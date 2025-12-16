@@ -16,6 +16,7 @@ pocketbase.exe
 # Output
 Backend/output/*.xlsx
 !Backend/output/.gitkeep
+Backend/csv_sources/
 
 # IDE
 .vscode/

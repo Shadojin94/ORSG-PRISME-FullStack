@@ -4,8 +4,8 @@ const pb = new PocketBase('http://127.0.0.1:8090');
 
 // Helper to authenticate as admin (required to write to restricted collections)
 // We use the credentials you just validated
-const ADMIN_EMAIL = "cedric.atticot@live.fr";
-const ADMIN_PASSWORD = "Password123";
+const ADMIN_EMAIL = process.env.POCKETBASE_ADMIN_EMAIL || "admin@example.com";
+const ADMIN_PASSWORD = process.env.POCKETBASE_ADMIN_PASSWORD || "ChangeMe123!";
 
 async function main() {
     console.log("🌱 Seeding Demo Data...");

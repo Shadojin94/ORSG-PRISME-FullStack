@@ -14,7 +14,7 @@ Il est divisé en deux parties :
     *   Port : `http://localhost:5173`
     *   État : Login connecté, Page "Utilisateurs" connectée.
 *   **📂 /Backend** : Serveur PocketBase + Moteur Python.
-    *   Port : `http://127.0.0.1:8090` (Admin: `cedric.atticot@live.fr` / `Password123`)
+    *   Port : `http://127.0.0.1:8090` (Admin: voir `.env` ou créer un admin)
     *   Script Moteur : `generate_reports.py` (surveille les fichiers en attente).
     *   Script Lancement Facile : `run_engine.bat`.
 

@@ -12,6 +12,7 @@ from openpyxl import Workbook
 from openpyxl.styles import PatternFill, Font
 from pathlib import Path
 import warnings
+import os
 
 warnings.filterwarnings('ignore')
 
@@ -20,8 +21,8 @@ warnings.filterwarnings('ignore')
 # ============================================================================
 
 POCKETBASE_URL = "http://127.0.0.1:8090"
-ADMIN_EMAIL = "cedric.atticot@live.fr"
-ADMIN_PASSWORD = "Password123"
+ADMIN_EMAIL = os.getenv("POCKETBASE_ADMIN_EMAIL", "admin@example.com")
+ADMIN_PASSWORD = os.getenv("POCKETBASE_ADMIN_PASSWORD", "ChangeMe123!")
 
 BASE_DIR = Path(__file__).parent
 TEMP_DIR = BASE_DIR / "temp"
