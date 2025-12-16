@@ -1,0 +1,143 @@
+@import "tailwindcss";
+
+@plugin "tailwindcss-animate";
+
+@config "../tailwind.config.js";
+
+/* 
+  ORSG Legacy Theme 
+  Based on demo_officiel.html
+  Colors: Green (#00A651), Blue (#00AEEF), Yellow (#FFD400), Dark Blue (#0033A0)
+*/
+
+@layer base {
+  :root {
+    /* Light Mode (Default for this legacy theme) */
+    --background: 210 40% 98%;
+    /* Light Gray-Blueish */
+    --foreground: 222 47% 11%;
+
+    --card: 0 0% 100%;
+    --card-foreground: 222 47% 11%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 222 47% 11%;
+
+    /* Main Green */
+    --primary: 149 100% 33%;
+    /* #00A651 converted to HSL approx */
+    --primary-foreground: 210 40% 98%;
+
+    /* Main Blue */
+    --secondary: 196 100% 47%;
+    /* #00AEEF */
+    --secondary-foreground: 222 47% 11%;
+
+    --muted: 210 40% 96.1%;
+    --muted-foreground: 215.4 16.3% 46.9%;
+
+    /* Main Yellow */
+    --accent: 48 100% 50%;
+    /* #FFD400 */
+    --accent-foreground: 222 47% 11%;
+
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 210 40% 98%;
+
+    --border: 214.3 31.8% 91.4%;
+    --input: 214.3 31.8% 91.4%;
+    --ring: 196 100% 47%;
+    /* Blue ring */
+
+    --radius: 0.75rem;
+    /* 12px / rounded-xl */
+
+    /* Chart colors */
+    --chart-1: 149 100% 33%;
+    --chart-2: 196 100% 47%;
+    --chart-3: 48 100% 50%;
+    --chart-4: 218 100% 31%;
+    /* Dark Blue */
+    --chart-5: 27 96% 61%;
+  }
+
+  /* Dark mode is purely optional/hidden here as legacy was light, keeping variables just in case */
+  .dark {
+    --background: 222 47% 11%;
+    --foreground: 210 40% 98%;
+    --card: 222 47% 11%;
+    --card-foreground: 210 40% 98%;
+    --popover: 222 47% 11%;
+    --popover-foreground: 210 40% 98%;
+    --primary: 149 100% 33%;
+    --primary-foreground: 210 40% 98%;
+    --secondary: 196 100% 47%;
+    --secondary-foreground: 210 40% 98%;
+    --muted: 217.2 32.6% 17.5%;
+    --muted-foreground: 215 20.2% 65.1%;
+    --accent: 217.2 32.6% 17.5%;
+    --accent-foreground: 210 40% 98%;
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 210 40% 98%;
+    --border: 217.2 32.6% 17.5%;
+    --input: 217.2 32.6% 17.5%;
+    --ring: 196 100% 47%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+    font-family: 'Poppins', sans-serif;
+  }
+}
+
+@layer utilities {
+  .bg-main-green {
+    background-color: #00A651;
+  }
+
+  .bg-main-yellow {
+    background-color: #FFD400;
+  }
+
+  .bg-main-blue {
+    background-color: #00AEEF;
+  }
+
+  .bg-main-dark-blue {
+    background-color: #0033A0;
+  }
+
+  .text-main-green {
+    color: #00A651;
+  }
+
+  .text-main-yellow {
+    color: #FFD400;
+  }
+
+  .text-main-blue {
+    color: #00AEEF;
+  }
+
+  .text-main-dark-blue {
+    color: #0033A0;
+  }
+
+  .hero-gradient {
+    background: linear-gradient(135deg, rgba(0, 51, 160, 0.9) 0%, rgba(0, 166, 81, 0.9) 100%);
+  }
+
+  .step-card {
+    @apply transition-all duration-300 border border-gray-200 shadow-sm hover:translate-y-[-2px] hover:shadow-lg bg-white rounded-xl;
+  }
+
+  .glass {
+    @apply bg-white/10 backdrop-blur-sm border border-white/20;
+  }
+}

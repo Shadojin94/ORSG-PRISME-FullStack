@@ -1,0 +1,26 @@
+# Node
+node_modules/
+dist/
+.env
+
+# Python
+venv/
+__pycache__/
+*.py[cod]
+*$py.class
+
+# PocketBase
+pb_data/
+pocketbase.exe
+
+# Output
+Backend/output/*.xlsx
+!Backend/output/.gitkeep
+
+# IDE
+.vscode/
+.idea/
+
+# OS
+.DS_Store
+Thumbs.db
