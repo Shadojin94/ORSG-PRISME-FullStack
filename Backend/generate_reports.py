@@ -198,8 +198,10 @@ def find_csv_file(pattern, search_dir=None):
 # EXCEL GENERATOR
 # ============================================================================
 
+import shutil
+
 def generate_prisme_excel(dataset_name, year, csv_dir=None):
-    """Génère un fichier Excel PRISME complet."""
+    """Génère une archive ZIP contenant la structure de fichiers PRISME (Structure SharePoint)."""
     
     if dataset_name not in DATASET_CONFIGS:
         print(f"Dataset inconnu: {dataset_name}")
@@ -273,22 +275,47 @@ def generate_prisme_excel(dataset_name, year, csv_dir=None):
             if not val.empty:
                 data['fra'][0][var_name] = round(val.values[0], 2)
     
-    # Créer le fichier Excel
-    wb = Workbook()
-    wb.remove(wb.active)
+    # --- GÉNÉRATION DE L'ARBORESCENCE (TYPE B: SELECTIVE) ---
     
-    # Feuilles de données
-    sheet_configs = [
-        ('com', 'com'),
-        ('dom', 'dom'),
-        ('reg', 'reg'),
-        ('fh', 'fh'),
-        ('fra', 'fra')
-    ]
-    
-    for sheet_name, id_col in sheet_configs:
+    # Mapping des dossiers (Nom technique -> Nom Dossier Client)
+    folder_mapping = {
+        'com': 'Commune',
+        'reg': 'Region',
+        'dom': 'DOM',
+        'fh': 'France_Hexagonale',
+        'fra': 'France_Entiere'
+    }
+
+    # Création du dossier racine temporaire pour l'année
+    root_year_dir = OUTPUT_DIR / f"{year}"
+    if root_year_dir.exists():
+        shutil.rmtree(root_year_dir)
+    root_year_dir.mkdir()
+
+    # Génération des fichiers par niveau géographique
+    # Configuration des feuilles (clé_data, nom_colonne_id)
+    sheet_configs = {
+        'com': 'com',
+        'dom': 'dom',
+        'reg': 'reg',
+        'fh': 'fh',
+        'fra': 'fra'
+    }
+
+    for key, folder_name in folder_mapping.items():
+        # Créer le sous-dossier (ex: output/2017/Commune)
+        sub_dir = root_year_dir / folder_name
+        sub_dir.mkdir(exist_ok=True)
+        
+        # Créer le fichier Excel
+        wb = Workbook()
+        wb.remove(wb.active) # Supprime la feuille par défaut
+        
+        id_col = sheet_configs[key]
+        sheet_name = key # Le nom de l'onglet sera le code technique (com, reg...)
+        
         ws = wb.create_sheet(sheet_name)
-        rows_data = data[sheet_name]
+        rows_data = data[key]
         
         # En-têtes
         headers = [id_col, 'annee'] + variables
@@ -311,38 +338,65 @@ def generate_prisme_excel(dataset_name, year, csv_dir=None):
         # Largeur colonnes
         ws.column_dimensions['A'].width = 15
         ws.column_dimensions['B'].width = 10
+
+        # Sauvegarder avec le nom générique (ex: educ.xlsx)
+        filename = f"{dataset_name}.xlsx"
+        wb.save(sub_dir / filename)
+
+    # --- GÉNÉRATION FICHIER CONSOLIDÉ (TYPE A) ---
+    print(f"  [INFO] Génération fichier consolidé (Type A)...")
+    try:
+        wb_cons = Workbook()
+        wb_cons.remove(wb_cons.active)
+        
+        # Pour chaque niveau géographique, créer un onglet dans le même fichier
+        for key, folder_name in folder_mapping.items():
+            id_col = sheet_configs[key]
+            sheet_name = key # com, reg, dom...
+            
+            ws = wb_cons.create_sheet(sheet_name)
+            rows_data = data[key]
+            
+            # En-têtes
+            headers = [id_col, 'annee'] + variables
+            for col_idx, h in enumerate(headers, 1):
+                cell = ws.cell(row=1, column=col_idx, value=h)
+                cell.font = Font(bold=True)
+                cell.fill = ORANGE_FILL
+            
+            # Données
+            for row_idx, row_dict in enumerate(rows_data, 2):
+                ws.cell(row=row_idx, column=1, value=row_dict.get(id_col))
+                ws.cell(row=row_idx, column=2, value=row_dict.get('annee'))
+                
+                for i, var in enumerate(variables):
+                    val = row_dict.get(var)
+                    cell = ws.cell(row=row_idx, column=3 + i, value=val)
+                    if val is not None:
+                        cell.fill = ORANGE_FILL
+            
+            # Largeur colonnes
+            ws.column_dimensions['A'].width = 15
+            ws.column_dimensions['B'].width = 10
+            
+        # Sauvegarder le fichier consolidé à la racine de l'année
+        cons_filename = f"{dataset_name}_consolidated.xlsx"
+        wb_cons.save(root_year_dir / cons_filename)
+        print(f"  [OK] Fichier consolidé créé: {cons_filename}")
+        
+    except Exception as e:
+        print(f"  [ERROR] Erreur création consolidé: {e}")
+        
+    # Créer le ZIP final
+    zip_base_name = OUTPUT_DIR / f"{dataset_name}_{year}"
+
+    zip_path = shutil.make_archive(str(zip_base_name), 'zip', str(OUTPUT_DIR), str(year)) # Zip uniquement le dossier de l'année
     
-    # Feuille code_régions
-    ws_cr = wb.create_sheet('code_régions')
-    ws_cr.cell(1, 1, "CODE").font = Font(bold=True)
-    ws_cr.cell(1, 2, "LIBELLÉ").font = Font(bold=True)
-    for i, (code, name) in enumerate(REGIONS_INFO, 2):
-        ws_cr.cell(i, 1, code)
-        ws_cr.cell(i, 2, name)
-    ws_cr.column_dimensions['A'].width = 10
-    ws_cr.column_dimensions['B'].width = 30
+    # Nettoyage du dossier temporaire
+    # shutil.rmtree(root_year_dir) # MODIFICATION: On garde les fichiers pour permettre le téléchargement sélectif
     
-    # Feuille Dic_variables
-    ws_dic = wb.create_sheet('Dic_variables')
-    dic_headers = ["Nom de l'indicateur", "Jeux de données", "Nom indicateur jeu de données"]
-    for i, h in enumerate(dic_headers, 1):
-        ws_dic.cell(1, i, h).font = Font(bold=True)
-    
-    for i, row_data in enumerate(config.get('dic_variables', []), 2):
-        for j, val in enumerate(row_data, 1):
-            ws_dic.cell(i, j, val)
-    
-    ws_dic.column_dimensions['A'].width = 45
-    ws_dic.column_dimensions['B'].width = 20
-    ws_dic.column_dimensions['C'].width = 30
-    
-    # Sauvegarder
-    filename = f"{dataset_name}_{year}.xlsx"
-    output_path = OUTPUT_DIR / filename
-    wb.save(output_path)
-    
-    print(f"[OK] Genere: {output_path}")
-    return output_path
+    print(f"[OK] Genere Archive: {zip_path}")
+    return Path(zip_path)
 
 
 # ============================================================================
@@ -439,11 +493,12 @@ def main():
                     print(f"[>] Traitement {item['id']}...")
                     
                     try:
-                        # Déterminer l'année
+                        # Déterminer l'année et le thème
                         year = int(item.get('year', 2022))
+                        theme = item.get('theme', 'educ')
                         
                         # Générer le fichier Excel avec les CSV sources locaux
-                        output_path = generate_prisme_excel('educ', year, CSV_SOURCES_DIR)
+                        output_path = generate_prisme_excel(theme, year, CSV_SOURCES_DIR)
                         
                         if output_path and output_path.exists():
                             # Uploader le rapport

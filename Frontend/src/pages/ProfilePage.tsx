@@ -1,5 +1,5 @@
 import { useState } from "react"
-import { User, Mail, Shield, Key, Bell, Save, Globe, Moon } from "lucide-react"
+import { User, Shield, Key, Bell, Save, Globe, Moon } from "lucide-react"
 import { cn } from "@/lib/utils"
 
 export function ProfilePage() {

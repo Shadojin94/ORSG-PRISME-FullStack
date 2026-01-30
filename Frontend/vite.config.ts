@@ -16,17 +16,10 @@ export default defineConfig({
   },
   server: {
     proxy: {
-      // Proxy download requests to the file server
-      '/api/download': {
-        target: 'http://localhost:3001',
+      // Proxy all API requests to PRISME backend
+      '/api': {
+        target: 'http://localhost:8000',
         changeOrigin: true,
-        rewrite: (path) => path.replace(/^\/api\/download/, '/download'),
-      },
-      // Proxy generate requests to the file server
-      '/api/generate': {
-        target: 'http://localhost:3001',
-        changeOrigin: true,
-        rewrite: (path) => path.replace(/^\/api\/generate/, '/generate'),
       }
     },
     fs: {

@@ -1,4 +1,4 @@
-import { LifeBuoy, Mail, MessageCircle, AlertTriangle } from "lucide-react"
+import { Mail, AlertTriangle } from "lucide-react"
 
 export function SupportPage() {
     return (

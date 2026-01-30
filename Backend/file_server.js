@@ -10,7 +10,8 @@ const { spawn } = require('child_process');
 
 const PORT = 3001;
 const OUTPUT_DIR = path.join(__dirname, 'output');
-const PYTHON_EXE = 'C:\\Users\\chad9\\Documents\\003.ORSG\\Livraison_Client\\ORSG_PRISME_V1\\backend\\venv\\Scripts\\python.exe';
+// Use Windows Python launcher 'py' which is more reliable
+const PYTHON_EXE = 'py';
 const GENERATOR_SCRIPT = path.join(__dirname, 'generate_reports.py');
 
 // Ensure output directory exists
@@ -71,9 +72,10 @@ const server = http.createServer(async (req, res) => {
         const filename = urlPath.replace('/download/', '');
         const filePath = path.join(OUTPUT_DIR, filename);
 
-        if (filename.includes('..') || !filename.endsWith('.xlsx')) {
+        // Allow xlsx and zip
+        if (filename.includes('..') || (!filename.endsWith('.xlsx') && !filename.endsWith('.zip'))) {
             res.writeHead(400, { 'Content-Type': 'text/plain' });
-            res.end('Invalid file request');
+            res.end('Invalid file request. Only .xlsx and .zip are allowed.');
             return;
         }
 
@@ -84,8 +86,15 @@ const server = http.createServer(async (req, res) => {
         }
 
         const fileStream = fs.createReadStream(filePath);
+
+        // Determine Content-Type
+        let contentType = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet';
+        if (filename.endsWith('.zip')) {
+            contentType = 'application/zip';
+        }
+
         res.writeHead(200, {
-            'Content-Type': 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+            'Content-Type': contentType,
             'Content-Disposition': `attachment; filename="${filename}"`,
         });
         fileStream.pipe(res);
@@ -115,9 +124,16 @@ const server = http.createServer(async (req, res) => {
  */
 function generateFile(theme, year) {
     return new Promise((resolve) => {
-        const pythonCode = `
+        console.log(`   Using Python: ${PYTHON_EXE}`);
+        console.log(`   Working dir: ${__dirname}`);
+
+        // Use a separate Python script file instead of inline code for Windows compatibility
+        const scriptPath = path.join(__dirname, 'run_generation.py');
+
+        // Create a temporary Python script
+        const pythonScript = `
 import sys
-sys.path.insert(0, '.')
+sys.path.insert(0, '${__dirname.replace(/\\/g, '/')}')
 from generate_reports import generate_prisme_excel, CSV_SOURCES_DIR
 result = generate_prisme_excel('${theme}', ${year}, CSV_SOURCES_DIR)
 if result:
@@ -126,7 +142,10 @@ else:
     print("ERROR:Generation failed")
 `;
 
-        const child = spawn(PYTHON_EXE, ['-c', pythonCode], {
+        // Write the script to a file
+        fs.writeFileSync(scriptPath, pythonScript, 'utf8');
+
+        const child = spawn(PYTHON_EXE, [scriptPath], {
             cwd: __dirname
         });
 
@@ -144,17 +163,24 @@ else:
         });
 
         child.on('close', (code) => {
+            console.log(`   Python exit code: ${code}`);
+            // Clean up the temp script
+            try { fs.unlinkSync(scriptPath); } catch (e) { }
+
             if (stdout.includes('SUCCESS:')) {
                 const filename = stdout.split('SUCCESS:')[1].trim();
                 console.log(`✅ Generated: ${filename}`);
                 resolve({ success: true, filename });
             } else {
                 console.log(`❌ Generation failed`);
+                console.log(`   stdout: ${stdout}`);
+                console.log(`   stderr: ${stderr}`);
                 resolve({ success: false, error: stderr || stdout || 'Unknown error' });
             }
         });
 
         child.on('error', (err) => {
+            console.error(`   ❌ Spawn error: ${err.message}`);
             resolve({ success: false, error: err.message });
         });
     });

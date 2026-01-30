@@ -5,9 +5,16 @@
 @config "../tailwind.config.js";
 
 /* 
-  ORSG Legacy Theme 
-  Based on demo_officiel.html
-  Colors: Green (#00A651), Blue (#00AEEF), Yellow (#FFD400), Dark Blue (#0033A0)
+  ORSG-CTPS Theme 
+  Based on https://www.ors-guyane.org/
+  Colors: 
+  - Primary Blue: #1a4b8c (dark blue header)
+  - Teal/Cyan: #3bb3a9 (turquoise buttons)
+  - Yellow/Gold: #f5c542 (accent buttons)
+  - Green: #4caf50 (PROJETS)
+  - Magenta: #e91e63 (ACTUALITÉS)
+  - Orange: #ff9800 (PRISME)
+  - Legacy ORSG: Green (#00A651), Blue (#00AEEF), Yellow (#FFD400), Dark Blue (#0033A0)
 */
 
 @layer base {
@@ -92,11 +99,13 @@
 
   body {
     @apply bg-background text-foreground;
-    font-family: 'Poppins', sans-serif;
+    font-family: 'Poppins', 'Segoe UI', sans-serif;
   }
 }
 
 @layer utilities {
+
+  /* ORSG Legacy Colors */
   .bg-main-green {
     background-color: #00A651;
   }
@@ -129,8 +138,49 @@
     color: #0033A0;
   }
 
+  /* ORS-Guyane Website Colors */
+  .bg-ors-blue {
+    background-color: #1a4b8c;
+  }
+
+  .bg-ors-teal {
+    background-color: #3bb3a9;
+  }
+
+  .bg-ors-yellow {
+    background-color: #f5c542;
+  }
+
+  .bg-ors-green {
+    background-color: #4caf50;
+  }
+
+  .bg-ors-magenta {
+    background-color: #e91e63;
+  }
+
+  .bg-ors-orange {
+    background-color: #ff9800;
+  }
+
+  .text-ors-blue {
+    color: #1a4b8c;
+  }
+
+  .text-ors-teal {
+    color: #3bb3a9;
+  }
+
+  .text-ors-yellow {
+    color: #f5c542;
+  }
+
   .hero-gradient {
     background: linear-gradient(135deg, rgba(0, 51, 160, 0.9) 0%, rgba(0, 166, 81, 0.9) 100%);
+  }
+
+  .ors-gradient {
+    background: linear-gradient(135deg, #1a4b8c 0%, #3bb3a9 100%);
   }
 
   .step-card {

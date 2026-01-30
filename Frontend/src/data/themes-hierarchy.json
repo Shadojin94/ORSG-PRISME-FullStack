@@ -1,0 +1,123 @@
+{
+  "categories": [
+    {
+      "id": "population_conditions_vie",
+      "name": "Population et condition de vie",
+      "subcategories": [
+        {
+          "id": "conditions_vie",
+          "name": "Conditions de vie",
+          "themes": [
+            {
+              "id": "conditions_vie_anciens",
+              "name": "Conditions de vie anciens",
+              "code": "pers_sup65ans_seules"
+            },
+            {
+              "id": "conditions_enfants",
+              "name": "Conditions enfants",
+              "code": "conditions_enfants"
+            },
+            {
+              "id": "conditions_generales",
+              "name": "Conditions générales",
+              "code": "conditions_generales"
+            }
+          ]
+        },
+        {
+          "id": "education",
+          "name": "Education",
+          "themes": [
+            {
+              "id": "educ",
+              "name": "Éducation",
+              "code": "educ"
+            }
+          ]
+        },
+        {
+          "id": "emploi_revenu",
+          "name": "Emploi et revenu",
+          "themes": [
+            {
+              "id": "emploi",
+              "name": "Emploi",
+              "code": "emploi"
+            },
+            {
+              "id": "revenu",
+              "name": "Revenu",
+              "code": "revenu"
+            }
+          ]
+        },
+        {
+          "id": "population",
+          "name": "Population",
+          "themes": [
+            {
+              "id": "naissance_fecondite",
+              "name": "Naissance fécondité",
+              "code": "naissance_fecondite"
+            },
+            {
+              "id": "personnes_agees",
+              "name": "Personnes âgées",
+              "code": "personnes_agees"
+            },
+            {
+              "id": "petite_enfance",
+              "name": "Petite enfance",
+              "code": "petite_enfance"
+            },
+            {
+              "id": "structure_population",
+              "name": "Structure de la population - recensement",
+              "code": "structure_population"
+            }
+          ]
+        },
+        {
+          "id": "prestations_sociales",
+          "name": "Prestations sociales",
+          "themes": [
+            {
+              "id": "allocataires",
+              "name": "Allocataires",
+              "code": "allocataires"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "years": ["2015", "2016", "2017", "2018", "2019", "2020", "2021", "2022", "2023"],
+  "geographicLevels": [
+    {
+      "id": "commune",
+      "name": "Commune",
+      "folder": "Commune"
+    },
+    {
+      "id": "region",
+      "name": "Région",
+      "folder": "Région"
+    },
+    {
+      "id": "dom",
+      "name": "DOM",
+      "folder": "DOM"
+    },
+    {
+      "id": "france_hexagonale",
+      "name": "France Hexagonale",
+      "folder": "France Hexagonale"
+    },
+    {
+      "id": "france_entiere",
+      "name": "France entière",
+      "folder": "France entière"
+    }
+  ]
+}
