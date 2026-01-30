@@ -21,9 +21,10 @@ warnings.filterwarnings('ignore')
 # CONFIGURATION & PATHS
 # ============================================================================
 
-BASE_DIR = Path(__file__).parent.parent
+# Le fichier est dans Backend/, donc BASE_DIR = Backend/
+BASE_DIR = Path(__file__).parent
 CSV_SOURCES_DIR = BASE_DIR / "csv_sources"
-OUTPUT_DIR = BASE_DIR / "output"
+OUTPUT_DIR = BASE_DIR.parent / "output"  # output/ au niveau Version_FullStack/
 CONFIG_FILE = BASE_DIR / "themes_config.json"
 
 OUTPUT_DIR.mkdir(exist_ok=True)
