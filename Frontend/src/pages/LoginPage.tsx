@@ -38,6 +38,7 @@ export function LoginPage() {
         // Vérifier le code (enlever les espaces)
         const cleanCode = code.replace(/\s/g, '')
         if (cleanCode === DEMO_CODE) {
+            localStorage.setItem("demo_authenticated", "true")
             navigate("/dashboard")
         } else {
             setError("Code incorrect. Veuillez réessayer.")
@@ -167,7 +168,7 @@ export function LoginPage() {
                                         autoFocus
                                         maxLength={8}
                                         className="block w-full pl-10 pr-3 py-3 border border-gray-200 rounded-xl leading-5 bg-gray-50 placeholder-gray-400 focus:outline-none focus:bg-white focus:ring-2 focus:ring-orsg-green/20 focus:border-orsg-green transition-all duration-200 font-mono tracking-widest text-center text-lg"
-                                        placeholder="30012026"
+                                        placeholder="••••••••"
                                     />
                                 </div>
                                 {error && (

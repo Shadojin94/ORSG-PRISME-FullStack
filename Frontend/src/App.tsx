@@ -9,39 +9,16 @@ import { LoginPage } from "./pages/LoginPage"
 import { ProfilePage } from "./pages/ProfilePage"
 import { AdminUsersPage } from "./pages/AdminUsersPage"
 import { SupportPage } from "./pages/SupportPage"
-import PocketBase from "pocketbase"
+import "./index.css"
 
-const pb = new PocketBase("http://127.0.0.1:8090")
-
-// Protected Route Component - DEMO MODE: Auth disabled for presentation
+// Protected Route Component - vérifie l'authentification via localStorage
 function ProtectedRoute({ children }: { children: React.ReactNode }) {
-  // DEMO MODE: Skip authentication for client presentation
-  const DEMO_MODE = true;
-
-  const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(DEMO_MODE ? true : null)
+  const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(null)
 
   useEffect(() => {
-    if (DEMO_MODE) {
-      setIsAuthenticated(true);
-      return;
-    }
-
-    // Check if user is authenticated
-    const checkAuth = () => {
-      const isValid = pb.authStore.isValid
-      setIsAuthenticated(isValid)
-    }
-
-    checkAuth()
-
-    // Listen for auth changes
-    const unsubscribe = pb.authStore.onChange(() => {
-      checkAuth()
-    })
-
-    return () => {
-      unsubscribe()
-    }
+    // Vérifier si l'utilisateur a été authentifié via le code démo
+    const authToken = localStorage.getItem("demo_authenticated")
+    setIsAuthenticated(authToken === "true")
   }, [])
 
   // Loading state
