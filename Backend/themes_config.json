@@ -15,29 +15,42 @@
             {
               "id": "structure_pop",
               "title": "Structure de la population - Recensement",
-              "datasets": ["densite", "structure_quinq", "structure_grp"]
+              "datasets": [
+                "densite",
+                "structure_quinq",
+                "structure_grp"
+              ]
             },
             {
               "id": "naissance_fecondite",
               "title": "Naissance, fécondité",
-              "datasets": ["indice_fecondite", "fecondite"]
+              "datasets": [
+                "indice_fecondite",
+                "fecondite"
+              ]
             },
             {
               "id": "petite_enfance",
               "title": "Petite enfance",
-              "datasets": ["pop_inf3ans"]
+              "datasets": [
+                "pop_inf3ans"
+              ]
             },
             {
               "id": "personnes_agees",
               "title": "Personnes âgées",
-              "datasets": ["accroiss_sup65ans"]
+              "datasets": [
+                "accroiss_sup65ans"
+              ]
             }
           ]
         },
         {
           "id": "education",
           "title": "Éducation",
-          "datasets": ["educ"]
+          "datasets": [
+            "educ"
+          ]
         },
         {
           "id": "emploi_revenu",
@@ -46,19 +59,25 @@
             {
               "id": "emploi",
               "title": "Emploi",
-              "datasets": ["emplois"]
+              "datasets": [
+                "emplois"
+              ]
             },
             {
               "id": "revenu",
               "title": "Revenu",
-              "datasets": ["revenu"]
+              "datasets": [
+                "revenu"
+              ]
             }
           ]
         },
         {
           "id": "prestations_sociales",
           "title": "Prestations sociales",
-          "datasets": ["alloc"]
+          "datasets": [
+            "alloc"
+          ]
         },
         {
           "id": "conditions_vie",
@@ -67,17 +86,25 @@
             {
               "id": "cond_vie_anciens",
               "title": "Conditions de vie anciens",
-              "datasets": ["pers_sup65ans_seules"]
+              "datasets": [
+                "pers_sup65ans_seules"
+              ]
             },
             {
               "id": "cond_vie_enfants",
               "title": "Conditions de vie enfants",
-              "datasets": ["familles_mono", "accueil_pop_inf3ans"]
+              "datasets": [
+                "familles_mono",
+                "accueil_pop_inf3ans"
+              ]
             },
             {
               "id": "cond_vie_generales",
               "title": "Conditions de vie générales",
-              "datasets": ["pers_menages", "types_menages"]
+              "datasets": [
+                "pers_menages",
+                "types_menages"
+              ]
             }
           ]
         }
@@ -89,239 +116,932 @@
       "name": "Éducation",
       "folderPath": "Population et condition de vie/Education/Educ",
       "fileName": "educ",
-      "sheets": ["com", "reg", "dom", "fh", "fra"],
+      "sheets": [
+        "com",
+        "reg",
+        "dom",
+        "fh",
+        "fra"
+      ],
       "columns": [
-        {"id": "geo", "type": "geo_id"},
-        {"id": "annee", "type": "year"},
-        {"id": "pop_6_16", "type": "variable", "label": "Population 6-16 ans", "csvPattern": "Pop_6-16ans", "parser": "moca"},
-        {"id": "nb_non_sco", "type": "variable", "label": "Jeunes 6-16 ans non scolarisés", "csvPattern": "nb_non_scol", "parser": "moca"},
-        {"id": "pop_15_64", "type": "variable", "label": "Population 15-64 ans", "csvPattern": "Pop_15-64ans", "parser": "moca"},
-        {"id": "nb_peu_dipl", "type": "variable", "label": "Personnes 15+ peu ou pas diplômées", "csvPattern": "Nb_peu_dipl", "parser": "moca"}
+        {
+          "id": "geo",
+          "type": "geo_id"
+        },
+        {
+          "id": "annee",
+          "type": "year"
+        },
+        {
+          "id": "pop_6_16",
+          "type": "variable",
+          "label": "Population 6-16 ans",
+          "csvPattern": "Pop_6-16ans",
+          "parser": "moca"
+        },
+        {
+          "id": "nb_non_sco",
+          "type": "variable",
+          "label": "Jeunes 6-16 ans non scolarisés",
+          "csvPattern": "nb_non_scol",
+          "parser": "moca"
+        },
+        {
+          "id": "pop_15_64",
+          "type": "variable",
+          "label": "Population 15-64 ans",
+          "csvPattern": "Pop_15-64ans",
+          "parser": "moca"
+        },
+        {
+          "id": "nb_peu_dipl",
+          "type": "variable",
+          "label": "Personnes 15+ peu ou pas diplômées",
+          "csvPattern": "Nb_peu_dipl",
+          "parser": "moca"
+        }
       ]
     },
     "pers_sup65ans_seules": {
       "name": "Conditions de vie anciens",
       "folderPath": "Population et condition de vie/Conditions de vie/Conditions de vie anciens",
       "fileName": "pers_sup65ans_seules",
-      "sheets": ["com", "reg", "dom", "fh", "fra"],
+      "sheets": [
+        "com",
+        "reg",
+        "dom",
+        "fh",
+        "fra"
+      ],
       "columns": [
-        {"id": "geo", "type": "geo_id"},
-        {"id": "annee", "type": "year"},
-        {"id": "nb_pop_65ans", "type": "variable", "label": "Population 65 ans et plus", "csvPattern": "Pop_65ans", "parser": "long"},
-        {"id": "nb_pop_65ans_seule", "type": "variable", "label": "Personnes seules 65+", "csvPattern": "Nb_Pop_65ans_Seules", "parser": "long"}
+        {
+          "id": "geo",
+          "type": "geo_id"
+        },
+        {
+          "id": "annee",
+          "type": "year"
+        },
+        {
+          "id": "nb_pop_65ans",
+          "type": "variable",
+          "label": "Population 65 ans et plus",
+          "csvPattern": "Pop_65ans",
+          "parser": "long"
+        },
+        {
+          "id": "nb_pop_65ans_seule",
+          "type": "variable",
+          "label": "Personnes seules 65+",
+          "csvPattern": "Nb_Pop_65ans_Seules",
+          "parser": "long"
+        }
       ]
     },
     "familles_mono": {
       "name": "Familles monoparentales",
       "folderPath": "Population et condition de vie/Conditions de vie/Conditions enfants/Familles monoparentales",
       "fileName": "familles_mono",
-      "sheets": ["com", "reg", "dom", "fh", "fra"],
+      "sheets": [
+        "com",
+        "reg",
+        "dom",
+        "fh",
+        "fra"
+      ],
       "columns": [
-        {"id": "geo", "type": "geo_id"},
-        {"id": "annee", "type": "year"},
-        {"id": "nb_familles_enf", "type": "variable", "label": "Familles avec enfant(s) < 25 ans", "csvPattern": "Nb_Famille_Avec_Enfant", "parser": "moca"},
-        {"id": "nb_familles_mono_enf", "type": "variable", "label": "Familles monoparentales avec enfant(s) < 25 ans", "csvPattern": "Nb_Famille_Mono_Avec_Enfant", "parser": "moca"}
+        {
+          "id": "geo",
+          "type": "geo_id"
+        },
+        {
+          "id": "annee",
+          "type": "year"
+        },
+        {
+          "id": "nb_familles_enf",
+          "type": "variable",
+          "label": "Familles avec enfant(s) < 25 ans",
+          "csvPattern": "Nb_Famille_Avec_Enfant",
+          "parser": "moca"
+        },
+        {
+          "id": "nb_familles_mono_enf",
+          "type": "variable",
+          "label": "Familles monoparentales avec enfant(s) < 25 ans",
+          "csvPattern": "Nb_Famille_Mono_Avec_Enfant",
+          "parser": "moca"
+        }
       ]
     },
     "pop_inf3ans": {
       "name": "Petite enfance - Population < 3 ans",
       "folderPath": "Population et condition de vie/Population/Petite enfance/Pop_Infa3ans",
       "fileName": "pop_inf3ans",
-      "sheets": ["com", "reg", "dom", "fh", "fra"],
+      "sheets": [
+        "com",
+        "reg",
+        "dom",
+        "fh",
+        "fra"
+      ],
       "columns": [
-        {"id": "geo", "type": "geo_id"},
-        {"id": "annee", "type": "year"},
-        {"id": "pop_inf3ans", "type": "variable", "label": "Population < 3 ans", "csvPattern": "Pop_Inf3ans", "parser": "moca"},
-        {"id": "rp", "type": "variable", "label": "Population totale (RP)", "csvPattern": "pop_0ans_tous_niveaux", "parser": "moca", "note": "A remplacer par RP_total quand disponible"}
+        {
+          "id": "geo",
+          "type": "geo_id"
+        },
+        {
+          "id": "annee",
+          "type": "year"
+        },
+        {
+          "id": "pop_inf3ans",
+          "type": "variable",
+          "label": "Population < 3 ans",
+          "csvPattern": "Pop_Inf3ans",
+          "parser": "moca"
+        },
+        {
+          "id": "rp",
+          "type": "variable",
+          "label": "Population totale (RP)",
+          "csvPattern": "pop_0ans_tous_niveaux",
+          "parser": "moca",
+          "note": "A remplacer par RP_total quand disponible"
+        }
       ]
     },
     "pers_menages": {
       "name": "Proportion de ménages suivant leur nombre",
       "folderPath": "Population et condition de vie/Conditions de vie/Conditions générales/Proportion de ménages suivant leur nombre",
       "fileName": "pers_menages",
-      "sheets": ["com", "reg", "dom", "fh", "fra"],
+      "sheets": [
+        "com",
+        "reg",
+        "dom",
+        "fh",
+        "fra"
+      ],
       "multiRowDimension": "nb_pers_menages",
       "columns": [
-        {"id": "geo", "type": "geo_id"},
-        {"id": "annee", "type": "year"},
-        {"id": "nb_pers_menages", "type": "dimension", "label": "Nombre de personnes dans le ménage", "values": ["0", "1", "2", "3", "4", "5", "6"]},
-        {"id": "nb_menages", "type": "variable", "label": "Nombre de ménages", "csvPattern": "Nb_Menages_Nb_Pers", "parser": "long"}
+        {
+          "id": "geo",
+          "type": "geo_id"
+        },
+        {
+          "id": "annee",
+          "type": "year"
+        },
+        {
+          "id": "nb_pers_menages",
+          "type": "dimension",
+          "label": "Nombre de personnes dans le ménage",
+          "values": [
+            "0",
+            "1",
+            "2",
+            "3",
+            "4",
+            "5",
+            "6"
+          ]
+        },
+        {
+          "id": "nb_menages",
+          "type": "variable",
+          "label": "Nombre de ménages",
+          "csvPattern": "Nb_Menages_Nb_Pers",
+          "parser": "long"
+        }
       ]
     },
     "types_menages": {
       "name": "Types de ménages",
       "folderPath": "Population et condition de vie/Conditions de vie/Conditions générales/Types de ménages",
       "fileName": "types_menages",
-      "sheets": ["com", "reg", "dom", "fh", "fra"],
+      "sheets": [
+        "com",
+        "reg",
+        "dom",
+        "fh",
+        "fra"
+      ],
       "multiRowDimension": "types_menages",
       "columns": [
-        {"id": "geo", "type": "geo_id"},
-        {"id": "annee", "type": "year"},
-        {"id": "types_menages", "type": "dimension", "label": "Type de ménage", "values": ["1", "2", "3", "4", "5", "6", "7", "8", "9"]},
-        {"id": "nb_menages", "type": "variable", "label": "Nombre de ménages", "csvPattern": "nb_menages_GF_REG_DOM", "parser": "moca"},
-        {"id": "tot_menages", "type": "variable", "label": "Total ménages", "csvPattern": "Tot_men", "parser": "moca"}
+        {
+          "id": "geo",
+          "type": "geo_id"
+        },
+        {
+          "id": "annee",
+          "type": "year"
+        },
+        {
+          "id": "types_menages",
+          "type": "dimension",
+          "label": "Type de ménage",
+          "values": [
+            "1",
+            "2",
+            "3",
+            "4",
+            "5",
+            "6",
+            "7",
+            "8",
+            "9"
+          ]
+        },
+        {
+          "id": "nb_menages",
+          "type": "variable",
+          "label": "Nombre de ménages",
+          "csvPattern": "nb_menages_GF_REG_DOM",
+          "parser": "moca"
+        },
+        {
+          "id": "tot_menages",
+          "type": "variable",
+          "label": "Total ménages",
+          "csvPattern": "Tot_men",
+          "parser": "moca"
+        }
       ]
     },
     "indice_fecondite": {
       "name": "Indice de fécondité",
       "folderPath": "Population et condition de vie/Population/Naissance fécondité/Indice Fécondité",
       "fileName": "indice_fecondite",
-      "sheets": ["com", "reg", "dom", "fh", "fra"],
+      "sheets": [
+        "com",
+        "reg",
+        "dom",
+        "fh",
+        "fra"
+      ],
       "columns": [
-        {"id": "geo", "type": "geo_id"},
-        {"id": "annee", "type": "year"},
-        {"id": "icf", "type": "variable", "label": "Indice conjoncturel de fécondité", "csvPattern": "icf_GF_REG_DOM", "parser": "tabular", "column": 2},
-        {"id": "tx_natalite", "type": "variable", "label": "Taux de natalité", "csvPattern": "icf_GF_REG_DOM", "parser": "tabular", "column": 3}
+        {
+          "id": "geo",
+          "type": "geo_id"
+        },
+        {
+          "id": "annee",
+          "type": "year"
+        },
+        {
+          "id": "icf",
+          "type": "variable",
+          "label": "Indice conjoncturel de fécondité",
+          "csvPattern": "icf_GF_REG_DOM",
+          "parser": "tabular",
+          "column": 2
+        },
+        {
+          "id": "tx_natalite",
+          "type": "variable",
+          "label": "Taux de natalité",
+          "csvPattern": "Tx_Natalite_GF_REG_DOM",
+          "parser": "tabular",
+          "column": 2
+        }
       ]
     },
     "fecondite": {
       "name": "Fécondité",
       "folderPath": "Population et condition de vie/Population/Naissance fécondité/Fécondité",
       "fileName": "fecondite",
-      "sheets": ["com", "reg", "dom", "fh", "fra"],
+      "sheets": [
+        "com",
+        "reg",
+        "dom",
+        "fh",
+        "fra"
+      ],
       "multiRowDimension": "age_mere",
       "columns": [
-        {"id": "geo", "type": "geo_id"},
-        {"id": "annee", "type": "year"},
-        {"id": "age_mere", "type": "dimension", "label": "Âge de la mère", "values": ["014", "019", "024", "029", "034", "039", "044", "049"]},
-        {"id": "tx_fecondite", "type": "variable", "label": "Taux de fécondité", "csvPattern": "Tx_Fecondite", "parser": "tabular", "yearColumn": 0, "geoColumn": 2, "column": 3},
-        {"id": "nb_naiss_vivante", "type": "variable", "label": "Nombre de naissances vivantes", "csvPattern": "Nb_Naiss_Vivante", "parser": "tabular", "yearColumn": 0, "geoColumn": 2, "column": 3}
+        {
+          "id": "geo",
+          "type": "geo_id"
+        },
+        {
+          "id": "annee",
+          "type": "year"
+        },
+        {
+          "id": "age_mere",
+          "type": "dimension",
+          "label": "Âge de la mère",
+          "values": [
+            "014",
+            "019",
+            "024",
+            "029",
+            "034",
+            "039",
+            "044",
+            "049"
+          ]
+        },
+        {
+          "id": "tx_fecondite",
+          "type": "variable",
+          "label": "Taux de fécondité",
+          "csvPattern": "Tx_Fecondite",
+          "parser": "tabular",
+          "yearColumn": 0,
+          "geoColumn": 2,
+          "column": 3
+        },
+        {
+          "id": "nb_naiss_vivante",
+          "type": "variable",
+          "label": "Nombre de naissances vivantes",
+          "csvPattern": "Nb_Naiss_Vivante",
+          "parser": "tabular",
+          "yearColumn": 0,
+          "geoColumn": 2,
+          "column": 3
+        }
       ]
     },
     "revenu": {
       "name": "Revenu",
       "folderPath": "Population et condition de vie/Emploi et revenu/Revenu",
       "fileName": "revenu",
-      "sheets": ["com", "reg", "dom", "fh", "fra"],
+      "sheets": [
+        "com",
+        "reg",
+        "dom",
+        "fh",
+        "fra"
+      ],
       "columns": [
-        {"id": "geo", "type": "geo_id"},
-        {"id": "annee", "type": "year"},
-        {"id": "nb_foyers_non_impo", "type": "variable", "label": "Foyers fiscaux non imposables", "csvPattern": "Nb_Foyers_Impose_NonImpose", "parser": "moca_filter", "filterColumn": 4, "filterValue": "Foyers fiscaux non imposés"},
-        {"id": "nb_foyers_imposes", "type": "variable", "label": "Foyers fiscaux imposables", "csvPattern": "Nb_Foyers_Impose_NonImpose", "parser": "moca_filter", "filterColumn": 4, "filterValue": "Foyers fiscaux imposés"}
+        {
+          "id": "geo",
+          "type": "geo_id"
+        },
+        {
+          "id": "annee",
+          "type": "year"
+        },
+        {
+          "id": "nb_foyers_non_impo",
+          "type": "variable",
+          "label": "Foyers fiscaux non imposables",
+          "csvPattern": "Nb_Foyers_Impose_NonImpose",
+          "parser": "moca_filter",
+          "filterColumn": 4,
+          "filterValue": "Foyers fiscaux non imposés"
+        },
+        {
+          "id": "nb_foyers_imposes",
+          "type": "variable",
+          "label": "Foyers fiscaux imposables",
+          "csvPattern": "Nb_Foyers_Impose_NonImpose",
+          "parser": "moca_filter",
+          "filterColumn": 4,
+          "filterValue": "Foyers fiscaux imposés"
+        }
       ]
     },
     "emplois": {
       "name": "Emploi",
       "folderPath": "Population et condition de vie/Emploi et revenu/emploi",
       "fileName": "emplois",
-      "sheets": ["com", "reg", "dom", "fh", "fra"],
+      "sheets": [
+        "com",
+        "reg",
+        "dom",
+        "fh",
+        "fra"
+      ],
       "columns": [
-        {"id": "geo", "type": "geo_id"},
-        {"id": "annee", "type": "year"},
-        {"id": "age_active", "type": "dimension", "label": "Âge population active", "values": ["015"]},
-        {"id": "sexe", "type": "dimension", "label": "Sexe", "values": ["Ens"]},
-        {"id": "nb_actifs", "type": "variable", "label": "Nombre d'actifs 15+", "csvPattern": "Nb_Actifs", "parser": "tabular", "yearColumn": 2, "geoColumn": 5, "column": 6},
-        {"id": "nb_pop", "type": "variable", "label": "Population 15+", "csvPattern": "Pop_Sup15ans", "parser": "tabular", "yearColumn": 2, "geoColumn": 5, "column": 6},
-        {"id": "nb_ouvriers", "type": "variable", "label": "Nombre d'ouvriers", "csvPattern": "Nb_Cadres_Ouvriers", "parser": "moca_filter", "yearColumn": 2, "geoColumn": 5, "filterColumn": 6, "filterValue": "Ouvriers", "valueColumn": 7},
-        {"id": "nb_cadres", "type": "variable", "label": "Nombre de cadres", "csvPattern": "Nb_Cadres_Ouvriers", "parser": "moca_filter", "yearColumn": 2, "geoColumn": 5, "filterColumn": 6, "filterValue": "Cadres et professions intellectuelles supérieures", "valueColumn": 7}
+        {
+          "id": "geo",
+          "type": "geo_id"
+        },
+        {
+          "id": "annee",
+          "type": "year"
+        },
+        {
+          "id": "age_active",
+          "type": "dimension",
+          "label": "Âge population active",
+          "values": [
+            "015"
+          ]
+        },
+        {
+          "id": "sexe",
+          "type": "dimension",
+          "label": "Sexe",
+          "values": [
+            "Ens"
+          ]
+        },
+        {
+          "id": "nb_actifs",
+          "type": "variable",
+          "label": "Nombre d'actifs 15+",
+          "csvPattern": "Nb_Actifs",
+          "parser": "tabular",
+          "yearColumn": 2,
+          "geoColumn": 5,
+          "column": 6
+        },
+        {
+          "id": "nb_pop",
+          "type": "variable",
+          "label": "Population 15+",
+          "csvPattern": "Pop_Sup15ans",
+          "parser": "tabular",
+          "yearColumn": 2,
+          "geoColumn": 5,
+          "column": 6
+        },
+        {
+          "id": "nb_ouvriers",
+          "type": "variable",
+          "label": "Nombre d'ouvriers",
+          "csvPattern": "Nb_Cadres_Ouvriers",
+          "parser": "moca_filter",
+          "yearColumn": 2,
+          "geoColumn": 5,
+          "filterColumn": 6,
+          "filterValue": "Ouvriers",
+          "valueColumn": 7
+        },
+        {
+          "id": "nb_cadres",
+          "type": "variable",
+          "label": "Nombre de cadres",
+          "csvPattern": "Nb_Cadres_Ouvriers",
+          "parser": "moca_filter",
+          "yearColumn": 2,
+          "geoColumn": 5,
+          "filterColumn": 6,
+          "filterValue": "Cadres et professions intellectuelles supérieures",
+          "valueColumn": 7
+        }
       ]
     },
     "alloc": {
       "name": "Allocataires prestations sociales",
       "folderPath": "Population et condition de vie/Prestations sociales/Allocataires",
       "fileName": "alloc",
-      "sheets": ["com", "reg", "dom", "fh", "fra"],
+      "sheets": [
+        "com",
+        "reg",
+        "dom",
+        "fh",
+        "fra"
+      ],
       "columns": [
-        {"id": "geo", "type": "geo_id"},
-        {"id": "annee", "type": "year"},
-        {"id": "nb_alloc", "type": "variable", "label": "Personnes couvertes par prestation CNAF", "csvPattern": "Nb_Alloc", "parser": "moca"},
-        {"id": "nb_menages", "type": "variable", "label": "Nombre de ménages", "csvPattern": "Tot_men", "parser": "moca"}
+        {
+          "id": "geo",
+          "type": "geo_id"
+        },
+        {
+          "id": "annee",
+          "type": "year"
+        },
+        {
+          "id": "nb_alloc",
+          "type": "variable",
+          "label": "Personnes couvertes par prestation CNAF",
+          "csvPattern": "Nb_Alloc",
+          "parser": "moca"
+        },
+        {
+          "id": "nb_menages",
+          "type": "variable",
+          "label": "Nombre de ménages",
+          "csvPattern": "Tot_men",
+          "parser": "moca"
+        }
       ]
     },
     "densite": {
       "name": "Densité de population",
       "folderPath": "Population et condition de vie/Population/structure de la population -recensement/structure de la population/Densité",
       "fileName": "densite",
-      "sheets": ["com", "reg", "dom", "fh", "fra"],
+      "sheets": [
+        "com",
+        "reg",
+        "dom",
+        "fh",
+        "fra"
+      ],
       "columns": [
-        {"id": "geo", "type": "geo_id"},
-        {"id": "annee", "type": "year"},
-        {"id": "rp", "type": "variable", "label": "Population (RP)", "csvPattern": "densite_rp", "parser": "moca"},
-        {"id": "superficie", "type": "variable", "label": "Superficie (km²)", "csvPattern": "densite_superficie", "parser": "moca"}
+        {
+          "id": "geo",
+          "type": "geo_id"
+        },
+        {
+          "id": "annee",
+          "type": "year"
+        },
+        {
+          "id": "rp",
+          "type": "variable",
+          "label": "Population (RP)",
+          "csvPattern": "densite_rp",
+          "parser": "moca"
+        },
+        {
+          "id": "superficie",
+          "type": "variable",
+          "label": "Superficie (km²)",
+          "csvPattern": "densite_superficie",
+          "parser": "moca"
+        }
       ]
     },
     "structure_quinq": {
       "name": "Structure quinquennale de la population",
       "folderPath": "Population et condition de vie/Population/structure de la population -recensement/structure de la population/structure quinq",
       "fileName": "structure_quinq",
-      "sheets": ["com", "reg", "dom", "fh", "fra"],
+      "sheets": [
+        "com",
+        "reg",
+        "dom",
+        "fh",
+        "fra"
+      ],
       "multiRowDimension": "age_quinq",
       "columns": [
-        {"id": "geo", "type": "geo_id"},
-        {"id": "annee", "type": "year"},
-        {"id": "age_quinq", "type": "dimension", "label": "Tranche d'âge quinquennale", "values": ["000", "005", "010", "015", "020", "025", "030", "035", "040", "045", "050", "055", "060", "065", "070", "075", "080", "085", "090", "095"]},
-        {"id": "pop_homme", "type": "variable", "label": "Population masculine", "csvPattern": "Pop_Age_Quinq_GF_REG_Sexe", "parser": "moca_filter", "filterColumn": 4, "filterValue": "Homme"},
-        {"id": "pop_femme", "type": "variable", "label": "Population féminine", "csvPattern": "Pop_Age_Quinq_GF_REG_Sexe", "parser": "moca_filter", "filterColumn": 4, "filterValue": "Femme"},
-        {"id": "rp", "type": "variable", "label": "Population totale (RP)", "csvPattern": "Pop_Age_Quinq", "parser": "moca"}
+        {
+          "id": "geo",
+          "type": "geo_id"
+        },
+        {
+          "id": "annee",
+          "type": "year"
+        },
+        {
+          "id": "age_quinq",
+          "type": "dimension",
+          "label": "Tranche d'âge quinquennale",
+          "values": [
+            "000",
+            "005",
+            "010",
+            "015",
+            "020",
+            "025",
+            "030",
+            "035",
+            "040",
+            "045",
+            "050",
+            "055",
+            "060",
+            "065",
+            "070",
+            "075",
+            "080",
+            "085",
+            "090",
+            "095"
+          ]
+        },
+        {
+          "id": "pop_homme",
+          "type": "variable",
+          "label": "Population masculine",
+          "csvPattern": "Pop_Age_Quinq_GF_REG_Sexe",
+          "parser": "moca_filter",
+          "yearColumn": 0,
+          "geoColumn": 1,
+          "dimensionColumn": 2,
+          "filterColumn": 3,
+          "filterValue": "masculin",
+          "valueColumn": 4
+        },
+        {
+          "id": "pop_femme",
+          "type": "variable",
+          "label": "Population féminine",
+          "csvPattern": "Pop_Age_Quinq_GF_REG_Sexe",
+          "parser": "moca_filter",
+          "yearColumn": 0,
+          "geoColumn": 1,
+          "dimensionColumn": 2,
+          "filterColumn": 3,
+          "filterValue": "feminin",
+          "valueColumn": 4
+        },
+        {
+          "id": "rp",
+          "type": "variable",
+          "label": "Population totale (RP)",
+          "csvPattern": "Pop_Age_Quinq_GF_REG_20",
+          "parser": "moca",
+          "yearColumn": 0,
+          "geoColumn": 1,
+          "dimensionColumn": 2,
+          "valueColumn": 4
+        }
       ]
     },
     "structure_grp": {
       "name": "Structure par groupe d'âge",
       "folderPath": "Population et condition de vie/Population/structure de la population -recensement/structure de la population/structure grp",
       "fileName": "structure_grp",
-      "sheets": ["com", "reg", "dom", "fh", "fra"],
+      "sheets": [
+        "com",
+        "reg",
+        "dom",
+        "fh",
+        "fra"
+      ],
       "multiRowDimension": "age_grp",
       "columns": [
-        {"id": "geo", "type": "geo_id"},
-        {"id": "annee", "type": "year"},
-        {"id": "age_grp", "type": "dimension", "label": "Groupe d'âge", "values": ["000", "003", "016", "026", "065"]},
-        {"id": "pop_age", "type": "variable", "label": "Population par groupe d'âge", "csvPattern": "pop_*_tous_niveaux", "parser": "moca", "note": "Fichiers multiples: pop_0ans, pop_3_15, pop_16_25, pop_26_64, pop_plus_65ans"},
-        {"id": "rp", "type": "variable", "label": "Population totale (RP)", "csvPattern": "pop_*_tous_niveaux", "parser": "moca", "aggregated": true}
+        {
+          "id": "geo",
+          "type": "geo_id"
+        },
+        {
+          "id": "annee",
+          "type": "year"
+        },
+        {
+          "id": "age_grp",
+          "type": "dimension",
+          "label": "Groupe d'âge",
+          "values": [
+            "000",
+            "003",
+            "016",
+            "026",
+            "065"
+          ]
+        },
+        {
+          "id": "pop_age",
+          "type": "variable",
+          "label": "Population par groupe d'âge",
+          "csvPattern": "pop_*_tous_niveaux",
+          "parser": "moca",
+          "note": "Fichiers multiples: pop_0ans, pop_3_15, pop_16_25, pop_26_64, pop_plus_65ans"
+        },
+        {
+          "id": "rp",
+          "type": "variable",
+          "label": "Population totale (RP)",
+          "csvPattern": "pop_*_tous_niveaux",
+          "parser": "moca",
+          "aggregated": true
+        }
       ]
     },
     "accroiss_sup65ans": {
       "name": "Accroissement population 65+",
       "folderPath": "Population et condition de vie/Population/personnes âgées/Accroissement sup 65 ans",
       "fileName": "accroiss_sup65ans",
-      "sheets": ["com", "reg", "dom", "fh", "fra"],
+      "sheets": [
+        "com",
+        "reg",
+        "dom",
+        "fh",
+        "fra"
+      ],
       "yearType": "period",
       "columns": [
-        {"id": "geo", "type": "geo_id"},
-        {"id": "periode", "type": "period", "label": "Période"},
-        {"id": "tx_accroiss", "type": "variable", "label": "Taux d'accroissement", "csvPattern": "accroiss_sup65ans", "parser": "moca"}
+        {
+          "id": "geo",
+          "type": "geo_id"
+        },
+        {
+          "id": "periode",
+          "type": "period",
+          "label": "Période"
+        },
+        {
+          "id": "tx_accroiss",
+          "type": "variable",
+          "label": "Taux d'accroissement",
+          "csvPattern": "accroiss_sup65ans",
+          "parser": "moca"
+        }
       ]
     },
     "accueil_pop_inf3ans": {
       "name": "Accueil population < 3 ans",
       "folderPath": "Population et condition de vie/Conditions de vie/Conditions enfants/Population inférieure à 3 ans",
       "fileName": "accueil_pop_inf3ans",
-      "sheets": ["com", "reg", "dom", "fh", "fra"],
+      "sheets": [
+        "com",
+        "reg",
+        "dom",
+        "fh",
+        "fra"
+      ],
       "columns": [
-        {"id": "geo", "type": "geo_id"},
-        {"id": "annee", "type": "year"},
-        {"id": "pop_inf3ans", "type": "variable", "label": "Population < 3 ans", "csvPattern": "Pop_Inf3ans", "parser": "long"},
-        {"id": "nb_places_acceuil_co", "type": "variable", "label": "Places accueil collectif", "csvPattern": "accueil_places_co", "parser": "external", "source": "DREES"},
-        {"id": "nb_places_mono", "type": "variable", "label": "Places crèches mono-accueil", "csvPattern": "accueil_places_mono", "parser": "external", "source": "DREES"},
-        {"id": "nb_places_hg", "type": "variable", "label": "Places halte-garderies", "csvPattern": "accueil_places_hg", "parser": "external", "source": "DREES"},
-        {"id": "nb_places_je", "type": "variable", "label": "Places jardins d'enfants", "csvPattern": "accueil_places_je", "parser": "external", "source": "DREES"},
-        {"id": "nb_places_multi", "type": "variable", "label": "Places multi-accueil", "csvPattern": "accueil_places_multi", "parser": "external", "source": "DREES"},
-        {"id": "nb_places_familial", "type": "variable", "label": "Places accueil familial", "csvPattern": "accueil_places_familial", "parser": "external", "source": "DREES"},
-        {"id": "nb_etab_co", "type": "variable", "label": "Établissements accueil collectif", "csvPattern": "accueil_etab_co", "parser": "external", "source": "DREES"},
-        {"id": "nb_etab_mono", "type": "variable", "label": "Crèches mono-accueil", "csvPattern": "accueil_etab_mono", "parser": "external", "source": "DREES"},
-        {"id": "nb_etab_hg", "type": "variable", "label": "Halte-garderies", "csvPattern": "accueil_etab_hg", "parser": "external", "source": "DREES"},
-        {"id": "nb_etab_je", "type": "variable", "label": "Jardins d'enfants", "csvPattern": "accueil_etab_je", "parser": "external", "source": "DREES"},
-        {"id": "nb_etab_multi", "type": "variable", "label": "Établissements multi-accueil", "csvPattern": "accueil_etab_multi", "parser": "external", "source": "DREES"},
-        {"id": "nb_services_familial", "type": "variable", "label": "Services accueil familial", "csvPattern": "accueil_services_familial", "parser": "external", "source": "DREES"},
-        {"id": "nb_mam", "type": "variable", "label": "Maisons assistantes maternelles", "csvPattern": "accueil_mam", "parser": "external", "source": "DREES"}
+        {
+          "id": "geo",
+          "type": "geo_id"
+        },
+        {
+          "id": "annee",
+          "type": "year"
+        },
+        {
+          "id": "pop_inf3ans",
+          "type": "variable",
+          "label": "Population < 3 ans",
+          "csvPattern": "Pop_Inf3ans",
+          "parser": "long"
+        },
+        {
+          "id": "nb_places_acceuil_co",
+          "type": "variable",
+          "label": "Places accueil collectif",
+          "csvPattern": "accueil_places_co",
+          "parser": "external",
+          "source": "DREES"
+        },
+        {
+          "id": "nb_places_mono",
+          "type": "variable",
+          "label": "Places crèches mono-accueil",
+          "csvPattern": "accueil_places_mono",
+          "parser": "external",
+          "source": "DREES"
+        },
+        {
+          "id": "nb_places_hg",
+          "type": "variable",
+          "label": "Places halte-garderies",
+          "csvPattern": "accueil_places_hg",
+          "parser": "external",
+          "source": "DREES"
+        },
+        {
+          "id": "nb_places_je",
+          "type": "variable",
+          "label": "Places jardins d'enfants",
+          "csvPattern": "accueil_places_je",
+          "parser": "external",
+          "source": "DREES"
+        },
+        {
+          "id": "nb_places_multi",
+          "type": "variable",
+          "label": "Places multi-accueil",
+          "csvPattern": "accueil_places_multi",
+          "parser": "external",
+          "source": "DREES"
+        },
+        {
+          "id": "nb_places_familial",
+          "type": "variable",
+          "label": "Places accueil familial",
+          "csvPattern": "accueil_places_familial",
+          "parser": "external",
+          "source": "DREES"
+        },
+        {
+          "id": "nb_etab_co",
+          "type": "variable",
+          "label": "Établissements accueil collectif",
+          "csvPattern": "accueil_etab_co",
+          "parser": "external",
+          "source": "DREES"
+        },
+        {
+          "id": "nb_etab_mono",
+          "type": "variable",
+          "label": "Crèches mono-accueil",
+          "csvPattern": "accueil_etab_mono",
+          "parser": "external",
+          "source": "DREES"
+        },
+        {
+          "id": "nb_etab_hg",
+          "type": "variable",
+          "label": "Halte-garderies",
+          "csvPattern": "accueil_etab_hg",
+          "parser": "external",
+          "source": "DREES"
+        },
+        {
+          "id": "nb_etab_je",
+          "type": "variable",
+          "label": "Jardins d'enfants",
+          "csvPattern": "accueil_etab_je",
+          "parser": "external",
+          "source": "DREES"
+        },
+        {
+          "id": "nb_etab_multi",
+          "type": "variable",
+          "label": "Établissements multi-accueil",
+          "csvPattern": "accueil_etab_multi",
+          "parser": "external",
+          "source": "DREES"
+        },
+        {
+          "id": "nb_services_familial",
+          "type": "variable",
+          "label": "Services accueil familial",
+          "csvPattern": "accueil_services_familial",
+          "parser": "external",
+          "source": "DREES"
+        },
+        {
+          "id": "nb_mam",
+          "type": "variable",
+          "label": "Maisons assistantes maternelles",
+          "csvPattern": "accueil_mam",
+          "parser": "external",
+          "source": "DREES"
+        }
       ]
     }
   },
   "calculatedIndicators": [
-    {"id": "tx_non_sco", "formula": "(nb_non_sco / pop_6_16) * 100", "label": "Part des jeunes 6-16 ans non scolarisés", "dataset": "educ"},
-    {"id": "tx_peu_dipl", "formula": "(nb_peu_dipl / pop_15_64) * 100", "label": "Part des personnes 15+ peu diplômées", "dataset": "educ"},
-    {"id": "tx_familles_mono", "formula": "(nb_familles_mono_enf / nb_familles_enf) * 100", "label": "Part familles monoparentales", "dataset": "familles_mono"},
-    {"id": "tx_presta_sociales", "formula": "(nb_alloc / nb_menages) * 100", "label": "Part ménages couverts prestations CNAF", "dataset": "alloc"},
-    {"id": "tx_foyers_non_impo", "formula": "(nb_foyers_non_impo / (nb_foyers_non_impo + nb_foyers_imposes)) * 100", "label": "Part foyers fiscaux non imposables", "dataset": "revenu"},
-    {"id": "tx_actifs", "formula": "(nb_actifs / nb_pop) * 100", "label": "Taux d'activité 15+", "dataset": "emplois"},
-    {"id": "rapp_ouvriers_cadres", "formula": "nb_ouvriers / nb_cadres", "label": "Rapport ouvriers/cadres", "dataset": "emplois"},
-    {"id": "densite_pop", "formula": "rp / superficie", "label": "Densité de population", "dataset": "densite"},
-    {"id": "tx_inf3ans", "formula": "(pop_inf3ans / rp) * 100", "label": "Part enfants < 3 ans", "dataset": "pop_inf3ans"}
+    {
+      "id": "tx_non_sco",
+      "formula": "(nb_non_sco / pop_6_16) * 100",
+      "label": "Part des jeunes 6-16 ans non scolarisés",
+      "dataset": "educ"
+    },
+    {
+      "id": "tx_peu_dipl",
+      "formula": "(nb_peu_dipl / pop_15_64) * 100",
+      "label": "Part des personnes 15+ peu diplômées",
+      "dataset": "educ"
+    },
+    {
+      "id": "tx_familles_mono",
+      "formula": "(nb_familles_mono_enf / nb_familles_enf) * 100",
+      "label": "Part familles monoparentales",
+      "dataset": "familles_mono"
+    },
+    {
+      "id": "tx_presta_sociales",
+      "formula": "(nb_alloc / nb_menages) * 100",
+      "label": "Part ménages couverts prestations CNAF",
+      "dataset": "alloc"
+    },
+    {
+      "id": "tx_foyers_non_impo",
+      "formula": "(nb_foyers_non_impo / (nb_foyers_non_impo + nb_foyers_imposes)) * 100",
+      "label": "Part foyers fiscaux non imposables",
+      "dataset": "revenu"
+    },
+    {
+      "id": "tx_actifs",
+      "formula": "(nb_actifs / nb_pop) * 100",
+      "label": "Taux d'activité 15+",
+      "dataset": "emplois"
+    },
+    {
+      "id": "rapp_ouvriers_cadres",
+      "formula": "nb_ouvriers / nb_cadres",
+      "label": "Rapport ouvriers/cadres",
+      "dataset": "emplois"
+    },
+    {
+      "id": "densite_pop",
+      "formula": "rp / superficie",
+      "label": "Densité de population",
+      "dataset": "densite"
+    },
+    {
+      "id": "tx_inf3ans",
+      "formula": "(pop_inf3ans / rp) * 100",
+      "label": "Part enfants < 3 ans",
+      "dataset": "pop_inf3ans"
+    }
   ],
   "geoLevels": {
-    "com": {"name": "Commune", "folderName": "Commune", "entities": 22},
-    "reg": {"name": "Région", "folderName": "Région", "entities": 18},
-    "dom": {"name": "DOM", "folderName": "DOM", "entities": 1},
-    "fh": {"name": "France Hexagonale", "folderName": "France Hexagonale", "entities": 1},
-    "fra": {"name": "France entière", "folderName": "France entière", "entities": 1}
+    "com": {
+      "name": "Commune",
+      "folderName": "Commune",
+      "entities": 22
+    },
+    "reg": {
+      "name": "Région",
+      "folderName": "Région",
+      "entities": 18
+    },
+    "dom": {
+      "name": "DOM",
+      "folderName": "DOM",
+      "entities": 1
+    },
+    "fh": {
+      "name": "France Hexagonale",
+      "folderName": "France Hexagonale",
+      "entities": 1
+    },
+    "fra": {
+      "name": "France entière",
+      "folderName": "France entière",
+      "entities": 1
+    }
   }
 }

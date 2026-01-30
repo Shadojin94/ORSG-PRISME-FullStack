@@ -272,14 +272,8 @@ def parse_long_format_csv(filepath):
 # TABULAR FORMAT PARSER (OpenData style)
 # ============================================================================
 
-def parse_tabular_csv(filepath, value_column=2, year_column=0, geo_column=1):
-    """Parse un fichier CSV au format tabulaire (OpenData).
-
-    Format configurable:
-    - year_column: colonne contenant 'Année#YYYY' (défaut: 0)
-    - geo_column: colonne contenant '97XXX - NomCommune' (défaut: 1)
-    - value_column: colonne contenant la valeur (défaut: 2)
-    """
+def parse_tabular_csv(filepath, value_column=2, year_column=0, geo_column=1, dimension_column=None):
+    """Parse un fichier CSV au format tabulaire (OpenData)."""
     result = {'com': [], 'reg': [], 'dom': [], 'fh': [], 'fra': []}
 
     try:
@@ -290,6 +284,8 @@ def parse_tabular_csv(filepath, value_column=2, year_column=0, geo_column=1):
         return {k: pd.DataFrame(columns=['annee', 'codgeo', 'valeur']) for k in result}
 
     max_col = max(value_column, year_column, geo_column)
+    if dimension_column:
+        max_col = max(max_col, dimension_column)
 
     for line in lines[1:]:  # Skip header
         if not line.strip():
@@ -298,6 +294,11 @@ def parse_tabular_csv(filepath, value_column=2, year_column=0, geo_column=1):
         parts = line.strip().split(';')
         if len(parts) <= max_col:
             continue
+        
+        # Extract dim
+        dim_val = None
+        if dimension_column:
+             dim_val = parts[dimension_column].strip()
 
         # Extract year from specified column
         year_match = re.search(r'(\d{4})', parts[year_column])
@@ -307,48 +308,163 @@ def parse_tabular_csv(filepath, value_column=2, year_column=0, geo_column=1):
         if not (2000 <= annee <= 2030):
             continue
 
-        # Extract value
         try:
             valeur = float(parts[value_column].replace(',', '.'))
         except:
             continue
+            
+        geo_str = parts[geo_column].strip()
+        geo_lower = geo_str.lower()
+        
+        item = {'annee': annee, 'valeur': valeur}
+        if dim_val:
+            item['dimension'] = dim_val
+            
+        # Commune 97XXX
+        match_com = re.search(r'(973\d{2})', geo_str)
+        if match_com:
+            code = int(match_com.group(1))
+            if code in COMMUNES_GUYANE:
+                item['codgeo'] = code
+                result['com'].append(item.copy())
+            continue
+
+        if 'france entiere' in geo_lower or 'france entière' in geo_lower:
+            item['codgeo'] = 99
+            result['fra'].append(item.copy())
+            continue
+
+        if 'france metropolitaine' in geo_lower or 'france hexagonale' in geo_lower:
+            item['codgeo'] = 0
+            result['fh'].append(item.copy())
+            continue
+        
+        if "departements d'outre" in geo_lower:
+            item['codgeo'] = 'DOM'
+            result['dom'].append(item.copy())
+            continue
+            
+        for reg_name, reg_code in REGION_MAPPING.items():
+            if reg_name.lower() in geo_lower:
+                item['codgeo'] = reg_code
+                result['reg'].append(item.copy())
+                break
+
+    dfs = {}
+    for k, v in result.items():
+        if v:
+            subset_cols = ['annee', 'codgeo']
+            if dimension_column:
+                subset_cols.append('dimension')
+            dfs[k] = pd.DataFrame(v).drop_duplicates(subset=subset_cols)
+        else:
+            dfs[k] = pd.DataFrame(columns=['annee', 'codgeo', 'valeur'])
+
+    return dfs
+# ============================================================================
+# PARSE MOCA CSV (Standard format)
+# ============================================================================
+
+def parse_moca_csv(filepath, year_column=3, geo_column=5, value_column=6, dimension_column=None):
+    """Parse un fichier format MOCA standard."""
+    result = {'com': [], 'reg': [], 'dom': [], 'fh': [], 'fra': []}
+
+    try:
+        with open(filepath, 'r', encoding='cp1252', errors='replace') as f:
+            lines = f.readlines()
+    except Exception as e:
+        print(f"Erreur lecture {filepath}: {e}")
+        return {k: pd.DataFrame(columns=['annee', 'codgeo', 'valeur']) for k in result}
+    
+    # Determine split char (auto-detect roughly)
+    sep = ';'
+    if lines and ',' in lines[0] and ';' not in lines[0]:
+        sep = ','
+
+    for line in lines:
+        if not line.strip():
+            continue
+
+        parts = line.strip().split(sep)
+        # Safety check indices
+        max_idx = max(year_column, geo_column, value_column)
+        if dimension_column is not None:
+            max_idx = max(max_idx, dimension_column)
+        
+        if len(parts) <= max_idx:
+            continue
+
+        # Extract year
+        year_match = re.search(r'(\d{4})', parts[year_column])
+        if not year_match:
+            continue
+        annee = int(year_match.group(1))
+        if not (2000 <= annee <= 2030):
+            continue
+
+        # Extract value
+        try:
+            val_str = parts[value_column].replace(',', '.').replace(' ', '') # Handle space thousands sep
+            if val_str == '' or val_str.lower() == 'nd':
+                valeur = 0.0
+            else:
+                valeur = float(val_str)
+        except:
+            continue
+            
+        # Extract dimension if needed
+        dim_val = None
+        if dimension_column is not None:
+            dim_val = parts[dimension_column].strip()
 
         geo_str = parts[geo_column] if len(parts) > geo_column else ''
         geo_lower = geo_str.lower()
+        
+        item = {'annee': annee, 'valeur': valeur}
+        if dim_val is not None:
+             item['dimension'] = dim_val
 
         # Check for commune (973XX)
         match_com = re.search(r'(973\d{2})', geo_str)
         if match_com:
             code = int(match_com.group(1))
             if code in COMMUNES_GUYANE:
-                result['com'].append({'annee': annee, 'codgeo': code, 'valeur': valeur})
+                item['codgeo'] = code
+                result['com'].append(item.copy())
             continue
 
         # France entière
         if 'france entiere' in geo_lower or 'france entière' in geo_lower or 'france (y compris' in geo_lower:
-            result['fra'].append({'annee': annee, 'codgeo': 99, 'valeur': valeur})
+            item['codgeo'] = 99
+            result['fra'].append(item.copy())
             continue
 
         # France hexagonale
         if 'france metropolitaine' in geo_lower or 'france hexagonale' in geo_lower or 'france métropolitaine' in geo_lower:
-            result['fh'].append({'annee': annee, 'codgeo': 0, 'valeur': valeur})
+            item['codgeo'] = 0
+            result['fh'].append(item.copy())
             continue
 
         # DOM
         if "departements d'outre" in geo_lower or "départements d'outre" in geo_lower or "dom -" in geo_lower:
-            result['dom'].append({'annee': annee, 'codgeo': 'DOM', 'valeur': valeur})
+            item['codgeo'] = 'DOM'
+            result['dom'].append(item.copy())
             continue
 
         # Régions
         for reg_name, reg_code in REGION_MAPPING.items():
             if reg_name.lower() in geo_lower:
-                result['reg'].append({'annee': annee, 'codgeo': reg_code, 'valeur': valeur})
+                item['codgeo'] = reg_code
+                result['reg'].append(item.copy())
                 break
 
     dfs = {}
     for k, v in result.items():
         if v:
-            dfs[k] = pd.DataFrame(v).drop_duplicates(subset=['annee', 'codgeo'])
+            subset_cols = ['annee', 'codgeo']
+            if dimension_column is not None:
+                subset_cols.append('dimension')
+            dfs[k] = pd.DataFrame(v).drop_duplicates(subset=subset_cols)
         else:
             dfs[k] = pd.DataFrame(columns=['annee', 'codgeo', 'valeur'])
 
@@ -359,15 +475,8 @@ def parse_tabular_csv(filepath, value_column=2, year_column=0, geo_column=1):
 # MOCA FILTER PARSER (MOCA with column filter)
 # ============================================================================
 
-def parse_moca_filter_csv(filepath, filter_column, filter_value, year_column=3, geo_column=5, value_column=6):
-    """Parse un fichier MOCA avec filtre sur une colonne spécifique.
-
-    Format configurable (colonnes séparées par ;):
-    - year_column: colonne année (défaut: 3)
-    - filter_column: colonne à filtrer
-    - geo_column: colonne code géo (défaut: 5)
-    - value_column: colonne valeur (défaut: 6)
-    """
+def parse_moca_filter_csv(filepath, filter_column, filter_value, year_column=3, geo_column=5, value_column=6, dimension_column=None):
+    """Parse un fichier MOCA avec filtre sur une colonne spécifique."""
     result = {'com': [], 'reg': [], 'dom': [], 'fh': [], 'fra': []}
 
     try:
@@ -376,14 +485,20 @@ def parse_moca_filter_csv(filepath, filter_column, filter_value, year_column=3, 
     except Exception as e:
         print(f"Erreur lecture {filepath}: {e}")
         return {k: pd.DataFrame(columns=['annee', 'codgeo', 'valeur']) for k in result}
+    
+    sep = ';'
+    if lines and ',' in lines[0] and ';' not in lines[0]:
+        sep = ','
 
     max_col = max(filter_column, year_column, geo_column, value_column)
+    if dimension_column is not None:
+        max_col = max(max_col, dimension_column)
 
     for line in lines:
         if not line.strip():
             continue
 
-        parts = line.strip().split(';')
+        parts = line.strip().split(sep)
         if len(parts) <= max_col:
             continue
 
@@ -394,7 +509,9 @@ def parse_moca_filter_csv(filepath, filter_column, filter_value, year_column=3, 
 
         # Extract year
         try:
-            annee = int(parts[year_column])
+            year_match = re.search(r'(\d{4})', parts[year_column])
+            if not year_match: continue
+            annee = int(year_match.group(1))
             if not (2000 <= annee <= 2030):
                 continue
         except:
@@ -402,46 +519,67 @@ def parse_moca_filter_csv(filepath, filter_column, filter_value, year_column=3, 
 
         # Extract value
         try:
-            valeur = float(parts[value_column].replace(',', '.'))
+             val_str = parts[value_column].replace(',', '.').replace(' ', '')
+             if val_str == '' or val_str.lower() == 'nd':
+                 valeur = 0.0
+             else:
+                 valeur = float(val_str)
         except:
             continue
+            
+        # Extract dimension
+        dim_val = None
+        if dimension_column is not None:
+            dim_val = parts[dimension_column].strip()
 
         geo_str = parts[geo_column] if len(parts) > geo_column else ''
         geo_lower = geo_str.lower()
+
+        item = {'annee': annee, 'valeur': valeur}
+        if dim_val is not None:
+             item['dimension'] = dim_val
 
         # Check for commune (973XX)
         match_com = re.search(r'(973\d{2})', geo_str)
         if match_com:
             code = int(match_com.group(1))
             if code in COMMUNES_GUYANE:
-                result['com'].append({'annee': annee, 'codgeo': code, 'valeur': valeur})
+                item['codgeo'] = code
+                result['com'].append(item.copy())
             continue
 
         # France entière
         if 'france entiere' in geo_lower or 'france entière' in geo_lower or 'france (y compris' in geo_lower:
-            result['fra'].append({'annee': annee, 'codgeo': 99, 'valeur': valeur})
+            item['codgeo'] = 99
+            result['fra'].append(item.copy())
             continue
 
         # France hexagonale
         if 'france metropolitaine' in geo_lower or 'france hexagonale' in geo_lower or 'france métropolitaine' in geo_lower:
-            result['fh'].append({'annee': annee, 'codgeo': 0, 'valeur': valeur})
+            item['codgeo'] = 0
+            result['fh'].append(item.copy())
             continue
 
         # DOM
         if "departements d'outre" in geo_lower or "départements d'outre" in geo_lower:
-            result['dom'].append({'annee': annee, 'codgeo': 'DOM', 'valeur': valeur})
+            item['codgeo'] = 'DOM'
+            result['dom'].append(item.copy())
             continue
 
         # Régions
         for reg_name, reg_code in REGION_MAPPING.items():
             if reg_name.lower() in geo_lower:
-                result['reg'].append({'annee': annee, 'codgeo': reg_code, 'valeur': valeur})
+                item['codgeo'] = reg_code
+                result['reg'].append(item.copy())
                 break
 
     dfs = {}
     for k, v in result.items():
         if v:
-            dfs[k] = pd.DataFrame(v).drop_duplicates(subset=['annee', 'codgeo'])
+            subset_cols = ['annee', 'codgeo']
+            if dimension_column is not None:
+                subset_cols.append('dimension')
+            dfs[k] = pd.DataFrame(v).drop_duplicates(subset=subset_cols)
         else:
             dfs[k] = pd.DataFrame(columns=['annee', 'codgeo', 'valeur'])
 
@@ -459,7 +597,7 @@ def find_csv_file(pattern, search_dir=None):
     candidates = list(Path(search_dir).glob(f"*{pattern}*.csv"))
     if not candidates:
         return None
-    # Prioriser les fichiers commençant par le pattern (évite les faux positifs)
+    # Prioriser les fichiers commençant par le pattern
     for c in candidates:
         if c.name.startswith(pattern):
             return c
@@ -492,6 +630,8 @@ def detect_available_years(dataset_id):
             continue
         
         parser_type = col.get('parser', 'moca')
+        dimension_col = col.get('dimensionColumn') # Support dimension
+
         try:
             if parser_type == 'long':
                 parsed = parse_long_format_csv(csv_file)
@@ -506,14 +646,17 @@ def detect_available_years(dataset_id):
                 year_col = col.get('yearColumn', 3)
                 geo_col = col.get('geoColumn', 5)
                 value_col = col.get('valueColumn', 6)
-                parsed = parse_moca_filter_csv(csv_file, filter_col, filter_val, year_col, geo_col, value_col)
+                parsed = parse_moca_filter_csv(csv_file, filter_col, filter_val, year_col, geo_col, value_col, dimension_column=dimension_col)
             elif parser_type == 'external':
-                # Skip external sources (DREES, etc.)
                 continue
             else:
-                parsed = parse_moca_csv(csv_file)
+                 # Standard moca
+                year_col = col.get('yearColumn', 3)
+                geo_col = col.get('geoColumn', 5)
+                value_col = col.get('valueColumn', 6)
+                parsed = parse_moca_csv(csv_file, year_column=year_col, geo_column=geo_col, value_column=value_col, dimension_column=dimension_col)
 
-            # Extraire les années depuis tous les niveaux geo
+            # Extraire les années
             for level_df in parsed.values():
                 if not level_df.empty and 'annee' in level_df.columns:
                     years.update(level_df['annee'].unique())
@@ -542,14 +685,7 @@ GEO_ENTITIES = {
 # ============================================================================
 
 def _write_sheet(ws, headers, rows_data, col_keys):
-    """Écrit les en-têtes et les données dans une feuille Excel.
-
-    Args:
-        ws: Worksheet openpyxl
-        headers: Liste des noms de colonnes
-        rows_data: Liste de dicts contenant les données
-        col_keys: Liste des clés à extraire de chaque row_dict (même ordre que headers)
-    """
+    """Écrit les en-têtes et les données dans une feuille Excel."""
     for col_idx, h in enumerate(headers, 1):
         cell = ws.cell(row=1, column=col_idx, value=h)
         cell.font = Font(bold=True)
@@ -570,7 +706,7 @@ def _write_sheet(ws, headers, rows_data, col_keys):
 # FILL VARIABLE DATA FROM CSV
 # ============================================================================
 
-def _fill_variable_data(data, var_id, parsed, year, time_col_id):
+def _fill_variable_data(data, var_id, parsed, year, time_col_id, dimension_id=None):
     """Remplit les données d'une variable dans les structures de données.
 
     Args:
@@ -579,6 +715,7 @@ def _fill_variable_data(data, var_id, parsed, year, time_col_id):
         parsed: Dict {geo_key: DataFrame} du CSV parsé
         year: Année ou période à filtrer
         time_col_id: Nom de la colonne temps (annee ou periode)
+        dimension_id: ID de la dimension (ex: 'age_quinq') si applicable
     """
     for geo_key in ['com', 'reg', 'dom', 'fh', 'fra']:
         df = parsed.get(geo_key, pd.DataFrame())
@@ -590,11 +727,39 @@ def _fill_variable_data(data, var_id, parsed, year, time_col_id):
             df_filtered = df[df['annee'] == year]
         else:
             continue
+            
+        # Check if parsed data has dimension info
+        has_parsed_dim = 'dimension' in df_filtered.columns
 
         id_col = GEO_ID_COLS[geo_key]
 
         for row in data[geo_key]:
-            match = df_filtered[df_filtered['codgeo'] == row[id_col]]
+            # Filter by GEO
+            if has_parsed_dim and dimension_id and dimension_id in row:
+                # Filter by GEO + DIMENSION
+                # We interpret the CSV 'dimension' column value should match row[dimension_id]
+                # NOTE: CSV values might differ from Config values (e.g. "0-4 ans" vs "000")
+                # Need fuzzy check or normalization? 
+                # For now assuming string containment or fuzzy match
+                
+                target_dim = str(row[dimension_id])
+                
+                # Try simple match first
+                match = df_filtered[
+                    (df_filtered['codgeo'] == row[id_col]) & 
+                    (df_filtered['dimension'].astype(str).str.contains(target_dim, case=False, regex=False))
+                ]
+                
+                # If no match, try stricter equals if numbers
+                if match.empty:
+                     match = df_filtered[
+                        (df_filtered['codgeo'] == row[id_col]) & 
+                        (df_filtered['dimension'].astype(str) == target_dim)
+                    ]
+            else:
+                 # Match only GEO
+                 match = df_filtered[df_filtered['codgeo'] == row[id_col]]
+
             if not match.empty:
                 row[var_id] = round(match.iloc[0]['valeur'], 2)
 
@@ -719,7 +884,7 @@ def generate_prisme_excel(dataset_id, year):
     # ---- Remplir les données pour chaque variable ----
     for var_id in variable_ids:
         parsed = csv_data.get(var_id, {})
-        _fill_variable_data(data, var_id, parsed, year, time_col_id)
+        _fill_variable_data(data, var_id, parsed, year, time_col_id, dimension_id=multi_row_dim)
 
     # ---- Construire l'ordre des colonnes (headers) ----
     # Suit l'ordre exact du config : geo, time, dimensions, variables
