@@ -611,7 +611,10 @@
           "type": "variable",
           "label": "Personnes couvertes par prestation CNAF",
           "csvPattern": "Nb_Alloc",
-          "parser": "moca"
+          "parser": "tabular",
+          "yearColumn": 0,
+          "geoColumn": 2,
+          "column": 3
         },
         {
           "id": "nb_menages",
