@@ -1,0 +1,140 @@
+Date_RP#Annee;Lieu_domicile#France;Nombre de ménage selon le statut d’occupation
+;;;;;;;;
+2022;Departements d'outre mer;788458.7893773317
+2022;France métropolitaine;30100134.296334263
+2021;Departements d'outre mer;779014.4365670383
+2021;France métropolitaine;29749352.50643538
+2020;Departements d'outre mer;768848.3456604481
+2020;France métropolitaine;29453836.27976025
+
+Date_RP#Annee;Lieu_domicile#Regions_France_2017;Nombre de ménage selon le statut d’occupation
+;;;;;;;;
+2022;Auvergne-Rhône-Alpes;3727947.4522565603
+2022;Bourgogne-Franche-Comté;1325189.6953389645
+2022;Bretagne;1608388.441818297
+2022;Centre-Val de Loire;1193022.4044837058
+2022;Corse;159138.46273744106
+2022;Grand Est;2549423.1832036376
+2022;Guadeloupe;177917.87943798304
+2022;Guyane;86397.60589766502
+2022;Hauts-de-France;2619932.1852311054
+2022;Martinique;170721.7098479271
+2022;Normandie;1539474.2888821922
+2022;Nouvelle-Aquitaine;2922921.2413702905
+2022;Occitanie;2887906.132567942
+2022;Pays de la Loire;1760962.57023561
+2022;Provence-Alpes-Côte d'Azur;2417502.9414150417
+2022;Région inconnue;17132.89637953043
+2022;Réunion;353421.5941937566
+2022;Île-de-France;5388325.296793472
+2021;Auvergne-Rhône-Alpes;3681163.707462256
+2021;Bourgogne-Franche-Comté;1313611.2775696516
+2021;Bretagne;1584802.4829987884
+2021;Centre-Val de Loire;1181699.6952887326
+2021;Corse;156046.7152776122
+2021;Grand Est;2532350.244217485
+2021;Guadeloupe;176722.3647379279
+2021;Guyane;85270.30880376697
+2021;Hauts-de-France;2597977.381281664
+2021;Martinique;168878.02974063158
+2021;Normandie;1524634.4685325623
+2021;Nouvelle-Aquitaine;2882774.870672554
+2021;Occitanie;2840001.4736012816
+2021;Pays de la Loire;1736156.8496294022
+2021;Provence-Alpes-Côte d'Azur;2383101.3908406273
+2021;Région inconnue;17116.046203494072
+2021;Réunion;348143.73328471184
+2021;Île-de-France;5335031.949062765
+2020;Auvergne-Rhône-Alpes;3640367.7129339385
+2020;Bourgogne-Franche-Comté;1304705.19497329
+2020;Bretagne;1566278.893929243
+2020;Centre-Val de Loire;1174298.4364847094
+2020;Corse;153632.58800721169
+2020;Grand Est;2515410.1699958444
+2020;Guadeloupe;174750.79286646843
+2020;Guyane;84453.87707531452
+2020;Hauts-de-France;2577860.758549653
+2020;Martinique;167687.90874499083
+2020;Normandie;1511862.3794496953
+2020;Nouvelle-Aquitaine;2848920.243876815
+2020;Occitanie;2797412.085481435
+2020;Pays de la Loire;1715879.4967449307
+2020;Provence-Alpes-Côte d'Azur;2353873.1643235683
+2020;Région inconnue;17003.191985845566
+2020;Réunion;341955.7669736743
+2020;Île-de-France;5293335.155009915
+
+Date_RP#Annee;Lieu_domicile#TrancheAireUrbaine2017_FrEnt;Nombre de ménage selon le statut d’occupation
+;00 - Commune hors aire urbaine§01 - Commune appartenant à une aire urbaine de moins de 15 000 habitants§02 - Commune appartenant à une aire urbaine de 15 000 à 19 999 habitants§03 - Commune appartenant à une aire urbaine de 20 000 à 24 999 habitants§04 - Commune appartenant à une aire urbaine de 25 000 à 34 999 habitants§05 - Commune appartenant à une aire urbaine de 35 000 à 49 999 habitants§06 - Commune appartenant à une aire urbaine de 50 000 à 99 999 habitants§07 - Commune appartenant à une aire urbaine de 100 000 à 199 999 habitants§08 - Commune appartenant à une aire urbaine de 200 000 à 499 999 habitants§09 - Commune appartenant à une aire urbaine de 500 000 à 9 999 999 habitants§10 - Commune appartenant à l'aire urbaine de Paris§99 - Commune inconnue;;;00 - Commune hors aire urbaine§01 - Commune appartenant à une aire urbaine de moins de 15 000 habitants§02 - Commune appartenant à une aire urbaine de 15 000 à 19 999 habitants§03 - Commune appartenant à une aire urbaine de 20 000 à 24 999 habitants§04 - Commune appartenant à une aire urbaine de 25 000 à 34 999 habitants§05 - Commune appartenant à une aire urbaine de 35 000 à 49 999 habitants§06 - Commune appartenant à une aire urbaine de 50 000 à 99 999 habitants§07 - Commune appartenant à une aire urbaine de 100 000 à 199 999 habitants§08 - Commune appartenant à une aire urbaine de 200 000 à 499 999 habitants§09 - Commune appartenant à une aire urbaine de 500 000 à 9 999 999 habitants§10 - Commune appartenant à l'aire urbaine de Paris§99 - Commune inconnue;;;00 - Commune hors aire urbaine§01 - Commune appartenant à une aire urbaine de moins de 15 000 habitants§02 - Commune appartenant à une aire urbaine de 15 000 à 19 999 habitants§03 - Commune appartenant à une aire urbaine de 20 000 à 24 999 habitants§04 - Commune appartenant à une aire urbaine de 25 000 à 34 999 habitants§05 - Commune appartenant à une aire urbaine de 35 000 à 49 999 habitants§06 - Commune appartenant à une aire urbaine de 50 000 à 99 999 habitants§07 - Commune appartenant à une aire urbaine de 100 000 à 199 999 habitants§08 - Commune appartenant à une aire urbaine de 200 000 à 499 999 habitants§09 - Commune appartenant à une aire urbaine de 500 000 à 9 999 999 habitants§10 - Commune appartenant à l'aire urbaine de Paris§99 - Commune inconnue;
+2022;TAU2017 France entière;30905725.98209112
+2021;TAU2017 France entière;30545482.989205915
+2020;TAU2017 France entière;30239687.817406543
+
+Date_RP#Annee;Lieu_domicile#commune_stable_ds_tps_0825_sansArr;Nombre de ménage selon le statut d’occupation
+;;;;;;;;
+2022;97301 - Régina;256.3674750328064
+2022;97302 - Cayenne;24837.940230846405
+2022;97303 - Iracoubo;484.0
+2022;97304 - Kourou;7768.347137928009
+2022;97305 - Macouria;5994.363827943802
+2022;97306 - Mana;2557.5118057727814
+2022;97307 - Matoury;11736.907682299614
+2022;97308 - Saint-Georges;1169.2102051377296
+2022;97309 - Remire-Montjoly;10081.019346475601
+2022;97310 - Roura;1065.157627940178
+2022;97311 - Saint-Laurent-du-Maroni;12052.705020666122
+2022;97312 - Sinnamary;936.9124991893768
+2022;97313 - Montsinéry-Tonnegrande;1079.489914894104
+2022;97314 - Ouanary;43.0652973651886
+2022;97352 - Saül;53.423577547073364
+2022;97353 - Maripasoula;1370.5852699875832
+2022;97356 - Camopi;393.1462208032608
+2022;97357 - Grand-Santi;1594.9550284147263
+2022;97358 - Saint-Élie;20.202189326286316
+2022;97360 - Apatou;1752.99571788311
+2022;97361 - Awala-Yalimapo;342.0
+2022;97362 - Papaichton;807.2998222112656
+2021;97301 - Régina;256.5802059173584
+2021;97302 - Cayenne;24679.014390468597
+2021;97303 - Iracoubo;479.32797795534134
+2021;97304 - Kourou;7680.686147093773
+2021;97305 - Macouria;5914.830477952957
+2021;97306 - Mana;2601.4273459911346
+2021;97307 - Matoury;11357.200967788696
+2021;97308 - Saint-Georges;1114.4207913279533
+2021;97309 - Remire-Montjoly;10138.598396539688
+2021;97310 - Roura;1043.0585485696793
+2021;97311 - Saint-Laurent-du-Maroni;11606.222670316696
+2021;97312 - Sinnamary;945.702203810215
+2021;97313 - Montsinéry-Tonnegrande;1035.27488052845
+2021;97314 - Ouanary;56.34630596637726
+2021;97352 - Saül;62.852020502090454
+2021;97353 - Maripasoula;1457.7685451209545
+2021;97356 - Camopi;374.11300414800644
+2021;97357 - Grand-Santi;1563.0674254894257
+2021;97358 - Saint-Élie;23.6816303730011
+2021;97360 - Apatou;1746.5592552423477
+2021;97361 - Awala-Yalimapo;337.1857346892357
+2021;97362 - Papaichton;796.389877974987
+2020;97301 - Régina;258.02815955877304
+2020;97302 - Cayenne;25233.70065867901
+2020;97303 - Iracoubo;474.6560136079788
+2020;97304 - Kourou;7660.978392481804
+2020;97305 - Macouria;5851.4754638671875
+2020;97306 - Mana;2583.5650445222855
+2020;97307 - Matoury;11058.996782541275
+2020;97308 - Saint-Georges;1057.7016332149506
+2020;97309 - Remire-Montjoly;9619.626877307892
+2020;97310 - Roura;1021.3480643033981
+2020;97311 - Saint-Laurent-du-Maroni;11324.528756380081
+2020;97312 - Sinnamary;941.6656737327576
+2020;97313 - Montsinéry-Tonnegrande;993.0
+2020;97314 - Ouanary;46.55000126361847
+2020;97352 - Saül;51.335525035858154
+2020;97353 - Maripasoula;1506.9693366885185
+2020;97356 - Camopi;355.2578672170639
+2020;97357 - Grand-Santi;1531.9232585430145
+2020;97358 - Saint-Élie;24.73795795440674
+2020;97360 - Apatou;1740.0
+2020;97361 - Awala-Yalimapo;332.1489067673683
+2020;97362 - Papaichton;785.6827016472816

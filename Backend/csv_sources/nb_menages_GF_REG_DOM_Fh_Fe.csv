@@ -1,0 +1,141 @@
+Date_RP#Annee;Nombre_personnes_menage_RP#nombre0_6plus;Lieu_domicile#France;Nombre_de_menages_selon_la_taille_du_menage
+;1§2§3§4§5§6 ou plus;;
+2020;Nombre : 1, 2, ?, 6 ou plus;Departements d'outre mer;768921.286655724
+2021;Nombre : 1, 2, ?, 6 ou plus;Departements d'outre mer;777645.914386034
+2020;Nombre : 1, 2, ?, 6 ou plus;France métropolitaine;29451578.42205683
+2021;Nombre : 1, 2, ?, 6 ou plus;France métropolitaine;29856173.98415965
+
+Date_RP#Annee;Nombre_personnes_menage_RP#nombre0_6plus;Lieu_domicile#France_avec_Mayotte;Nombre_de_menages_selon_la_taille_du_menage
+;1§2§3§4§5§6 ou plus;France métropolitaine§Départements d'outre-mer (hors Mayotte)§Saint-Barthélémy§Saint-Martin;
+2020;Nombre : 1, 2, ?, 6 ou plus;France (y compris Mayotte);30237470.84857128
+2021;Nombre : 1, 2, ?, 6 ou plus;France (y compris Mayotte);30651755.9451465
+
+Date_RP#Annee;Nombre_personnes_menage_RP#nombre0_6plus;Lieu_domicile#Regions_France_2017;Nombre_de_menages_selon_la_taille_du_menage
+;1§2§3§4§5§6 ou plus;;
+2020;Nombre : 1, 2, ?, 6 ou plus;Auvergne-Rhône-Alpes;3640413.7925370373
+2021;Nombre : 1, 2, ?, 6 ou plus;Auvergne-Rhône-Alpes;3693030.3426349163
+2020;Nombre : 1, 2, ?, 6 ou plus;Bourgogne-Franche-Comté;1304563.563161552
+2021;Nombre : 1, 2, ?, 6 ou plus;Bourgogne-Franche-Comté;1314827.2082588077
+2020;Nombre : 1, 2, ?, 6 ou plus;Bretagne;1566115.1550312042
+2021;Nombre : 1, 2, ?, 6 ou plus;Bretagne;1589122.998456657
+2020;Nombre : 1, 2, ?, 6 ou plus;Centre-Val de Loire;1174197.1480970383
+2021;Nombre : 1, 2, ?, 6 ou plus;Centre-Val de Loire;1183568.1342732906
+2020;Nombre : 1, 2, ?, 6 ou plus;Corse;153616.43895864487
+2021;Nombre : 1, 2, ?, 6 ou plus;Corse;156099.31266123056
+2020;Nombre : 1, 2, ?, 6 ou plus;Grand Est;2515407.661955416
+2021;Nombre : 1, 2, ?, 6 ou plus;Grand Est;2535357.617487788
+2020;Nombre : 1, 2, ?, 6 ou plus;Guadeloupe;174782.46491509676
+2021;Nombre : 1, 2, ?, 6 ou plus;Guadeloupe;177495.0727418661
+2020;Nombre : 1, 2, ?, 6 ou plus;Guyane;84453.32517457008
+2021;Nombre : 1, 2, ?, 6 ou plus;Guyane;85825.39816582203
+2020;Nombre : 1, 2, ?, 6 ou plus;Hauts-de-France;2577854.2098689675
+2021;Nombre : 1, 2, ?, 6 ou plus;Hauts-de-France;2607564.458583832
+2020;Nombre : 1, 2, ?, 6 ou plus;Martinique;167714.86583191156
+2021;Nombre : 1, 2, ?, 6 ou plus;Martinique;168673.24186837673
+2020;Nombre : 1, 2, ?, 6 ou plus;Normandie;1511775.7330834866
+2021;Nombre : 1, 2, ?, 6 ou plus;Normandie;1530971.7063496113
+2020;Nombre : 1, 2, ?, 6 ou plus;Nouvelle-Aquitaine;2848812.596996844
+2021;Nombre : 1, 2, ?, 6 ou plus;Nouvelle-Aquitaine;2892933.2386862636
+2020;Nombre : 1, 2, ?, 6 ou plus;Occitanie;2797187.274635017
+2021;Nombre : 1, 2, ?, 6 ou plus;Occitanie;2845670.6283676624
+2020;Nombre : 1, 2, ?, 6 ou plus;Pays de la Loire;1715310.5924936533
+2021;Nombre : 1, 2, ?, 6 ou plus;Pays de la Loire;1756547.8310254812
+2020;Nombre : 1, 2, ?, 6 ou plus;Provence-Alpes-Côte d'Azur;2353664.0088693798
+2021;Nombre : 1, 2, ?, 6 ou plus;Provence-Alpes-Côte d'Azur;2392731.3372620344
+2020;Nombre : 1, 2, ?, 6 ou plus;Région inconnue;16971.139858722687
+2021;Nombre : 1, 2, ?, 6 ou plus;Région inconnue;17936.046600818634
+2020;Nombre : 1, 2, ?, 6 ou plus;Réunion;341970.63073414564
+2021;Nombre : 1, 2, ?, 6 ou plus;Réunion;345652.20160996914
+2020;Nombre : 1, 2, ?, 6 ou plus;Île-de-France;5292660.246368594
+2021;Nombre : 1, 2, ?, 6 ou plus;Île-de-France;5357749.170112073
+
+Date_RP#Annee;Nombre_personnes_menage_RP#nombre0_6plus;Lieu_domicile#commune_stable_ds_tps_0825_sansArr;Nombre_de_menages_selon_la_taille_du_menage
+;1§2§3§4§5§6 ou plus;;
+2020;Nombre : 1, 2, ?, 6 ou plus;97301 - Régina;259.1239366531372
+2021;Nombre : 1, 2, ?, 6 ou plus;97301 - Régina;260.9613628387451
+2020;Nombre : 1, 2, ?, 6 ou plus;97302 - Cayenne;25233.148388385773
+2021;Nombre : 1, 2, ?, 6 ou plus;97302 - Cayenne;23936.756518363953
+2020;Nombre : 1, 2, ?, 6 ou plus;97303 - Iracoubo;475.57226037979126
+2021;Nombre : 1, 2, ?, 6 ou plus;97303 - Iracoubo;480.2862539291382
+2020;Nombre : 1, 2, ?, 6 ou plus;97304 - Kourou;7665.978364944458
+2021;Nombre : 1, 2, ?, 6 ou plus;97304 - Kourou;7786.529885292053
+2020;Nombre : 1, 2, ?, 6 ou plus;97305 - Macouria;5828.522602319717
+2021;Nombre : 1, 2, ?, 6 ou plus;97305 - Macouria;7124.811651468277
+2020;Nombre : 1, 2, ?, 6 ou plus;97306 - Mana;2580.657134771347
+2021;Nombre : 1, 2, ?, 6 ou plus;97306 - Mana;2856.2045612335205
+2020;Nombre : 1, 2, ?, 6 ou plus;97307 - Matoury;11061.996608257294
+2021;Nombre : 1, 2, ?, 6 ou plus;97307 - Matoury;11205.545751333237
+2020;Nombre : 1, 2, ?, 6 ou plus;97308 - Saint-Georges;1056.7691764831543
+2021;Nombre : 1, 2, ?, 6 ou plus;97308 - Saint-Georges;1115.7578616142273
+2020;Nombre : 1, 2, ?, 6 ou plus;97309 - Remire-Montjoly;9615.027510762215
+2021;Nombre : 1, 2, ?, 6 ou plus;97309 - Remire-Montjoly;10670.990990757942
+2020;Nombre : 1, 2, ?, 6 ou plus;97310 - Roura;1027.8383688926697
+2021;Nombre : 1, 2, ?, 6 ou plus;97310 - Roura;1049.3478755950928
+2020;Nombre : 1, 2, ?, 6 ou plus;97311 - Saint-Laurent-du-Maroni;11317.528789758682
+2021;Nombre : 1, 2, ?, 6 ou plus;97311 - Saint-Laurent-du-Maroni;10740.829163074493
+2020;Nombre : 1, 2, ?, 6 ou plus;97312 - Sinnamary;937.946964263916
+2021;Nombre : 1, 2, ?, 6 ou plus;97312 - Sinnamary;941.611900806427
+2020;Nombre : 1, 2, ?, 6 ou plus;97313 - Montsinéry-Tonnegrande;995.0
+2021;Nombre : 1, 2, ?, 6 ou plus;97313 - Montsinéry-Tonnegrande;1037.255075454712
+2020;Nombre : 1, 2, ?, 6 ou plus;97314 - Ouanary;46.55000066757202
+2021;Nombre : 1, 2, ?, 6 ou plus;97314 - Ouanary;56.3463020324707
+2020;Nombre : 1, 2, ?, 6 ou plus;97352 - Saül;50.328946590423584
+2021;Nombre : 1, 2, ?, 6 ou plus;97352 - Saül;57.13819885253906
+2020;Nombre : 1, 2, ?, 6 ou plus;97353 - Maripasoula;1541.0048159360886
+2021;Nombre : 1, 2, ?, 6 ou plus;97353 - Maripasoula;1671.6402130126953
+2020;Nombre : 1, 2, ?, 6 ou plus;97356 - Camopi;351.12671279907227
+2021;Nombre : 1, 2, ?, 6 ou plus;97356 - Camopi;372.267774105072
+2020;Nombre : 1, 2, ?, 6 ou plus;97357 - Grand-Santi;1531.7822046279907
+2021;Nombre : 1, 2, ?, 6 ou plus;97357 - Grand-Santi;1562.9337210655212
+2020;Nombre : 1, 2, ?, 6 ou plus;97358 - Saint-Élie;27.48661994934082
+2021;Nombre : 1, 2, ?, 6 ou plus;97358 - Saint-Élie;26.312922477722168
+2020;Nombre : 1, 2, ?, 6 ou plus;97360 - Apatou;1735.0
+2021;Nombre : 1, 2, ?, 6 ou plus;97360 - Apatou;1741.7055988311768
+2020;Nombre : 1, 2, ?, 6 ou plus;97361 - Awala-Yalimapo;329.8716130256653
+2021;Nombre : 1, 2, ?, 6 ou plus;97361 - Awala-Yalimapo;335.0433850288391
+2020;Nombre : 1, 2, ?, 6 ou plus;97362 - Papaichton;785.0641551017761
+2021;Nombre : 1, 2, ?, 6 ou plus;97362 - Papaichton;795.1211986541748
+
+Date_RP#Annee;Nombre_personnes_menage_RP#nombre0_6plus;Lieu_domicile#Regions_France_2017;Nombre_de_menages_selon_la_taille_du_menage_0
+;1§2§3§4§5§6 ou plus;;
+2020;Nombre : 1, 2, ?, 6 ou plus;Auvergne-Rhône-Alpes;3640413.7925370373
+2021;Nombre : 1, 2, ?, 6 ou plus;Auvergne-Rhône-Alpes;3693030.3426349163
+2020;Nombre : 1, 2, ?, 6 ou plus;Bourgogne-Franche-Comté;1304563.563161552
+2021;Nombre : 1, 2, ?, 6 ou plus;Bourgogne-Franche-Comté;1314827.2082588077
+2020;Nombre : 1, 2, ?, 6 ou plus;Bretagne;1566115.1550312042
+2021;Nombre : 1, 2, ?, 6 ou plus;Bretagne;1589122.998456657
+2020;Nombre : 1, 2, ?, 6 ou plus;Centre-Val de Loire;1174197.1480970383
+2021;Nombre : 1, 2, ?, 6 ou plus;Centre-Val de Loire;1183568.1342732906
+2020;Nombre : 1, 2, ?, 6 ou plus;Corse;153616.43895864487
+2021;Nombre : 1, 2, ?, 6 ou plus;Corse;156099.31266123056
+2020;Nombre : 1, 2, ?, 6 ou plus;Grand Est;2515407.661955416
+2021;Nombre : 1, 2, ?, 6 ou plus;Grand Est;2535357.617487788
+2020;Nombre : 1, 2, ?, 6 ou plus;Guadeloupe;174782.46491509676
+2021;Nombre : 1, 2, ?, 6 ou plus;Guadeloupe;177495.0727418661
+2020;Nombre : 1, 2, ?, 6 ou plus;Guyane;84453.32517457008
+2021;Nombre : 1, 2, ?, 6 ou plus;Guyane;85825.39816582203
+2020;Nombre : 1, 2, ?, 6 ou plus;Hauts-de-France;2577854.2098689675
+2021;Nombre : 1, 2, ?, 6 ou plus;Hauts-de-France;2607564.458583832
+2020;Nombre : 1, 2, ?, 6 ou plus;Martinique;167714.86583191156
+2021;Nombre : 1, 2, ?, 6 ou plus;Martinique;168673.24186837673
+2020;Nombre : 1, 2, ?, 6 ou plus;Normandie;1511775.7330834866
+2021;Nombre : 1, 2, ?, 6 ou plus;Normandie;1530971.7063496113
+2020;Nombre : 1, 2, ?, 6 ou plus;Nouvelle-Aquitaine;2848812.596996844
+2021;Nombre : 1, 2, ?, 6 ou plus;Nouvelle-Aquitaine;2892933.2386862636
+2020;Nombre : 1, 2, ?, 6 ou plus;Occitanie;2797187.274635017
+2021;Nombre : 1, 2, ?, 6 ou plus;Occitanie;2845670.6283676624
+2020;Nombre : 1, 2, ?, 6 ou plus;Pays de la Loire;1715310.5924936533
+2021;Nombre : 1, 2, ?, 6 ou plus;Pays de la Loire;1756547.8310254812
+2020;Nombre : 1, 2, ?, 6 ou plus;Provence-Alpes-Côte d'Azur;2353664.0088693798
+2021;Nombre : 1, 2, ?, 6 ou plus;Provence-Alpes-Côte d'Azur;2392731.3372620344
+2020;Nombre : 1, 2, ?, 6 ou plus;Réunion;341970.63073414564
+2021;Nombre : 1, 2, ?, 6 ou plus;Réunion;345652.20160996914
+2020;Nombre : 1, 2, ?, 6 ou plus;Île-de-France;5292660.246368594
+2021;Nombre : 1, 2, ?, 6 ou plus;Île-de-France;5357749.170112073
+
+Date_RP#Annee;Nombre_personnes_menage_RP#nombre0_6plus;Lieu_domicile#France;Nombre_de_menages_selon_la_taille_du_menage_1
+;1§2§3§4§5§6 ou plus;;
+2020;Nombre : 1, 2, ?, 6 ou plus;Departements d'outre mer;768921.286655724
+2021;Nombre : 1, 2, ?, 6 ou plus;Departements d'outre mer;777645.914386034
+2020;Nombre : 1, 2, ?, 6 ou plus;France métropolitaine;29451578.42205683
+2021;Nombre : 1, 2, ?, 6 ou plus;France métropolitaine;29856173.98415965
