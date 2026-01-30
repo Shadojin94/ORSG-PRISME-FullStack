@@ -61,14 +61,18 @@ export function GeneratorPage() {
     };
     const currentDatasetId = getDatasetId();
 
-    // Load available years dynamically from API
+    // Load available years dynamically from API or Config
     const { years: apiYears, loading: yearsLoading } = useDatasetYears(currentDatasetId);
+
+    // Check for static availableYears in config
+    const selectedDatasetConfig = leafDatasets.find((d: any) => d.id === currentDatasetId);
+    const staticAvailableYears = selectedDatasetConfig?.availableYears?.map(String);
 
     // Fallback to static years if API not available
     const defaultYears = ['2022', '2021', '2020', '2019', '2018', '2017', '2016', '2015']
-    const availableYears: string[] = apiYears.length > 0
+    const availableYears: string[] = staticAvailableYears || (apiYears.length > 0
         ? apiYears.map(y => String(y))
-        : defaultYears
+        : defaultYears)
 
     const nextStep = () => setCurrentStep(prev => Math.min(prev + 1, 5))
     const prevStep = () => setCurrentStep(prev => Math.max(prev - 1, 1))
@@ -242,46 +246,60 @@ export function GeneratorPage() {
                         </div>
 
                         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
-                            {BDI_THEMES.map((theme) => (
-                                <div
-                                    key={theme.id}
-                                    onClick={() => handleThemeSelect(theme.id)}
-                                    className={cn(
-                                        "p-5 rounded-xl border-2 cursor-pointer transition-all hover:shadow-lg group",
-                                        "border-gray-100 bg-white hover:border-[#3bb3a9]"
-                                    )}
-                                >
-                                    <div className="flex items-start gap-4">
-                                        <div className={cn(
-                                            "w-12 h-12 rounded-xl flex items-center justify-center shadow-sm transition-all",
-                                            `bg-gray-100 ${theme.color} group-hover:bg-[#3bb3a9] group-hover:text-white`
-                                        )}>
-                                            <theme.icon className="w-6 h-6" />
-                                        </div>
-                                        <div className="flex-1 min-w-0">
-                                            <h4 className="font-bold text-gray-800 group-hover:text-[#1a4b8c]">
-                                                {theme.shortTitle}
-                                            </h4>
-                                            <p className="text-xs text-gray-500 mt-1 line-clamp-2">
-                                                {theme.description}
-                                            </p>
-                                            <div className="flex items-center gap-2 mt-2 flex-wrap">
-                                                <div className="flex items-center gap-1 text-xs text-[#3bb3a9]">
-                                                    <FolderOpen className="w-3 h-3" />
-                                                    <span>{theme.subThemes?.length || 0} sous-themes</span>
-                                                </div>
-                                                {countThemeDemoReady(theme) > 0 && (
-                                                    <div className="flex items-center gap-1 text-xs bg-green-100 text-green-700 px-2 py-0.5 rounded-full font-medium">
-                                                        <CheckCircle2 className="w-3 h-3" />
-                                                        <span>{countThemeDemoReady(theme)} Démo</span>
-                                                    </div>
-                                                )}
+                            {BDI_THEMES.map((theme) => {
+                                const isReady = countThemeDemoReady(theme) > 0;
+                                return (
+                                    <div
+                                        key={theme.id}
+                                        onClick={() => isReady && handleThemeSelect(theme.id)}
+                                        className={cn(
+                                            "p-5 rounded-xl border-2 transition-all group relative",
+                                            isReady
+                                                ? "cursor-pointer border-gray-100 bg-white hover:border-[#3bb3a9] hover:shadow-lg"
+                                                : "cursor-not-allowed border-gray-100 bg-gray-50 opacity-60 grayscale"
+                                        )}
+                                    >
+                                        <div className="flex items-start gap-4">
+                                            <div className={cn(
+                                                "w-12 h-12 rounded-xl flex items-center justify-center shadow-sm transition-all",
+                                                isReady
+                                                    ? `bg-gray-100 ${theme.color} group-hover:bg-[#3bb3a9] group-hover:text-white`
+                                                    : "bg-gray-200 text-gray-400"
+                                            )}>
+                                                <theme.icon className="w-6 h-6" />
                                             </div>
+                                            <div className="flex-1 min-w-0">
+                                                <div className="flex justify-between items-start">
+                                                    <h4 className="font-bold text-gray-800 group-hover:text-[#1a4b8c]">
+                                                        {theme.shortTitle}
+                                                    </h4>
+                                                    {!isReady && (
+                                                        <span className="text-[10px] bg-gray-200 text-gray-500 px-2 py-0.5 rounded-full font-medium whitespace-nowrap ml-2">
+                                                            En cours
+                                                        </span>
+                                                    )}
+                                                </div>
+                                                <p className="text-xs text-gray-500 mt-1 line-clamp-2">
+                                                    {theme.description}
+                                                </p>
+                                                <div className="flex items-center gap-2 mt-2 flex-wrap">
+                                                    <div className="flex items-center gap-1 text-xs text-[#3bb3a9]">
+                                                        <FolderOpen className="w-3 h-3" />
+                                                        <span>{theme.subThemes?.length || 0} sous-themes</span>
+                                                    </div>
+                                                    {isReady && (
+                                                        <div className="flex items-center gap-1 text-xs bg-green-100 text-green-700 px-2 py-0.5 rounded-full font-medium">
+                                                            <CheckCircle2 className="w-3 h-3" />
+                                                            <span>{countThemeDemoReady(theme)} Démo</span>
+                                                        </div>
+                                                    )}
+                                                </div>
+                                            </div>
+                                            {isReady && <ChevronRight className="w-5 h-5 text-gray-300 group-hover:text-[#3bb3a9]" />}
                                         </div>
-                                        <ChevronRight className="w-5 h-5 text-gray-300 group-hover:text-[#3bb3a9]" />
                                     </div>
-                                </div>
-                            ))}
+                                )
+                            })}
                         </div>
                     </div>
                 )}
@@ -300,54 +318,63 @@ export function GeneratorPage() {
                         </div>
 
                         <div className="grid md:grid-cols-2 gap-4">
-                            {subThemes.map((subTheme) => (
-                                <div
-                                    key={subTheme.id}
-                                    onClick={() => handleSubThemeSelect(subTheme.id)}
-                                    className={cn(
-                                        "p-5 rounded-xl border-2 cursor-pointer transition-all hover:shadow-lg group",
-                                        "border-gray-100 bg-white hover:border-[#3bb3a9]"
-                                    )}
-                                >
-                                    <div className="flex items-center justify-between">
-                                        <div>
-                                            <div className="flex items-center gap-2">
-                                                <h4 className="font-bold text-gray-800 group-hover:text-[#1a4b8c]">
-                                                    {subTheme.title}
-                                                </h4>
-                                                {countDemoReady(subTheme) > 0 && (
-                                                    <span className="flex items-center gap-1 text-[10px] bg-green-100 text-green-700 px-1.5 py-0.5 rounded-full font-medium">
-                                                        <CheckCircle2 className="w-2.5 h-2.5" />
-                                                        {countDemoReady(subTheme)}
-                                                    </span>
-                                                )}
-                                            </div>
-                                            <p className="text-xs text-gray-500 mt-1">
-                                                {countDatasets(subTheme)} indicateur{countDatasets(subTheme) > 1 ? 's' : ''}
-                                            </p>
-                                        </div>
-                                        <ChevronRight className="w-5 h-5 text-gray-300 group-hover:text-[#3bb3a9]" />
-                                    </div>
-                                    <div className="mt-3 flex flex-wrap gap-1">
-                                        {subTheme.datasets.slice(0, 3).map((ds: any) => (
-                                            <span key={ds.id} className={cn(
-                                                "text-[10px] px-2 py-0.5 rounded",
-                                                ds.demoReady
-                                                    ? "bg-green-100 text-green-700 font-medium"
-                                                    : "bg-gray-100 text-gray-600"
-                                            )}>
-                                                {ds.demoReady && "✓ "}
-                                                {ds.label.length > 30 ? ds.label.substring(0, 30) + '...' : ds.label}
-                                            </span>
-                                        ))}
-                                        {('subThemes' in subTheme) && (
-                                            <span className="text-[10px] bg-blue-50 text-blue-600 px-2 py-0.5 rounded">
-                                                {(subTheme as any).subThemes.length} categories
-                                            </span>
+                            {subThemes.map((subTheme) => {
+                                const isReady = countDemoReady(subTheme) > 0;
+                                return (
+                                    <div
+                                        key={subTheme.id}
+                                        onClick={() => isReady && handleSubThemeSelect(subTheme.id)}
+                                        className={cn(
+                                            "p-5 rounded-xl border-2 transition-all group",
+                                            isReady
+                                                ? "cursor-pointer border-gray-100 bg-white hover:border-[#3bb3a9] hover:shadow-lg"
+                                                : "cursor-not-allowed border-gray-100 bg-gray-50 opacity-60 grayscale"
                                         )}
+                                    >
+                                        <div className="flex items-center justify-between">
+                                            <div>
+                                                <div className="flex items-center gap-2">
+                                                    <h4 className="font-bold text-gray-800 group-hover:text-[#1a4b8c]">
+                                                        {subTheme.title}
+                                                    </h4>
+                                                    {isReady ? (
+                                                        <span className="flex items-center gap-1 text-[10px] bg-green-100 text-green-700 px-1.5 py-0.5 rounded-full font-medium">
+                                                            <CheckCircle2 className="w-2.5 h-2.5" />
+                                                            {countDemoReady(subTheme)}
+                                                        </span>
+                                                    ) : (
+                                                        <span className="text-[10px] bg-gray-200 text-gray-500 px-2 py-0.5 rounded-full font-medium">
+                                                            En cours
+                                                        </span>
+                                                    )}
+                                                </div>
+                                                <p className="text-xs text-gray-500 mt-1">
+                                                    {countDatasets(subTheme)} indicateur{countDatasets(subTheme) > 1 ? 's' : ''}
+                                                </p>
+                                            </div>
+                                            {isReady && <ChevronRight className="w-5 h-5 text-gray-300 group-hover:text-[#3bb3a9]" />}
+                                        </div>
+                                        <div className="mt-3 flex flex-wrap gap-1">
+                                            {subTheme.datasets.slice(0, 3).map((ds: any) => (
+                                                <span key={ds.id} className={cn(
+                                                    "text-[10px] px-2 py-0.5 rounded",
+                                                    ds.demoReady
+                                                        ? "bg-green-100 text-green-700 font-medium"
+                                                        : "bg-gray-100 text-gray-600"
+                                                )}>
+                                                    {ds.demoReady && "✓ "}
+                                                    {ds.label.length > 30 ? ds.label.substring(0, 30) + '...' : ds.label}
+                                                </span>
+                                            ))}
+                                            {('subThemes' in subTheme) && (
+                                                <span className="text-[10px] bg-blue-50 text-blue-600 px-2 py-0.5 rounded">
+                                                    {(subTheme as any).subThemes.length} categories
+                                                </span>
+                                            )}
+                                        </div>
                                     </div>
-                                </div>
-                            ))}
+                                )
+                            })}
                         </div>
                     </div>
                 )}
@@ -426,25 +453,37 @@ export function GeneratorPage() {
                             {leafDatasets.map((ds: any) => (
                                 <div
                                     key={ds.id}
-                                    onClick={() => handleDatasetSelect(ds.id)}
+                                    onClick={() => ds.demoReady && handleDatasetSelect(ds.id)}
                                     className={cn(
-                                        "p-5 rounded-xl border-2 cursor-pointer transition-all hover:shadow-lg group",
-                                        "border-gray-100 bg-white hover:border-[#3bb3a9]"
+                                        "p-5 rounded-xl border-2 transition-all group",
+                                        ds.demoReady
+                                            ? "cursor-pointer border-gray-100 bg-white hover:border-[#3bb3a9] hover:shadow-lg"
+                                            : "cursor-not-allowed border-gray-100 bg-gray-50 opacity-60 grayscale"
                                     )}
                                 >
                                     <div className="flex items-center gap-4">
-                                        <div className="w-10 h-10 rounded-lg bg-gray-100 flex items-center justify-center group-hover:bg-[#3bb3a9] group-hover:text-white transition-colors">
-                                            <Database className="w-5 h-5" />
+                                        <div className={cn(
+                                            "w-10 h-10 rounded-lg flex items-center justify-center transition-colors",
+                                            ds.demoReady
+                                                ? "bg-green-100 text-green-600 group-hover:bg-[#3bb3a9] group-hover:text-white"
+                                                : "bg-gray-200 text-gray-400"
+                                        )}>
+                                            {ds.demoReady ? <CheckCircle2 className="w-5 h-5" /> : <Database className="w-5 h-5" />}
                                         </div>
                                         <div className="flex-1">
-                                            <h4 className="font-bold text-gray-800 group-hover:text-[#1a4b8c]">
-                                                {ds.label}
-                                            </h4>
+                                            <div className="flex justify-between items-start">
+                                                <h4 className="font-bold text-gray-800 group-hover:text-[#1a4b8c]">
+                                                    {ds.label}
+                                                </h4>
+                                                {!ds.demoReady && (
+                                                    <span className="text-[10px] bg-gray-200 text-gray-500 px-2 py-0.5 rounded-full font-medium ml-2 whitespace-nowrap">En cours</span>
+                                                )}
+                                            </div>
                                             <p className="text-xs text-gray-400 mt-1">
                                                 Source : {ds.source}
                                             </p>
                                         </div>
-                                        <ChevronRight className="w-5 h-5 text-gray-300 group-hover:text-[#3bb3a9]" />
+                                        {ds.demoReady && <ChevronRight className="w-5 h-5 text-gray-300 group-hover:text-[#3bb3a9]" />}
                                     </div>
                                 </div>
                             ))}
