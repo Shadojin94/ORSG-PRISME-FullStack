@@ -432,14 +432,14 @@
           "type": "dimension",
           "label": "Âge de la mère",
           "values": [
-            "014",
-            "019",
-            "024",
-            "029",
-            "034",
-            "039",
-            "044",
-            "049"
+            "10-14 ans",
+            "15-19 ans",
+            "20-24 ans",
+            "25-29 ans",
+            "30-34 ans",
+            "35-39 ans",
+            "40-44 ans",
+            "45-49 ans"
           ]
         },
         {
@@ -450,6 +450,7 @@
           "parser": "tabular",
           "yearColumn": 0,
           "geoColumn": 2,
+          "dimensionColumn": 1,
           "column": 3
         },
         {
@@ -460,6 +461,7 @@
           "parser": "tabular",
           "yearColumn": 0,
           "geoColumn": 2,
+          "dimensionColumn": 1,
           "column": 3
         }
       ]
@@ -687,26 +689,27 @@
           "type": "dimension",
           "label": "Tranche d'âge quinquennale",
           "values": [
-            "000",
-            "005",
-            "010",
-            "015",
-            "020",
-            "025",
-            "030",
-            "035",
-            "040",
-            "045",
-            "050",
-            "055",
-            "060",
-            "065",
-            "070",
-            "075",
-            "080",
-            "085",
-            "090",
-            "095"
+            "Moins d'un an",
+            "1-4 ans",
+            "5-9 ans",
+            "10-14 ans",
+            "15-19 ans",
+            "20-24 ans",
+            "25-29 ans",
+            "30-34 ans",
+            "35-39 ans",
+            "40-44 ans",
+            "45-49 ans",
+            "50-54 ans",
+            "55-59 ans",
+            "60-64 ans",
+            "65-69 ans",
+            "70-74 ans",
+            "75-79 ans",
+            "80-84 ans",
+            "85-89 ans",
+            "90-94 ans",
+            "95 ans et plus"
           ]
         },
         {

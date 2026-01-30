@@ -77,23 +77,38 @@ def get_theme_tree():
 REGION_ORDER = [11, 24, 27, 28, 32, 44, 52, 53, 75, 76, 84, 93, 94, 1, 2, 3, 4, 6]
 
 REGION_MAPPING = {
+    # Île-de-France with various encodings
     "Île-de-France": 11, "Ile-de-France": 11, "île-de-France": 11,
+    "Ã®le-de-France": 11, "Ãle-de-France": 11,
+    # Centre-Val de Loire
     "Centre-Val de Loire": 24,
-    "Bourgogne-Franche-Comté": 27, "Bourgogne-Franche-ComtÃ©": 27,
+    # Bourgogne-Franche-Comté
+    "Bourgogne-Franche-Comté": 27, "Bourgogne-Franche-ComtÃ©": 27, "Bourgogne-Franche-Comte": 27,
+    # Normandie
     "Normandie": 28,
+    # Hauts-de-France
     "Hauts-de-France": 32,
+    # Grand Est
     "Grand Est": 44,
+    # Pays de la Loire
     "Pays de la Loire": 52,
+    # Bretagne
     "Bretagne": 53,
+    # Nouvelle-Aquitaine
     "Nouvelle-Aquitaine": 75,
+    # Occitanie
     "Occitanie": 76,
-    "Auvergne-Rhône-Alpes": 84, "Auvergne-RhÃ´ne-Alpes": 84,
-    "Provence-Alpes-Côte d'Azur": 93,
+    # Auvergne-Rhône-Alpes
+    "Auvergne-Rhône-Alpes": 84, "Auvergne-RhÃ´ne-Alpes": 84, "Auvergne-Rhone-Alpes": 84,
+    # Provence-Alpes-Côte d'Azur
+    "Provence-Alpes-Côte d'Azur": 93, "Provence-Alpes-Cote d'Azur": 93,
+    # Corse
     "Corse": 94,
+    # DOM
     "Guadeloupe": 1,
     "Martinique": 2,
     "Guyane": 3,
-    "La Réunion": 4, "Réunion": 4,
+    "La Réunion": 4, "Réunion": 4, "Reunion": 4, "RÃ©union": 4,
     "Mayotte": 6
 }
 
@@ -277,7 +292,7 @@ def parse_tabular_csv(filepath, value_column=2, year_column=0, geo_column=1, dim
     result = {'com': [], 'reg': [], 'dom': [], 'fh': [], 'fra': []}
 
     try:
-        with open(filepath, 'r', encoding='utf-8', errors='replace') as f:
+        with open(filepath, 'r', encoding='cp1252', errors='replace') as f:
             lines = f.readlines()
     except Exception as e:
         print(f"Erreur lecture {filepath}: {e}")
@@ -329,17 +344,24 @@ def parse_tabular_csv(filepath, value_column=2, year_column=0, geo_column=1, dim
                 result['com'].append(item.copy())
             continue
 
-        if 'france entiere' in geo_lower or 'france entière' in geo_lower:
+        # France entière detection (various formats)
+        if ('france entiere' in geo_lower or 'france entière' in geo_lower or
+            'france (y compris' in geo_lower or 'lieu_domicile#france_avec' in geo_lower or
+            (geo_lower == 'lieu_domicile#france')):
             item['codgeo'] = 99
             result['fra'].append(item.copy())
             continue
 
-        if 'france metropolitaine' in geo_lower or 'france hexagonale' in geo_lower:
+        # France métropolitaine / hexagonale detection
+        if ('france metropolitaine' in geo_lower or 'france hexagonale' in geo_lower or
+            'france métropolitaine' in geo_lower or geo_lower.startswith('france m')):
             item['codgeo'] = 0
             result['fh'].append(item.copy())
             continue
-        
-        if "departements d'outre" in geo_lower:
+
+        # DOM detection
+        if ("departements d'outre" in geo_lower or "départements d'outre" in geo_lower or
+            "departements d'outre mer" in geo_lower):
             item['codgeo'] = 'DOM'
             result['dom'].append(item.copy())
             continue
@@ -433,20 +455,24 @@ def parse_moca_csv(filepath, year_column=3, geo_column=5, value_column=6, dimens
                 result['com'].append(item.copy())
             continue
 
-        # France entière
-        if 'france entiere' in geo_lower or 'france entière' in geo_lower or 'france (y compris' in geo_lower:
+        # France entière detection (various formats)
+        if ('france entiere' in geo_lower or 'france entière' in geo_lower or
+            'france (y compris' in geo_lower or 'lieu_domicile#france_avec' in geo_lower or
+            (geo_lower == 'lieu_domicile#france')):
             item['codgeo'] = 99
             result['fra'].append(item.copy())
             continue
 
-        # France hexagonale
-        if 'france metropolitaine' in geo_lower or 'france hexagonale' in geo_lower or 'france métropolitaine' in geo_lower:
+        # France métropolitaine / hexagonale detection
+        if ('france metropolitaine' in geo_lower or 'france hexagonale' in geo_lower or
+            'france métropolitaine' in geo_lower or geo_lower.startswith('france m')):
             item['codgeo'] = 0
             result['fh'].append(item.copy())
             continue
 
-        # DOM
-        if "departements d'outre" in geo_lower or "départements d'outre" in geo_lower or "dom -" in geo_lower:
+        # DOM detection
+        if ("departements d'outre" in geo_lower or "départements d'outre" in geo_lower or
+            "dom -" in geo_lower or "departements d'outre mer" in geo_lower):
             item['codgeo'] = 'DOM'
             result['dom'].append(item.copy())
             continue
@@ -548,20 +574,24 @@ def parse_moca_filter_csv(filepath, filter_column, filter_value, year_column=3, 
                 result['com'].append(item.copy())
             continue
 
-        # France entière
-        if 'france entiere' in geo_lower or 'france entière' in geo_lower or 'france (y compris' in geo_lower:
+        # France entière detection (various formats)
+        if ('france entiere' in geo_lower or 'france entière' in geo_lower or
+            'france (y compris' in geo_lower or 'lieu_domicile#france_avec' in geo_lower or
+            (geo_lower == 'lieu_domicile#france')):
             item['codgeo'] = 99
             result['fra'].append(item.copy())
             continue
 
-        # France hexagonale
-        if 'france metropolitaine' in geo_lower or 'france hexagonale' in geo_lower or 'france métropolitaine' in geo_lower:
+        # France métropolitaine / hexagonale detection
+        if ('france metropolitaine' in geo_lower or 'france hexagonale' in geo_lower or
+            'france métropolitaine' in geo_lower or geo_lower.startswith('france m')):
             item['codgeo'] = 0
             result['fh'].append(item.copy())
             continue
 
-        # DOM
-        if "departements d'outre" in geo_lower or "départements d'outre" in geo_lower:
+        # DOM detection
+        if ("departements d'outre" in geo_lower or "départements d'outre" in geo_lower or
+            "departements d'outre mer" in geo_lower):
             item['codgeo'] = 'DOM'
             result['dom'].append(item.copy())
             continue
@@ -706,7 +736,7 @@ def _write_sheet(ws, headers, rows_data, col_keys):
 # FILL VARIABLE DATA FROM CSV
 # ============================================================================
 
-def _fill_variable_data(data, var_id, parsed, year, time_col_id, dimension_id=None):
+def _fill_variable_data(data, var_id, parsed, year, time_col_id, dimension_id=None, dimension_mapping=None):
     """Remplit les données d'une variable dans les structures de données.
 
     Args:
@@ -716,6 +746,7 @@ def _fill_variable_data(data, var_id, parsed, year, time_col_id, dimension_id=No
         year: Année ou période à filtrer
         time_col_id: Nom de la colonne temps (annee ou periode)
         dimension_id: ID de la dimension (ex: 'age_quinq') si applicable
+        dimension_mapping: Dict mapping config dimension values to CSV dimension values
     """
     for geo_key in ['com', 'reg', 'dom', 'fh', 'fra']:
         df = parsed.get(geo_key, pd.DataFrame())
@@ -727,7 +758,7 @@ def _fill_variable_data(data, var_id, parsed, year, time_col_id, dimension_id=No
             df_filtered = df[df['annee'] == year]
         else:
             continue
-            
+
         # Check if parsed data has dimension info
         has_parsed_dim = 'dimension' in df_filtered.columns
 
@@ -736,25 +767,32 @@ def _fill_variable_data(data, var_id, parsed, year, time_col_id, dimension_id=No
         for row in data[geo_key]:
             # Filter by GEO
             if has_parsed_dim and dimension_id and dimension_id in row:
-                # Filter by GEO + DIMENSION
-                # We interpret the CSV 'dimension' column value should match row[dimension_id]
-                # NOTE: CSV values might differ from Config values (e.g. "0-4 ans" vs "000")
-                # Need fuzzy check or normalization? 
-                # For now assuming string containment or fuzzy match
-                
-                target_dim = str(row[dimension_id])
-                
-                # Try simple match first
+                # Get the row's dimension value and map it to CSV dimension value if mapping exists
+                row_dim_value = str(row[dimension_id])
+
+                if dimension_mapping and row_dim_value in dimension_mapping:
+                    target_dim = dimension_mapping[row_dim_value]
+                else:
+                    target_dim = row_dim_value
+
+                # Try exact match first (after mapping)
                 match = df_filtered[
-                    (df_filtered['codgeo'] == row[id_col]) & 
-                    (df_filtered['dimension'].astype(str).str.contains(target_dim, case=False, regex=False))
+                    (df_filtered['codgeo'] == row[id_col]) &
+                    (df_filtered['dimension'].astype(str) == target_dim)
                 ]
-                
-                # If no match, try stricter equals if numbers
+
+                # If no match, try case-insensitive contains
                 if match.empty:
-                     match = df_filtered[
-                        (df_filtered['codgeo'] == row[id_col]) & 
-                        (df_filtered['dimension'].astype(str) == target_dim)
+                    match = df_filtered[
+                        (df_filtered['codgeo'] == row[id_col]) &
+                        (df_filtered['dimension'].astype(str).str.lower() == target_dim.lower())
+                    ]
+
+                # Still no match? Try partial match (contains)
+                if match.empty:
+                    match = df_filtered[
+                        (df_filtered['codgeo'] == row[id_col]) &
+                        (df_filtered['dimension'].astype(str).str.contains(target_dim, case=False, regex=False))
                     ]
             else:
                  # Match only GEO
@@ -841,23 +879,30 @@ def generate_prisme_excel(dataset_id, year):
 
         csv_file = find_csv_file(csv_pattern, CSV_SOURCES_DIR)
         if csv_file:
+            # Get dimension column from variable config if present
+            dim_col = col.get('dimensionColumn')
+
             if parser_type == 'long':
                 csv_data[var_id] = parse_long_format_csv(csv_file)
             elif parser_type == 'tabular':
                 value_col = col.get('column', 2)
                 year_col = col.get('yearColumn', 0)
                 geo_col = col.get('geoColumn', 1)
-                csv_data[var_id] = parse_tabular_csv(csv_file, value_column=value_col, year_column=year_col, geo_column=geo_col)
+                csv_data[var_id] = parse_tabular_csv(csv_file, value_column=value_col, year_column=year_col, geo_column=geo_col, dimension_column=dim_col)
             elif parser_type == 'moca_filter':
                 filter_col = col.get('filterColumn', 4)
                 filter_val = col.get('filterValue', '')
                 year_col = col.get('yearColumn', 3)
                 geo_col = col.get('geoColumn', 5)
                 value_col = col.get('valueColumn', 6)
-                csv_data[var_id] = parse_moca_filter_csv(csv_file, filter_col, filter_val, year_col, geo_col, value_col)
+                csv_data[var_id] = parse_moca_filter_csv(csv_file, filter_col, filter_val, year_col, geo_col, value_col, dimension_column=dim_col)
             else:
-                csv_data[var_id] = parse_moca_csv(csv_file)
-            print(f"  [OK] {var_id} -> {csv_file.name} (parser: {parser_type})")
+                # Standard moca parser
+                year_col = col.get('yearColumn', 3)
+                geo_col = col.get('geoColumn', 5)
+                value_col = col.get('valueColumn', 6)
+                csv_data[var_id] = parse_moca_csv(csv_file, year_column=year_col, geo_column=geo_col, value_column=value_col, dimension_column=dim_col)
+            print(f"  [OK] {var_id} -> {csv_file.name} (parser: {parser_type}, dim_col: {dim_col})")
         else:
             print(f"  [WARN] {var_id} -> Fichier non trouve (pattern: {csv_pattern})")
             csv_data[var_id] = empty_dfs()
@@ -1054,6 +1099,12 @@ if __name__ == "__main__":
     else:
         print("  -> Erreur de génération")
     
-    # Afficher les années disponibles pour educ
-    print("\n[INFO] Années disponibles pour 'educ':", detect_available_years('educ'))
-    print("[INFO] Années disponibles pour 'pers_sup65ans_seules':", detect_available_years('pers_sup65ans_seules'))
+    # Test 3: emplois
+    print("\n[TEST 3] Génération emplois_2022.zip")
+    result = generate_prisme_excel('emplois', 2022)
+    if result:
+        print(f"  -> Fichier généré: {result}")
+        # Verify file size
+        print(f"  -> Taille: {result.stat().st_size} bytes")
+    else:
+        print("  -> Erreur de génération")
