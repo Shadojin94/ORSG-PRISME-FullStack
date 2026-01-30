@@ -220,7 +220,14 @@ export function GeneratorPage() {
                     style={{ width: `${((currentStep - 1) / (STEPS.length - 1)) * 100}%` }} />
 
                 {STEPS.map((step) => (
-                    <div key={step.id} className="flex flex-col items-center gap-2 bg-gray-50 px-1">
+                    <div
+                        key={step.id}
+                        onClick={() => step.id < currentStep && setCurrentStep(step.id)}
+                        className={cn(
+                            "flex flex-col items-center gap-2 bg-gray-50 px-1 transition-colors",
+                            step.id < currentStep ? "cursor-pointer hover:bg-gray-100 rounded-lg" : ""
+                        )}
+                    >
                         <div className={cn(
                             "w-8 h-8 rounded-full flex items-center justify-center font-bold text-xs shadow-sm transition-colors duration-300",
                             currentStep > step.id ? "bg-[#4caf50] text-white" :
@@ -309,7 +316,12 @@ export function GeneratorPage() {
                     <div className="step-card p-6 md:p-8 animate-in slide-in-from-bottom-4 duration-500">
                         <div className="mb-6">
                             <div className="flex items-center gap-2 text-sm text-gray-500 mb-2">
-                                <span className="text-[#3bb3a9]">{selectedTheme.shortTitle}</span>
+                                <span
+                                    className="text-[#3bb3a9] cursor-pointer hover:underline font-medium"
+                                    onClick={() => setCurrentStep(1)}
+                                >
+                                    {selectedTheme.shortTitle}
+                                </span>
                                 <ChevronRight className="w-4 h-4" />
                                 <span>Sous-theme</span>
                             </div>
@@ -384,9 +396,19 @@ export function GeneratorPage() {
                     <div className="step-card p-6 md:p-8 animate-in slide-in-from-bottom-4 duration-500">
                         <div className="mb-6">
                             <div className="flex items-center gap-2 text-sm text-gray-500 mb-2">
-                                <span className="text-[#3bb3a9]">{selectedTheme?.shortTitle}</span>
+                                <span
+                                    className="text-[#3bb3a9] cursor-pointer hover:underline font-medium"
+                                    onClick={() => setCurrentStep(1)}
+                                >
+                                    {selectedTheme?.shortTitle}
+                                </span>
                                 <ChevronRight className="w-4 h-4" />
-                                <span className="text-[#3bb3a9]">{selectedSubTheme?.title}</span>
+                                <span
+                                    className="text-[#3bb3a9] cursor-pointer hover:underline font-medium"
+                                    onClick={() => setCurrentStep(2)}
+                                >
+                                    {selectedSubTheme?.title}
+                                </span>
                                 <ChevronRight className="w-4 h-4" />
                                 <span>Categorie</span>
                             </div>
@@ -433,13 +455,31 @@ export function GeneratorPage() {
                     <div className="step-card p-6 md:p-8 animate-in slide-in-from-bottom-4 duration-500">
                         <div className="mb-6">
                             <div className="flex items-center gap-2 text-sm text-gray-500 mb-2">
-                                <span className="text-[#3bb3a9]">{selectedTheme?.shortTitle}</span>
+                                <span
+                                    className="text-[#3bb3a9] cursor-pointer hover:underline font-medium"
+                                    onClick={() => setCurrentStep(1)}
+                                >
+                                    {selectedTheme?.shortTitle}
+                                </span>
                                 <ChevronRight className="w-4 h-4" />
-                                <span className="text-[#3bb3a9]">{selectedSubTheme?.title}</span>
+                                <span
+                                    className="text-[#3bb3a9] cursor-pointer hover:underline font-medium"
+                                    onClick={() => setCurrentStep(2)}
+                                >
+                                    {selectedSubTheme?.title}
+                                </span>
                                 {selectedNestedSubTheme && (
                                     <>
                                         <ChevronRight className="w-4 h-4" />
-                                        <span className="text-[#3bb3a9]">{selectedNestedSubTheme.title}</span>
+                                        <span
+                                            className="text-[#3bb3a9] cursor-pointer hover:underline font-medium"
+                                            onClick={() => {
+                                                setSelectedDatasetId(null);
+                                                // Stay on step 3 but reset dataset
+                                            }}
+                                        >
+                                            {selectedNestedSubTheme.title}
+                                        </span>
                                     </>
                                 )}
                                 <ChevronRight className="w-4 h-4" />
@@ -496,19 +536,39 @@ export function GeneratorPage() {
                     <div className="step-card p-6 md:p-8 animate-in slide-in-from-bottom-4 duration-500">
                         <div className="mb-6">
                             <div className="flex items-center gap-2 text-sm text-gray-500 mb-2">
-                                <span className="text-[#3bb3a9]">{selectedTheme?.shortTitle}</span>
+                                <span
+                                    className="text-[#3bb3a9] cursor-pointer hover:underline font-medium"
+                                    onClick={() => setCurrentStep(1)}
+                                >
+                                    {selectedTheme?.shortTitle}
+                                </span>
                                 <ChevronRight className="w-4 h-4" />
-                                <span className="text-[#3bb3a9]">{selectedSubTheme?.title || 'Tous'}</span>
+                                <span
+                                    className="text-[#3bb3a9] cursor-pointer hover:underline font-medium"
+                                    onClick={() => setCurrentStep(2)}
+                                >
+                                    {selectedSubTheme?.title || 'Tous'}
+                                </span>
                                 {selectedNestedSubTheme && (
                                     <>
                                         <ChevronRight className="w-4 h-4" />
-                                        <span className="text-[#3bb3a9]">{selectedNestedSubTheme.title}</span>
+                                        <span
+                                            className="text-[#3bb3a9] cursor-pointer hover:underline font-medium"
+                                            onClick={() => setSelectedDatasetId(null)}
+                                        >
+                                            {selectedNestedSubTheme.title}
+                                        </span>
                                     </>
                                 )}
                                 {selectedDatasetId && hasMultipleDatasets && (
                                     <>
                                         <ChevronRight className="w-4 h-4" />
-                                        <span className="text-[#3bb3a9]">{leafDatasets.find((d: any) => d.id === selectedDatasetId)?.label}</span>
+                                        <span
+                                            className="text-[#3bb3a9] cursor-pointer hover:underline font-medium"
+                                            onClick={() => setSelectedDatasetId(null)}
+                                        >
+                                            {leafDatasets.find((d: any) => d.id === selectedDatasetId)?.label}
+                                        </span>
                                     </>
                                 )}
                                 <ChevronRight className="w-4 h-4" />
