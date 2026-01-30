@@ -8,7 +8,8 @@ RUN pip install --no-cache-dir -r requirements.txt
 
 # Copy application files
 COPY app.py .
-COPY Backend/generate_reports.py ./Backend/
+COPY Backend/prisme_engine.py ./Backend/
+COPY Backend/themes_config.json ./Backend/
 COPY Backend/csv_sources/ ./Backend/csv_sources/
 
 # Copy frontend build

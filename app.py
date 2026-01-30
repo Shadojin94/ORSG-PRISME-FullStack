@@ -17,14 +17,14 @@ FRONTEND_DIST = BASE_DIR / "Frontend" / "dist"
 # Add Backend to path to import the engine
 sys.path.append(str(BACKEND_DIR))
 
-# Import Engine Logic
+# Import Engine Logic (prisme_engine.py - config-driven avec tous les datasets)
 try:
-    from generate_reports import generate_prisme_excel, CSV_SOURCES_DIR, OUTPUT_DIR
+    from prisme_engine import generate_prisme_excel, OUTPUT_DIR, CSV_SOURCES_DIR
 except ImportError as e:
-    print(f"CRITICAL ERROR: Could not import generation engine. {e}")
+    print(f"CRITICAL ERROR: Could not import generation engine. {e}") 
     sys.exit(1)
 
-# Ensure output directory exists (it should be defined in generate_reports, but safe to check)
+# Ensure output directory exists
 OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
 
 
@@ -55,9 +55,8 @@ async def generate_report(theme: str, year: int):
     print(f"Request: Generate {theme} for {year}")
     
     try:
-        # Call the engine
-        # Note: generate_prisme_excel returns a Path object to the generated file (ZIP or Xlsx)
-        output_path = generate_prisme_excel(theme, year, CSV_SOURCES_DIR)
+        # Call the engine (prisme_engine.generate_prisme_excel(dataset_id, year))
+        output_path = generate_prisme_excel(theme, year)
         
         if output_path and output_path.exists():
             filename = output_path.name
