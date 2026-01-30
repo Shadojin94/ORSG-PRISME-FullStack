@@ -34,7 +34,7 @@ export function Sidebar() {
                         <span className="w-3 h-6 bg-[#3bb3a9] rounded-r-sm"></span>
                     </div>
                     <h1 className="text-xl font-bold text-white tracking-wide">
-                        PRISME
+                        Data Visus
                     </h1>
                 </Link>
                 <div className="px-3 py-1 bg-white/10 rounded-full inline-block">

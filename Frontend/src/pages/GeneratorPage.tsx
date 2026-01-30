@@ -181,9 +181,9 @@ export function GeneratorPage() {
 
             {/* Header */}
             <div className="mb-8 text-center">
-                <h2 className="text-3xl font-bold text-[#1a4b8c] mb-2">Generation PRISME</h2>
+                <h2 className="text-3xl font-bold text-[#1a4b8c] mb-2">Génération Géoclip</h2>
                 <p className="text-gray-600 max-w-2xl mx-auto">
-                    Generez automatiquement les fichiers Excel pour PRISME a partir des donnees MOCA-O.
+                    Générez automatiquement les fichiers Excel pour Géoclip à partir des données MOCA-O.
                 </p>
             </div>
 
