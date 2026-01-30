@@ -8,8 +8,8 @@ pnpm-debug.log*
 lerna-debug.log*
 
 node_modules
-dist
-dist-ssr
+# dist - REMOVED: we need dist in the repo for Docker deployment
+# dist-ssr
 *.local
 
 # Editor directories and files
