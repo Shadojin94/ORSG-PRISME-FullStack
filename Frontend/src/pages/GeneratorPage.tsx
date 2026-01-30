@@ -114,6 +114,28 @@ export function GeneratorPage() {
         return count
     }
 
+    // Count demo-ready datasets in a subTheme (including nested)
+    const countDemoReady = (st: any): number => {
+        let count = st.datasets?.filter((d: any) => d.demoReady)?.length || 0
+        if (st.subThemes) {
+            for (const nested of st.subThemes) {
+                count += countDemoReady(nested)
+            }
+        }
+        return count
+    }
+
+    // Count demo-ready datasets in an entire theme
+    const countThemeDemoReady = (theme: any): number => {
+        let count = theme.datasets?.filter((d: any) => d.demoReady)?.length || 0
+        if (theme.subThemes) {
+            for (const st of theme.subThemes) {
+                count += countDemoReady(st)
+            }
+        }
+        return count
+    }
+
     // Start generation - DIRECT API MODE with dynamic dataset ID
     const startGeneration = async () => {
         setIsProcessing(true)
@@ -243,9 +265,17 @@ export function GeneratorPage() {
                                             <p className="text-xs text-gray-500 mt-1 line-clamp-2">
                                                 {theme.description}
                                             </p>
-                                            <div className="flex items-center gap-1 mt-2 text-xs text-[#3bb3a9]">
-                                                <FolderOpen className="w-3 h-3" />
-                                                <span>{theme.subThemes?.length || 0} sous-themes</span>
+                                            <div className="flex items-center gap-2 mt-2 flex-wrap">
+                                                <div className="flex items-center gap-1 text-xs text-[#3bb3a9]">
+                                                    <FolderOpen className="w-3 h-3" />
+                                                    <span>{theme.subThemes?.length || 0} sous-themes</span>
+                                                </div>
+                                                {countThemeDemoReady(theme) > 0 && (
+                                                    <div className="flex items-center gap-1 text-xs bg-green-100 text-green-700 px-2 py-0.5 rounded-full font-medium">
+                                                        <CheckCircle2 className="w-3 h-3" />
+                                                        <span>{countThemeDemoReady(theme)} Démo</span>
+                                                    </div>
+                                                )}
                                             </div>
                                         </div>
                                         <ChevronRight className="w-5 h-5 text-gray-300 group-hover:text-[#3bb3a9]" />
@@ -281,9 +311,17 @@ export function GeneratorPage() {
                                 >
                                     <div className="flex items-center justify-between">
                                         <div>
-                                            <h4 className="font-bold text-gray-800 group-hover:text-[#1a4b8c]">
-                                                {subTheme.title}
-                                            </h4>
+                                            <div className="flex items-center gap-2">
+                                                <h4 className="font-bold text-gray-800 group-hover:text-[#1a4b8c]">
+                                                    {subTheme.title}
+                                                </h4>
+                                                {countDemoReady(subTheme) > 0 && (
+                                                    <span className="flex items-center gap-1 text-[10px] bg-green-100 text-green-700 px-1.5 py-0.5 rounded-full font-medium">
+                                                        <CheckCircle2 className="w-2.5 h-2.5" />
+                                                        {countDemoReady(subTheme)}
+                                                    </span>
+                                                )}
+                                            </div>
                                             <p className="text-xs text-gray-500 mt-1">
                                                 {countDatasets(subTheme)} indicateur{countDatasets(subTheme) > 1 ? 's' : ''}
                                             </p>
@@ -291,8 +329,14 @@ export function GeneratorPage() {
                                         <ChevronRight className="w-5 h-5 text-gray-300 group-hover:text-[#3bb3a9]" />
                                     </div>
                                     <div className="mt-3 flex flex-wrap gap-1">
-                                        {subTheme.datasets.slice(0, 3).map(ds => (
-                                            <span key={ds.id} className="text-[10px] bg-gray-100 text-gray-600 px-2 py-0.5 rounded">
+                                        {subTheme.datasets.slice(0, 3).map((ds: any) => (
+                                            <span key={ds.id} className={cn(
+                                                "text-[10px] px-2 py-0.5 rounded",
+                                                ds.demoReady
+                                                    ? "bg-green-100 text-green-700 font-medium"
+                                                    : "bg-gray-100 text-gray-600"
+                                            )}>
+                                                {ds.demoReady && "✓ "}
                                                 {ds.label.length > 30 ? ds.label.substring(0, 30) + '...' : ds.label}
                                             </span>
                                         ))}

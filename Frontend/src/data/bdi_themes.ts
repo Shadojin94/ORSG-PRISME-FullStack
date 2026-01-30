@@ -31,23 +31,23 @@ export const BDI_THEMES = [
                         title: "Structure de la population - Recensement",
                         datasets: [
                             { id: "densite", label: "Densite de population", source: "INSEE" },
-                            { id: "structure_quinq", label: "Structure quinquennale de la population", source: "INSEE / MOCA-O" },
-                            { id: "structure_grp", label: "Structure par groupe d'age", source: "MOCA-O" },
+                            { id: "structure_quinq", label: "Structure quinquennale de la population", source: "INSEE / MOCA-O", demoReady: true },
+                            { id: "structure_grp", label: "Structure par groupe d'age", source: "MOCA-O", demoReady: true },
                         ]
                     },
                     {
                         id: "naissance_fecondite",
                         title: "Naissance, fecondite",
                         datasets: [
-                            { id: "indice_fecondite", label: "Indice de fecondite", source: "INSEE / MOCA-O" },
-                            { id: "fecondite", label: "Naissances et fecondite", source: "MOCA-O" },
+                            { id: "indice_fecondite", label: "Indice de fecondite", source: "INSEE / MOCA-O", demoReady: true },
+                            { id: "fecondite", label: "Naissances et fecondite", source: "MOCA-O", demoReady: true },
                         ]
                     },
                     {
                         id: "petite_enfance",
                         title: "Petite enfance",
                         datasets: [
-                            { id: "pop_inf3ans", label: "Population < 3 ans", source: "INSEE / MOCA-O" },
+                            { id: "pop_inf3ans", label: "Population < 3 ans", source: "INSEE / MOCA-O", demoReady: true },
                         ]
                     },
                     {
@@ -63,7 +63,7 @@ export const BDI_THEMES = [
                 id: "education",
                 title: "Education",
                 datasets: [
-                    { id: "educ", label: "Scolarisation et diplomes (population 6-16 et 15-64 ans)", source: "INSEE / MOCA-O" },
+                    { id: "educ", label: "Scolarisation et diplomes (population 6-16 et 15-64 ans)", source: "INSEE / MOCA-O", demoReady: true },
                 ]
             },
             {
@@ -75,14 +75,14 @@ export const BDI_THEMES = [
                         id: "emploi",
                         title: "Emploi",
                         datasets: [
-                            { id: "emplois", label: "Emploi et activite", source: "INSEE / MOCA-O" },
+                            { id: "emplois", label: "Emploi et activite", source: "INSEE / MOCA-O", demoReady: true },
                         ]
                     },
                     {
                         id: "revenu",
                         title: "Revenu",
                         datasets: [
-                            { id: "revenu", label: "Revenus et fiscalite", source: "INSEE / MOCA-O" },
+                            { id: "revenu", label: "Revenus et fiscalite", source: "INSEE / MOCA-O", demoReady: true },
                         ]
                     }
                 ]
@@ -91,7 +91,7 @@ export const BDI_THEMES = [
                 id: "prestations_sociales",
                 title: "Prestations sociales",
                 datasets: [
-                    { id: "alloc", label: "Allocataires prestations sociales", source: "INSEE / MOCA-O" },
+                    { id: "alloc", label: "Allocataires prestations sociales", source: "INSEE / MOCA-O", demoReady: true },
                 ]
             },
             {
@@ -103,14 +103,14 @@ export const BDI_THEMES = [
                         id: "cond_vie_anciens",
                         title: "Conditions de vie anciens",
                         datasets: [
-                            { id: "pers_sup65ans_seules", label: "Personnes 65+ seules", source: "INSEE / MOCA-O" },
+                            { id: "pers_sup65ans_seules", label: "Personnes 65+ seules", source: "INSEE / MOCA-O", demoReady: true },
                         ]
                     },
                     {
                         id: "cond_vie_enfants",
                         title: "Conditions de vie enfants",
                         datasets: [
-                            { id: "familles_mono", label: "Familles monoparentales", source: "INSEE / MOCA-O" },
+                            { id: "familles_mono", label: "Familles monoparentales", source: "INSEE / MOCA-O", demoReady: true },
                             { id: "accueil_pop_inf3ans", label: "Accueil petite enfance", source: "DREES" },
                         ]
                     },
@@ -119,7 +119,7 @@ export const BDI_THEMES = [
                         title: "Conditions de vie generales",
                         datasets: [
                             { id: "pers_menages", label: "Menages", source: "INSEE / MOCA-O" },
-                            { id: "types_menages", label: "Types de menages", source: "INSEE / MOCA-O" },
+                            { id: "types_menages", label: "Types de menages", source: "INSEE / MOCA-O", demoReady: true },
                         ]
                     }
                 ]
