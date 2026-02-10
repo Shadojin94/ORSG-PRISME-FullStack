@@ -16,10 +16,11 @@ export default defineConfig({
   },
   server: {
     proxy: {
-      // Proxy all API requests to PRISME backend
+      // Proxy all API requests to PRISME file server
       '/api': {
-        target: 'http://localhost:8000',
+        target: 'http://localhost:3001',
         changeOrigin: true,
+        rewrite: (path: string) => path.replace(/^\/api/, ''),
       }
     },
     fs: {

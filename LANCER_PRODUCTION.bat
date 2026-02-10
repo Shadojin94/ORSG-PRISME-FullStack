@@ -1,44 +1,37 @@
 @echo off
 echo ==========================================
-echo    PRISME ORSG - Demarrage Automatique
+echo    PRISME ORSG - Mode Production
 echo ==========================================
 echo.
 
 :: Start PocketBase
-echo [1/3] Lancement de PocketBase...
+echo [1/2] Lancement de PocketBase...
 start "PocketBase" cmd /k "cd /d %~dp0Backend && pocketbase.exe serve"
 
 :: Wait for PocketBase to start
 timeout /t 3 /nobreak > nul
 
-:: Start File Server (Node.js)
-echo [2/3] Lancement du serveur de fichiers...
+:: Start File Server (Node.js) - sert l'API + le frontend
+echo [2/2] Lancement du serveur (API + Frontend)...
 start "FileServer" cmd /k "cd /d %~dp0Backend && node file_server.js"
 
-:: Wait for File Server
-timeout /t 2 /nobreak > nul
-
-:: Note: Le moteur Python est appele directement par le File Server (pas besoin de watchdog)
-
-:: Start Frontend (dev mode)
-echo [3/3] Lancement du Frontend...
-start "Frontend" cmd /k "cd /d %~dp0Frontend && npm run dev"
-
 :: Wait and open browser
-timeout /t 5 /nobreak > nul
+timeout /t 3 /nobreak > nul
 echo.
 echo ==========================================
 echo    Ouverture du navigateur...
 echo ==========================================
-start http://localhost:5173
+start http://localhost:3001
 
 echo.
 echo ==========================================
 echo    Services actifs :
 echo    - PocketBase : http://localhost:8090
-echo    - File Server : http://localhost:3001
-echo    - Frontend    : http://localhost:5173
+echo    - Application : http://localhost:3001
 echo ==========================================
 echo.
-echo Fermez cette fenetre pour continuer.
+echo Mode production : le frontend est compile et servi
+echo directement par le serveur Node.js (port 3001).
+echo Pas besoin de npm ou Vite.
+echo.
 pause

@@ -137,28 +137,40 @@
           "type": "variable",
           "label": "Population 6-16 ans",
           "csvPattern": "Pop_6-16ans",
-          "parser": "moca"
+          "parser": "moca",
+          "yearColumn": 0,
+          "geoColumn": 3,
+          "valueColumn": 4
         },
         {
           "id": "nb_non_sco",
           "type": "variable",
           "label": "Jeunes 6-16 ans non scolarisés",
           "csvPattern": "nb_non_scol",
-          "parser": "moca"
+          "parser": "moca",
+          "yearColumn": 0,
+          "geoColumn": 1,
+          "valueColumn": 2
         },
         {
           "id": "pop_15_64",
           "type": "variable",
           "label": "Population 15-64 ans",
           "csvPattern": "Pop_15-64ans",
-          "parser": "moca"
+          "parser": "moca",
+          "yearColumn": 0,
+          "geoColumn": 3,
+          "valueColumn": 4
         },
         {
           "id": "nb_peu_dipl",
           "type": "variable",
           "label": "Personnes 15+ peu ou pas diplômées",
           "csvPattern": "Nb_peu_dipl",
-          "parser": "moca"
+          "parser": "moca",
+          "yearColumn": 0,
+          "geoColumn": 4,
+          "valueColumn": 5
         }
       ]
     },
@@ -223,14 +235,20 @@
           "type": "variable",
           "label": "Familles avec enfant(s) < 25 ans",
           "csvPattern": "Nb_Famille_Avec_Enfant",
-          "parser": "moca"
+          "parser": "moca",
+          "yearColumn": 0,
+          "geoColumn": 3,
+          "valueColumn": 4
         },
         {
           "id": "nb_familles_mono_enf",
           "type": "variable",
           "label": "Familles monoparentales avec enfant(s) < 25 ans",
           "csvPattern": "Nb_Famille_Mono_Avec_Enfant",
-          "parser": "moca"
+          "parser": "moca",
+          "yearColumn": 0,
+          "geoColumn": 3,
+          "valueColumn": 4
         }
       ]
     },
@@ -259,7 +277,10 @@
           "type": "variable",
           "label": "Population < 3 ans",
           "csvPattern": "Pop_Inf3ans",
-          "parser": "moca"
+          "parser": "moca",
+          "yearColumn": 0,
+          "geoColumn": 4,
+          "valueColumn": 5
         },
         {
           "id": "rp",
@@ -267,6 +288,9 @@
           "label": "Population totale (RP)",
           "csvPattern": "pop_0ans_tous_niveaux",
           "parser": "moca",
+          "yearColumn": 0,
+          "geoColumn": 3,
+          "valueColumn": 4,
           "note": "A remplacer par RP_total quand disponible"
         }
       ]
@@ -357,14 +381,20 @@
           "type": "variable",
           "label": "Nombre de ménages",
           "csvPattern": "nb_menages_GF_REG_DOM",
-          "parser": "moca"
+          "parser": "moca",
+          "yearColumn": 0,
+          "geoColumn": 2,
+          "valueColumn": 3
         },
         {
           "id": "tot_menages",
           "type": "variable",
           "label": "Total ménages",
           "csvPattern": "Tot_men",
-          "parser": "moca"
+          "parser": "moca",
+          "yearColumn": 0,
+          "geoColumn": 1,
+          "valueColumn": 2
         }
       ]
     },
@@ -623,7 +653,10 @@
           "type": "variable",
           "label": "Nombre de ménages",
           "csvPattern": "Tot_men",
-          "parser": "moca"
+          "parser": "moca",
+          "yearColumn": 0,
+          "geoColumn": 1,
+          "valueColumn": 2
         }
       ]
     },
@@ -790,6 +823,9 @@
           "label": "Population par groupe d'âge",
           "csvPattern": "pop_*_tous_niveaux",
           "parser": "moca",
+          "yearColumn": 0,
+          "geoColumn": 3,
+          "valueColumn": 4,
           "note": "Fichiers multiples: pop_0ans, pop_3_15, pop_16_25, pop_26_64, pop_plus_65ans"
         },
         {
@@ -798,6 +834,9 @@
           "label": "Population totale (RP)",
           "csvPattern": "pop_*_tous_niveaux",
           "parser": "moca",
+          "yearColumn": 0,
+          "geoColumn": 3,
+          "valueColumn": 4,
           "aggregated": true
         }
       ]

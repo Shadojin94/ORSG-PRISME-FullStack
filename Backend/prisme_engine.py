@@ -24,7 +24,7 @@ warnings.filterwarnings('ignore')
 # Le fichier est dans Backend/, donc BASE_DIR = Backend/
 BASE_DIR = Path(__file__).parent
 CSV_SOURCES_DIR = BASE_DIR / "csv_sources"
-OUTPUT_DIR = BASE_DIR.parent / "output"  # output/ au niveau Version_FullStack/
+OUTPUT_DIR = BASE_DIR / "output"  # output/ au niveau Backend/
 CONFIG_FILE = BASE_DIR / "themes_config.json"
 
 OUTPUT_DIR.mkdir(exist_ok=True)
@@ -136,11 +136,13 @@ GEO_ID_COLS = {
 }
 
 # ============================================================================
-# MOCA-O CSV PARSER (Legacy Matrix Format)
+# MOCA-O CSV PARSER (Legacy Matrix Format - Auto-detect columns)
 # ============================================================================
 
-def parse_moca_csv(filepath):
-    """Parse un fichier CSV au format MOCA-O classique (matrice)."""
+def parse_moca_legacy_csv(filepath):
+    """Parse un fichier CSV au format MOCA-O classique (matrice).
+    Auto-détecte: year=col0, geo=pattern matching, value=dernière col numérique.
+    """
     result = {'com': [], 'reg': [], 'dom': [], 'fh': [], 'fra': []}
     
     try:
@@ -694,7 +696,7 @@ def detect_available_years(dataset_id):
             print(f"[WARN] Erreur parsing {csv_file}: {e}")
             continue
     
-    return sorted(list(years))
+    return sorted([int(y) for y in years])
 
 
 # ============================================================================
