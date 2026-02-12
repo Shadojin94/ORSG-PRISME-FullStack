@@ -1,7 +1,5 @@
 # Node
 node_modules/
-dist/
-.env
 
 # Python
 venv/
@@ -13,15 +11,45 @@ __pycache__/
 pb_data/
 pocketbase.exe
 
-# Output
-Backend/output/*.xlsx
-!Backend/output/.gitkeep
+# Generated outputs (regenerables par prisme_engine.py)
+Backend/output/
+Backend/output_sharepoint/
+Backend/test_output/
+output/
+
+# Input data (volumineux, pas du code source)
+Backend/inputs/
+
+# CSV sources (fournis par le client, pas du code)
 Backend/csv_sources/
 
-# IDE
+# Fichiers de dev/debug
+debug_*.py
+app.py
+nul
+api-*.txt
+*.log
+
+# Documentation temporaire
+Debugging Multi-Dataset Configs.md
+Generate Educ Opendata File.md
+INSEE CSV Download.md
+
+# Documents business (sensibles)
+Devis sign*
+Devis_*
+
+# IDE / Agent configs
 .vscode/
 .idea/
+.claude/
+
+# Exemple client (660 fichiers, trop lourd)
+Exemple Arbo Client/
 
 # OS
 .DS_Store
 Thumbs.db
+
+# Environment
+.env

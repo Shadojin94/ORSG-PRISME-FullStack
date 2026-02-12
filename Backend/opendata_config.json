@@ -1,0 +1,200 @@
+{
+  "version": "1.0",
+  "description": "Configuration des sources Open Data pour PRISME (alternative à MOCA-O)",
+  "lastUpdated": "2026-02-02",
+
+  "sources": {
+    "insee_diplomes_formation": {
+      "name": "INSEE Base infracommunale Diplômes-Formation",
+      "provider": "INSEE",
+      "baseUrl": "https://www.insee.fr/fr/statistiques/fichier",
+      "years": {
+        "2022": "/8647010/base-ic-diplomes-formation-2022_csv.zip",
+        "2021": "/8268840/base-ic-diplomes-formation-2021_csv.zip",
+        "2020": "/7704080/base-ic-diplomes-formation-2020_csv.zip",
+        "2019": "/6543298/base-ic-diplomes-formation-2019_csv.zip",
+        "2018": "/5650712/base-ic-diplomes-formation-2018_csv.zip",
+        "2017": "/4799252/base-ic-diplomes-formation-2017_csv.zip"
+      },
+      "encoding": "utf-8",
+      "separator": ";",
+      "geoColumn": "COM",
+      "irisColumn": "IRIS",
+      "variables": {
+        "pop_6_16": {
+          "formula": "P{YY}_POP0610 + P{YY}_POP1114 + P{YY}_POP1517 * 0.666",
+          "description": "Population 6-16 ans"
+        },
+        "nb_non_sco": {
+          "formula": "(P{YY}_POP0610 - P{YY}_SCOL0610) + (P{YY}_POP1114 - P{YY}_SCOL1114) + (P{YY}_POP1517 - P{YY}_SCOL1517) * 0.666",
+          "description": "Jeunes 6-16 ans non scolarisés"
+        },
+        "pop_15_64": {
+          "formula": "P{YY}_POP1524 + P{YY}_POP2554 + P{YY}_POP5564",
+          "fallback": "P{YY}_POP1517 + P{YY}_POP1824 + P{YY}_POP2529 + P{YY}_POP30P * 0.88",
+          "description": "Population 15-64 ans"
+        },
+        "nb_peu_dipl": {
+          "formula": "P{YY}_NSCOL15P_DIPLMIN",
+          "fallback": "P{YY}_NSCOL15P",
+          "description": "Personnes 15+ peu ou pas diplômées"
+        }
+      },
+      "providesDatasets": ["educ"]
+    },
+
+    "insee_couples_familles_menages": {
+      "name": "INSEE Base infracommunale Couples-Familles-Ménages",
+      "provider": "INSEE",
+      "baseUrl": "https://www.insee.fr/fr/statistiques/fichier",
+      "years": {
+        "2022": "/8647008/base-ic-couples-familles-menages-2022_csv.zip",
+        "2021": "/8268828/base-ic-couples-familles-menages-2021_csv.zip",
+        "2020": "/7704086/base-ic-couples-familles-menages-2020_csv.zip",
+        "2019": "/6543224/base-ic-couples-familles-menages-2019_csv.zip",
+        "2018": "/5650714/base-ic-couples-familles-menages-2018_csv.zip",
+        "2017": "/4799268/base-ic-couples-familles-menages-2017_csv.zip"
+      },
+      "encoding": "utf-8",
+      "separator": ";",
+      "geoColumn": "COM",
+      "variables": {
+        "nb_pop_65ans": {
+          "formula": "P{YY}_POP65P",
+          "description": "Population 65 ans et plus"
+        },
+        "nb_pop_65ans_seule": {
+          "formula": "C{YY}_PMEN_MENPSEUL65P",
+          "fallback": "C{YY}_MEN_PMEN1 * 0.3",
+          "description": "Personnes seules 65 ans et plus"
+        },
+        "nb_familles_enf": {
+          "formula": "C{YY}_FAM_COUPAENF + C{YY}_FAM_MONO",
+          "description": "Familles avec enfant(s) < 25 ans"
+        },
+        "nb_familles_mono_enf": {
+          "formula": "C{YY}_FAM_MONO",
+          "fallback": "C{YY}_MENFAMMONO",
+          "description": "Familles monoparentales avec enfant(s)"
+        },
+        "pop_inf3ans": {
+          "formula": "P{YY}_POP0002",
+          "description": "Population moins de 3 ans"
+        },
+        "nb_menages_total": {
+          "formula": "C{YY}_MEN",
+          "description": "Nombre total de ménages"
+        }
+      },
+      "providesDatasets": ["pers_sup65ans_seules", "familles_mono", "pop_inf3ans", "pers_menages", "types_menages"]
+    },
+
+    "insee_populations_legales": {
+      "name": "INSEE Populations légales",
+      "provider": "INSEE",
+      "baseUrl": "https://www.insee.fr/fr/statistiques/fichier",
+      "years": {
+        "2023": "/8680726/ensemble.zip",
+        "2022": "/8290591/ensemble.zip",
+        "2021": "/7739582/ensemble.zip"
+      },
+      "encoding": "utf-8",
+      "separator": ";",
+      "geoColumn": "CODGEO",
+      "variables": {
+        "population_municipale": {
+          "formula": "PMUN",
+          "description": "Population municipale"
+        },
+        "population_totale": {
+          "formula": "PTOT",
+          "description": "Population totale"
+        }
+      },
+      "providesDatasets": ["densite", "structure_pop"]
+    },
+
+    "insee_naissances": {
+      "name": "INSEE État civil - Naissances",
+      "provider": "INSEE",
+      "baseUrl": "https://www.insee.fr/fr/statistiques/fichier",
+      "years": {
+        "2024": "/8582142/reg_dep_naissances_2024.zip",
+        "2023": "/7673429/reg_dep_naissances_2023.zip",
+        "2022": "/7673429/reg_dep_naissances_2022.zip"
+      },
+      "encoding": "utf-8",
+      "separator": ";",
+      "geoLevel": "regional",
+      "note": "Données régionales uniquement, pas au niveau communal",
+      "providesDatasets": ["indice_fecondite"]
+    },
+
+    "data_gouv_ircom": {
+      "name": "IRCOM - Impôt sur le revenu par collectivité",
+      "provider": "DGFiP via data.gouv.fr",
+      "url": "https://www.data.gouv.fr/fr/datasets/limpot-sur-le-revenu-par-collectivite-territoriale-ircom/",
+      "directDownload": "https://www.data.gouv.fr/fr/datasets/r/36b63bea-2be5-42d7-b72e-5d5e46f47e85",
+      "encoding": "utf-8",
+      "separator": ";",
+      "geoColumn": "code_commune",
+      "variables": {
+        "nb_foyers_non_impo": {
+          "column": "foyers_non_imposables",
+          "description": "Foyers fiscaux non imposables"
+        },
+        "nb_foyers_imposes": {
+          "column": "foyers_imposables",
+          "description": "Foyers fiscaux imposables"
+        }
+      },
+      "providesDatasets": ["revenu"]
+    },
+
+    "cafdata_allocataires": {
+      "name": "CAF Data - Allocataires par commune",
+      "provider": "CNAF",
+      "apiEndpoint": "https://data.caf.fr/api/explore/v2.1/catalog/datasets/s_ben_com_f/exports/csv",
+      "params": {
+        "lang": "fr",
+        "timezone": "Europe/Paris",
+        "delimiter": ";"
+      },
+      "encoding": "utf-8",
+      "separator": ";",
+      "geoColumn": "code_commune",
+      "variables": {
+        "nb_alloc": {
+          "column": "Nbre_foyers_alloc_total",
+          "description": "Nombre de foyers allocataires"
+        },
+        "nb_personnes_couvertes": {
+          "column": "Nbre_pers_couv_total",
+          "description": "Personnes couvertes par prestations CNAF"
+        }
+      },
+      "providesDatasets": ["alloc"]
+    }
+  },
+
+  "datasetsRequiringMocaO": {
+    "fecondite": {
+      "reason": "Données par tranche d'âge de la mère au niveau communal non disponibles en Open Data",
+      "variables": ["tx_fecondite", "nb_naiss_vivante"],
+      "alternative": "Utiliser données régionales INSEE pour approximation"
+    },
+    "emplois_csp": {
+      "reason": "Catégories socio-professionnelles détaillées (ouvriers/cadres) non disponibles par commune",
+      "variables": ["nb_ouvriers", "nb_cadres"],
+      "alternative": "Utiliser ratios régionaux ou données emploi générales"
+    }
+  },
+
+  "geoFilters": {
+    "guyane": {
+      "communeCodes": ["97301", "97302", "97303", "97304", "97305", "97306", "97307", "97308", "97309", "97310", "97311", "97312", "97313", "97314", "97352", "97353", "97356", "97357", "97358", "97360", "97361", "97362"],
+      "regionCode": "03",
+      "departementCode": "973"
+    }
+  }
+}
