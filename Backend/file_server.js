@@ -12,7 +12,7 @@ const PORT = 3001;
 const OUTPUT_DIR = path.join(__dirname, 'output');
 const CONFIG_FILE = path.join(__dirname, 'themes_config.json');
 const FRONTEND_DIST = path.join(__dirname, '..', 'Frontend', 'dist');
-const PYTHON_EXE = 'py';
+const PYTHON_EXE = process.env.PYTHON_EXE || 'py';
 
 // Ensure output directory exists
 if (!fs.existsSync(OUTPUT_DIR)) {

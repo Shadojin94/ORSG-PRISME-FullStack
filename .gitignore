@@ -20,8 +20,8 @@ output/
 # Input data (volumineux, pas du code source)
 Backend/inputs/
 
-# CSV sources (fournis par le client, pas du code)
-Backend/csv_sources/
+# CSV sources - INCLUS dans le repo (nécessaires pour Docker build, 649 KB)
+# Backend/csv_sources/
 
 # Fichiers de dev/debug
 debug_*.py
