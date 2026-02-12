@@ -8,7 +8,7 @@ const fs = require('fs');
 const path = require('path');
 const { spawn } = require('child_process');
 
-const PORT = 3001;
+const PORT = process.env.PORT || 3001;
 const OUTPUT_DIR = path.join(__dirname, 'output');
 const CONFIG_FILE = path.join(__dirname, 'themes_config.json');
 const FRONTEND_DIST = path.join(__dirname, '..', 'Frontend', 'dist');

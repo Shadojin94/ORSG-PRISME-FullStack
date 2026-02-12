@@ -30,11 +30,12 @@ COPY Frontend/dist/ ./Frontend/dist/
 # Create output directory
 RUN mkdir -p Backend/output
 
-# Environment: Python command for Linux
+# Environment
 ENV PYTHON_EXE=python3
+ENV PORT=8000
 
-# file_server.js listens on port 3001
-EXPOSE 3001
+# Match the port cercleonline expects (old app.py used 8000)
+EXPOSE 8000
 
 # Start the Node.js server
 CMD ["node", "Backend/file_server.js"]
