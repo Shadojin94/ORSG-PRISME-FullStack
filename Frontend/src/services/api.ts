@@ -106,3 +106,17 @@ export async function reloadConfig(): Promise<{ success: boolean; message?: stri
 export function getDownloadUrl(filename: string): string {
     return `${API_BASE}/api/download/${filename}`;
 }
+
+// Get generated files history
+export interface GeneratedFile {
+    filename: string;
+    date: string;
+    size: string;
+    theme: string;
+}
+
+export async function getFiles(): Promise<GeneratedFile[]> {
+    const response = await fetch(`${API_BASE}/api/files`);
+    if (!response.ok) throw new Error('Erreur serveur');
+    return response.json();
+}
