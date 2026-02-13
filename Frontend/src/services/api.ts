@@ -116,7 +116,13 @@ export interface GeneratedFile {
 }
 
 export async function getFiles(): Promise<GeneratedFile[]> {
-    const response = await fetch(`${API_BASE}/api/files`);
-    if (!response.ok) throw new Error('Erreur serveur');
-    return response.json();
+    try {
+        const response = await fetch(`${API_BASE}/api/files`);
+        if (!response.ok) throw new Error('Erreur serveur');
+        const data = await response.json();
+        return Array.isArray(data) ? data : [];
+    } catch (error) {
+        console.error("API error in getFiles:", error);
+        return [];
+    }
 }

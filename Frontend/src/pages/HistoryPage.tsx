@@ -41,7 +41,7 @@ export function HistoryPage() {
         }
     }
 
-    const filteredFiles = files.filter(f =>
+    const filteredFiles = (Array.isArray(files) ? files : []).filter(f =>
         f.filename.toLowerCase().includes(searchTerm.toLowerCase()) ||
         f.theme.toLowerCase().includes(searchTerm.toLowerCase())
     );
