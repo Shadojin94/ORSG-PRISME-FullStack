@@ -1,4 +1,4 @@
-import { Link, useLocation } from "react-router-dom"
+import { Link, useLocation, useNavigate } from "react-router-dom"
 import { cn } from "@/lib/utils"
 import {
     Home,
@@ -28,6 +28,22 @@ interface SidebarProps {
 
 export function Sidebar({ isOpen = false, onClose }: SidebarProps) {
     const location = useLocation()
+    const navigate = useNavigate()
+
+    const handleNavClick = (path: string) => {
+        // Clicking "Thématiques" always resets generator to step 1
+        if (path === '/generate') {
+            try { sessionStorage.removeItem('prisme_generator_state'); } catch (e) { }
+        }
+        onClose?.()
+    }
+
+    const handleLogout = () => {
+        localStorage.removeItem("demo_authenticated")
+        sessionStorage.clear()
+        onClose?.()
+        navigate("/login", { replace: true })
+    }
 
     return (
         <div className={cn(
@@ -63,7 +79,7 @@ export function Sidebar({ isOpen = false, onClose }: SidebarProps) {
                     <Link
                         key={item.path}
                         to={item.path}
-                        onClick={onClose}
+                        onClick={() => handleNavClick(item.path)}
                         className={cn(
                             "flex items-center gap-3 px-4 py-3 rounded-lg transition-all duration-200 font-medium group relative overflow-hidden",
                             location.pathname === item.path
@@ -103,12 +119,12 @@ export function Sidebar({ isOpen = false, onClose }: SidebarProps) {
                         <p className="text-xs text-white/50 group-hover:text-white/80 transition-colors">Mon Profil</p>
                     </div>
                 </Link>
-                <Link
-                    to="/login"
-                    className="flex items-center justify-center gap-2 mt-3 p-2 text-xs font-medium text-white/60 hover:text-white hover:bg-red-500/20 rounded-lg transition-all border border-transparent hover:border-red-500/30"
+                <button
+                    onClick={handleLogout}
+                    className="flex items-center justify-center gap-2 mt-3 p-2 w-full text-xs font-medium text-white/60 hover:text-white hover:bg-red-500/20 rounded-lg transition-all border border-transparent hover:border-red-500/30 cursor-pointer"
                 >
                     <LogOut className="w-3 h-3" /> Déconnexion
-                </Link>
+                </button>
             </div>
         </div>
     )

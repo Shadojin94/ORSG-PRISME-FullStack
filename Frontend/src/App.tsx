@@ -1,5 +1,4 @@
 import { BrowserRouter, Routes, Route, Navigate, useLocation } from "react-router-dom"
-import { useState, useEffect } from "react"
 import { AppLayout } from "./components/layout/AppLayout"
 import { DashboardPage } from "./pages/DashboardPage"
 import { GeneratorPage } from "./pages/GeneratorPage"
@@ -13,22 +12,13 @@ import "./index.css"
 
 // Protected Route Component - vérifie l'authentification via localStorage
 function ProtectedRoute({ children }: { children: React.ReactNode }) {
-  const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(null)
+  const location = useLocation()
 
-  useEffect(() => {
-    // Vérifier si l'utilisateur a été authentifié via le code démo
-    const authToken = localStorage.getItem("demo_authenticated")
-    setIsAuthenticated(authToken === "true")
-  }, [])
+  // Check auth synchronously on every render/navigation (no stale state)
+  const isAuthenticated = localStorage.getItem("demo_authenticated") === "true"
 
-  // Loading state
-  if (isAuthenticated === null) {
-    return <div className="flex items-center justify-center h-screen">Chargement...</div>
-  }
-
-  // Redirect to login if not authenticated
   if (!isAuthenticated) {
-    return <Navigate to="/login" replace />
+    return <Navigate to="/login" replace state={{ from: location.pathname }} />
   }
 
   return <>{children}</>

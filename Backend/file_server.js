@@ -604,7 +604,7 @@ except Exception as e:
         if (fs.existsSync(filePath) && fs.statSync(filePath).isFile()) {
             const ext = path.extname(filePath).toLowerCase();
             const contentType = MIME_TYPES[ext] || 'application/octet-stream';
-            res.writeHead(200, { 'Content-Type': contentType });
+            res.writeHead(200, { 'Content-Type': contentType, 'X-Robots-Tag': 'noindex, nofollow' });
             fs.createReadStream(filePath).pipe(res);
             return;
         }
@@ -612,7 +612,7 @@ except Exception as e:
         // SPA fallback: serve index.html for all non-API routes
         const indexPath = path.join(FRONTEND_DIST, 'index.html');
         if (fs.existsSync(indexPath)) {
-            res.writeHead(200, { 'Content-Type': 'text/html' });
+            res.writeHead(200, { 'Content-Type': 'text/html', 'X-Robots-Tag': 'noindex, nofollow' });
             fs.createReadStream(indexPath).pipe(res);
             return;
         }
