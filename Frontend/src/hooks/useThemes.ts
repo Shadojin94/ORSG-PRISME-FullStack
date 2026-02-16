@@ -184,7 +184,7 @@ export function useThemes() {
 }
 
 // Hook pour charger les années d'un dataset spécifique
-export function useDatasetYears(datasetId: string | null) {
+export function useDatasetYears(datasetId: string | null, openDataMode: boolean = false) {
     const [years, setYears] = useState<number[]>([]);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
@@ -199,10 +199,12 @@ export function useDatasetYears(datasetId: string | null) {
             setLoading(true);
             setError(null);
             try {
-                const yearsData = await api.getAvailableYears(datasetId);
+                const yearsData = openDataMode
+                    ? await api.getAvailableYearsOpenData(datasetId)
+                    : await api.getAvailableYears(datasetId);
                 setYears(yearsData);
             } catch (err) {
-                console.error(`Failed to load years for ${datasetId}:`, err);
+                console.error(`Failed to load years for ${datasetId} (openData=${openDataMode}):`, err);
                 setError(err instanceof Error ? err.message : 'Erreur');
                 setYears([]);
             } finally {
@@ -211,7 +213,7 @@ export function useDatasetYears(datasetId: string | null) {
         };
 
         load();
-    }, [datasetId]);
+    }, [datasetId, openDataMode]);
 
     return { years, loading, error };
 }

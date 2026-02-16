@@ -20,6 +20,7 @@ sys.path.append(str(BACKEND_DIR))
 # Import Engine Logic (prisme_engine.py - config-driven avec tous les datasets)
 try:
     from prisme_engine import generate_prisme_excel, OUTPUT_DIR, CSV_SOURCES_DIR
+    from generate_from_opendata import generate_theme
 except ImportError as e:
     print(f"CRITICAL ERROR: Could not import generation engine. {e}") 
     sys.exit(1)
@@ -75,6 +76,42 @@ async def generate_report(theme: str, year: int):
             
     except Exception as e:
         print(f"Exception during generation: {e}")
+        return {
+            "success": False, 
+            "error": str(e)
+        }
+
+@app.post("/api/generate-opendata")
+async def generate_opendata(theme: str, year: int):
+    """
+    Triggers Open Data file generation.
+    """
+    print(f"Request: Generate Open Data {theme} for {year}")
+    
+    try:
+        # Call the Open Data Engine
+        root_dir = generate_theme(theme, year)
+        
+        # The zip file is generated at OUTPUT_DIR / f"{theme}_opendata_{year}.zip"
+        filename = f"{theme}_opendata_{year}.zip"
+        zip_path = OUTPUT_DIR / filename
+        
+        if zip_path.exists():
+            print(f"Success Open Data: {filename}")
+            return {
+                "success": True, 
+                "filename": filename,
+                "message": "Fichier Open Data généré avec succès"
+            }
+        else:
+            print("Failure: Open Data Engine returned but file not found")
+            return {
+                "success": False, 
+                "error": "La génération a échoué (Fichier ZIP introuvable)"
+            }
+            
+    except Exception as e:
+        print(f"Exception during Open Data generation: {e}")
         return {
             "success": False, 
             "error": str(e)

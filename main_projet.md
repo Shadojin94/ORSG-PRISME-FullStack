@@ -29,7 +29,7 @@ Ce fichier sert de **source unique de vérité** pour tous les agents IA travail
 |-------|-------|-----------|------------|-------------|
 | **Claude Code Opus 4.6** | Claude Code (CLI/VSCode) | 🥇 #1 — Référence | Architecture, Backend Python, Debug, Décisions critiques | **Usage limité** (quota par session). Réserver pour tâches critiques |
 | **GPT 5.3 Codex** | Codex (CLI/IDE) | 🥈 #2 — Fiable | Backend, Frontend, Intégration, Développement général | Vérifier la cohérence avec l'existant avant de merger |
-| **Gemini 3 Pro** | Antigravity | 🥉 #3 — Frontend/Intégration uniquement | Frontend React, pages statiques, UI, intégration composants | **⛔ INTERDIT BACKEND & PYTHON**. A causé des erreurs en backend |
+| **Gemini 3 Pro** | Antigravity | 🥉 #3 — Frontend + Recherche Web | Frontend React, pages statiques, UI, **Recherche internet** (meilleur agent pour ça) | **⛔ INTERDIT BACKEND & PYTHON**. A causé des erreurs en backend. MCP: Firecrawl, Context7, Ref |
 
 ### Règles d'Affectation par Chantier
 
@@ -41,6 +41,7 @@ Ce fichier sert de **source unique de vérité** pour tous les agents IA travail
 | **D** Auth email (file_server.js + LoginPage.tsx) | GPT Codex | Backend Node.js critique |
 | **E** Pages statiques (DocsPage, SupportPage, ProfilePage) | Gemini 3 Pro ✅ | Frontend React pur, pas de risque backend |
 | **F** Recette + Livraison | Claude Opus (pilotage) | Décisions critiques, validation finale |
+| **Recherche Web** (URLs, APIs, docs) | Gemini 3 Pro ✅ | MCP Firecrawl + Context7 + Ref, meilleur pour l'info à jour |
 
 ### Stratégie d'Utilisation de Claude Opus 4.6
 
@@ -70,12 +71,15 @@ Ce fichier sert de **source unique de vérité** pour tous les agents IA travail
 - `Backend/download_opendata.py` — Téléchargement Open Data
 - Tout fichier `.py` dans `Backend/`
 
-**Gemini PEUT modifier** :
+**Gemini PEUT faire** :
 - `Frontend/src/pages/*.tsx` — Pages React
 - `Frontend/src/components/*.tsx` — Composants UI
 - `Frontend/src/lib/*.ts` — Utilitaires frontend
 - `Frontend/src/data/*.ts` — Données mock/seed
 - Fichiers `.css`, `.md` dans `Frontend/`
+- **Recherche internet** — Gemini est le MEILLEUR agent pour récupérer des infos à jour (APIs, docs, URLs)
+- **MCP disponibles** : Firecrawl (self-hosted), Context7, Ref — tous actifs
+- **Cas d'usage recherche** : Trouver URLs Open Data INSEE/CAF/IRCOM, vérifier disponibilité APIs, documentation technique
 
 ### 🔄 Protocole de Coordination Inter-Agents
 
@@ -658,6 +662,18 @@ python -c "import zipfile; z=zipfile.ZipFile('output/educ_2022.zip'); print(z.na
 
 ### 2026-02-12
 
+- **[13:46]** [GPT 5.3 Codex] [TERMINE] Chantier A - Finalisation Open Data (revenu + unification + validation)
+  - Fichiers modifies: `Backend/generate_from_opendata.py`, `Backend/opendata_config.json`, `main_projet.md`
+  - Sources ajoutees: `Backend/inputs/opendata/ircom_2022.zip`, `Backend/inputs/opendata/ircom_2022/ircom_communes_complet_revenus_2020.xlsx`, `Backend/inputs/opendata/ircom_communes_complet_revenus_2020.xlsx`, `Backend/inputs/opendata/superficie_communes.json`, `Backend/inputs/opendata/diplomes_formation_2022.csv`
+  - Resultat: ZIP genere `Backend/output/revenu_opendata_2022.zip`; support ajoute pour `educ`, `pers_sup65ans_seules`, `familles_mono`; 9 ZIP Open Data 2022 generes avec dossiers normalises (`Commune/Region/DOM/France_Hexagonale/France_Entiere`)
+  - Validation: colonnes presentes, valeurs Guyane non nulles, aggregations Region/DOM/FH/FR coherentes (tolerance arrondi) sur les 9 themes
+
+
+- **[13:02]** [GPT 5.3 Codex] [TERMINE] Chantier A - Transforms Open Data pour 5 datasets manquants
+  - Fichiers modifies: `Backend/download_opendata.py`, `Backend/generate_from_opendata.py`, `Backend/opendata_config.json`
+  - Implemente: transforms `pop_inf3ans`, `pers_menages`, `types_menages`, `alloc`, `revenu`, `densite` + generation ZIP multi-themes avec 5 dossiers (`Commune/Region/DOM/France_Hexagonale/France_Entiere`) et agregations `reg/dom/fh/fra` remplies
+  - Validation locale: ZIP generes et structure 5 dossiers confirmee pour `pop_inf3ans`, `pers_menages`, `types_menages`, `alloc`, `densite` (annee 2022)
+  - Point d'attention: `densite.superficie` reste a 0 sans fichier Open Data superficie injecte dans `Backend/inputs/opendata/`
 - **[13:00]** [Claude Code Opus 4.6] [TERMINÉ] Ajout section Agents IA — Hiérarchie & Répartition
   - Ajouts: Tableau 3 agents (Claude/GPT/Gemini), règles d'affectation par chantier, restrictions Gemini (backend interdit), stratégie quota Claude, protocole coordination, template briefing
   - Résultat: Chaque agent sait ce qu'il peut et ne peut pas faire

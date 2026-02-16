@@ -60,6 +60,14 @@ export async function getAvailableYears(datasetId: string): Promise<number[]> {
     return data.years;
 }
 
+// Get available years for a dataset in Open Data mode
+export async function getAvailableYearsOpenData(datasetId: string): Promise<number[]> {
+    const response = await fetch(`${API_BASE}/api/available-years-opendata?dataset=${datasetId}`);
+    const data = await response.json();
+    if (!data.success) throw new Error(data.error || 'Failed to fetch Open Data years');
+    return data.years;
+}
+
 // Check CSV availability for a dataset
 export async function checkCsvAvailability(datasetId: string): Promise<CsvAvailability> {
     const response = await fetch(`${API_BASE}/api/check-csv?dataset=${datasetId}`);
@@ -89,6 +97,18 @@ export async function generateExcel(theme: string, year: number): Promise<{
     error?: string;
 }> {
     const response = await fetch(`${API_BASE}/api/generate?theme=${theme}&year=${year}`, {
+        method: 'POST'
+    });
+    return response.json();
+}
+
+// Generate Open Data files
+export async function generateOpenData(theme: string, year: number): Promise<{
+    success: boolean;
+    filename?: string;
+    error?: string;
+}> {
+    const response = await fetch(`${API_BASE}/api/generate-opendata?theme=${theme}&year=${year}`, {
         method: 'POST'
     });
     return response.json();

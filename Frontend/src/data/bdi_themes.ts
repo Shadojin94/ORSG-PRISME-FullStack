@@ -30,7 +30,7 @@ export const BDI_THEMES = [
                         id: "structure_pop",
                         title: "Structure de la population - Recensement",
                         datasets: [
-                            { id: "densite", label: "Densite de population", source: "INSEE" },
+                            { id: "densite", label: "Densite de population", source: "INSEE Open Data", demoReady: true, availableYears: [2021] },
                             { id: "structure_quinq", label: "Structure quinquennale de la population", source: "INSEE / MOCA-O", demoReady: true, availableYears: [2020, 2021, 2022] },
                             { id: "structure_grp", label: "Structure par groupe d'age", source: "MOCA-O", demoReady: true, availableYears: [2020, 2021, 2022] },
                         ]
@@ -118,7 +118,7 @@ export const BDI_THEMES = [
                         id: "cond_vie_generales",
                         title: "Conditions de vie generales",
                         datasets: [
-                            { id: "pers_menages", label: "Menages", source: "INSEE / MOCA-O" },
+                            { id: "pers_menages", label: "Menages", source: "INSEE / MOCA-O", demoReady: true, availableYears: [2020, 2021, 2022] },
                             { id: "types_menages", label: "Types de menages", source: "INSEE / MOCA-O", demoReady: true, availableYears: [2020, 2021] },
                         ]
                     }
@@ -148,6 +148,8 @@ export const BDI_THEMES = [
                 id: "mortalite",
                 title: "Mortalite",
                 datasets: [
+                    { id: "mortalite_gen", label: "Mortalite toutes causes (effectifs et taux)", source: "INSERM-CepiDc Open Data", demoReady: true, availableYears: [2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023] },
+                    { id: "mortalite_covid", label: "Mortalite Covid-19", source: "INSERM-CepiDc Open Data", demoReady: true, availableYears: [2020, 2021, 2022, 2023] },
                     { id: "dc_gene_prema", label: "Mortalite generale et prematuree", source: "INSERM-CepiDc / MOCA-O" },
                     { id: "dc_infantil_neonat", label: "Mortalite infantile et neonatale", source: "INSERM-CepiDc / MOCA-O" },
                 ]
@@ -207,7 +209,7 @@ export const BDI_THEMES = [
                 id: "cardiovasculaire",
                 title: "Maladies Cardiovasculaires",
                 datasets: [
-                    { id: "mortalite_cardio", label: "Mortalite AVC, Cardiopathies, Insuffisance cardiaque", source: "INSERM-CepiDc / MOCA-O" },
+                    { id: "mortalite_cardio", label: "Mortalite AVC, Cardiopathies, Insuffisance cardiaque", source: "INSERM-CepiDc Open Data", demoReady: true, availableYears: [2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023] },
                     { id: "prevalence_cardio", label: "Prevalence HTA, AVC, Insuffisance cardiaque", source: "SNDS" },
                 ]
             },
@@ -215,28 +217,28 @@ export const BDI_THEMES = [
                 id: "respiratoire",
                 title: "Maladies Respiratoires",
                 datasets: [
-                    { id: "mortalite_respi", label: "Mortalite respiratoire, Asthme, BPCO", source: "INSERM-CepiDc / MOCA-O" },
+                    { id: "mortalite_respi", label: "Mortalite respiratoire, Asthme, BPCO", source: "INSERM-CepiDc Open Data", demoReady: true, availableYears: [2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023] },
                 ]
             },
             {
                 id: "neurologique",
                 title: "Maladies Neurologiques",
                 datasets: [
-                    { id: "mortalite_neuro", label: "Mortalite Alzheimer, Parkinson", source: "INSERM-CepiDc / MOCA-O" },
+                    { id: "mortalite_neuro", label: "Mortalite Alzheimer, Parkinson, Demence", source: "INSERM-CepiDc Open Data", demoReady: true, availableYears: [2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023] },
                 ]
             },
             {
                 id: "cancers",
                 title: "Cancers",
                 datasets: [
-                    { id: "mortalite_cancer", label: "Mortalite cancers (poumon, sein, colorectal, prostate)", source: "INSERM-CepiDc / MOCA-O" },
+                    { id: "mortalite_tumeurs", label: "Mortalite cancers / tumeurs", source: "INSERM-CepiDc Open Data", demoReady: true, availableYears: [2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023] },
                 ]
             },
             {
                 id: "metabolique",
                 title: "Maladies Metaboliques",
                 datasets: [
-                    { id: "mortalite_diabete", label: "Mortalite diabete, maladies foie/pancreas", source: "INSERM-CepiDc / MOCA-O" },
+                    { id: "mortalite_diabete", label: "Mortalite endocrinienne, diabete, nutrition", source: "INSERM-CepiDc Open Data", demoReady: true, availableYears: [2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023] },
                 ]
             },
             {
@@ -298,7 +300,7 @@ export const BDI_THEMES = [
                 id: "accidents_route",
                 title: "Accidents de la Route",
                 datasets: [
-                    { id: "route", label: "Accidents, blesses, deces", source: "ONISR / Barometre Accidents" },
+                    { id: "route", label: "Accidents, blesses, deces", source: "ONISR / BAAC Open Data", demoReady: true, availableYears: [2019, 2020, 2021, 2022, 2023] },
                 ]
             },
             {

@@ -148,6 +148,70 @@ print(json.dumps({"success": True, "years": years}))
         return;
     }
 
+    // ========== AVAILABLE YEARS OPEN DATA ==========
+    if (urlPath === '/available-years-opendata' && req.method === 'GET') {
+        const datasetId = url.searchParams.get('dataset');
+        if (!datasetId) {
+            jsonResponse(res, 400, { success: false, error: 'Missing dataset parameter' });
+            return;
+        }
+        try {
+            const result = await runPython(`
+import sys, json
+sys.path.insert(0, '${__dirname.replace(/\\/g, '/')}')
+from generate_from_opendata import THEME_CONFIGS, INPUTS_DIR
+
+dataset = '${datasetId}'
+if dataset not in THEME_CONFIGS:
+    print(json.dumps({"success": True, "years": []}))
+else:
+    src = THEME_CONFIGS[dataset]["source_type"]
+    years = []
+    if src == "educ":
+        for p in sorted(INPUTS_DIR.glob("diplomes_formation_*.csv")):
+            y = p.stem.split("_")[-1]
+            if y.isdigit(): years.append(int(y))
+    elif src == "couples":
+        for p in sorted(INPUTS_DIR.glob("couples_familles_*.csv")):
+            y = p.stem.split("_")[-1]
+            if y.isdigit(): years.append(int(y))
+    elif src == "caf":
+        import pandas as pd
+        caf = INPUTS_DIR / "caf_allocataires_2023.csv"
+        if caf.exists():
+            df = pd.read_csv(caf, sep=";", low_memory=False)
+            if "Date référence" in df.columns:
+                years = sorted(set(int(str(v)[:4]) for v in df["Date référence"].dropna()))
+    elif src == "ircom":
+        for p in INPUTS_DIR.rglob("ircom_communes_complet_revenus_*.xlsx"):
+            y = p.stem.split("_")[-1]
+            if y.isdigit(): years.append(int(y))
+    elif src == "pop_legales":
+        for p in sorted(INPUTS_DIR.glob("populations_*.csv")):
+            y = p.stem.split("_")[-1]
+            if y.isdigit(): years.append(int(y))
+    elif src == "baac":
+        baac_dir = INPUTS_DIR / "baac"
+        if baac_dir.exists():
+            for p in sorted(baac_dir.glob("caract_*.csv")):
+                y = p.stem.split("_")[-1]
+                if y.isdigit(): years.append(int(y))
+    elif src == "cepidc":
+        cepidc_dir = INPUTS_DIR / "cepidc"
+        src_file = cepidc_dir / "taux_effectifs_regions_15_23.xlsx"
+        if src_file.exists():
+            years = list(range(2015, 2024))
+    years = sorted(set(years))
+    print(json.dumps({"success": True, "years": years}))
+`);
+            const data = JSON.parse(result.stdout.trim().split('\n').pop());
+            jsonResponse(res, 200, data);
+        } catch (e) {
+            jsonResponse(res, 500, { success: false, years: [], error: e.message });
+        }
+        return;
+    }
+
     // ========== CHECK CSV AVAILABILITY ==========
     if (urlPath === '/check-csv' && req.method === 'GET') {
         const datasetId = url.searchParams.get('dataset');
@@ -211,6 +275,46 @@ print(json.dumps({"success": True, "years": years}))
         return;
     }
 
+    // ========== GENERATE OPEN DATA ENDPOINT ==========
+    // POST /generate-opendata?theme=educ&year=2022
+    if (urlPath === '/generate-opendata' && req.method === 'POST') {
+        const theme = url.searchParams.get('theme') || 'educ';
+        const year = url.searchParams.get('year') || '2022';
+
+        console.log(`\nOpen Data generation requested: ${theme}_${year}`);
+
+        // Themes supportés par generate_from_opendata.py
+        const supportedThemes = [
+            'educ', 'pers_sup65ans_seules', 'familles_mono', 'pop_inf3ans',
+            'pers_menages', 'types_menages', 'alloc', 'revenu', 'densite'
+        ];
+
+        if (!supportedThemes.includes(theme)) {
+            jsonResponse(res, 400, {
+                success: false,
+                error: `Theme non supporté pour Open Data. Themes disponibles: ${supportedThemes.join(', ')}`
+            });
+            return;
+        }
+
+        try {
+            const result = await generateOpenDataFile(theme, parseInt(year));
+
+            if (result.success) {
+                jsonResponse(res, 200, {
+                    success: true,
+                    filename: result.filename,
+                    message: `Open Data file generated: ${result.filename}`
+                });
+            } else {
+                jsonResponse(res, 500, { success: false, error: result.error });
+            }
+        } catch (err) {
+            jsonResponse(res, 500, { success: false, error: err.message });
+        }
+        return;
+    }
+
     // ========== DOWNLOAD ENDPOINT ==========
     if (urlPath.startsWith('/download/')) {
         const filename = decodeURIComponent(urlPath.replace('/download/', ''));
@@ -243,13 +347,40 @@ print(json.dumps({"success": True, "years": years}))
     }
 
     // ========== LIST FILES ENDPOINT ==========
-    if (urlPath === '/files') {
+    // GET /api/files — Returns metadata array for all generated .zip files
+    // Format: [{ filename, date, size, theme }]
+    if (urlPath === '/files' && req.method === 'GET') {
         try {
-            const files = fs.readdirSync(OUTPUT_DIR)
-                .filter(f => (f.endsWith('.xlsx') || f.endsWith('.zip')) && !f.startsWith('~$'));
-            jsonResponse(res, 200, { files });
-        } catch {
-            jsonResponse(res, 500, { success: false, error: 'Error reading output directory' });
+            const zipFiles = fs.readdirSync(OUTPUT_DIR)
+                .filter(f => f.endsWith('.zip') && !f.startsWith('~$'));
+
+            const result = zipFiles.map(f => {
+                const filePath = path.join(OUTPUT_DIR, f);
+                const stat = fs.statSync(filePath);
+
+                // Date: YYYY-MM-DD from mtime
+                const mtime = stat.mtime;
+                const date = `${mtime.getFullYear()}-${String(mtime.getMonth() + 1).padStart(2, '0')}-${String(mtime.getDate()).padStart(2, '0')}`;
+
+                // Size: human-readable
+                const bytes = stat.size;
+                const size = bytes >= 1024 * 1024
+                    ? `${(bytes / (1024 * 1024)).toFixed(1)} MB`
+                    : `${(bytes / 1024).toFixed(0)} KB`;
+
+                // Theme: extract prefix before first '_' or year pattern, lookup in config
+                const baseName = f.replace(/\.zip$/, '');
+                const themeId = baseName.replace(/_\d{4}.*$/, '');
+                const cfg = (themesConfig.datasets || {})[themeId];
+                const theme = cfg ? cfg.name : themeId;
+
+                return { filename: f, date, size, theme };
+            });
+
+            jsonResponse(res, 200, result);
+        } catch (e) {
+            console.error(`Error listing files: ${e.message}`);
+            jsonResponse(res, 200, []);
         }
         return;
     }
@@ -371,6 +502,60 @@ else:
     });
 }
 
+/**
+ * Generate a file using generate_from_opendata.py
+ */
+function generateOpenDataFile(theme, year) {
+    return new Promise((resolve) => {
+        const scriptPath = path.join(__dirname, 'generate_from_opendata.py');
+
+        if (!fs.existsSync(scriptPath)) {
+            resolve({ success: false, error: 'generate_from_opendata.py not found' });
+            return;
+        }
+
+        // Call generate_from_opendata.py --theme <theme> --year <year>
+        const child = spawn(PYTHON_EXE, [scriptPath, '--theme', theme, '--year', year.toString()], { 
+            cwd: __dirname 
+        });
+
+        let stdout = '';
+        let stderr = '';
+
+        child.stdout.on('data', (data) => {
+            stdout += data.toString();
+            console.log(`   ${data.toString().trim()}`);
+        });
+
+        child.stderr.on('data', (data) => {
+            stderr += data.toString();
+            console.error(`   ERROR: ${data.toString().trim()}`);
+        });
+
+        child.on('close', (code) => {
+            if (code === 0 && stdout.includes('[OK]')) {
+                // Extract filename from output: "[OK] educ 2022: .../output/educ_opendata_2022.zip"
+                const match = stdout.match(/([a-z_]+_opendata_\d{4}\.zip)/);
+                if (match) {
+                    const filename = match[1];
+                    console.log(`Generated Open Data: ${filename}`);
+                    resolve({ success: true, filename });
+                } else {
+                    console.log('Generation succeeded but filename not found in output');
+                    resolve({ success: true, filename: `${theme}_opendata_${year}.zip` });
+                }
+            } else {
+                console.log(`Open Data generation failed (exit ${code})`);
+                resolve({ success: false, error: stderr || stdout || 'Unknown error' });
+            }
+        });
+
+        child.on('error', (err) => {
+            resolve({ success: false, error: err.message });
+        });
+    });
+}
+
 server.listen(PORT, () => {
     console.log(`\n${'='.repeat(50)}`);
     console.log(`PRISME File Server v4.0`);
@@ -387,7 +572,8 @@ server.listen(PORT, () => {
     console.log(`   - GET  /check-csv?dataset=educ`);
     console.log(`   - POST /reload-config`);
     console.log(`   - POST /generate?theme=educ&year=2022`);
+    console.log(`   - POST /generate-opendata?theme=educ&year=2022`);
     console.log(`   - GET  /download/educ_2022.zip`);
-    console.log(`   - GET  /files`);
+    console.log(`   - GET  /files              (metadata: filename, date, size, theme)`);
     console.log(`${'='.repeat(50)}\n`);
 });

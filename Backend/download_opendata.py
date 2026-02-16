@@ -692,6 +692,267 @@ def transform_familles_mono(source_path: Path, year: int) -> Dict[str, pd.DataFr
 
 
 # ============================================================================
+# TRANSFORMS OPEN DATA CHANTIER A
+# ============================================================================
+
+def _read_csv_auto(path: Path, dtype: Dict = None) -> pd.DataFrame:
+    last_error = None
+    for sep in (';', ','):
+        try:
+            return pd.read_csv(path, sep=sep, dtype=dtype, low_memory=False)
+        except Exception as e:
+            last_error = e
+    raise RuntimeError(f"Lecture CSV impossible pour {path}: {last_error}")
+
+
+def _safe_numeric(df: pd.DataFrame, candidates: List[str]) -> pd.Series:
+    for col in candidates:
+        if col in df.columns:
+            return pd.to_numeric(df[col], errors='coerce').fillna(0)
+    return pd.Series([0] * len(df), index=df.index, dtype='float64')
+
+
+def transform_pop_inf3ans(source_path: Path, year: int) -> Dict[str, pd.DataFrame]:
+    """Transforme pop_inf3ans + rp depuis Couples-Familles-Menages."""
+    print(f"\n[POP_INF3ANS] Transformation {year}...")
+    try:
+        df = _read_csv_auto(source_path, dtype={'IRIS': str, 'COM': str, 'CODGEO': str})
+    except Exception as e:
+        print(f"  [ERROR] Lecture fichier: {e}")
+        return {}
+
+    geo_col = 'COM' if 'COM' in df.columns else 'CODGEO'
+    df['commune_code'] = df[geo_col].apply(extract_commune_code)
+    df_guyane = df[df['commune_code'].isin(COMMUNES_GUYANE)].copy()
+    if df_guyane.empty:
+        print("  [WARN] Aucune ligne Guyane")
+        return {}
+
+    numeric_cols = [c for c in df_guyane.columns if c.startswith('C') or c.startswith('P')]
+    df_com = df_guyane.groupby('commune_code')[numeric_cols].sum().reset_index()
+
+    prefix_c = f"C{str(year)[2:]}_"
+    prefix_p = f"P{str(year)[2:]}_"
+
+    pop_inf3 = _safe_numeric(df_com, [f'{prefix_p}POP0002', f'{prefix_p}POP0003'])
+    if float(pop_inf3.sum()) == 0:
+        ne24f1 = _safe_numeric(df_com, [f'{prefix_c}NE24F1'])
+        ne24f2 = _safe_numeric(df_com, [f'{prefix_c}NE24F2'])
+        ne24f3 = _safe_numeric(df_com, [f'{prefix_c}NE24F3'])
+        ne24f4p = _safe_numeric(df_com, [f'{prefix_c}NE24F4P'])
+        total_enfants = ne24f1 + 2 * ne24f2 + 3 * ne24f3 + 4 * ne24f4p
+        pop_inf3 = total_enfants * 0.12
+
+    rp = _safe_numeric(df_com, [f'{prefix_p}POP', f'{prefix_c}PMEN'])
+
+    df_result = pd.DataFrame({
+        'codgeo': pd.to_numeric(df_com['commune_code'], errors='coerce').fillna(0).astype(int),
+        'annee': year,
+        'pop_inf3ans': pop_inf3.round(2),
+        'rp': rp.round(2)
+    })
+
+    print(f"  [OK] {len(df_result)} communes traitées")
+    return {'com': df_result, 'year': year, 'dataset': 'pop_inf3ans'}
+
+
+def transform_pers_menages(source_path: Path, year: int) -> Dict[str, pd.DataFrame]:
+    """Transforme pers_menages depuis Couples-Familles-Menages."""
+    print(f"\n[PERS_MENAGES] Transformation {year}...")
+    try:
+        df = _read_csv_auto(source_path, dtype={'IRIS': str, 'COM': str, 'CODGEO': str})
+    except Exception as e:
+        print(f"  [ERROR] Lecture fichier: {e}")
+        return {}
+
+    geo_col = 'COM' if 'COM' in df.columns else 'CODGEO'
+    df['commune_code'] = df[geo_col].apply(extract_commune_code)
+    df_guyane = df[df['commune_code'].isin(COMMUNES_GUYANE)].copy()
+    if df_guyane.empty:
+        return {}
+
+    numeric_cols = [c for c in df_guyane.columns if c.startswith('C') or c.startswith('P')]
+    df_com = df_guyane.groupby('commune_code')[numeric_cols].sum().reset_index()
+    prefix_c = f"C{str(year)[2:]}_"
+
+    df_result = pd.DataFrame({
+        'codgeo': pd.to_numeric(df_com['commune_code'], errors='coerce').fillna(0).astype(int),
+        'annee': year,
+        'nb_menages': _safe_numeric(df_com, [f'{prefix_c}MEN']).round(2),
+        'nb_pers_menages': _safe_numeric(df_com, [f'{prefix_c}PMEN']).round(2)
+    })
+
+    print(f"  [OK] {len(df_result)} communes traitées")
+    return {'com': df_result, 'year': year, 'dataset': 'pers_menages'}
+
+
+def transform_types_menages(source_path: Path, year: int) -> Dict[str, pd.DataFrame]:
+    """Transforme types_menages depuis Couples-Familles-Menages."""
+    print(f"\n[TYPES_MENAGES] Transformation {year}...")
+    try:
+        df = _read_csv_auto(source_path, dtype={'IRIS': str, 'COM': str, 'CODGEO': str})
+    except Exception as e:
+        print(f"  [ERROR] Lecture fichier: {e}")
+        return {}
+
+    geo_col = 'COM' if 'COM' in df.columns else 'CODGEO'
+    df['commune_code'] = df[geo_col].apply(extract_commune_code)
+    df_guyane = df[df['commune_code'].isin(COMMUNES_GUYANE)].copy()
+    if df_guyane.empty:
+        return {}
+
+    numeric_cols = [c for c in df_guyane.columns if c.startswith('C') or c.startswith('P')]
+    df_com = df_guyane.groupby('commune_code')[numeric_cols].sum().reset_index()
+    prefix_c = f"C{str(year)[2:]}_"
+
+    df_result = pd.DataFrame({
+        'codgeo': pd.to_numeric(df_com['commune_code'], errors='coerce').fillna(0).astype(int),
+        'annee': year,
+        'nb_men_seul': _safe_numeric(df_com, [f'{prefix_c}MENPSEUL']).round(2),
+        'nb_men_couple_senf': _safe_numeric(df_com, [f'{prefix_c}MENCOUPSENF']).round(2),
+        'nb_men_couple_aenf': _safe_numeric(df_com, [f'{prefix_c}MENCOUPAENF']).round(2),
+        'nb_men_fam_mono': _safe_numeric(df_com, [f'{prefix_c}MENFAMMONO']).round(2),
+    })
+
+    print(f"  [OK] {len(df_result)} communes traitées")
+    return {'com': df_result, 'year': year, 'dataset': 'types_menages'}
+
+
+def transform_alloc(source_path: Path, year: int, couples_source: Optional[Path] = None) -> Dict[str, pd.DataFrame]:
+    """Transforme alloc (CAF) avec nb_menages depuis Couples-Familles-Menages."""
+    print(f"\n[ALLOC] Transformation {year}...")
+    try:
+        df = _read_csv_auto(source_path)
+    except Exception as e:
+        print(f"  [ERROR] Lecture CAF: {e}")
+        return {}
+
+    if 'Date référence' not in df.columns or 'Numéro commune' not in df.columns:
+        print("  [ERROR] Colonnes CAF attendues absentes")
+        return {}
+
+    df['year'] = df['Date référence'].astype(str).str[:4]
+    df_year = df[df['year'] == str(year)].copy()
+    if df_year.empty:
+        print(f"  [WARN] Aucune ligne CAF pour {year}")
+        return {}
+
+    df_year['commune_code'] = df_year['Numéro commune'].astype(str).str.zfill(5)
+    df_guyane = df_year[df_year['commune_code'].isin(COMMUNES_GUYANE)].copy()
+    if df_guyane.empty:
+        return {}
+
+    alloc_series = _safe_numeric(df_guyane, ['Nombre foyers NDUR', 'Nbre_foyers_alloc_total'])
+    out = pd.DataFrame({
+        'commune_code': df_guyane['commune_code'],
+        'nb_alloc': alloc_series
+    }).groupby('commune_code', as_index=False).sum()
+
+    out['nb_menages'] = 0.0
+    if couples_source and couples_source.exists():
+        try:
+            couples_df = _read_csv_auto(couples_source, dtype={'IRIS': str, 'COM': str, 'CODGEO': str})
+            geo_col = 'COM' if 'COM' in couples_df.columns else 'CODGEO'
+            couples_df['commune_code'] = couples_df[geo_col].apply(extract_commune_code)
+            couples_df = couples_df[couples_df['commune_code'].isin(COMMUNES_GUYANE)].copy()
+            prefix_c = f"C{str(year)[2:]}_"
+            menages = _safe_numeric(couples_df, [f'{prefix_c}MEN', 'C22_MEN'])
+            men_df = pd.DataFrame({
+                'commune_code': couples_df['commune_code'],
+                'nb_menages': menages
+            }).groupby('commune_code', as_index=False).sum()
+            out = out.merge(men_df, on='commune_code', how='left', suffixes=('', '_m'))
+            out['nb_menages'] = out['nb_menages_m'].fillna(out['nb_menages'])
+            out.drop(columns=['nb_menages_m'], inplace=True)
+        except Exception as e:
+            print(f"  [WARN] Impossible de lier nb_menages couples: {e}")
+
+    df_result = pd.DataFrame({
+        'codgeo': pd.to_numeric(out['commune_code'], errors='coerce').fillna(0).astype(int),
+        'annee': year,
+        'nb_alloc': out['nb_alloc'].round(2),
+        'nb_menages': out['nb_menages'].round(2)
+    })
+    print(f"  [OK] {len(df_result)} communes traitées")
+    return {'com': df_result, 'year': year, 'dataset': 'alloc'}
+
+
+def transform_revenu(source_path: Path, year: int) -> Dict[str, pd.DataFrame]:
+    """Transforme revenu (IRCOM): nb_foyers_non_impo / nb_foyers_imposes."""
+    print(f"\n[REVENU] Transformation {year}...")
+    try:
+        df = _read_csv_auto(source_path)
+    except Exception as e:
+        print(f"  [ERROR] Lecture IRCOM: {e}")
+        return {}
+
+    code_col = next((c for c in ['code_commune', 'Code commune', 'CODGEO', 'COM', 'Numéro commune'] if c in df.columns), None)
+    if not code_col:
+        print("  [ERROR] Colonne code commune introuvable dans IRCOM")
+        return {}
+
+    year_col = next((c for c in ['annee', 'Annee', 'Année', 'year', 'millesime', 'Millesime'] if c in df.columns), None)
+    if year_col:
+        df = df[pd.to_numeric(df[year_col], errors='coerce') == year].copy()
+        if df.empty:
+            print(f"  [WARN] Aucune ligne IRCOM pour {year}")
+            return {}
+
+    df['commune_code'] = df[code_col].astype(str).str.zfill(5).str[:5]
+    df_guyane = df[df['commune_code'].isin(COMMUNES_GUYANE)].copy()
+    if df_guyane.empty:
+        return {}
+
+    df_result = pd.DataFrame({
+        'commune_code': df_guyane['commune_code'],
+        'nb_foyers_non_impo': _safe_numeric(df_guyane, ['foyers_non_imposables', 'nb_foyers_non_impo']),
+        'nb_foyers_imposes': _safe_numeric(df_guyane, ['foyers_imposables', 'nb_foyers_imposes'])
+    }).groupby('commune_code', as_index=False).sum()
+
+    df_result['codgeo'] = pd.to_numeric(df_result['commune_code'], errors='coerce').fillna(0).astype(int)
+    df_result['annee'] = year
+    df_result = df_result[['codgeo', 'annee', 'nb_foyers_non_impo', 'nb_foyers_imposes']]
+    df_result[['nb_foyers_non_impo', 'nb_foyers_imposes']] = df_result[['nb_foyers_non_impo', 'nb_foyers_imposes']].round(2)
+
+    print(f"  [OK] {len(df_result)} communes traitées")
+    return {'com': df_result, 'year': year, 'dataset': 'revenu'}
+
+
+def transform_densite(source_path: Path, year: int) -> Dict[str, pd.DataFrame]:
+    """Transforme densite: rp + superficie (si disponible)."""
+    print(f"\n[DENSITE] Transformation {year}...")
+    try:
+        df = _read_csv_auto(source_path)
+    except Exception as e:
+        print(f"  [ERROR] Lecture populations: {e}")
+        return {}
+
+    code_col = 'COM' if 'COM' in df.columns else ('CODGEO' if 'CODGEO' in df.columns else None)
+    if not code_col:
+        print("  [ERROR] Colonne COM/CODGEO absente")
+        return {}
+
+    df['commune_code'] = df[code_col].astype(str).str.zfill(5).str[:5]
+    df_guyane = df[df['commune_code'].isin(COMMUNES_GUYANE)].copy()
+    if df_guyane.empty:
+        return {}
+
+    df_result = pd.DataFrame({
+        'commune_code': df_guyane['commune_code'],
+        'rp': _safe_numeric(df_guyane, ['PMUN', 'PTOT', 'rp']),
+        'superficie': _safe_numeric(df_guyane, ['superficie', 'SUPERFICIE', 'surface_km2', 'surface'])
+    }).groupby('commune_code', as_index=False).sum()
+
+    df_result['codgeo'] = pd.to_numeric(df_result['commune_code'], errors='coerce').fillna(0).astype(int)
+    df_result['annee'] = year
+    df_result = df_result[['codgeo', 'annee', 'rp', 'superficie']]
+    df_result[['rp', 'superficie']] = df_result[['rp', 'superficie']].round(2)
+
+    print(f"  [OK] {len(df_result)} communes traitées")
+    return {'com': df_result, 'year': year, 'dataset': 'densite'}
+
+
+# ============================================================================
 # EXPORT EN FORMAT PRISME
 # ============================================================================
 
@@ -815,6 +1076,74 @@ def main():
                     results.append(data)
 
                 data = transform_familles_mono(path, year)
+                if data:
+                    export_to_prisme_csv(data)
+                    results.append(data)
+
+                data = transform_pop_inf3ans(path, year)
+                if data:
+                    export_to_prisme_csv(data)
+                    results.append(data)
+
+                data = transform_pers_menages(path, year)
+                if data:
+                    export_to_prisme_csv(data)
+                    results.append(data)
+
+                data = transform_types_menages(path, year)
+                if data:
+                    export_to_prisme_csv(data)
+                    results.append(data)
+
+        elif 'caf_allocataires' in source_id:
+            # Le fichier CAF contient plusieurs années. On traite:
+            # - les années demandées via --years, sinon
+            # - toutes les années trouvées dans le fichier.
+            try:
+                df_caf = _read_csv_auto(path)
+                if 'Date référence' in df_caf.columns:
+                    years_in_file = sorted(
+                        pd.to_numeric(df_caf['Date référence'].astype(str).str[:4], errors='coerce')
+                        .dropna()
+                        .astype(int)
+                        .unique()
+                        .tolist()
+                    )
+                else:
+                    years_in_file = []
+            except Exception:
+                years_in_file = []
+
+            target_years = years if years else years_in_file
+            couples_by_year = {
+                y: downloaded.get(f'couples_familles_{y}')
+                for y in target_years
+                if isinstance(y, int)
+            }
+
+            for y in target_years:
+                if not isinstance(y, int):
+                    continue
+                data = transform_alloc(path, y, couples_by_year.get(y))
+                if data:
+                    export_to_prisme_csv(data)
+                    results.append(data)
+
+        elif 'populations_' in source_id:
+            year = downloaded.get(source_id + '_year')
+            if isinstance(year, int):
+                data = transform_densite(path, year)
+                if data:
+                    export_to_prisme_csv(data)
+                    results.append(data)
+
+    # Revenu (IRCOM) peut être ajouté manuellement dans inputs/opendata.
+    ircom_files = sorted(INPUTS_DIR.glob('*ircom*.csv')) + sorted(INPUTS_DIR.glob('*revenu*.csv'))
+    if ircom_files:
+        target_years = years if years else [2021, 2022, 2023]
+        for ircom_path in ircom_files:
+            for y in target_years:
+                data = transform_revenu(ircom_path, y)
                 if data:
                     export_to_prisme_csv(data)
                     results.append(data)

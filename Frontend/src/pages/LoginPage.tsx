@@ -50,9 +50,9 @@ export function LoginPage() {
         <div className="min-h-screen flex items-center justify-center bg-gray-50 relative overflow-hidden">
 
             {/* Background Decor - ORSG Colors */}
-            <div className="absolute top-0 left-0 w-full h-2 bg-gradient-to-r from-orsg-yellow via-orsg-green to-orsg-blue" />
-            <div className="absolute -bottom-24 -right-24 w-64 h-64 bg-orsg-blue/5 rounded-full blur-3xl" />
-            <div className="absolute -top-24 -left-24 w-64 h-64 bg-orsg-green/5 rounded-full blur-3xl" />
+            <div className="absolute top-0 left-0 w-full h-2 bg-gradient-to-r from-ors-yellow via-ors-green to-ors-blue" />
+            <div className="absolute -bottom-24 -right-24 w-64 h-64 bg-ors-blue/5 rounded-full blur-3xl" />
+            <div className="absolute -top-24 -left-24 w-64 h-64 bg-ors-green/5 rounded-full blur-3xl" />
 
             <div className="w-full max-w-md p-8 relative z-10">
 
@@ -61,9 +61,9 @@ export function LoginPage() {
                     <div className="flex justify-center mb-6">
                         <div className="bg-white p-4 rounded-2xl shadow-lg border border-gray-100">
                             <div className="flex items-center gap-1 scale-125">
-                                <div className="w-2 h-8 bg-orsg-yellow rounded-l-sm"></div>
-                                <div className="w-2 h-8 bg-orsg-green"></div>
-                                <div className="w-2 h-8 bg-orsg-blue rounded-r-sm"></div>
+                                <div className="w-2 h-8 bg-ors-yellow rounded-l-sm"></div>
+                                <div className="w-2 h-8 bg-ors-green"></div>
+                                <div className="w-2 h-8 bg-ors-blue rounded-r-sm"></div>
                             </div>
                         </div>
                     </div>
@@ -79,19 +79,19 @@ export function LoginPage() {
                         <div className={cn(
                             "w-8 h-8 rounded-full flex items-center justify-center font-bold text-sm transition-all",
                             step === 'email'
-                                ? "bg-orsg-blue text-white"
-                                : "bg-orsg-green text-white"
+                                ? "bg-ors-blue text-white"
+                                : "bg-ors-green text-white"
                         )}>
                             1
                         </div>
                         <div className={cn(
                             "w-12 h-1 rounded-full transition-all",
-                            step === 'code' ? "bg-orsg-green" : "bg-gray-200"
+                            step === 'code' ? "bg-ors-green" : "bg-gray-200"
                         )} />
                         <div className={cn(
                             "w-8 h-8 rounded-full flex items-center justify-center font-bold text-sm transition-all",
                             step === 'code'
-                                ? "bg-orsg-green text-white"
+                                ? "bg-ors-green text-white"
                                 : "bg-gray-200 text-gray-400"
                         )}>
                             2
@@ -111,14 +111,14 @@ export function LoginPage() {
                                 <label className="text-sm font-medium text-gray-700 ml-1">Email professionnel</label>
                                 <div className="relative group">
                                     <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                        <Mail className="h-5 w-5 text-gray-400 group-focus-within:text-orsg-blue transition-colors" />
+                                        <Mail className="h-5 w-5 text-gray-400 group-focus-within:text-ors-blue transition-colors" />
                                     </div>
                                     <input
                                         type="email"
                                         value={email}
                                         onChange={(e) => setEmail(e.target.value)}
                                         autoComplete="off"
-                                        className="block w-full pl-10 pr-3 py-3 border border-gray-200 rounded-xl leading-5 bg-gray-50 placeholder-gray-400 focus:outline-none focus:bg-white focus:ring-2 focus:ring-orsg-blue/20 focus:border-orsg-blue transition-all duration-200"
+                                        className="block w-full pl-10 pr-3 py-3 border border-gray-200 rounded-xl leading-5 bg-gray-50 placeholder-gray-400 focus:outline-none focus:bg-white focus:ring-2 focus:ring-ors-blue/20 focus:border-ors-blue transition-all duration-200"
                                         placeholder="prenom.nom@orsg.fr"
                                     />
                                 </div>
@@ -129,7 +129,7 @@ export function LoginPage() {
                                 disabled={loading || !email.trim()}
                                 className={cn(
                                     "w-full flex justify-center items-center py-3 px-4 border border-transparent rounded-xl shadow-lg text-sm font-bold text-white transition-all transform hover:scale-[1.02] disabled:opacity-70 disabled:cursor-not-allowed focus:outline-none focus:ring-2 focus:ring-offset-2",
-                                    "bg-gradient-to-r from-orsg-blue to-blue-600 shadow-orsg-blue/20 hover:from-blue-600 hover:to-blue-700 focus:ring-orsg-blue"
+                                    "bg-gradient-to-r from-ors-blue to-blue-600 shadow-ors-blue/20 hover:from-blue-600 hover:to-blue-700 focus:ring-ors-blue"
                                 )}
                             >
                                 {loading ? (
@@ -144,13 +144,13 @@ export function LoginPage() {
                     ) : (
                         <form onSubmit={handleCodeSubmit} className="space-y-6">
                             <div className="text-center mb-4">
-                                <div className="w-12 h-12 bg-orsg-green/10 rounded-full flex items-center justify-center mx-auto mb-3">
-                                    <ShieldCheck className="w-6 h-6 text-orsg-green" />
+                                <div className="w-12 h-12 bg-ors-green/10 rounded-full flex items-center justify-center mx-auto mb-3">
+                                    <ShieldCheck className="w-6 h-6 text-ors-green" />
                                 </div>
                                 <h3 className="text-xl font-bold text-gray-800">Code envoyé !</h3>
                                 <p className="text-sm text-gray-500 mt-2">
                                     Un code à 6 chiffres a été envoyé à <br />
-                                    <span className="font-medium text-orsg-blue">{email}</span>
+                                    <span className="font-medium text-ors-blue">{email}</span>
                                 </p>
                             </div>
 
@@ -158,7 +158,7 @@ export function LoginPage() {
                                 <label className="text-sm font-medium text-gray-700 ml-1">Code d'authentification</label>
                                 <div className="relative group">
                                     <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                        <ShieldCheck className="h-5 w-5 text-gray-400 group-focus-within:text-orsg-green transition-colors" />
+                                        <ShieldCheck className="h-5 w-5 text-gray-400 group-focus-within:text-ors-green transition-colors" />
                                     </div>
                                     <input
                                         type="text"
@@ -167,7 +167,7 @@ export function LoginPage() {
                                         autoComplete="off"
                                         autoFocus
                                         maxLength={8}
-                                        className="block w-full pl-10 pr-3 py-3 border border-gray-200 rounded-xl leading-5 bg-gray-50 placeholder-gray-400 focus:outline-none focus:bg-white focus:ring-2 focus:ring-orsg-green/20 focus:border-orsg-green transition-all duration-200 font-mono tracking-widest text-center text-lg"
+                                        className="block w-full pl-10 pr-3 py-3 border border-gray-200 rounded-xl leading-5 bg-gray-50 placeholder-gray-400 focus:outline-none focus:bg-white focus:ring-2 focus:ring-ors-green/20 focus:border-ors-green transition-all duration-200 font-mono tracking-widest text-center text-lg"
                                         placeholder="••••••••"
                                     />
                                 </div>
@@ -181,7 +181,7 @@ export function LoginPage() {
                                 disabled={loading || !code.trim()}
                                 className={cn(
                                     "w-full flex justify-center items-center py-3 px-4 border border-transparent rounded-xl shadow-lg text-sm font-bold text-white transition-all transform hover:scale-[1.02] disabled:opacity-70 disabled:cursor-not-allowed focus:outline-none focus:ring-2 focus:ring-offset-2",
-                                    "bg-gradient-to-r from-orsg-green to-green-600 shadow-orsg-green/20 hover:from-green-600 hover:to-green-700 focus:ring-orsg-green"
+                                    "bg-gradient-to-r from-ors-green to-green-600 shadow-ors-green/20 hover:from-green-600 hover:to-green-700 focus:ring-ors-green"
                                 )}
                             >
                                 {loading ? (

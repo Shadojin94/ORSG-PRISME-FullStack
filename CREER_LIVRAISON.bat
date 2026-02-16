@@ -27,7 +27,10 @@ echo [1/5] Copie du Backend...
 :: Core files
 copy "%SRC%Backend\file_server.js" "%DEST%\Backend\" /y
 copy "%SRC%Backend\prisme_engine.py" "%DEST%\Backend\" /y
+copy "%SRC%Backend\generate_from_opendata.py" "%DEST%\Backend\" /y
+copy "%SRC%Backend\download_opendata.py" "%DEST%\Backend\" /y
 copy "%SRC%Backend\themes_config.json" "%DEST%\Backend\" /y
+copy "%SRC%Backend\opendata_config.json" "%DEST%\Backend\" /y
 copy "%SRC%Backend\package.json" "%DEST%\Backend\" /y
 copy "%SRC%Backend\package-lock.json" "%DEST%\Backend\" /y
 copy "%SRC%Backend\pocketbase.exe" "%DEST%\Backend\" /y
@@ -64,6 +67,8 @@ echo [5/5] Copie des fichiers racine...
 copy "%SRC%README_INSTALLATION.md" "%DEST%\" /y
 copy "%SRC%LANCER_TOUT.bat" "%DEST%\" /y
 copy "%SRC%LANCER_PRODUCTION.bat" "%DEST%\" /y
+copy "%SRC%LANCER_APP.bat" "%DEST%\" /y 2>nul
+copy "%SRC%STOP_ET_NETTOYER.bat" "%DEST%\" /y 2>nul
 copy "%SRC%requirements.txt" "%DEST%\" /y
 
 :: ===== CREATE ZIP =====

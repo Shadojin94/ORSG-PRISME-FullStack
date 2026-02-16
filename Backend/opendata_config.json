@@ -133,8 +133,8 @@
     "data_gouv_ircom": {
       "name": "IRCOM - Impôt sur le revenu par collectivité",
       "provider": "DGFiP via data.gouv.fr",
-      "url": "https://www.data.gouv.fr/fr/datasets/limpot-sur-le-revenu-par-collectivite-territoriale-ircom/",
-      "directDownload": "https://www.data.gouv.fr/fr/datasets/r/36b63bea-2be5-42d7-b72e-5d5e46f47e85",
+      "url": "https://www.data.gouv.fr/fr/datasets/impot-sur-le-revenu-par-commune-ircom/",
+      "directDownload": "https://www.data.gouv.fr/fr/datasets/r/23c55b31-74c2-4669-9815-84b79d7c5d8f",
       "encoding": "utf-8",
       "separator": ";",
       "geoColumn": "code_commune",
@@ -174,6 +174,59 @@
         }
       },
       "providesDatasets": ["alloc"]
+    }
+  },
+
+  "datasetMappings": {
+    "pop_inf3ans": {
+      "source": "insee_couples_familles_menages",
+      "outputColumns": ["pop_inf3ans", "rp"],
+      "formula": {
+        "pop_inf3ans": "P{YY}_POP0002 (fallback: (C{YY}_NE24F1 + 2*C{YY}_NE24F2 + 3*C{YY}_NE24F3 + 4*C{YY}_NE24F4P) * 0.12)",
+        "rp": "P{YY}_POP (fallback: C{YY}_PMEN)"
+      }
+    },
+    "pers_menages": {
+      "source": "insee_couples_familles_menages",
+      "outputColumns": ["nb_menages", "nb_pers_menages"],
+      "formula": {
+        "nb_menages": "C{YY}_MEN",
+        "nb_pers_menages": "C{YY}_PMEN"
+      }
+    },
+    "types_menages": {
+      "source": "insee_couples_familles_menages",
+      "outputColumns": ["nb_men_seul", "nb_men_couple_senf", "nb_men_couple_aenf", "nb_men_fam_mono"],
+      "formula": {
+        "nb_men_seul": "C{YY}_MENPSEUL",
+        "nb_men_couple_senf": "C{YY}_MENCOUPSENF",
+        "nb_men_couple_aenf": "C{YY}_MENCOUPAENF",
+        "nb_men_fam_mono": "C{YY}_MENFAMMONO"
+      }
+    },
+    "alloc": {
+      "source": "cafdata_allocataires",
+      "outputColumns": ["nb_alloc", "nb_menages"],
+      "formula": {
+        "nb_alloc": "CAF: Nombre foyers NDUR (fallback: Nbre_foyers_alloc_total)",
+        "nb_menages": "INSEE Couples-Familles-Menages: C{YY}_MEN (jointure par commune)"
+      }
+    },
+    "revenu": {
+      "source": "data_gouv_ircom",
+      "outputColumns": ["nb_foyers_non_impo", "nb_foyers_imposes"],
+      "formula": {
+        "nb_foyers_non_impo": "foyers_non_imposables (fallback: nb_foyers_non_impo)",
+        "nb_foyers_imposes": "foyers_imposables (fallback: nb_foyers_imposes)"
+      }
+    },
+    "densite": {
+      "source": "insee_populations_legales",
+      "outputColumns": ["rp", "superficie"],
+      "formula": {
+        "rp": "PMUN (fallback: PTOT)",
+        "superficie": "superficie (fallback: SUPERFICIE | surface_km2 | surface)"
+      }
     }
   },
 
