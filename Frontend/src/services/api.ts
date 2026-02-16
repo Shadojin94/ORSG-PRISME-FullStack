@@ -222,6 +222,7 @@ export interface GeneratedFile {
     date: string;
     size: string;
     theme: string;
+    source?: string;
 }
 
 export async function getFiles(): Promise<GeneratedFile[]> {

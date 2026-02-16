@@ -611,13 +611,17 @@ except Exception as e:
                     ? `${(bytes / (1024 * 1024)).toFixed(1)} MB`
                     : `${(bytes / 1024).toFixed(0)} KB`;
 
+                // Source: detect from filename pattern
+                const isOpenData = f.includes('_opendata_');
+                const source = isOpenData ? 'Open Data' : 'MOCA-O';
+
                 // Theme: extract prefix before first '_' or year pattern, lookup in config
                 const baseName = f.replace(/\.zip$/, '');
-                const themeId = baseName.replace(/_\d{4}.*$/, '');
+                const themeId = baseName.replace(/_opendata_\d{4}.*$/, '').replace(/_\d{4}.*$/, '');
                 const cfg = (themesConfig.datasets || {})[themeId];
                 const theme = cfg ? cfg.name : themeId;
 
-                return { filename: f, date, size, theme };
+                return { filename: f, date, size, theme, source };
             });
 
             jsonResponse(res, 200, result);
@@ -802,7 +806,7 @@ function generateOpenDataFile(theme, year) {
         child.on('close', (code) => {
             if (code === 0 && stdout.includes('[OK]')) {
                 // Extract filename from output: "[OK] educ 2022: .../output/educ_opendata_2022.zip"
-                const match = stdout.match(/([a-z_]+_opendata_\d{4}\.zip)/);
+                const match = stdout.match(/([a-z0-9_]+_opendata_\d{4}\.zip)/);
                 if (match) {
                     const filename = match[1];
                     console.log(`Generated Open Data: ${filename}`);

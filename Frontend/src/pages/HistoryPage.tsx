@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react"
-import { Download, FileSpreadsheet, Search, AlertCircle, Loader2, TrendingUp, Calendar, History as HistoryIcon } from "lucide-react"
+import { Download, FileSpreadsheet, Search, AlertCircle, Loader2, TrendingUp, Calendar, History as HistoryIcon, Globe, HardDrive } from "lucide-react"
 import { getFiles, type GeneratedFile, getDownloadUrl } from "../services/api"
 import { Card } from "../components/ui/card"
 import { StatsCard } from "../components/ui/StatsCard"
@@ -45,7 +45,8 @@ export function HistoryPage() {
 
     const filteredFiles = (Array.isArray(files) ? files : []).filter(f =>
         f.filename.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        f.theme.toLowerCase().includes(searchTerm.toLowerCase())
+        f.theme.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        (f.source && f.source.toLowerCase().includes(searchTerm.toLowerCase()))
     );
 
     const handleDownload = (filename: string) => {
@@ -162,6 +163,7 @@ export function HistoryPage() {
                                     <th className="px-6 py-4">Fichier</th>
                                     <th className="px-6 py-4">Date & Taille</th>
                                     <th className="px-6 py-4">Thématique</th>
+                                    <th className="px-6 py-4">Source</th>
                                     <th className="px-6 py-4 text-right">Actions</th>
                                 </tr>
                             </thead>
@@ -191,6 +193,19 @@ export function HistoryPage() {
                                             )}>
                                                 {file.theme}
                                             </span>
+                                        </td>
+                                        <td className="px-6 py-4">
+                                            {file.source === 'Open Data' ? (
+                                                <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md text-xs font-bold bg-blue-50 text-blue-700 ring-1 ring-inset ring-blue-200">
+                                                    <Globe className="w-3 h-3" />
+                                                    Open Data
+                                                </span>
+                                            ) : (
+                                                <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md text-xs font-bold bg-emerald-50 text-emerald-700 ring-1 ring-inset ring-emerald-200">
+                                                    <HardDrive className="w-3 h-3" />
+                                                    MOCA-O
+                                                </span>
+                                            )}
                                         </td>
                                         <td className="px-6 py-4 text-right">
                                             <button
