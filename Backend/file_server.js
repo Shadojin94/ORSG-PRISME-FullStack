@@ -37,7 +37,11 @@ function loadConfig() {
 }
 
 function jsonResponse(res, statusCode, data) {
-    res.writeHead(statusCode, { 'Content-Type': 'application/json; charset=utf-8' });
+    res.writeHead(statusCode, {
+        'Content-Type': 'application/json; charset=utf-8',
+        'Cache-Control': 'no-store, no-cache, must-revalidate',
+        'Pragma': 'no-cache'
+    });
     res.end(JSON.stringify(data));
 }
 

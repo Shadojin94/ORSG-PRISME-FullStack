@@ -86,10 +86,12 @@ export function DocsPage() {
     // Filter datasets based on search
     const filteredSubThemes = activeTheme?.subThemes?.map(st => ({
         ...st,
-        datasets: st.datasets.filter(ds =>
+        datasets: st.datasets.filter((ds: any) =>
             ds.label.toLowerCase().includes(searchTerm.toLowerCase()) ||
             ds.id.toLowerCase().includes(searchTerm.toLowerCase()) ||
-            ds.source.toLowerCase().includes(searchTerm.toLowerCase())
+            ds.source.toLowerCase().includes(searchTerm.toLowerCase()) ||
+            (ds.variable && ds.variable.toLowerCase().includes(searchTerm.toLowerCase())) ||
+            (ds.tool && ds.tool.toLowerCase().includes(searchTerm.toLowerCase()))
         )
     })).filter(st => st.datasets.length > 0 || searchTerm === '')
 
@@ -297,26 +299,24 @@ export function DocsPage() {
                                             <table className="w-full text-left">
                                                 <thead className="bg-gray-50 border-b border-gray-200 text-xs font-bold text-gray-500 uppercase tracking-wider">
                                                     <tr>
-                                                        <th className="px-4 py-3">ID Variable</th>
                                                         <th className="px-4 py-3">Nom de l'indicateur</th>
+                                                        <th className="px-4 py-3">Variable</th>
                                                         <th className="px-4 py-3">Source</th>
+                                                        <th className="px-4 py-3">Outil</th>
                                                         <th className="px-4 py-3 text-center">Disponibilité</th>
                                                     </tr>
                                                 </thead>
                                                 <tbody className="divide-y divide-gray-100 text-sm">
-                                                    {subTheme.datasets.map((ds) => (
-                                                        <tr key={ds.id} className="hover:bg-[#3bb3a9]/5 transition-colors">
-                                                            <td className="px-4 py-3">
-                                                                <code className="text-xs bg-gray-100 px-2 py-1 rounded text-gray-600 font-mono">
-                                                                    {ds.id}
-                                                                </code>
-                                                            </td>
+                                                    {subTheme.datasets.map((ds: any, idx: number) => (
+                                                        <tr key={`${ds.id}-${idx}`} className="hover:bg-[#3bb3a9]/5 transition-colors">
                                                             <td className="px-4 py-3 font-medium text-gray-900">
                                                                 {ds.label}
-                                                                {ds.availableYears && ds.availableYears.length > 0 && (
-                                                                    <span className="text-[10px] text-gray-400 ml-2">
-                                                                        ({ds.availableYears[0]}-{ds.availableYears[ds.availableYears.length - 1]})
-                                                                    </span>
+                                                            </td>
+                                                            <td className="px-4 py-3">
+                                                                {ds.variable && (
+                                                                    <code className="text-xs bg-gray-100 px-2 py-1 rounded text-gray-600 font-mono">
+                                                                        {ds.variable}
+                                                                    </code>
                                                                 )}
                                                             </td>
                                                             <td className="px-4 py-3">
@@ -324,6 +324,11 @@ export function DocsPage() {
                                                                     <FileSpreadsheet className="w-3 h-3" />
                                                                     {ds.source}
                                                                 </span>
+                                                            </td>
+                                                            <td className="px-4 py-3">
+                                                                {ds.tool && (
+                                                                    <span className="text-xs text-gray-500">{ds.tool}</span>
+                                                                )}
                                                             </td>
                                                             <td className="px-4 py-3 text-center">
                                                                 {renderAvailability(ds.id, ds)}
