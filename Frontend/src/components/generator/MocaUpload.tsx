@@ -1,5 +1,5 @@
-import { useState, useCallback, useEffect } from "react";
-import { Upload, FileCheck, FileMinus, Loader2, CheckCircle2, AlertTriangle, RefreshCw, Clock, FileSpreadsheet, ChevronDown, Eye, Trash2 } from "lucide-react";
+import { useState, useCallback, useEffect, useRef } from "react";
+import { Upload, FileCheck, FileMinus, Loader2, CheckCircle2, AlertTriangle, RefreshCw, Clock, FileSpreadsheet, ChevronDown, Eye, Trash2, ShieldCheck } from "lucide-react";
 import { cn } from "@/lib/utils";
 import * as api from "@/services/api";
 
@@ -22,6 +22,10 @@ export function MocaUpload({ datasetId, onUploadComplete }: MocaUploadProps) {
     const [uploadResult, setUploadResult] = useState<api.UploadResult | null>(null);
     const [csvStatus, setCsvStatus] = useState<CsvStatus[]>([]);
     const [statusLoading, setStatusLoading] = useState(false);
+
+    // Post-upload sync phase: idle -> syncing -> done
+    const [syncPhase, setSyncPhase] = useState<'idle' | 'syncing' | 'done'>('idle');
+    const syncTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
     // Import history
     const [importHistory, setImportHistory] = useState<api.ImportHistoryEntry[]>([]);
@@ -71,6 +75,11 @@ export function MocaUpload({ datasetId, onUploadComplete }: MocaUploadProps) {
         loadHistory();
     }, [loadCsvStatus, loadHistory]);
 
+    // Cleanup sync timer on unmount
+    useEffect(() => {
+        return () => { if (syncTimerRef.current) clearTimeout(syncTimerRef.current); };
+    }, []);
+
     const totalRequired = csvStatus.length;
     const totalFound = csvStatus.filter(s => s.found).length;
     const allPresent = totalRequired > 0 && totalFound === totalRequired;
@@ -97,15 +106,23 @@ export function MocaUpload({ datasetId, onUploadComplete }: MocaUploadProps) {
 
         setUploading(true);
         setUploadResult(null);
+        setSyncPhase('idle');
+        if (syncTimerRef.current) clearTimeout(syncTimerRef.current);
 
         try {
             const result = await api.uploadCsvFiles(validFiles);
             setUploadResult(result);
             if (result.success) {
-                // Refresh status + trigger year re-detection
+                // Phase 2: Synchronisation - re-index files
+                setUploading(false);
+                setSyncPhase('syncing');
                 await loadCsvStatus();
                 await loadHistory();
                 onUploadComplete();
+                // Phase 3: Confirmation
+                setSyncPhase('done');
+                // Auto-dismiss after 8 seconds
+                syncTimerRef.current = setTimeout(() => setSyncPhase('idle'), 8000);
             }
         } catch (err: any) {
             setUploadResult({ success: false, error: `Erreur: ${err.message}` });
@@ -366,6 +383,28 @@ export function MocaUpload({ datasetId, onUploadComplete }: MocaUploadProps) {
                 </div>
             )}
 
+            {/* Sync Phase Banner */}
+            {syncPhase === 'syncing' && (
+                <div className="flex items-center gap-3 px-4 py-3 rounded-xl border-2 border-[#1a4b8c]/30 bg-[#1a4b8c]/5 animate-in fade-in duration-200">
+                    <Loader2 className="w-5 h-5 text-[#1a4b8c] animate-spin shrink-0" />
+                    <div>
+                        <p className="text-sm font-bold text-[#1a4b8c]">Synchronisation des données...</p>
+                        <p className="text-xs text-[#1a4b8c]/70">Indexation des fichiers et mise à jour des années disponibles</p>
+                    </div>
+                </div>
+            )}
+
+            {syncPhase === 'done' && (
+                <div className="flex items-center gap-3 px-4 py-3 rounded-xl border-2 border-green-300 bg-green-50 animate-in fade-in slide-in-from-bottom-2 duration-300">
+                    <ShieldCheck className="w-6 h-6 text-green-600 shrink-0" />
+                    <div className="flex-1">
+                        <p className="text-sm font-bold text-green-700">Fichiers intégrés avec succès</p>
+                        <p className="text-xs text-green-600">Les données sont prêtes pour la génération. Sélectionnez une année et lancez.</p>
+                    </div>
+                    <button onClick={() => setSyncPhase('idle')} className="text-xs text-green-500 hover:text-green-700 shrink-0">Fermer</button>
+                </div>
+            )}
+
             {/* Drop Zone */}
             <div
                 onDragEnter={handleDrag}
@@ -374,11 +413,13 @@ export function MocaUpload({ datasetId, onUploadComplete }: MocaUploadProps) {
                 onDrop={handleDrop}
                 className={cn(
                     "relative border-2 border-dashed rounded-xl p-6 text-center transition-all cursor-pointer",
-                    dragActive
-                        ? "border-[#1a4b8c] bg-[#1a4b8c]/5 scale-[1.01]"
-                        : "border-gray-300 hover:border-[#3bb3a9] hover:bg-gray-50"
+                    syncPhase === 'syncing'
+                        ? "border-[#1a4b8c]/30 bg-[#1a4b8c]/5 pointer-events-none opacity-60"
+                        : dragActive
+                            ? "border-[#1a4b8c] bg-[#1a4b8c]/5 scale-[1.01]"
+                            : "border-gray-300 hover:border-[#3bb3a9] hover:bg-gray-50"
                 )}
-                onClick={() => document.getElementById('csv-file-input')?.click()}
+                onClick={() => syncPhase !== 'syncing' && document.getElementById('csv-file-input')?.click()}
             >
                 <input
                     id="csv-file-input"

@@ -77,7 +77,14 @@ export function DashboardPage() {
 
             {/* Main Action Card */}
             <div className="relative group rounded-3xl overflow-hidden shadow-2xl transition-all hover:shadow-[#3bb3a9]/20 hover:-translate-y-1">
-                <div className="absolute inset-0 bg-gradient-to-r from-[#1a4b8c] to-[#0083B0] opacity-90 group-hover:opacity-100 transition-opacity" />
+                {/* Background Video Layer */}
+                <video
+                    autoPlay muted loop playsInline
+                    className="absolute inset-0 w-full h-full object-cover"
+                    src="/bg-video.mp4"
+                />
+                {/* Gradient Overlay - reduced opacity to let video show through */}
+                <div className="absolute inset-0 bg-gradient-to-r from-[#1a4b8c]/80 to-[#0083B0]/70 group-hover:from-[#1a4b8c]/85 group-hover:to-[#0083B0]/75 transition-all" />
                 <div className="absolute -right-20 -top-20 w-96 h-96 bg-[#3bb3a9] rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-blob" />
                 <div className="absolute -left-20 -bottom-20 w-96 h-96 bg-[#4caf50] rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-blob animation-delay-2000" />
 
