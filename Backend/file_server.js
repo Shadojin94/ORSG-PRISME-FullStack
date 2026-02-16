@@ -464,11 +464,15 @@ except Exception as e:
             const result = await generateFile(theme, parseInt(year));
 
             if (result.success) {
-                jsonResponse(res, 200, {
+                const resp = {
                     success: true,
                     filename: result.filename,
                     message: `File generated: ${result.filename}`
-                });
+                };
+                if (result.warnings && result.warnings.length > 0) {
+                    resp.warnings = result.warnings;
+                }
+                jsonResponse(res, 200, resp);
             } else {
                 jsonResponse(res, 500, { success: false, error: result.error });
             }
@@ -694,7 +698,14 @@ else:
             if (stdout.includes('SUCCESS:')) {
                 const filename = stdout.split('SUCCESS:')[1].trim();
                 console.log(`Generated: ${filename}`);
-                resolve({ success: true, filename });
+                // Extract year coverage warnings
+                const warnings = [];
+                const warnLines = stdout.split('\n').filter(l => l.includes('[WARN_YEAR]'));
+                for (const wl of warnLines) {
+                    const m = wl.match(/\[WARN_YEAR\]\s*(.+)/);
+                    if (m) warnings.push(m[1].trim());
+                }
+                resolve({ success: true, filename, warnings });
             } else {
                 console.log(`Generation failed (exit ${code})`);
                 resolve({ success: false, error: stderr || stdout || 'Unknown error' });

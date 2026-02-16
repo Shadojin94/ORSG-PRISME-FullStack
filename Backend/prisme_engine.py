@@ -959,6 +959,22 @@ def generate_prisme_excel(dataset_id, year):
         parsed = csv_data.get(var_id, {})
         _fill_variable_data(data, var_id, parsed, year, time_col_id, dimension_id=multi_row_dim)
 
+    # ---- Vérifier la couverture par année pour chaque variable ----
+    for var_id in vars_with_data:
+        parsed = csv_data.get(var_id, {})
+        # Check if this variable has data for the requested year
+        has_year_data = False
+        available_years = set()
+        for geo_key, df in parsed.items():
+            if isinstance(df, pd.DataFrame) and not df.empty and 'annee' in df.columns:
+                df_years = set(int(y) for y in df['annee'].unique())
+                available_years.update(df_years)
+                if year in df_years:
+                    has_year_data = True
+        if not has_year_data and available_years:
+            yr_range = f"{min(available_years)}-{max(available_years)}"
+            print(f"  [WARN_YEAR] {var_id} : CSV trouvé mais pas de données pour {year} (couverture: {yr_range})")
+
     # ---- Construire l'ordre des colonnes (headers) ----
     # Suit l'ordre exact du config : geo, time, dimensions, variables
     col_keys_template = []  # clés pour extraire les données (sans geo qui varie)
