@@ -909,6 +909,32 @@ def generate_prisme_excel(dataset_id, year):
             print(f"  [WARN] {var_id} -> Fichier non trouve (pattern: {csv_pattern})")
             csv_data[var_id] = empty_dfs()
 
+    # ---- Vérifier qu'au moins une variable a des données ----
+    vars_with_data = []
+    vars_without_data = []
+    for var_id in variable_ids:
+        parsed = csv_data.get(var_id, {})
+        has_data = any(
+            not df.empty for df in parsed.values()
+        ) if isinstance(parsed, dict) else False
+        if has_data:
+            vars_with_data.append(var_id)
+        else:
+            vars_without_data.append(var_id)
+
+    if not vars_with_data:
+        missing_patterns = []
+        for col in var_cols:
+            p = col.get('csvPattern', '?')
+            if col.get('parser') != 'external':
+                missing_patterns.append(f"{col['id']} ({p})")
+        print(f"[ERROR] Aucun fichier CSV trouvé pour {dataset_id}. Variables manquantes: {', '.join(missing_patterns)}")
+        print(f"[ERROR] Placez les fichiers CSV dans: {CSV_SOURCES_DIR}")
+        return None
+
+    if vars_without_data:
+        print(f"  [WARN] Variables sans données: {', '.join(vars_without_data)} (les colonnes seront vides)")
+
     # ---- Construire les structures de données par niveau géo ----
     data = {}
     for geo_key, entities in GEO_ENTITIES.items():

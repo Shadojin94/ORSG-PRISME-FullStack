@@ -1,4 +1,4 @@
-import { FileSpreadsheet, Info, CheckCircle2, Loader2, Play } from "lucide-react";
+import { FileSpreadsheet, Info, CheckCircle2, Loader2, Play, Pencil } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { BDI_THEMES } from "@/data/bdi_themes";
 
@@ -11,6 +11,7 @@ interface SidebarSummaryProps {
     format: string;
     isProcessing: boolean;
     onGenerate: () => void;
+    onGoToStep: (step: number) => void;
     canGenerate: boolean;
     isOpenDataMode: boolean;
 }
@@ -24,20 +25,17 @@ export function SidebarSummary({
     format,
     isProcessing,
     onGenerate,
+    onGoToStep,
     canGenerate,
     isOpenDataMode
 }: SidebarSummaryProps) {
 
-    const selectedTheme = selectedThemeId ? BDI_THEMES.find(t => t.id === selectedThemeId) : null;
+    const selectedTheme = selectedThemeId ? BDI_THEMES.find(t => t.id === selectedThemeId) as any : null;
 
-    // Helper to find sub-theme and dataset label
-    // This is a bit complex because of nesting. 
-    // We traverse BDI_THEMES to find the names.
     let subThemeTitle = "--";
     let datasetLabel = "--";
 
     if (selectedTheme) {
-        // Recursive search for subtheme title
         const findSubThemeTitle = (items: any[], id: string): string | null => {
             for (const item of items) {
                 if (item.id === id) return item.title;
@@ -52,7 +50,6 @@ export function SidebarSummary({
             subThemeTitle = findSubThemeTitle(selectedTheme.subThemes || [], selectedSubThemeId) || "--";
         }
 
-        // Recursive search for dataset label
         const findDatasetLabel = (items: any[], id: string): string | null => {
             for (const item of items) {
                 if (item.datasets) {
@@ -64,7 +61,6 @@ export function SidebarSummary({
                     if (found) return found;
                 }
             }
-            // Check root datasets if any
             if (selectedTheme.datasets) {
                 const ds = selectedTheme.datasets.find((d: any) => d.id === id);
                 if (ds) return ds.label;
@@ -75,6 +71,9 @@ export function SidebarSummary({
             datasetLabel = findDatasetLabel(selectedTheme.subThemes || [], selectedDatasetId) || "--";
         }
     }
+
+    const canGoToStep1 = step > 1 && !isProcessing;
+    const canGoToStep2 = step > 2 && !isProcessing;
 
     return (
         <div className="flex flex-col gap-6 sticky top-8 self-start z-30">
@@ -95,9 +94,19 @@ export function SidebarSummary({
                     {/* Theme */}
                     <div className={cn("relative pl-6 border-l-2 transition-all duration-300", selectedTheme ? "border-[#3bb3a9]" : "border-gray-200")}>
                         <span className={cn("absolute -left-[9px] top-0 w-4 h-4 rounded-full border-2 bg-white", selectedTheme ? "border-[#3bb3a9]" : "border-gray-300")} />
-                        <p className="text-xs font-bold text-gray-400 uppercase mb-2 tracking-wider">Thématique</p>
+                        <div className="flex items-center justify-between mb-2">
+                            <p className="text-xs font-bold text-gray-400 uppercase tracking-wider">Thématique</p>
+                            {canGoToStep1 && (
+                                <button onClick={() => onGoToStep(1)} className="text-[10px] text-[#3bb3a9] hover:text-[#2f9a91] flex items-center gap-0.5 hover:underline">
+                                    <Pencil className="w-3 h-3" /> Modifier
+                                </button>
+                            )}
+                        </div>
                         {selectedTheme ? (
-                            <div className="bg-gray-50 p-3 rounded-lg border border-gray-100">
+                            <div
+                                className={cn("bg-gray-50 p-3 rounded-lg border border-gray-100", canGoToStep1 && "cursor-pointer hover:border-[#3bb3a9]/40 hover:bg-[#3bb3a9]/5 transition-colors")}
+                                onClick={() => canGoToStep1 && onGoToStep(1)}
+                            >
                                 <div className="flex items-center gap-2 font-bold text-[#1a4b8c]">
                                     {selectedTheme.icon && <selectedTheme.icon className="w-4 h-4" />}
                                     {selectedTheme.shortTitle}
@@ -111,9 +120,19 @@ export function SidebarSummary({
                     {/* Sub-Theme */}
                     <div className={cn("relative pl-6 border-l-2 transition-all duration-300", selectedSubThemeId ? "border-[#3bb3a9]" : "border-gray-200")}>
                         <span className={cn("absolute -left-[9px] top-0 w-4 h-4 rounded-full border-2 bg-white", selectedSubThemeId ? "border-[#3bb3a9]" : "border-gray-300")} />
-                        <p className="text-xs font-bold text-gray-400 uppercase mb-2 tracking-wider">Sujet</p>
+                        <div className="flex items-center justify-between mb-2">
+                            <p className="text-xs font-bold text-gray-400 uppercase tracking-wider">Sujet</p>
+                            {canGoToStep1 && selectedSubThemeId && (
+                                <button onClick={() => onGoToStep(1)} className="text-[10px] text-[#3bb3a9] hover:text-[#2f9a91] flex items-center gap-0.5 hover:underline">
+                                    <Pencil className="w-3 h-3" /> Modifier
+                                </button>
+                            )}
+                        </div>
                         {selectedSubThemeId ? (
-                            <div className="bg-gray-50 p-3 rounded-lg border border-gray-100">
+                            <div
+                                className={cn("bg-gray-50 p-3 rounded-lg border border-gray-100", canGoToStep1 && "cursor-pointer hover:border-[#3bb3a9]/40 hover:bg-[#3bb3a9]/5 transition-colors")}
+                                onClick={() => canGoToStep1 && onGoToStep(1)}
+                            >
                                 <div className="font-bold text-gray-800">{subThemeTitle}</div>
                             </div>
                         ) : (
@@ -124,9 +143,19 @@ export function SidebarSummary({
                     {/* Dataset */}
                     <div className={cn("relative pl-6 border-l-2 transition-all duration-300", selectedDatasetId ? "border-[#3bb3a9]" : "border-gray-200")}>
                         <span className={cn("absolute -left-[9px] top-0 w-4 h-4 rounded-full border-2 bg-white", selectedDatasetId ? "border-[#3bb3a9]" : "border-gray-300")} />
-                        <p className="text-xs font-bold text-gray-400 uppercase mb-2 tracking-wider">Indicateur</p>
+                        <div className="flex items-center justify-between mb-2">
+                            <p className="text-xs font-bold text-gray-400 uppercase tracking-wider">Indicateur</p>
+                            {canGoToStep1 && selectedDatasetId && (
+                                <button onClick={() => onGoToStep(1)} className="text-[10px] text-[#3bb3a9] hover:text-[#2f9a91] flex items-center gap-0.5 hover:underline">
+                                    <Pencil className="w-3 h-3" /> Modifier
+                                </button>
+                            )}
+                        </div>
                         {selectedDatasetId ? (
-                            <div className="bg-blue-50 p-3 rounded-lg border border-blue-100">
+                            <div
+                                className={cn("bg-blue-50 p-3 rounded-lg border border-blue-100", canGoToStep1 && "cursor-pointer hover:border-[#1a4b8c]/30 hover:bg-blue-100 transition-colors")}
+                                onClick={() => canGoToStep1 && onGoToStep(1)}
+                            >
                                 <div className="font-bold text-[#1a4b8c] text-sm">{datasetLabel}</div>
                             </div>
                         ) : (
@@ -134,24 +163,40 @@ export function SidebarSummary({
                         )}
                     </div>
 
-                    {/* Open Data Badge */}
-                    {isOpenDataMode && selectedDatasetId && (
-                        <div className="p-3 bg-blue-50 rounded-lg border border-blue-100 text-xs text-blue-700 mt-2">
-                            <span className="font-bold block mb-1">ℹ️ Mode Open Data</span>
-                            Données issues des sources publiques (INSEE, CepiDc, etc.)
-                        </div>
-                    )}
-
                     {/* Config (only if Step >= 2) */}
                     {step >= 2 && (
-                        <div className="mt-6 pt-6 border-t border-gray-100 animate-in fade-in slide-in-from-bottom-2">
-                            <div className="flex justify-between items-center mb-2">
-                                <span className="text-sm text-gray-600">Année</span>
-                                <span className="font-bold text-[#1a4b8c]">{year || "--"}</span>
+                        <div className="mt-6 pt-6 border-t border-gray-100 animate-in fade-in slide-in-from-bottom-2 space-y-2">
+                            <div className="flex items-center justify-between mb-1">
+                                <span className="text-xs font-bold text-gray-400 uppercase tracking-wider">Configuration</span>
+                                {canGoToStep2 && (
+                                    <button onClick={() => onGoToStep(2)} className="text-[10px] text-[#3bb3a9] hover:text-[#2f9a91] flex items-center gap-0.5 hover:underline">
+                                        <Pencil className="w-3 h-3" /> Modifier
+                                    </button>
+                                )}
                             </div>
-                            <div className="flex justify-between items-center mb-2">
-                                <span className="text-sm text-gray-600">Format</span>
-                                <span className="font-bold text-[#1a4b8c] uppercase">{format === 'zip' ? 'Pack Complet' : format}</span>
+                            <div
+                                className={cn("space-y-2 p-3 rounded-lg border border-gray-100 bg-gray-50", canGoToStep2 && "cursor-pointer hover:border-[#3bb3a9]/40 hover:bg-[#3bb3a9]/5 transition-colors")}
+                                onClick={() => canGoToStep2 && onGoToStep(2)}
+                            >
+                                <div className="flex justify-between items-center">
+                                    <span className="text-sm text-gray-600">Source</span>
+                                    <span className={cn(
+                                        "font-bold text-xs px-2 py-0.5 rounded-full",
+                                        isOpenDataMode
+                                            ? "bg-green-100 text-green-700"
+                                            : "bg-blue-100 text-[#1a4b8c]"
+                                    )}>
+                                        {isOpenDataMode ? "Open Data" : "MOCA-O"}
+                                    </span>
+                                </div>
+                                <div className="flex justify-between items-center">
+                                    <span className="text-sm text-gray-600">Année</span>
+                                    <span className="font-bold text-[#1a4b8c]">{year || "--"}</span>
+                                </div>
+                                <div className="flex justify-between items-center">
+                                    <span className="text-sm text-gray-600">Format</span>
+                                    <span className="font-bold text-[#1a4b8c]">{format === 'zip' ? 'Pack Complet' : format}</span>
+                                </div>
                             </div>
                         </div>
                     )}
@@ -201,4 +246,3 @@ export function SidebarSummary({
         </div>
     );
 }
-

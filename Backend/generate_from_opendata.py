@@ -572,7 +572,8 @@ def _build_densite_levels(year: int):
                 if {"code", "surface"}.issubset(set(sup_df.columns)):
                     sup_df = sup_df[["code", "surface"]].copy()
                     sup_df["code"] = sup_df["code"].astype(str).str.zfill(5).str[:5]
-                    sup_df["surface"] = pd.to_numeric(sup_df["surface"], errors="coerce").fillna(0)
+                    # geo.api.gouv.fr returns surface in hectares, convert to km²
+                    sup_df["surface"] = pd.to_numeric(sup_df["surface"], errors="coerce").fillna(0) / 100.0
 
                     raw["_geo_code"] = raw[code_col].astype(str).str.zfill(5).str[:5]
                     raw = raw.merge(sup_df, left_on="_geo_code", right_on="code", how="left")
@@ -787,14 +788,15 @@ def _build_cepidc_levels(theme: str, year: int):
     fh = pd.DataFrame({"codgeo": ["0"], var_n: [fh_n], var_tx: [round(fh_tx, 1)]})
     fra = pd.DataFrame({"codgeo": ["99"], var_n: [france_n if france_n else dom_n + fh_n], var_tx: [round(france_tx if france_tx else (dom_tx + fh_tx) / 2, 1)]})
 
-    # Communes Guyane: fill with Guyane region value (code 03)
+    # Communes Guyane: CepiDc data is regional only
+    # - effectifs (nb_deces): not available at commune level -> leave empty (NaN)
+    # - taux: use Guyane regional rate as proxy for all communes
     guyane_row = reg[reg["codgeo"] == "03"]
-    guyane_n = float(guyane_row[var_n].iloc[0]) if len(guyane_row) > 0 else 0
     guyane_tx = float(guyane_row[var_tx].iloc[0]) if len(guyane_row) > 0 else 0
     com = pd.DataFrame({
         "codgeo": COMMUNES_GUYANE,
-        var_n: [0] * len(COMMUNES_GUYANE),  # No commune-level data
-        var_tx: [guyane_tx] * len(COMMUNES_GUYANE),  # Use regional rate as proxy
+        var_n: [None] * len(COMMUNES_GUYANE),  # Not available at commune level
+        var_tx: [guyane_tx] * len(COMMUNES_GUYANE),  # Regional rate as proxy
     })
 
     all_levels = {"com": com, "reg": reg, "dom": dom, "fh": fh, "fra": fra}
@@ -828,16 +830,26 @@ def _generate_excel_and_zip(theme: str, year: int, all_levels):
         df = all_levels[geo_key].copy()
         for var in variables:
             if var not in df.columns:
-                df[var] = 0
-        df = df.fillna(0)
+                df[var] = None
 
         for row_idx, (_, row) in enumerate(df.iterrows(), 2):
-            ws.cell(row=row_idx, column=1, value=row.get("codgeo", ""))
-            ws.cell(row=row_idx, column=2, value=row.get("annee", year))
+            ws.cell(row=row_idx, column=1, value=str(row.get("codgeo", "")) if pd.notna(row.get("codgeo")) else "")
+            ws.cell(row=row_idx, column=2, value=int(row.get("annee", year)) if pd.notna(row.get("annee")) else year)
             for i, var in enumerate(variables):
-                val = row.get(var, 0)
-                data_cell = ws.cell(row=row_idx, column=3 + i, value=float(val) if pd.notna(val) else 0)
+                val = row.get(var)
+                if pd.notna(val):
+                    data_cell = ws.cell(row=row_idx, column=3 + i, value=float(val))
+                else:
+                    data_cell = ws.cell(row=row_idx, column=3 + i, value=None)
                 data_cell.fill = ORANGE_FILL
+
+        # CepiDc commune annotation: data is regional-only
+        if geo_key == "com" and cfg.get("source_type") == "cepidc":
+            note_row = len(df) + 3
+            note_cell = ws.cell(row=note_row, column=1,
+                value="NOTE: La source CepiDc ne fournit pas de donnees communales. "
+                      "Les effectifs sont vides. Les taux correspondent au taux regional Guyane (proxy).")
+            note_cell.font = Font(italic=True, color="FF0000")
 
         wb.save(folder / f"{excel_name}.xlsx")
 
@@ -850,16 +862,28 @@ def _generate_excel_and_zip(theme: str, year: int, all_levels):
             c = ws.cell(row=1, column=idx, value=h)
             c.font = Font(bold=True)
             c.fill = ORANGE_FILL
-        df = all_levels[geo_key].copy().fillna(0)
+        df = all_levels[geo_key].copy()
         for var in variables:
             if var not in df.columns:
-                df[var] = 0
+                df[var] = None
         for row_idx, (_, row) in enumerate(df.iterrows(), 2):
-            ws.cell(row=row_idx, column=1, value=row.get("codgeo", ""))
-            ws.cell(row=row_idx, column=2, value=row.get("annee", year))
+            ws.cell(row=row_idx, column=1, value=str(row.get("codgeo", "")) if pd.notna(row.get("codgeo")) else "")
+            ws.cell(row=row_idx, column=2, value=int(row.get("annee", year)) if pd.notna(row.get("annee")) else year)
             for i, var in enumerate(variables):
-                data_cell = ws.cell(row=row_idx, column=3 + i, value=float(row.get(var, 0)))
+                val = row.get(var)
+                if pd.notna(val):
+                    data_cell = ws.cell(row=row_idx, column=3 + i, value=float(val))
+                else:
+                    data_cell = ws.cell(row=row_idx, column=3 + i, value=None)
                 data_cell.fill = ORANGE_FILL
+
+        # CepiDc commune annotation in consolidated
+        if geo_key == "com" and cfg.get("source_type") == "cepidc":
+            note_row = len(df) + 3
+            note_cell = ws.cell(row=note_row, column=1,
+                value="NOTE: La source CepiDc ne fournit pas de donnees communales. "
+                      "Les effectifs sont vides. Les taux correspondent au taux regional Guyane (proxy).")
+            note_cell.font = Font(italic=True, color="FF0000")
 
     wb_cons.save(root_dir / f"{excel_name}_consolidated_{year}.xlsx")
     zip_path = shutil.make_archive(str(OUTPUT_DIR / f"{theme}_opendata_{year}"), "zip", str(OUTPUT_DIR / f"{theme}_opendata"), str(year))

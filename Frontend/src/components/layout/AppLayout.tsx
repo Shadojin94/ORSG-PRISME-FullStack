@@ -10,7 +10,7 @@ export function AppLayout({ children }: AppLayoutProps) {
     const [sidebarOpen, setSidebarOpen] = useState(false)
 
     return (
-        <div className="min-h-screen bg-background text-foreground font-sans antialiased overflow-x-hidden">
+        <div className="min-h-screen bg-background text-foreground font-sans antialiased">
             {/* Mobile Header */}
             <div className="md:hidden flex items-center p-4 bg-[#1a4b8c] text-white fixed top-0 left-0 right-0 z-40 shadow-sm transition-all duration-300">
                 <button

@@ -114,6 +114,87 @@ export async function generateOpenData(theme: string, year: number): Promise<{
     return response.json();
 }
 
+// Upload CSV/XLSX files to Backend/csv_sources/
+export interface UploadResult {
+    success: boolean;
+    files?: string[];
+    converted?: Array<{ original: string; csv: string }>;
+    skipped?: Array<{ file: string; reason: string }>;
+    error?: string;
+    message?: string;
+}
+
+export async function uploadCsvFiles(files: File[], user?: string): Promise<UploadResult> {
+    const formData = new FormData();
+    for (const file of files) {
+        formData.append('files', file, file.name);
+    }
+    const userParam = user ? `?user=${encodeURIComponent(user)}` : '';
+    const response = await fetch(`${API_BASE}/api/upload-csv${userParam}`, {
+        method: 'POST',
+        body: formData
+    });
+    return response.json();
+}
+
+// Validate a CSV file (returns column info, row count, sample data)
+export interface CsvValidation {
+    columns: string[];
+    rowCount: number;
+    sampleRows: Record<string, any>[];
+    hasGeoColumn: boolean;
+    hasYearColumn: boolean;
+    hasValueColumn: boolean;
+    fileSize: number;
+    separator: string;
+}
+
+export async function validateCsvFile(filename: string): Promise<{
+    success: boolean;
+    validation?: CsvValidation;
+    error?: string;
+}> {
+    const response = await fetch(`${API_BASE}/api/validate-csv?file=${encodeURIComponent(filename)}`);
+    return response.json();
+}
+
+// Import history
+export interface ImportHistoryEntry {
+    id: string;
+    timestamp: string;
+    user: string;
+    files: string[];
+    converted: Array<{ original: string; csv: string }>;
+    count: number;
+}
+
+export async function getImportHistory(): Promise<ImportHistoryEntry[]> {
+    const response = await fetch(`${API_BASE}/api/import-history`);
+    const data = await response.json();
+    return data.success ? data.history : [];
+}
+
+// List CSV source files on server
+export interface CsvSourceFile {
+    name: string;
+    size: number;
+    modified: string;
+}
+
+export async function listCsvSources(): Promise<CsvSourceFile[]> {
+    const response = await fetch(`${API_BASE}/api/csv-sources`);
+    const data = await response.json();
+    return data.success ? data.files : [];
+}
+
+// Delete a CSV source file
+export async function deleteCsvSource(filename: string): Promise<{ success: boolean }> {
+    const response = await fetch(`${API_BASE}/api/delete-csv?file=${encodeURIComponent(filename)}`, {
+        method: 'POST'
+    });
+    return response.json();
+}
+
 // Reload server config
 export async function reloadConfig(): Promise<{ success: boolean; message?: string }> {
     const response = await fetch(`${API_BASE}/api/reload-config`, {

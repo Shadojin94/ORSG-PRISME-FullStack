@@ -7,10 +7,13 @@ const http = require('http');
 const fs = require('fs');
 const path = require('path');
 const { spawn } = require('child_process');
+const Busboy = require('busboy');
 
 const PORT = process.env.PORT || 3001;
 const OUTPUT_DIR = path.join(__dirname, 'output');
 const CONFIG_FILE = path.join(__dirname, 'themes_config.json');
+const CSV_SOURCES_DIR = path.join(__dirname, 'csv_sources');
+const IMPORT_HISTORY_FILE = path.join(CSV_SOURCES_DIR, 'import_history.json');
 const FRONTEND_DIST = path.join(__dirname, '..', 'Frontend', 'dist');
 const PYTHON_EXE = process.env.PYTHON_EXE || 'py';
 
@@ -242,6 +245,206 @@ else:
         return;
     }
 
+    // ========== UPLOAD FILES (CSV + XLSX) ==========
+    if (urlPath === '/upload-csv' && req.method === 'POST') {
+        try {
+            const files = await parseUploadedFiles(req);
+            if (files.length === 0) {
+                jsonResponse(res, 400, { success: false, error: 'Aucun fichier reçu.' });
+                return;
+            }
+
+            // Ensure csv_sources directory exists
+            if (!fs.existsSync(CSV_SOURCES_DIR)) {
+                fs.mkdirSync(CSV_SOURCES_DIR, { recursive: true });
+            }
+
+            const saved = [];
+            const converted = [];
+            const skipped = [];
+            const user = url.searchParams.get('user') || 'anonymous';
+
+            for (const file of files) {
+                const ext = path.extname(file.filename).toLowerCase();
+                // Sanitize: keep accented chars and common CSV naming patterns
+                const safeName = file.filename.replace(/[<>:"/\\|?*\x00-\x1f]/g, '_');
+
+                if (ext === '.csv') {
+                    const destPath = path.join(CSV_SOURCES_DIR, safeName);
+                    fs.writeFileSync(destPath, file.data);
+                    saved.push(safeName);
+                    console.log(`   Uploaded CSV: ${safeName} (${file.data.length} bytes)`);
+                } else if (ext === '.xlsx' || ext === '.xls') {
+                    // Save temp XLSX then convert to CSV via Python
+                    const tmpPath = path.join(CSV_SOURCES_DIR, `_tmp_${safeName}`);
+                    fs.writeFileSync(tmpPath, file.data);
+                    try {
+                        const csvFiles = await convertXlsxToCsv(tmpPath, CSV_SOURCES_DIR);
+                        converted.push(...csvFiles.map(f => ({ original: safeName, csv: f })));
+                        saved.push(...csvFiles);
+                        console.log(`   Converted XLSX: ${safeName} -> ${csvFiles.join(', ')}`);
+                    } catch (convErr) {
+                        console.error(`   XLSX conversion failed for ${safeName}:`, convErr.message);
+                        skipped.push({ file: safeName, reason: `Conversion XLSX échouée: ${convErr.message}` });
+                    } finally {
+                        try { fs.unlinkSync(tmpPath); } catch (e) { }
+                    }
+                } else {
+                    skipped.push({ file: safeName, reason: 'Format non supporté (CSV ou XLSX uniquement)' });
+                }
+            }
+
+            // Record import history
+            if (saved.length > 0) {
+                recordImportHistory(saved, user, converted);
+            }
+
+            if (saved.length === 0) {
+                jsonResponse(res, 400, {
+                    success: false,
+                    error: 'Aucun fichier valide. Formats acceptés: .csv, .xlsx',
+                    skipped
+                });
+                return;
+            }
+
+            jsonResponse(res, 200, {
+                success: true,
+                files: saved,
+                converted,
+                skipped,
+                message: `${saved.length} fichier(s) importé(s) avec succès.`
+            });
+        } catch (e) {
+            console.error('Upload error:', e.message);
+            jsonResponse(res, 500, { success: false, error: `Erreur d'import: ${e.message}` });
+        }
+        return;
+    }
+
+    // ========== VALIDATE UPLOADED CSV ==========
+    if (urlPath === '/validate-csv' && req.method === 'GET') {
+        const filename = url.searchParams.get('file');
+        if (!filename || filename.includes('..')) {
+            jsonResponse(res, 400, { success: false, error: 'Nom de fichier invalide' });
+            return;
+        }
+        const filePath = path.join(CSV_SOURCES_DIR, filename);
+        if (!fs.existsSync(filePath)) {
+            jsonResponse(res, 404, { success: false, error: 'Fichier non trouvé' });
+            return;
+        }
+        try {
+            const result = await runPython(`
+import sys, json, os
+sys.path.insert(0, '${__dirname.replace(/\\/g, '/')}')
+import pandas as pd
+
+filepath = r'${filePath.replace(/\\/g, '/')}'
+try:
+    df = pd.read_csv(filepath, sep=';', low_memory=False, nrows=100)
+    cols = list(df.columns)
+    rows_total = len(pd.read_csv(filepath, sep=';', low_memory=False))
+    sample = df.head(5).fillna('').to_dict(orient='records')
+    # Check for typical MOCA-O structure
+    has_geo = any('geo' in c.lower() or 'code' in c.lower() for c in cols)
+    has_year = any('ann' in c.lower() or 'year' in c.lower() for c in cols)
+    has_value = any('val' in c.lower() for c in cols)
+    print(json.dumps({
+        "success": True,
+        "validation": {
+            "columns": cols,
+            "rowCount": rows_total,
+            "sampleRows": sample,
+            "hasGeoColumn": has_geo,
+            "hasYearColumn": has_year,
+            "hasValueColumn": has_value,
+            "fileSize": os.path.getsize(filepath),
+            "separator": ";"
+        }
+    }))
+except Exception as e:
+    # Try comma separator
+    try:
+        df = pd.read_csv(filepath, sep=',', low_memory=False, nrows=100)
+        cols = list(df.columns)
+        rows_total = len(pd.read_csv(filepath, sep=',', low_memory=False))
+        sample = df.head(5).fillna('').to_dict(orient='records')
+        has_geo = any('geo' in c.lower() or 'code' in c.lower() for c in cols)
+        has_year = any('ann' in c.lower() or 'year' in c.lower() for c in cols)
+        has_value = any('val' in c.lower() for c in cols)
+        print(json.dumps({
+            "success": True,
+            "validation": {
+                "columns": cols,
+                "rowCount": rows_total,
+                "sampleRows": sample,
+                "hasGeoColumn": has_geo,
+                "hasYearColumn": has_year,
+                "hasValueColumn": has_value,
+                "fileSize": os.path.getsize(filepath),
+                "separator": ","
+            }
+        }))
+    except Exception as e2:
+        print(json.dumps({"success": False, "error": str(e2)}))
+`);
+            const data = JSON.parse(result.stdout.trim().split('\n').pop());
+            jsonResponse(res, 200, data);
+        } catch (e) {
+            jsonResponse(res, 500, { success: false, error: e.message });
+        }
+        return;
+    }
+
+    // ========== IMPORT HISTORY ==========
+    if (urlPath === '/import-history' && req.method === 'GET') {
+        try {
+            const history = loadImportHistory();
+            jsonResponse(res, 200, { success: true, history });
+        } catch (e) {
+            jsonResponse(res, 200, { success: true, history: [] });
+        }
+        return;
+    }
+
+    // ========== LIST CSV SOURCE FILES ==========
+    if (urlPath === '/csv-sources' && req.method === 'GET') {
+        try {
+            const files = fs.readdirSync(CSV_SOURCES_DIR)
+                .filter(f => f.endsWith('.csv'))
+                .map(f => {
+                    const stat = fs.statSync(path.join(CSV_SOURCES_DIR, f));
+                    return {
+                        name: f,
+                        size: stat.size,
+                        modified: stat.mtime.toISOString()
+                    };
+                });
+            jsonResponse(res, 200, { success: true, files });
+        } catch (e) {
+            jsonResponse(res, 200, { success: true, files: [] });
+        }
+        return;
+    }
+
+    // ========== DELETE CSV SOURCE FILE ==========
+    if (urlPath === '/delete-csv' && req.method === 'POST') {
+        const filename = url.searchParams.get('file');
+        if (!filename || filename.includes('..') || !filename.endsWith('.csv')) {
+            jsonResponse(res, 400, { success: false, error: 'Invalid filename' });
+            return;
+        }
+        const filePath = path.join(CSV_SOURCES_DIR, filename);
+        if (fs.existsSync(filePath)) {
+            fs.unlinkSync(filePath);
+            jsonResponse(res, 200, { success: true, message: `Deleted: ${filename}` });
+        } else {
+            jsonResponse(res, 404, { success: false, error: 'File not found' });
+        }
+        return;
+    }
+
     // ========== RELOAD CONFIG ==========
     if (urlPath === '/reload-config' && req.method === 'POST') {
         themesConfig = loadConfig();
@@ -286,7 +489,9 @@ else:
         // Themes supportés par generate_from_opendata.py
         const supportedThemes = [
             'educ', 'pers_sup65ans_seules', 'familles_mono', 'pop_inf3ans',
-            'pers_menages', 'types_menages', 'alloc', 'revenu', 'densite'
+            'pers_menages', 'types_menages', 'alloc', 'revenu', 'densite',
+            'route', 'mortalite_gen', 'mortalite_cardio', 'mortalite_tumeurs',
+            'mortalite_respi', 'mortalite_neuro', 'mortalite_diabete', 'mortalite_covid'
         ];
 
         if (!supportedThemes.includes(theme)) {
@@ -556,6 +761,131 @@ function generateOpenDataFile(theme, year) {
     });
 }
 
+/**
+ * Parse uploaded files using busboy (robust multipart parser)
+ * Accepts CSV and XLSX files, up to 50MB total
+ */
+function parseUploadedFiles(req) {
+    return new Promise((resolve, reject) => {
+        const files = [];
+        const busboy = Busboy({
+            headers: req.headers,
+            limits: { fileSize: 50 * 1024 * 1024, files: 20 }
+        });
+
+        busboy.on('file', (fieldname, stream, info) => {
+            const { filename, encoding, mimeType } = info;
+            const chunks = [];
+            stream.on('data', (chunk) => chunks.push(chunk));
+            stream.on('end', () => {
+                if (filename) {
+                    files.push({ filename, data: Buffer.concat(chunks) });
+                }
+            });
+        });
+
+        busboy.on('finish', () => resolve(files));
+        busboy.on('error', (err) => reject(err));
+        req.pipe(busboy);
+    });
+}
+
+/**
+ * Convert an XLSX file to one or more CSVs using Python pandas
+ * Returns array of generated CSV filenames
+ */
+function convertXlsxToCsv(xlsxPath, outputDir) {
+    return new Promise((resolve, reject) => {
+        const script = `
+import sys, json, pandas as pd, os
+
+xlsx_path = r'${xlsxPath.replace(/\\/g, '/')}'
+output_dir = r'${outputDir.replace(/\\/g, '/')}'
+base = os.path.splitext(os.path.basename(xlsx_path))[0]
+# Remove _tmp_ prefix if present
+if base.startswith('_tmp_'):
+    base = base[5:]
+
+xls = pd.ExcelFile(xlsx_path)
+sheet_names = xls.sheet_names
+csv_files = []
+
+if len(sheet_names) == 1:
+    df = pd.read_excel(xlsx_path, sheet_name=0)
+    csv_name = base.rsplit('.', 1)[0] + '.csv' if '.' in base else base + '.csv'
+    csv_path = os.path.join(output_dir, csv_name)
+    df.to_csv(csv_path, sep=';', index=False, encoding='utf-8-sig')
+    csv_files.append(csv_name)
+else:
+    for sheet in sheet_names:
+        df = pd.read_excel(xlsx_path, sheet_name=sheet)
+        safe_sheet = sheet.replace(' ', '_').replace('/', '_')
+        csv_name = f"{base}_{safe_sheet}.csv"
+        csv_path = os.path.join(output_dir, csv_name)
+        df.to_csv(csv_path, sep=';', index=False, encoding='utf-8-sig')
+        csv_files.append(csv_name)
+
+print(json.dumps({"success": True, "files": csv_files}))
+`;
+        const scriptPath = path.join(__dirname, '_tmp_convert.py');
+        fs.writeFileSync(scriptPath, script, 'utf8');
+
+        const child = spawn(PYTHON_EXE, [scriptPath], { cwd: __dirname });
+        let stdout = '';
+        let stderr = '';
+        child.stdout.on('data', (d) => { stdout += d.toString(); });
+        child.stderr.on('data', (d) => { stderr += d.toString(); });
+        child.on('close', (code) => {
+            try { fs.unlinkSync(scriptPath); } catch (e) { }
+            if (code === 0) {
+                try {
+                    const data = JSON.parse(stdout.trim().split('\n').pop());
+                    resolve(data.files || []);
+                } catch (e) {
+                    reject(new Error('Failed to parse XLSX conversion output'));
+                }
+            } else {
+                reject(new Error(stderr || `XLSX conversion failed (code ${code})`));
+            }
+        });
+        child.on('error', (err) => {
+            try { fs.unlinkSync(scriptPath); } catch (e) { }
+            reject(err);
+        });
+    });
+}
+
+/**
+ * Import history management
+ */
+function loadImportHistory() {
+    try {
+        if (fs.existsSync(IMPORT_HISTORY_FILE)) {
+            return JSON.parse(fs.readFileSync(IMPORT_HISTORY_FILE, 'utf8'));
+        }
+    } catch (e) { }
+    return [];
+}
+
+function recordImportHistory(files, user, converted) {
+    const history = loadImportHistory();
+    history.unshift({
+        id: Date.now().toString(36) + Math.random().toString(36).slice(2, 6),
+        timestamp: new Date().toISOString(),
+        user: user,
+        files: files,
+        converted: converted || [],
+        count: files.length
+    });
+    // Keep last 200 entries
+    if (history.length > 200) history.length = 200;
+    try {
+        fs.writeFileSync(IMPORT_HISTORY_FILE, JSON.stringify(history, null, 2), 'utf8');
+    } catch (e) {
+        console.error('Failed to save import history:', e.message);
+    }
+}
+
 server.listen(PORT, () => {
     console.log(`\n${'='.repeat(50)}`);
     console.log(`PRISME File Server v4.0`);
@@ -574,6 +904,11 @@ server.listen(PORT, () => {
     console.log(`   - POST /generate?theme=educ&year=2022`);
     console.log(`   - POST /generate-opendata?theme=educ&year=2022`);
     console.log(`   - GET  /download/educ_2022.zip`);
-    console.log(`   - GET  /files              (metadata: filename, date, size, theme)`);
+    console.log(`   - POST /upload-csv          (import CSV/XLSX files)`);
+    console.log(`   - GET  /validate-csv?file=X (validate a CSV file)`);
+    console.log(`   - GET  /import-history      (import audit trail)`);
+    console.log(`   - GET  /csv-sources         (list uploaded CSVs)`);
+    console.log(`   - POST /delete-csv?file=X   (delete a CSV)`);
+    console.log(`   - GET  /files               (metadata: filename, date, size, theme)`);
     console.log(`${'='.repeat(50)}\n`);
 });

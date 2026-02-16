@@ -5,6 +5,7 @@
 
 import { useState, useEffect, useCallback } from 'react';
 import * as api from '@/services/api';
+import { BDI_THEMES } from '@/data/bdi_themes';
 
 // Types locaux enrichis pour le frontend
 export interface FrontendTheme {
@@ -183,11 +184,40 @@ export function useThemes() {
     };
 }
 
+// Helper: find static years from BDI_THEMES for a dataset (fallback)
+function getStaticYears(datasetId: string): number[] {
+    const findInItems = (items: any[]): number[] | null => {
+        for (const item of items) {
+            if (item.datasets) {
+                const ds = item.datasets.find((d: any) => d.id === datasetId);
+                if (ds?.availableYears) return ds.availableYears;
+            }
+            if (item.subThemes) {
+                const found = findInItems(item.subThemes);
+                if (found) return found;
+            }
+        }
+        return null;
+    };
+    for (const theme of BDI_THEMES as any[]) {
+        if (theme.subThemes) {
+            const found = findInItems(theme.subThemes);
+            if (found) return found;
+        }
+        if (theme.datasets) {
+            const ds = theme.datasets.find((d: any) => d.id === datasetId);
+            if (ds?.availableYears) return ds.availableYears;
+        }
+    }
+    return [];
+}
+
 // Hook pour charger les années d'un dataset spécifique
 export function useDatasetYears(datasetId: string | null, openDataMode: boolean = false) {
     const [years, setYears] = useState<number[]>([]);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
+    const [refreshCounter, setRefreshCounter] = useState(0);
 
     useEffect(() => {
         if (!datasetId) {
@@ -205,15 +235,27 @@ export function useDatasetYears(datasetId: string | null, openDataMode: boolean 
                 setYears(yearsData);
             } catch (err) {
                 console.error(`Failed to load years for ${datasetId} (openData=${openDataMode}):`, err);
-                setError(err instanceof Error ? err.message : 'Erreur');
-                setYears([]);
+                // Fallback: use static years from bdi_themes.ts
+                const staticYears = getStaticYears(datasetId);
+                if (staticYears.length > 0) {
+                    console.warn(`Using static fallback years for ${datasetId}:`, staticYears);
+                    setYears(staticYears);
+                    setError(null); // Clear error since we have fallback data
+                } else {
+                    setError(err instanceof Error ? err.message : 'Erreur');
+                    setYears([]);
+                }
             } finally {
                 setLoading(false);
             }
         };
 
         load();
-    }, [datasetId, openDataMode]);
+    }, [datasetId, openDataMode, refreshCounter]);
 
-    return { years, loading, error };
+    const reload = useCallback(() => {
+        setRefreshCounter(c => c + 1);
+    }, []);
+
+    return { years, loading, error, reload };
 }

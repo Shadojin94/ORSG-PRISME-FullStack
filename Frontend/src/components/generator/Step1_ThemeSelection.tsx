@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { cn } from "@/lib/utils";
 import { BDI_THEMES } from "@/data/bdi_themes";
-import { ChevronDown, ChevronRight, CheckCircle2 } from "lucide-react";
+import { ChevronDown, ChevronRight, Database, Lock } from "lucide-react";
 
 interface Step1Props {
     onDatasetSelect: (themeId: string, subThemeId: string, datasetId: string) => void;
@@ -10,144 +10,187 @@ interface Step1Props {
     selectedDatasetId: string | null;
 }
 
+// Count how many demoReady datasets exist in a theme/subtheme (recursive)
+function countReadyDatasets(items: any[]): number {
+    let count = 0;
+    for (const item of items) {
+        if (item.datasets) {
+            count += item.datasets.filter((d: any) => d.demoReady).length;
+        }
+        if (item.subThemes) {
+            count += countReadyDatasets(item.subThemes);
+        }
+    }
+    return count;
+}
+function countAllDatasets(items: any[]): number {
+    let count = 0;
+    for (const item of items) {
+        if (item.datasets) count += item.datasets.length;
+        if (item.subThemes) count += countAllDatasets(item.subThemes);
+    }
+    return count;
+}
+
 export function Step1_ThemeSelection({
     onDatasetSelect,
     selectedThemeId,
-    selectedSubThemeId,
     selectedDatasetId
 }: Step1Props) {
     const [expandedThemeId, setExpandedThemeId] = useState<string | null>(selectedThemeId);
-    const [expandedSubThemeId, setExpandedSubThemeId] = useState<string | null>(selectedSubThemeId);
+    const [expandedSubThemeId, setExpandedSubThemeId] = useState<string | null>(null);
 
     const handleThemeClick = (id: string) => {
-        if (expandedThemeId === id) {
-            setExpandedThemeId(null);
-        } else {
-            setExpandedThemeId(id);
+        setExpandedThemeId(expandedThemeId === id ? null : id);
+        setExpandedSubThemeId(null);
+    };
+
+    const handleSubThemeClick = (subTheme: any, themeId: string) => {
+        const id = subTheme.id;
+        if (expandedSubThemeId === id) {
+            setExpandedSubThemeId(null);
+            return;
+        }
+        setExpandedSubThemeId(id);
+
+        // Auto-select if only 1 dataset total (direct + nested)
+        const allDs: any[] = [];
+        if (subTheme.datasets) allDs.push(...subTheme.datasets);
+        if (subTheme.subThemes) {
+            for (const nested of subTheme.subThemes) {
+                if (nested.datasets) allDs.push(...nested.datasets);
+            }
+        }
+        if (allDs.length === 1) {
+            onDatasetSelect(themeId, id, allDs[0].id);
         }
     };
 
-    const handleSubThemeClick = (id: string) => {
-        if (expandedSubThemeId === id) {
-            setExpandedSubThemeId(null);
-        } else {
-            setExpandedSubThemeId(id);
-        }
+    const renderDatasetButton = (ds: any, themeId: string, subThemeId: string) => {
+        const isSelected = selectedDatasetId === ds.id;
+        return (
+            <button
+                key={ds.id}
+                onClick={(e) => {
+                    e.stopPropagation();
+                    onDatasetSelect(themeId, subThemeId, ds.id);
+                }}
+                className={cn(
+                    "w-full text-left py-2.5 px-3 rounded-lg text-sm transition-all flex items-center justify-between gap-2",
+                    isSelected
+                        ? "bg-[#3bb3a9]/10 text-[#2f9a91] font-semibold ring-1 ring-[#3bb3a9]/30"
+                        : ds.demoReady
+                            ? "text-gray-700 hover:bg-[#3bb3a9]/5 hover:text-[#2f9a91] cursor-pointer"
+                            : "text-gray-400 cursor-default"
+                )}
+                disabled={!ds.demoReady}
+            >
+                <span className="flex-1">{ds.label}</span>
+                <span className="flex items-center gap-1.5 shrink-0">
+                    {ds.demoReady ? (
+                        <span className="text-[10px] bg-green-100 text-green-700 px-2 py-0.5 rounded-full font-medium flex items-center gap-1">
+                            <Database className="w-3 h-3" />
+                            Disponible
+                        </span>
+                    ) : (
+                        <span className="text-[10px] bg-gray-100 text-gray-500 px-2 py-0.5 rounded-full font-medium flex items-center gap-1">
+                            <Lock className="w-3 h-3" />
+                            Bientôt
+                        </span>
+                    )}
+                </span>
+            </button>
+        );
     };
 
     return (
-        <div className="space-y-6">
-            <h2 className="text-2xl font-bold text-[#1a4b8c] mb-6">1. Sélectionnez vos données</h2>
+        <div className="space-y-4">
+            <div className="flex items-center justify-between mb-2">
+                <h2 className="text-2xl font-bold text-[#1a4b8c]">1. Choisissez un indicateur</h2>
+                <span className="text-sm text-gray-400">
+                    {countReadyDatasets(BDI_THEMES as any[])} indicateurs disponibles
+                </span>
+            </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                {BDI_THEMES.map((theme) => {
+            {/* Theme Cards Grid */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                {(BDI_THEMES as any[]).map((theme) => {
                     const isExpanded = expandedThemeId === theme.id;
-                    const isSelected = selectedThemeId === theme.id;
                     const Icon = theme.icon;
+                    const readyCount = countReadyDatasets(theme.subThemes || []);
+                    const totalCount = countAllDatasets(theme.subThemes || []);
 
                     return (
                         <div
                             key={theme.id}
                             className={cn(
-                                "border rounded-xl transition-all duration-300 bg-white overflow-hidden shadow-sm hover:shadow-md",
-                                isExpanded ? "ring-2 ring-[#3bb3a9]" : "border-gray-200"
+                                "border rounded-xl transition-all duration-200 bg-white overflow-hidden",
+                                isExpanded
+                                    ? "ring-2 ring-[#3bb3a9] shadow-lg md:col-span-2"
+                                    : "border-gray-200 shadow-sm hover:shadow-md hover:border-gray-300"
                             )}
                         >
-                            {/* Theme Header Card */}
+                            {/* Theme Header */}
                             <button
                                 onClick={() => handleThemeClick(theme.id)}
-                                className="w-full text-left p-4 flex items-start gap-4"
+                                className="w-full text-left p-4 flex items-center gap-4"
                             >
-                                <div className={cn(
-                                    "p-3 rounded-lg text-white shrink-0",
-                                    theme.bgColor || "bg-gray-500"
-                                )}>
-                                    <Icon className="w-6 h-6" />
+                                <div className={cn("p-2.5 rounded-lg text-white shrink-0", theme.bgColor || "bg-gray-500")}>
+                                    <Icon className="w-5 h-5" />
                                 </div>
-                                <div className="flex-1">
-                                    <div className="flex justify-between items-center">
-                                        <h3 className="font-bold text-gray-800 text-lg">{theme.shortTitle}</h3>
-                                        <ChevronDown className={cn("w-5 h-5 text-gray-400 transition-transform", isExpanded && "rotate-180")} />
+                                <div className="flex-1 min-w-0">
+                                    <div className="flex items-center gap-2">
+                                        <h3 className="font-bold text-gray-800">{theme.shortTitle}</h3>
+                                        {readyCount > 0 && (
+                                            <span className="text-[10px] bg-green-50 text-green-600 px-2 py-0.5 rounded-full font-medium">
+                                                {readyCount}/{totalCount}
+                                            </span>
+                                        )}
                                     </div>
-                                    <p className="text-sm text-gray-500 mt-1 line-clamp-2">
-                                        {theme.description}
-                                    </p>
+                                    <p className="text-xs text-gray-500 mt-0.5 truncate">{theme.description}</p>
                                 </div>
+                                <ChevronDown className={cn("w-5 h-5 text-gray-400 shrink-0 transition-transform", isExpanded && "rotate-180")} />
                             </button>
 
-                            {/* Expanded Content (Sub-themes) */}
+                            {/* Expanded: Sub-themes */}
                             {isExpanded && (
-                                <div className="bg-gray-50 border-t border-gray-100 p-4 space-y-2 animate-in slide-in-from-top-2">
-                                    {theme.subThemes?.map((subTheme) => {
-                                        const isSubExpanded = expandedSubThemeId === subTheme.id;
-                                        const hasDirectDatasets = subTheme.datasets && subTheme.datasets.length > 0;
-                                        const hasNestedSubThemes = subTheme.subThemes && subTheme.subThemes.length > 0;
-
-                                        // Helper to render datasets list
-                                        const renderDatasets = (datasets: any[]) => (
-                                            <div className="pl-4 space-y-1 mt-2 mb-2 border-l-2 border-gray-200 ml-2">
-                                                {datasets.map((ds) => {
-                                                    const isDsSelected = selectedDatasetId === ds.id;
-                                                    return (
-                                                        <button
-                                                            key={ds.id}
-                                                            onClick={(e) => {
-                                                                e.stopPropagation();
-                                                                onDatasetSelect(theme.id, subTheme.id, ds.id);
-                                                            }}
-                                                            className={cn(
-                                                                "w-full text-left py-2 px-3 rounded-md text-sm transition-colors flex items-center justify-between group",
-                                                                isDsSelected
-                                                                    ? "bg-[#3bb3a9]/10 text-[#2f9a91] font-bold"
-                                                                    : "text-gray-600 hover:bg-white hover:text-[#3bb3a9]"
-                                                            )}
-                                                        >
-                                                            <span>{ds.label}</span>
-                                                            {ds.demoReady && (
-                                                                <span className="text-[10px] bg-green-100 text-green-700 px-1.5 py-0.5 rounded-full font-medium ml-2 shrink-0">
-                                                                    Open Data
-                                                                </span>
-                                                            )}
-                                                            {isDsSelected && <CheckCircle2 className="w-4 h-4" />}
-                                                        </button>
-                                                    );
-                                                })}
-                                            </div>
-                                        );
+                                <div className="bg-gray-50 border-t border-gray-100 p-3 space-y-2 animate-in fade-in slide-in-from-top-2 duration-200">
+                                    {theme.subThemes?.map((sub: any) => {
+                                        const isSubExpanded = expandedSubThemeId === sub.id;
+                                        const hasContent = (sub.datasets && sub.datasets.length > 0) || (sub.subThemes && sub.subThemes.length > 0);
 
                                         return (
-                                            <div key={subTheme.id} className="rounded-lg bg-white border border-gray-100 overflow-hidden">
+                                            <div key={sub.id} className={cn(
+                                                "rounded-lg bg-white border overflow-hidden transition-all",
+                                                isSubExpanded ? "border-[#3bb3a9]/30 shadow-sm" : "border-gray-100"
+                                            )}>
                                                 <button
-                                                    onClick={() => handleSubThemeClick(subTheme.id)}
+                                                    onClick={() => handleSubThemeClick(sub, theme.id)}
                                                     className="w-full flex items-center justify-between p-3 text-sm font-semibold text-gray-700 hover:bg-gray-50 transition-colors"
                                                 >
                                                     <span className="flex items-center gap-2">
                                                         <div className={cn("w-1.5 h-1.5 rounded-full", isSubExpanded ? "bg-[#3bb3a9]" : "bg-gray-300")} />
-                                                        {subTheme.title}
+                                                        {sub.title}
                                                     </span>
-                                                    {(hasDirectDatasets || hasNestedSubThemes) && (
+                                                    {hasContent && (
                                                         <ChevronRight className={cn("w-4 h-4 text-gray-400 transition-transform", isSubExpanded && "rotate-90")} />
                                                     )}
                                                 </button>
 
                                                 {isSubExpanded && (
-                                                    <div className="px-3 pb-3">
-                                                        {/* Direct Datasets */}
-                                                        {hasDirectDatasets && renderDatasets(subTheme.datasets)}
+                                                    <div className="px-3 pb-3 space-y-1">
+                                                        {/* Direct datasets */}
+                                                        {sub.datasets?.map((ds: any) => renderDatasetButton(ds, theme.id, sub.id))}
 
-                                                        {/* Nested Sub-themes (Level 3) */}
-                                                        {hasNestedSubThemes && (
-                                                            <div className="space-y-2 mt-1 pl-4">
-                                                                {subTheme.subThemes.map((nested: any) => (
-                                                                    <div key={nested.id}>
-                                                                        <div className="text-xs font-bold text-gray-400 uppercase tracking-wider mb-1 mt-2">
-                                                                            {nested.title}
-                                                                        </div>
-                                                                        {nested.datasets && renderDatasets(nested.datasets)}
-                                                                    </div>
-                                                                ))}
+                                                        {/* Nested sub-themes (Level 3) */}
+                                                        {sub.subThemes?.map((nested: any) => (
+                                                            <div key={nested.id} className="mt-2">
+                                                                <div className="text-[11px] font-bold text-gray-400 uppercase tracking-wider mb-1 px-3">
+                                                                    {nested.title}
+                                                                </div>
+                                                                {nested.datasets?.map((ds: any) => renderDatasetButton(ds, theme.id, nested.id))}
                                                             </div>
-                                                        )}
+                                                        ))}
                                                     </div>
                                                 )}
                                             </div>
