@@ -18,7 +18,11 @@ Backend/test_output/
 output/
 
 # Input data (volumineux, pas du code source)
-Backend/inputs/
+Backend/inputs/*
+!Backend/inputs/opendata/
+Backend/inputs/opendata/*
+!Backend/inputs/opendata/cepidc/
+!Backend/inputs/opendata/superficie_communes.json
 
 # CSV sources - INCLUS dans le repo (nécessaires pour Docker build, 649 KB)
 # Backend/csv_sources/
