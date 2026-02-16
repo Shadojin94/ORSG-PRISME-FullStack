@@ -115,11 +115,19 @@ export async function generateOpenData(theme: string, year: number): Promise<{
 }
 
 // Upload CSV/XLSX files to Backend/csv_sources/
+export interface GeoAnalysis {
+    filename: string;
+    found: Array<{ code: string; label: string }>;
+    missing: Array<{ code: string; label: string }>;
+}
+
 export interface UploadResult {
     success: boolean;
     files?: string[];
     converted?: Array<{ original: string; csv: string }>;
     skipped?: Array<{ file: string; reason: string }>;
+    geoAnalysis?: GeoAnalysis[];
+    geoWarnings?: string[];
     error?: string;
     message?: string;
 }
@@ -217,13 +225,8 @@ export interface GeneratedFile {
 }
 
 export async function getFiles(): Promise<GeneratedFile[]> {
-    try {
-        const response = await fetch(`${API_BASE}/api/files`);
-        if (!response.ok) throw new Error('Erreur serveur');
-        const data = await response.json();
-        return Array.isArray(data) ? data : [];
-    } catch (error) {
-        console.error("API error in getFiles:", error);
-        return [];
-    }
+    const response = await fetch(`${API_BASE}/api/files`);
+    if (!response.ok) throw new Error(`Erreur serveur (${response.status})`);
+    const data = await response.json();
+    return Array.isArray(data) ? data : [];
 }

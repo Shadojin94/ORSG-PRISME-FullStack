@@ -1,14 +1,79 @@
-import { useState } from "react"
+import { useState, useEffect, useCallback } from "react"
 import { BDI_THEMES } from "@/data/bdi_themes"
 import { cn } from "@/lib/utils"
-import { Search, Download, ChevronRight, ChevronDown, Database, FileSpreadsheet, ExternalLink } from "lucide-react"
+import { Search, ChevronRight, ChevronDown, Database, FileSpreadsheet, Loader2 } from "lucide-react"
+import { checkCsvAvailability } from "@/services/api"
+
+// Collect unique sources from BDI_THEMES
+function countUniqueSources(): number {
+    const sources = new Set<string>()
+    const walk = (items: any[]) => {
+        for (const item of items) {
+            if (item.datasets) {
+                for (const ds of item.datasets) {
+                    if (ds.source) sources.add(ds.source.split(' / ')[0].trim())
+                }
+            }
+            if (item.subThemes) walk(item.subThemes)
+        }
+    }
+    for (const theme of BDI_THEMES) walk(theme.subThemes || [])
+    return sources.size
+}
+
+const UNIQUE_SOURCES_COUNT = countUniqueSources()
 
 export function DocsPage() {
     const [activeThemeId, setActiveThemeId] = useState(BDI_THEMES[0].id)
     const [expandedSubThemes, setExpandedSubThemes] = useState<string[]>([])
     const [searchTerm, setSearchTerm] = useState("")
+    // Track real availability: datasetId -> { available, foundCount, totalCount }
+    const [availability, setAvailability] = useState<Record<string, { available: boolean; foundCount: number; totalCount: number; hasOpenData: boolean }>>({})
+    const [loadingAvail, setLoadingAvail] = useState(false)
 
     const activeTheme = BDI_THEMES.find(t => t.id === activeThemeId)
+
+    // Fetch availability for all datasets in active theme
+    const fetchAvailability = useCallback(async () => {
+        if (!activeTheme) return
+        const allDatasets: { id: string; hasOpenData: boolean }[] = []
+        const walk = (items: any[]) => {
+            for (const item of items) {
+                if (item.datasets) {
+                    for (const ds of item.datasets) {
+                        allDatasets.push({
+                            id: ds.id,
+                            hasOpenData: !!(ds.source && (ds.source.includes('Open Data') || ds.source.includes('INSEE')))
+                        })
+                    }
+                }
+                if (item.subThemes) walk(item.subThemes)
+            }
+        }
+        walk(activeTheme.subThemes || [])
+        if (allDatasets.length === 0) return
+
+        setLoadingAvail(true)
+        const results: typeof availability = {}
+        await Promise.all(allDatasets.map(async ({ id: dsId, hasOpenData }) => {
+            try {
+                const data = await checkCsvAvailability(dsId)
+                results[dsId] = {
+                    available: data.available,
+                    foundCount: data.found.length,
+                    totalCount: data.found.length + data.missing.length,
+                    hasOpenData
+                }
+            } catch {
+                // Dataset not in backend config = not configured yet
+                results[dsId] = { available: false, foundCount: 0, totalCount: 0, hasOpenData }
+            }
+        }))
+        setAvailability(prev => ({ ...prev, ...results }))
+        setLoadingAvail(false)
+    }, [activeTheme])
+
+    useEffect(() => { fetchAvailability() }, [fetchAvailability])
 
     const toggleSubTheme = (subThemeId: string) => {
         setExpandedSubThemes(prev =>
@@ -30,6 +95,71 @@ export function DocsPage() {
 
     const totalDatasets = activeTheme?.subThemes?.reduce((acc, st) => acc + st.datasets.length, 0) || 0
 
+    // Availability badge renderer
+    const renderAvailability = (dsId: string, ds: any) => {
+        const avail = availability[dsId]
+        if (loadingAvail && !avail) {
+            return (
+                <div className="flex items-center justify-center gap-1.5">
+                    <Loader2 className="w-3 h-3 animate-spin text-gray-400" />
+                </div>
+            )
+        }
+
+        // Has demoReady flag = generation is supported
+        if (ds.demoReady) {
+            if (avail && avail.available) {
+                return (
+                    <div className="flex items-center justify-center gap-1.5">
+                        <div className="w-2 h-2 rounded-full bg-green-500" />
+                        <span className="text-xs text-green-600 font-medium">MOCA + Config</span>
+                    </div>
+                )
+            }
+            if (avail && avail.foundCount > 0) {
+                return (
+                    <div className="flex items-center justify-center gap-1.5">
+                        <div className="w-2 h-2 rounded-full bg-amber-400" />
+                        <span className="text-xs text-amber-600 font-medium">{avail.foundCount}/{avail.totalCount} CSV</span>
+                    </div>
+                )
+            }
+            // demoReady but no MOCA CSV - likely Open Data only
+            return (
+                <div className="flex items-center justify-center gap-1.5">
+                    <div className="w-2 h-2 rounded-full bg-blue-500" />
+                    <span className="text-xs text-blue-600 font-medium">Open Data</span>
+                </div>
+            )
+        }
+
+        // Not demoReady - check if backend has config
+        if (avail && avail.totalCount > 0) {
+            if (avail.available) {
+                return (
+                    <div className="flex items-center justify-center gap-1.5">
+                        <div className="w-2 h-2 rounded-full bg-green-500" />
+                        <span className="text-xs text-green-600 font-medium">Disponible</span>
+                    </div>
+                )
+            }
+            return (
+                <div className="flex items-center justify-center gap-1.5">
+                    <div className="w-2 h-2 rounded-full bg-amber-400" />
+                    <span className="text-xs text-amber-600 font-medium">Partiel</span>
+                </div>
+            )
+        }
+
+        // No config at all
+        return (
+            <div className="flex items-center justify-center gap-1.5">
+                <div className="w-2 h-2 rounded-full bg-gray-300" />
+                <span className="text-xs text-gray-400 font-medium">Non configuré</span>
+            </div>
+        )
+    }
+
     return (
         <div className="max-w-6xl mx-auto py-8 px-4">
 
@@ -40,9 +170,6 @@ export function DocsPage() {
                         Dictionnaire complet des indicateurs et variables de la Base de Données.
                     </p>
                 </div>
-                <button className="bg-white border border-gray-300 text-gray-700 px-4 py-2 rounded-lg text-sm font-medium hover:bg-gray-50 flex items-center gap-2 shadow-sm">
-                    <Download className="w-4 h-4" /> Export PDF
-                </button>
             </div>
 
             {/* Stats */}
@@ -64,7 +191,7 @@ export function DocsPage() {
                     <div className="text-xs text-gray-500">Indicateurs</div>
                 </div>
                 <div className="bg-white rounded-xl p-4 border border-gray-200 shadow-sm">
-                    <div className="text-2xl font-bold text-[#f5c542]">5</div>
+                    <div className="text-2xl font-bold text-[#f5c542]">{UNIQUE_SOURCES_COUNT}</div>
                     <div className="text-xs text-gray-500">Sources de données</div>
                 </div>
             </div>
@@ -184,7 +311,14 @@ export function DocsPage() {
                                                                     {ds.id}
                                                                 </code>
                                                             </td>
-                                                            <td className="px-4 py-3 font-medium text-gray-900">{ds.label}</td>
+                                                            <td className="px-4 py-3 font-medium text-gray-900">
+                                                                {ds.label}
+                                                                {ds.availableYears && ds.availableYears.length > 0 && (
+                                                                    <span className="text-[10px] text-gray-400 ml-2">
+                                                                        ({ds.availableYears[0]}-{ds.availableYears[ds.availableYears.length - 1]})
+                                                                    </span>
+                                                                )}
+                                                            </td>
                                                             <td className="px-4 py-3">
                                                                 <span className="inline-flex items-center gap-1 px-2 py-1 rounded bg-gray-100 text-gray-600 text-xs font-medium border border-gray-200">
                                                                     <FileSpreadsheet className="w-3 h-3" />
@@ -192,10 +326,7 @@ export function DocsPage() {
                                                                 </span>
                                                             </td>
                                                             <td className="px-4 py-3 text-center">
-                                                                <div className="flex items-center justify-center gap-2">
-                                                                    <div className="w-2 h-2 rounded-full bg-green-500" title="Disponible"></div>
-                                                                    <span className="text-xs text-green-600">Disponible</span>
-                                                                </div>
+                                                                {renderAvailability(ds.id, ds)}
                                                             </td>
                                                         </tr>
                                                     ))}
@@ -227,10 +358,14 @@ export function DocsPage() {
                                     <span className="font-medium text-gray-700">MOCA-O</span>
                                     <span className="font-medium text-gray-700">INSERM-CépiDc</span>
                                     <span className="font-medium text-gray-700">DREES</span>
+                                    <span className="font-medium text-gray-700">ONISR</span>
                                 </div>
-                                <a href="#" className="flex items-center gap-1 text-[#3bb3a9] hover:underline">
-                                    Documentation complète <ExternalLink className="w-3 h-3" />
-                                </a>
+                                <div className="flex items-center gap-3 text-[10px]">
+                                    <span className="flex items-center gap-1"><span className="w-2 h-2 rounded-full bg-green-500 inline-block" /> CSV prêts</span>
+                                    <span className="flex items-center gap-1"><span className="w-2 h-2 rounded-full bg-blue-500 inline-block" /> Open Data</span>
+                                    <span className="flex items-center gap-1"><span className="w-2 h-2 rounded-full bg-amber-400 inline-block" /> Partiel</span>
+                                    <span className="flex items-center gap-1"><span className="w-2 h-2 rounded-full bg-gray-300 inline-block" /> Non configuré</span>
+                                </div>
                             </div>
                         </div>
 

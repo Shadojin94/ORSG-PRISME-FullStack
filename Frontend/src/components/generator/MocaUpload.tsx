@@ -494,6 +494,42 @@ export function MocaUpload({ datasetId, onUploadComplete }: MocaUploadProps) {
                 </div>
             )}
 
+            {/* Geo-Level Warnings */}
+            {uploadResult?.success && uploadResult.geoWarnings && uploadResult.geoWarnings.length > 0 && (
+                <div className="px-3 py-2.5 rounded-lg text-sm bg-amber-50 border border-amber-200 text-amber-800 animate-in fade-in slide-in-from-bottom-1">
+                    <div className="flex items-center gap-2 font-bold text-amber-700 mb-1.5">
+                        <AlertTriangle className="w-4 h-4 shrink-0" />
+                        Niveaux géographiques incomplets
+                    </div>
+                    <p className="text-xs text-amber-600 mb-2">
+                        Le(s) fichier(s) importé(s) ne contiennent pas tous les niveaux géographiques attendus.
+                        Les données manquantes seront vides dans le fichier généré.
+                    </p>
+                    <div className="space-y-1 ml-1">
+                        {uploadResult.geoWarnings.map((w, i) => (
+                            <div key={i} className="text-xs text-amber-700 flex items-start gap-1.5">
+                                <span className="text-amber-400 mt-0.5">-</span>
+                                <span>{w}</span>
+                            </div>
+                        ))}
+                    </div>
+                    {uploadResult.geoAnalysis && uploadResult.geoAnalysis.length > 0 && (
+                        <div className="mt-2 flex flex-wrap gap-1.5">
+                            {uploadResult.geoAnalysis[0].found.map((g, i) => (
+                                <span key={i} className="text-[10px] px-2 py-0.5 rounded-full bg-green-100 text-green-700 font-medium">
+                                    {g.code} ({g.label})
+                                </span>
+                            ))}
+                            {uploadResult.geoAnalysis[0].missing.map((g, i) => (
+                                <span key={i} className="text-[10px] px-2 py-0.5 rounded-full bg-red-100 text-red-600 font-medium line-through">
+                                    {g.code} ({g.label})
+                                </span>
+                            ))}
+                        </div>
+                    )}
+                </div>
+            )}
+
             {/* Import History */}
             {importHistory.length > 0 && (
                 <div>

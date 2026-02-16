@@ -16,6 +16,7 @@ const CSV_SOURCES_DIR = path.join(__dirname, 'csv_sources');
 const IMPORT_HISTORY_FILE = path.join(CSV_SOURCES_DIR, 'import_history.json');
 const FRONTEND_DIST = path.join(__dirname, '..', 'Frontend', 'dist');
 const PYTHON_EXE = process.env.PYTHON_EXE || 'py';
+const ACTIVITY_LOG_FILE = path.join(__dirname, 'activity_log.json');
 
 // Ensure output directory exists
 if (!fs.existsSync(OUTPUT_DIR)) {
@@ -299,6 +300,25 @@ else:
                 recordImportHistory(saved, user, converted);
             }
 
+            // Analyze geo levels for each saved CSV
+            const geoAnalysis = saved.map(f => analyzeGeoLevels(f));
+            const geoWarnings = [];
+            for (const analysis of geoAnalysis) {
+                if (analysis.found.length > 0 && analysis.missing.length > 0) {
+                    const missingLabels = analysis.missing.map(m => m.label).join(', ');
+                    geoWarnings.push(`${analysis.filename} : niveaux manquants: ${missingLabels}`);
+                }
+            }
+
+            // Log activity
+            logActivity('upload', {
+                user,
+                files: saved,
+                converted: converted.map(c => c.csv),
+                skipped: skipped.map(s => s.file),
+                geoWarnings
+            });
+
             if (saved.length === 0) {
                 jsonResponse(res, 400, {
                     success: false,
@@ -313,6 +333,8 @@ else:
                 files: saved,
                 converted,
                 skipped,
+                geoAnalysis,
+                geoWarnings,
                 message: `${saved.length} fichier(s) importé(s) avec succès.`
             });
         } catch (e) {
@@ -438,6 +460,7 @@ except Exception as e:
         const filePath = path.join(CSV_SOURCES_DIR, filename);
         if (fs.existsSync(filePath)) {
             fs.unlinkSync(filePath);
+            logActivity('delete', { filename });
             jsonResponse(res, 200, { success: true, message: `Deleted: ${filename}` });
         } else {
             jsonResponse(res, 404, { success: false, error: 'File not found' });
@@ -464,6 +487,7 @@ except Exception as e:
             const result = await generateFile(theme, parseInt(year));
 
             if (result.success) {
+                logActivity('generate', { source: 'moca', theme, year: parseInt(year), filename: result.filename, warnings: result.warnings || [] });
                 const resp = {
                     success: true,
                     filename: result.filename,
@@ -474,9 +498,11 @@ except Exception as e:
                 }
                 jsonResponse(res, 200, resp);
             } else {
+                logActivity('error', { source: 'moca', theme, year: parseInt(year), error: result.error });
                 jsonResponse(res, 500, { success: false, error: result.error });
             }
         } catch (err) {
+            logActivity('error', { source: 'moca', theme, year: parseInt(year), error: err.message });
             jsonResponse(res, 500, { success: false, error: err.message });
         }
         return;
@@ -510,15 +536,18 @@ except Exception as e:
             const result = await generateOpenDataFile(theme, parseInt(year));
 
             if (result.success) {
+                logActivity('generate', { source: 'opendata', theme, year: parseInt(year), filename: result.filename });
                 jsonResponse(res, 200, {
                     success: true,
                     filename: result.filename,
                     message: `Open Data file generated: ${result.filename}`
                 });
             } else {
+                logActivity('error', { source: 'opendata', theme, year: parseInt(year), error: result.error });
                 jsonResponse(res, 500, { success: false, error: result.error });
             }
         } catch (err) {
+            logActivity('error', { source: 'opendata', theme, year: parseInt(year), error: err.message });
             jsonResponse(res, 500, { success: false, error: err.message });
         }
         return;
@@ -551,6 +580,7 @@ except Exception as e:
             'Content-Disposition': `attachment; filename="${filename}"`,
         });
         fs.createReadStream(filePath).pipe(res);
+        logActivity('download', { filename });
         console.log(`Download: ${filename}`);
         return;
     }
@@ -589,7 +619,24 @@ except Exception as e:
             jsonResponse(res, 200, result);
         } catch (e) {
             console.error(`Error listing files: ${e.message}`);
-            jsonResponse(res, 200, []);
+            jsonResponse(res, 500, { error: `Erreur lecture des fichiers: ${e.message}` });
+        }
+        return;
+    }
+
+    // ========== ACTIVITY LOG ==========
+    if (urlPath === '/activity-log' && req.method === 'GET') {
+        try {
+            let logs = [];
+            if (fs.existsSync(ACTIVITY_LOG_FILE)) {
+                logs = JSON.parse(fs.readFileSync(ACTIVITY_LOG_FILE, 'utf8'));
+            }
+            const limit = parseInt(url.searchParams.get('limit') || '50');
+            const typeFilter = url.searchParams.get('type');
+            let filtered = typeFilter ? logs.filter(l => l.type === typeFilter) : logs;
+            jsonResponse(res, 200, { success: true, logs: filtered.slice(0, limit), total: logs.length });
+        } catch (e) {
+            jsonResponse(res, 200, { success: true, logs: [], total: 0 });
         }
         return;
     }
@@ -897,6 +944,59 @@ function recordImportHistory(files, user, converted) {
     }
 }
 
+/**
+ * Activity logging system - persistent JSON log for all operations
+ */
+function logActivity(type, details) {
+    try {
+        let logs = [];
+        if (fs.existsSync(ACTIVITY_LOG_FILE)) {
+            logs = JSON.parse(fs.readFileSync(ACTIVITY_LOG_FILE, 'utf8'));
+        }
+        logs.unshift({
+            id: Date.now().toString(36) + Math.random().toString(36).slice(2, 6),
+            timestamp: new Date().toISOString(),
+            type,      // 'upload', 'generate', 'download', 'delete', 'error', 'config'
+            ...details
+        });
+        // Keep last 500 entries
+        if (logs.length > 500) logs.length = 500;
+        fs.writeFileSync(ACTIVITY_LOG_FILE, JSON.stringify(logs, null, 2), 'utf8');
+    } catch (e) {
+        console.error('Failed to write activity log:', e.message);
+    }
+}
+
+/**
+ * Analyze CSV filename for geographic level indicators
+ * MOCA naming: Name_GF_REG_DOM_Fh_Fe_years.csv
+ * Returns { levels: string[], missing: string[], filename: string }
+ */
+function analyzeGeoLevels(filename) {
+    const upperName = filename.toUpperCase();
+    const allLevels = [
+        { code: 'GF', label: 'Communes Guyane' },
+        { code: 'REG', label: 'Régions' },
+        { code: 'DOM', label: 'DOM' },
+        { code: 'FH', label: 'France Hexagonale' },
+        { code: 'FE', label: 'France Entière' }
+    ];
+
+    const found = [];
+    const missing = [];
+    // Check for geo level codes in filename (surrounded by _ or at start/end)
+    for (const level of allLevels) {
+        const pattern = new RegExp(`(^|_)${level.code}(_|\\.|$)`, 'i');
+        if (pattern.test(filename)) {
+            found.push(level);
+        } else {
+            missing.push(level);
+        }
+    }
+
+    return { found, missing, filename };
+}
+
 server.listen(PORT, () => {
     console.log(`\n${'='.repeat(50)}`);
     console.log(`PRISME File Server v4.0`);
@@ -921,5 +1021,6 @@ server.listen(PORT, () => {
     console.log(`   - GET  /csv-sources         (list uploaded CSVs)`);
     console.log(`   - POST /delete-csv?file=X   (delete a CSV)`);
     console.log(`   - GET  /files               (metadata: filename, date, size, theme)`);
+    console.log(`   - GET  /activity-log        (persistent activity logs)`);
     console.log(`${'='.repeat(50)}\n`);
 });
