@@ -1,5 +1,7 @@
 import sys
 import os
+import json
+from datetime import datetime
 from pathlib import Path
 from fastapi import FastAPI, HTTPException
 from fastapi.staticfiles import StaticFiles
@@ -22,11 +24,25 @@ try:
     from prisme_engine import generate_prisme_excel, OUTPUT_DIR, CSV_SOURCES_DIR
     from generate_from_opendata import generate_theme
 except ImportError as e:
-    print(f"CRITICAL ERROR: Could not import generation engine. {e}") 
+    print(f"CRITICAL ERROR: Could not import generation engine. {e}")
     sys.exit(1)
 
 # Ensure output directory exists
 OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
+
+# Load themes config for name lookups
+THEMES_CONFIG_PATH = BACKEND_DIR / "themes_config.json"
+_themes_config_cache = None
+
+def load_themes_config():
+    global _themes_config_cache
+    if _themes_config_cache is None:
+        try:
+            with open(THEMES_CONFIG_PATH, "r", encoding="utf-8") as f:
+                _themes_config_cache = json.load(f)
+        except Exception:
+            _themes_config_cache = {}
+    return _themes_config_cache
 
 
 # ==========================================
@@ -181,6 +197,76 @@ async def download_file(filename: str):
 @app.get("/api/health")
 async def health_check():
     return {"status": "ok", "engine": "python-fastapi"}
+
+
+@app.get("/api/files")
+async def list_files():
+    """
+    Returns metadata for all generated .zip files (History page).
+    Mirrors the /files endpoint from file_server.js.
+    """
+    try:
+        cfg = load_themes_config()
+        datasets_cfg = cfg.get("datasets", {})
+
+        zip_files = sorted(
+            [f for f in OUTPUT_DIR.iterdir() if f.suffix == ".zip" and not f.name.startswith("~$")],
+            key=lambda f: f.stat().st_mtime,
+            reverse=True
+        )
+
+        result = []
+        for f in zip_files:
+            stat = f.stat()
+            mtime = datetime.fromtimestamp(stat.st_mtime)
+            date_str = mtime.strftime("%Y-%m-%d")
+
+            bytes_size = stat.st_size
+            if bytes_size >= 1024 * 1024:
+                size_str = f"{bytes_size / (1024*1024):.1f} MB"
+            else:
+                size_str = f"{bytes_size / 1024:.0f} KB"
+
+            is_opendata = "_opendata_" in f.name
+            source = "Open Data" if is_opendata else "MOCA-O"
+
+            base = f.name.replace(".zip", "")
+            import re
+            theme_id = re.sub(r"_opendata_\d{4}.*$", "", base)
+            theme_id = re.sub(r"_\d{4}.*$", "", theme_id)
+
+            ds_cfg = datasets_cfg.get(theme_id, {})
+            theme_label = ds_cfg.get("name", theme_id)
+
+            result.append({
+                "filename": f.name,
+                "date": date_str,
+                "size": size_str,
+                "theme": theme_label,
+                "source": source,
+            })
+
+        return result
+    except Exception as e:
+        return []
+
+
+@app.get("/api/themes")
+async def get_themes():
+    """Returns the theme tree (used by the Generator step 1)."""
+    cfg = load_themes_config()
+    return {"success": True, "themes": cfg.get("themeTree", [])}
+
+
+@app.get("/api/available-years")
+async def get_available_years(dataset: str):
+    """Returns available years for a dataset in MOCA-O mode."""
+    try:
+        from prisme_engine import detect_available_years
+        years = detect_available_years(dataset)
+        return {"success": True, "years": years}
+    except Exception as e:
+        return {"success": False, "years": [], "error": str(e)}
 
 # ==========================================
 # STATIC FILES SERVING (REACT APP)
