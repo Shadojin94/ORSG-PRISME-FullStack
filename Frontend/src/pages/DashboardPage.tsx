@@ -307,37 +307,7 @@ export function DashboardPage() {
                 ) : (
                     <>
                         {/* ══════════════════════════════════════════
-                            BLOC 1 — Disponibilité des données
-                            Matrice thème × millésime — vue centrale
-                           ══════════════════════════════════════════ */}
-                        <motion.section
-                            aria-label="Disponibilité des données par thème et millésime"
-                            initial={{ opacity: 0, y: 24 }}
-                            whileInView={{ opacity: 1, y: 0 }}
-                            viewport={{ once: true }}
-                            transition={{ duration: 0.6 }}
-                            className="bg-white rounded-2xl shadow-sm border border-gray-100 p-8"
-                        >
-                            <div className="mb-6 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-                                <div>
-                                    <h2 className="text-xl font-bold text-[#1a4b8c]">Disponibilité des données</h2>
-                                    <p className="text-sm text-gray-400 mt-1">
-                                        {uniqueThemes} thématiques × {uniqueYears} millésimes —
-                                        chaque point indique un fichier Excel disponible en téléchargement direct
-                                    </p>
-                                </div>
-                                <Link
-                                    to="/generate"
-                                    className="flex-shrink-0 text-xs font-semibold text-[#3bb3a9] hover:underline focus-visible:outline-2 focus-visible:outline-[#3bb3a9] focus-visible:rounded"
-                                >
-                                    Générer un fichier manquant →
-                                </Link>
-                            </div>
-                            <CoverageMatrix files={files} />
-                        </motion.section>
-
-                        {/* ══════════════════════════════════════════
-                            BLOC 2 — 3 colonnes : Vitesse · Sources · Conformité
+                            BLOC 1 — 3 colonnes : Vitesse · Sources · Conformité
                            ══════════════════════════════════════════ */}
                         <section aria-label="Apports de la plateforme" className="grid grid-cols-1 md:grid-cols-3 gap-6">
 
@@ -487,6 +457,36 @@ export function DashboardPage() {
                             </motion.article>
 
                         </section>
+
+                        {/* ══════════════════════════════════════════
+                            BLOC 2 — Disponibilité des données
+                            Matrice thème × millésime — vue centrale
+                           ══════════════════════════════════════════ */}
+                        <motion.section
+                            aria-label="Disponibilité des données par thème et millésime"
+                            initial={{ opacity: 0, y: 24 }}
+                            whileInView={{ opacity: 1, y: 0 }}
+                            viewport={{ once: true }}
+                            transition={{ duration: 0.6 }}
+                            className="bg-white rounded-2xl shadow-sm border border-gray-100 p-8"
+                        >
+                            <div className="mb-6 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                                <div>
+                                    <h2 className="text-xl font-bold text-[#1a4b8c]">Disponibilité des données</h2>
+                                    <p className="text-sm text-gray-400 mt-1">
+                                        {uniqueThemes} thématiques × {uniqueYears} millésimes —
+                                        chaque point indique un fichier Excel disponible en téléchargement direct
+                                    </p>
+                                </div>
+                                <Link
+                                    to="/generate"
+                                    className="flex-shrink-0 text-xs font-semibold text-[#3bb3a9] hover:underline focus-visible:outline-2 focus-visible:outline-[#3bb3a9] focus-visible:rounded"
+                                >
+                                    Générer un fichier manquant →
+                                </Link>
+                            </div>
+                            <CoverageMatrix files={files} />
+                        </motion.section>
 
                         {/* ── Productions récentes ── */}
                         <section aria-label="Productions récentes">
