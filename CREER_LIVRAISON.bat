@@ -18,6 +18,7 @@ if exist "%ZIP%" del "%ZIP%"
 mkdir "%DEST%"
 mkdir "%DEST%\Backend"
 mkdir "%DEST%\Backend\csv_sources"
+mkdir "%DEST%\Backend\inputs"
 mkdir "%DEST%\Backend\output"
 mkdir "%DEST%\Frontend"
 
@@ -35,19 +36,23 @@ copy "%SRC%Backend\package.json" "%DEST%\Backend\" /y
 copy "%SRC%Backend\package-lock.json" "%DEST%\Backend\" /y
 copy "%SRC%Backend\pocketbase.exe" "%DEST%\Backend\" /y
 
-:: CSV sources
-echo [2/5] Copie des donnees CSV (36 fichiers)...
+:: CSV sources (MOCA-O)
+echo [2/6] Copie des donnees CSV MOCA-O...
 xcopy "%SRC%Backend\csv_sources\*.csv" "%DEST%\Backend\csv_sources\" /y /i /q
 
+:: Open Data sources (INSEE, CAF, IRCOM, BAAC, CepiDc)
+echo [3/6] Copie des donnees Open Data (928 Mo)...
+xcopy "%SRC%Backend\inputs\opendata\*" "%DEST%\Backend\inputs\opendata\" /y /i /s /q
+
 :: PocketBase data (database + migrations)
-echo [3/5] Copie de la base de donnees...
+echo [4/6] Copie de la base de donnees...
 xcopy "%SRC%Backend\pb_data\*" "%DEST%\Backend\pb_data\" /y /i /s /q
 if exist "%SRC%Backend\pb_migrations" (
     xcopy "%SRC%Backend\pb_migrations\*" "%DEST%\Backend\pb_migrations\" /y /i /s /q
 )
 
 :: ===== FRONTEND =====
-echo [4/5] Copie du Frontend compile...
+echo [5/6] Copie du Frontend compile...
 xcopy "%SRC%Frontend\dist\*" "%DEST%\Frontend\dist\" /y /i /s /q
 
 :: Frontend source (for dev mode)
@@ -63,7 +68,7 @@ copy "%SRC%Frontend\postcss.config.*" "%DEST%\Frontend\" /y 2>nul
 copy "%SRC%Frontend\components.json" "%DEST%\Frontend\" /y 2>nul
 
 :: ===== ROOT FILES =====
-echo [5/5] Copie des fichiers racine...
+echo [6/6] Copie des fichiers racine...
 copy "%SRC%README_INSTALLATION.md" "%DEST%\" /y
 copy "%SRC%LANCER_TOUT.bat" "%DEST%\" /y
 copy "%SRC%LANCER_PRODUCTION.bat" "%DEST%\" /y
@@ -93,7 +98,8 @@ echo.
 echo    Contenu:
 echo    - Backend (moteur + API + PocketBase)
 echo    - Frontend (compile + sources)
-echo    - 36 fichiers CSV MOCA-O
+echo    - Fichiers CSV MOCA-O
+echo    - Donnees Open Data (INSEE, CAF, IRCOM, BAAC, CepiDc)
 echo    - Documentation d'installation
 echo    - Scripts de demarrage
 echo.

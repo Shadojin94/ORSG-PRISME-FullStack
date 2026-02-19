@@ -80,6 +80,7 @@ export function GeneratorPage() {
     // Process
     const [isProcessing, setIsProcessing] = useState(false);
     const [generatedFile, setGeneratedFile] = useState<string | null>(saved.generatedFile || null);
+    const [generationWarnings, setGenerationWarnings] = useState<string[]>([]);
 
     const [error, setError] = useState<string | null>(null);
 
@@ -179,6 +180,7 @@ export function GeneratorPage() {
 
             if (result.success && result.filename) {
                 setGeneratedFile(result.filename);
+                setGenerationWarnings(result.warnings || []);
                 setStep(3); // Success!
             } else {
                 setError(result.error || "Erreur inconnue lors de la génération.");
@@ -319,6 +321,7 @@ export function GeneratorPage() {
                     {step === 3 && (
                         <Step3_Result
                             generatedFile={generatedFile}
+                            warnings={generationWarnings}
                             onDownload={handleDownload}
                             onRestart={handleRestart}
                         />

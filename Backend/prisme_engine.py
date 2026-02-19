@@ -975,6 +975,22 @@ def generate_prisme_excel(dataset_id, year):
             yr_range = f"{min(available_years)}-{max(available_years)}"
             print(f"  [WARN_YEAR] {var_id} : CSV trouvé mais pas de données pour {year} (couverture: {yr_range})")
 
+    # ---- Vérifier les niveaux géographiques manquants pour chaque variable ----
+    GEO_LABELS = {'com': 'Communes', 'reg': 'Régions', 'dom': 'DOM', 'fh': 'France hexagonale', 'fra': 'France entière'}
+    for var_id in vars_with_data:
+        parsed = csv_data.get(var_id, {})
+        levels_with_data = []
+        levels_without_data = []
+        for geo_key in ['com', 'reg', 'dom', 'fh', 'fra']:
+            df = parsed.get(geo_key, pd.DataFrame())
+            if isinstance(df, pd.DataFrame) and not df.empty:
+                levels_without_data.append(geo_key) if df[df['annee'] == year].empty else levels_with_data.append(geo_key)
+            else:
+                levels_without_data.append(geo_key)
+        if levels_with_data and levels_without_data:
+            missing_labels = ', '.join(GEO_LABELS.get(l, l) for l in levels_without_data)
+            print(f"  [WARN_DATA] {var_id} : données absentes au niveau {missing_labels} — les colonnes seront vides. Vérifiez le fichier CSV source.")
+
     # ---- Construire l'ordre des colonnes (headers) ----
     # Suit l'ordre exact du config : geo, time, dimensions, variables
     col_keys_template = []  # clés pour extraire les données (sans geo qui varie)

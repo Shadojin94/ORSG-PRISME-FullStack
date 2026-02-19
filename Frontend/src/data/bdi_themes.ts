@@ -57,17 +57,11 @@ export const BDI_THEMES = [
                 ]
             },
             {
-                id: "education_enfants",
-                title: "Éducation - Enfants d'âge scolaire",
+                id: "education",
+                title: "Éducation",
                 datasets: [
                     { id: "educ", label: "Nombre de jeunes de 6-16 ans non scolarisés", variable: "nb_non_sco", source: "INSEE", tool: "MOCA-O", demoReady: true },
                     { id: "educ", label: "Part des jeunes de 6-16 ans non scolarisés", variable: "tx_non_sco", source: "INSEE", tool: "Calcul" },
-                ]
-            },
-            {
-                id: "education_diplomes",
-                title: "Éducation - Diplômes",
-                datasets: [
                     { id: "educ", label: "Nombre de personnes de 15 ans et plus peu ou pas diplômées", variable: "nb_peu_dipl", source: "INSEE", tool: "MOCA-O", demoReady: true },
                     { id: "educ", label: "Part des personnes de 15 ans et plus peu ou pas diplômées", variable: "tx_peu_dipl", source: "INSEE", tool: "Calcul" },
                 ]

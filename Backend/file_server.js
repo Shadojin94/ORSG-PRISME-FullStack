@@ -753,11 +753,11 @@ else:
             if (stdout.includes('SUCCESS:')) {
                 const filename = stdout.split('SUCCESS:')[1].trim();
                 console.log(`Generated: ${filename}`);
-                // Extract year coverage warnings
+                // Extract warnings (year coverage + missing geo data)
                 const warnings = [];
-                const warnLines = stdout.split('\n').filter(l => l.includes('[WARN_YEAR]'));
+                const warnLines = stdout.split('\n').filter(l => l.includes('[WARN_YEAR]') || l.includes('[WARN_DATA]'));
                 for (const wl of warnLines) {
-                    const m = wl.match(/\[WARN_YEAR\]\s*(.+)/);
+                    const m = wl.match(/\[WARN_(?:YEAR|DATA)\]\s*(.+)/);
                     if (m) warnings.push(m[1].trim());
                 }
                 resolve({ success: true, filename, warnings });

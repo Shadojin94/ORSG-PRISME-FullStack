@@ -1,13 +1,15 @@
-import { CheckCircle2, Download, RefreshCw, FileSpreadsheet } from "lucide-react";
+import { CheckCircle2, Download, RefreshCw, FileSpreadsheet, AlertTriangle } from "lucide-react";
 
 interface Step3Props {
     generatedFile: string | null;
+    warnings?: string[];
     onDownload: (filename: string) => void;
     onRestart: () => void;
 }
 
 export function Step3_Result({
     generatedFile,
+    warnings = [],
     onDownload,
     onRestart
 }: Step3Props) {
@@ -26,6 +28,27 @@ export function Step3_Result({
             <p className="text-gray-500 text-lg mb-8 max-w-lg mx-auto">
                 Votre fichier de données est prêt. Vous pouvez le télécharger ci-dessous.
             </p>
+
+            {warnings.length > 0 && (
+                <div className="bg-amber-50 border border-amber-200 rounded-xl p-4 mb-8 max-w-lg w-full text-left">
+                    <div className="flex items-center gap-2 mb-2">
+                        <AlertTriangle className="w-5 h-5 text-amber-500 flex-shrink-0" />
+                        <p className="font-semibold text-amber-700 text-sm">
+                            Avertissements sur les données sources
+                        </p>
+                    </div>
+                    <ul className="space-y-1">
+                        {warnings.map((w, i) => (
+                            <li key={i} className="text-xs text-amber-600 pl-7">
+                                {w}
+                            </li>
+                        ))}
+                    </ul>
+                    <p className="text-xs text-amber-500 mt-2 pl-7 italic">
+                        Ces avertissements proviennent des fichiers sources, pas de l'application.
+                    </p>
+                </div>
+            )}
 
             {generatedFile && (
                 <div className="bg-gray-50 p-4 rounded-xl border border-gray-200 mb-8 flex items-center gap-3 max-w-md w-full">

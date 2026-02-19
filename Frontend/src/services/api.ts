@@ -95,6 +95,7 @@ export async function generateExcel(theme: string, year: number): Promise<{
     success: boolean;
     filename?: string;
     error?: string;
+    warnings?: string[];
 }> {
     const response = await fetch(`${API_BASE}/api/generate?theme=${theme}&year=${year}`, {
         method: 'POST'
@@ -107,6 +108,7 @@ export async function generateOpenData(theme: string, year: number): Promise<{
     success: boolean;
     filename?: string;
     error?: string;
+    warnings?: string[];
 }> {
     const response = await fetch(`${API_BASE}/api/generate-opendata?theme=${theme}&year=${year}`, {
         method: 'POST'
