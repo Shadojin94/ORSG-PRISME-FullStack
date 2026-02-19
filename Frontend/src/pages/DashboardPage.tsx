@@ -1,16 +1,34 @@
-import { useEffect, useRef, useState } from "react"
+import { useEffect, useMemo, useRef, useState } from "react"
 import { motion, useInView } from "framer-motion"
 import { Link } from "react-router-dom"
 import {
     ArrowRight, History, BookOpen, FileSpreadsheet,
     TrendingUp, BarChart3, Download, Calendar, Loader2, Globe, HardDrive
 } from "lucide-react"
+import {
+    AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip as ReTooltip,
+    ResponsiveContainer, BarChart, Bar, PieChart, Pie, Cell, Legend
+} from "recharts"
 import { getFiles } from "@/services/api"
 import type { GeneratedFile } from "@/services/api"
 
-// ─────────────────────────────────────────────
-// Hook : compte animé 0 → target
-// ─────────────────────────────────────────────
+// ── Palette ORSG ──
+const C = {
+    darkBlue: "#1a4b8c",
+    teal: "#3bb3a9",
+    green: "#4caf50",
+    yellow: "#f5c542",
+    orange: "#ff9800",
+    magenta: "#e91e63",
+    slate: "#64748b",
+    lightBlue: "#0083B0",
+    purple: "#7c3aed",
+}
+
+const THEME_COLORS = [C.darkBlue, C.teal, C.green, C.yellow, C.lightBlue, C.orange, C.magenta, C.purple]
+const SOURCE_COLORS = [C.darkBlue, C.teal]
+
+// ── Hook : animated count 0 → target ──
 function useCountUp(target: number, duration = 1600, shouldStart = true) {
     const [count, setCount] = useState(0)
     useEffect(() => {
@@ -29,9 +47,7 @@ function useCountUp(target: number, duration = 1600, shouldStart = true) {
     return count
 }
 
-// ─────────────────────────────────────────────
-// Carte KPI (RGAA: role region + aria-label)
-// ─────────────────────────────────────────────
+// ── KPI Card ──
 function KpiCard({ value, label, suffix = "", icon: Icon, topColor, iconColor, delay = 0 }: {
     value: number; label: string; suffix?: string
     icon: React.ElementType; topColor: string; iconColor: string; delay?: number
@@ -66,149 +82,56 @@ function KpiCard({ value, label, suffix = "", icon: Icon, topColor, iconColor, d
     )
 }
 
-// ─────────────────────────────────────────────
-// Donut SVG — RGAA role="img" + aria-label
-// ─────────────────────────────────────────────
-function DonutChart({ ratio, centerValue, subLabel, color, size = 180, ariaLabel }: {
-    ratio: number; centerValue: string; subLabel: string; color: string; size?: number; ariaLabel: string
+// ── Chart card wrapper ──
+function ChartCard({ title, subtitle, children, className = "" }: {
+    title: string; subtitle?: string; children: React.ReactNode; className?: string
 }) {
-    const ref = useRef(null)
-    const inView = useInView(ref, { once: true })
-    const r = 40
-    const stroke = 11
-    const circumference = 2 * Math.PI * r
-
     return (
-        <div ref={ref} className="flex flex-col items-center gap-3">
-            <div style={{ width: size, height: size }} className="relative">
-                <svg
-                    viewBox="0 0 100 100"
-                    className="w-full h-full"
-                    style={{ transform: "rotate(-90deg)" }}
-                    role="img"
-                    aria-label={ariaLabel}
-                >
-                    <title>{ariaLabel}</title>
-                    <circle cx="50" cy="50" r={r} fill="none" stroke="#e5e7eb" strokeWidth={stroke} />
-                    <motion.circle
-                        cx="50" cy="50" r={r}
-                        fill="none"
-                        stroke={color}
-                        strokeWidth={stroke}
-                        strokeLinecap="round"
-                        strokeDasharray={circumference}
-                        initial={{ strokeDashoffset: circumference }}
-                        animate={inView ? { strokeDashoffset: circumference * (1 - ratio) } : { strokeDashoffset: circumference }}
-                        transition={{ duration: 2, ease: "easeOut" }}
-                    />
-                </svg>
-                <div className="absolute inset-0 flex flex-col items-center justify-center" aria-hidden="true">
-                    <span className="font-black text-2xl leading-none" style={{ color }}>{centerValue}</span>
-                    <span className="text-xs text-gray-400 mt-1 text-center px-2">{subLabel}</span>
-                </div>
-            </div>
-        </div>
-    )
-}
-
-// ─────────────────────────────────────────────
-// Barre de comparaison horizontale animée
-// ─────────────────────────────────────────────
-function ComparisonBar({ label, value, max, color, textValue, delay = 0 }: {
-    label: string; value: number; max: number; color: string; textValue: string; delay?: number
-}) {
-    const ref = useRef(null)
-    const inView = useInView(ref, { once: true })
-    const pct = (value / max) * 100
-
-    return (
-        <div ref={ref} className="space-y-1.5">
-            <div className="flex items-center justify-between">
-                <span className="text-sm font-medium text-gray-600">{label}</span>
-                <span className="text-sm font-bold" style={{ color }}>{textValue}</span>
-            </div>
-            <div
-                className="bg-gray-100 rounded-full h-5 overflow-hidden"
-                role="progressbar"
-                aria-valuenow={value}
-                aria-valuemin={0}
-                aria-valuemax={max}
-                aria-label={`${label} : ${textValue}`}
-            >
-                <motion.div
-                    initial={{ width: 0 }}
-                    animate={inView ? { width: `${pct}%` } : { width: 0 }}
-                    transition={{ duration: 1.2, delay, ease: "easeOut" }}
-                    className="h-full rounded-full flex items-center justify-end px-2.5"
-                    style={{ backgroundColor: color, minWidth: pct < 5 ? "2.5rem" : undefined }}
-                >
-                    {pct >= 5 && <span className="text-xs font-bold text-white">{textValue}</span>}
-                </motion.div>
-                {pct < 5 && (
-                    <span className="text-xs font-bold ml-2 text-gray-600 absolute">{textValue}</span>
-                )}
-            </div>
-        </div>
-    )
-}
-
-// ─────────────────────────────────────────────
-// Barres thématiques (bar chart)
-// ─────────────────────────────────────────────
-const BAR_COLORS = ["#1a4b8c", "#3bb3a9", "#4caf50", "#f5c542", "#0083B0", "#9c27b0", "#ff9800", "#e91e63"]
-
-function ThemeBarChart({ files }: { files: GeneratedFile[] }) {
-    const ref = useRef(null)
-    const inView = useInView(ref, { once: true, margin: "-60px" })
-
-    const themeCounts = files.reduce((acc, f) => {
-        const label = f.theme || f.filename.split("_")[0]
-        acc[label] = (acc[label] || 0) + 1
-        return acc
-    }, {} as Record<string, number>)
-
-    const sorted = Object.entries(themeCounts).sort((a, b) => b[1] - a[1]).slice(0, 8)
-    const max = sorted[0]?.[1] || 1
-
-    return (
-        <div
-            ref={ref}
-            role="list"
-            aria-label="Répartition des fichiers produits par thématique"
-            className="space-y-3"
+        <motion.div
+            initial={{ opacity: 0, y: 24 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6 }}
+            className={`bg-white rounded-2xl shadow-sm border border-gray-100 p-6 ${className}`}
         >
-            {sorted.map(([theme, count], i) => (
-                <div key={theme} role="listitem" className="flex items-center gap-4">
-                    <div className="w-52 text-xs font-medium text-gray-500 truncate text-right flex-shrink-0" title={theme}>
-                        {theme}
-                    </div>
-                    <div
-                        className="flex-1 bg-gray-100 rounded-full h-7 overflow-hidden"
-                        role="progressbar"
-                        aria-valuenow={count}
-                        aria-valuemin={0}
-                        aria-valuemax={max}
-                        aria-label={`${theme} : ${count} fichier${count > 1 ? "s" : ""}`}
-                    >
-                        <motion.div
-                            initial={{ width: 0 }}
-                            animate={inView ? { width: `${(count / max) * 100}%` } : { width: 0 }}
-                            transition={{ duration: 0.9, delay: i * 0.07, ease: "easeOut" }}
-                            className="h-full rounded-full flex items-center justify-end px-3"
-                            style={{ backgroundColor: BAR_COLORS[i % BAR_COLORS.length] }}
-                        >
-                            <span className="text-xs font-bold text-white">{count}</span>
-                        </motion.div>
-                    </div>
-                </div>
+            <div className="mb-5">
+                <h2 className="text-lg font-bold text-[#1a4b8c]">{title}</h2>
+                {subtitle && <p className="text-xs text-gray-400 mt-0.5">{subtitle}</p>}
+            </div>
+            {children}
+        </motion.div>
+    )
+}
+
+// ── Custom tooltip for recharts ──
+function CustomTooltip({ active, payload, label }: any) {
+    if (!active || !payload?.length) return null
+    return (
+        <div className="bg-white/95 backdrop-blur-sm border border-gray-200 rounded-lg px-3 py-2 shadow-lg text-xs">
+            <p className="font-semibold text-gray-700 mb-1">{label}</p>
+            {payload.map((entry: any, i: number) => (
+                <p key={i} className="flex items-center gap-2">
+                    <span className="w-2 h-2 rounded-full" style={{ backgroundColor: entry.color }} />
+                    <span className="text-gray-500">{entry.name} :</span>
+                    <span className="font-bold text-gray-800">{entry.value}</span>
+                </p>
             ))}
         </div>
     )
 }
 
-// ─────────────────────────────────────────────
-// Page principale
-// ─────────────────────────────────────────────
+// ── Donut center label ──
+function PieLabel({ viewBox, value, sub }: { viewBox?: any; value: string; sub: string }) {
+    const { cx, cy } = viewBox || {}
+    return (
+        <text x={cx} y={cy} textAnchor="middle" dominantBaseline="central">
+            <tspan x={cx} dy="-6" className="text-2xl font-black" fill={C.darkBlue}>{value}</tspan>
+            <tspan x={cx} dy="18" className="text-[10px]" fill="#94a3b8">{sub}</tspan>
+        </text>
+    )
+}
+
+// ── Main page ──
 export function DashboardPage() {
     const [files, setFiles] = useState<GeneratedFile[]>([])
     const [loading, setLoading] = useState(true)
@@ -220,16 +143,77 @@ export function DashboardPage() {
             .finally(() => setLoading(false))
     }, [])
 
+    // ── Computed data ──
     const fileCount = files.length
-    const hoursSaved = fileCount * 4
     const openDataCount = files.filter(f => f.source === "Open Data").length
     const mocaCount = files.filter(f => f.source !== "Open Data").length
     const uniqueThemes = new Set(files.map(f => f.theme)).size
     const recentFiles = files.slice(0, 5)
 
+    // ── Timeline data (files per month) ──
+    const timelineData = useMemo(() => {
+        if (files.length === 0) return []
+        const byMonth: Record<string, { moca: number; opendata: number }> = {}
+        for (const f of files) {
+            // date format: YYYY-MM-DD
+            const month = f.date?.slice(0, 7) || "inconnu"
+            if (!byMonth[month]) byMonth[month] = { moca: 0, opendata: 0 }
+            if (f.source === "Open Data") byMonth[month].opendata++
+            else byMonth[month].moca++
+        }
+        return Object.entries(byMonth)
+            .sort(([a], [b]) => a.localeCompare(b))
+            .map(([month, counts]) => ({
+                mois: month,
+                "MOCA-O": counts.moca,
+                "Open Data": counts.opendata,
+                total: counts.moca + counts.opendata,
+            }))
+    }, [files])
+
+    // ── Theme distribution (horizontal bar) ──
+    const themeData = useMemo(() => {
+        if (files.length === 0) return []
+        const counts: Record<string, number> = {}
+        for (const f of files) {
+            const label = f.theme || "Autre"
+            counts[label] = (counts[label] || 0) + 1
+        }
+        return Object.entries(counts)
+            .sort((a, b) => b[1] - a[1])
+            .slice(0, 8)
+            .map(([name, value]) => ({ name, value }))
+    }, [files])
+
+    // ── Source split (pie chart) ──
+    const sourceData = useMemo(() => {
+        if (files.length === 0) return []
+        return [
+            { name: "MOCA-O", value: mocaCount },
+            { name: "Open Data", value: openDataCount },
+        ].filter(d => d.value > 0)
+    }, [files, mocaCount, openDataCount])
+
+    // ── Year distribution (vertical bar) ──
+    const yearData = useMemo(() => {
+        if (files.length === 0) return []
+        const counts: Record<string, { moca: number; opendata: number }> = {}
+        for (const f of files) {
+            // Extract year from filename: theme_YYYY.zip or theme_opendata_YYYY.zip
+            const m = f.filename.match(/(\d{4})/)
+            const year = m ? m[1] : "?"
+            if (!counts[year]) counts[year] = { moca: 0, opendata: 0 }
+            if (f.source === "Open Data") counts[year].opendata++
+            else counts[year].moca++
+        }
+        return Object.entries(counts)
+            .sort(([a], [b]) => a.localeCompare(b))
+            .map(([year, c]) => ({ annee: year, "MOCA-O": c.moca, "Open Data": c.opendata }))
+    }, [files])
+
     return (
         <>
-            {/* ── Lien d'évitement RGAA ── */}
+            {/* RGAA skip link */}
             <a
                 href="#contenu-principal"
                 className="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-50 focus:bg-[#1a4b8c] focus:text-white focus:px-4 focus:py-2 focus:rounded-lg focus:text-sm focus:font-bold"
@@ -239,18 +223,18 @@ export function DashboardPage() {
 
             <main
                 id="contenu-principal"
-                className="max-w-7xl mx-auto py-8 px-4 sm:px-6 lg:px-8 space-y-10"
-                aria-label="Tableau de bord opérationnel PRISME"
+                className="max-w-7xl mx-auto py-8 px-4 sm:px-6 lg:px-8 space-y-8"
+                aria-label="Tableau de bord PRISME"
             >
 
-                {/* ── En-tête ── */}
+                {/* ── Header ── */}
                 <header className="flex flex-col md:flex-row md:items-center justify-between gap-4">
                     <div>
                         <h1 className="text-3xl font-bold text-[#1a4b8c] tracking-tight">
-                            Tableau de bord opérationnel
+                            Tableau de bord
                         </h1>
                         <p className="text-gray-500 mt-1">
-                            Indicateurs de santé de Guyane — ORSG-CTPS,{" "}
+                            Suivi de production — ORSG-CTPS,{" "}
                             <time dateTime={new Date().toISOString().split("T")[0]}>
                                 {new Date().toLocaleDateString("fr-FR", { year: "numeric", month: "long", day: "numeric" })}
                             </time>
@@ -262,31 +246,33 @@ export function DashboardPage() {
                         aria-live="polite"
                     >
                         <span className="w-2 h-2 rounded-full bg-green-500 animate-pulse" aria-hidden="true" />
-                        <span className="font-medium text-gray-600">Système actif</span>
+                        <span className="font-medium text-gray-600">
+                            {loading ? "Chargement..." : `${fileCount} fichiers`}
+                        </span>
                     </div>
                 </header>
 
-                {/* ── KPI Grid ── */}
+                {/* ── KPI cards ── */}
                 <section aria-label="Indicateurs clés">
                     <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-5">
-                        <KpiCard value={loading ? 0 : fileCount} label="Fichiers Excel produits" icon={FileSpreadsheet}
+                        <KpiCard value={loading ? 0 : fileCount} label="Fichiers produits" icon={FileSpreadsheet}
                             topColor="bg-gradient-to-r from-[#1a4b8c] to-[#3bb3a9]" iconColor="bg-blue-50 text-[#1a4b8c]" delay={0} />
-                        <KpiCard value={219} label="Indicateurs BDI référencés" icon={BarChart3}
+                        <KpiCard value={219} label="Indicateurs BDI" icon={BarChart3}
                             topColor="bg-[#3bb3a9]" iconColor="bg-teal-50 text-[#3bb3a9]" delay={0.1} />
                         <KpiCard value={loading ? 0 : uniqueThemes} label="Thématiques couvertes" icon={TrendingUp}
                             topColor="bg-[#4caf50]" iconColor="bg-green-50 text-[#4caf50]" delay={0.2} />
-                        <KpiCard value={loading ? 0 : hoursSaved} suffix="h" label="Temps valorisé (estimé)" icon={Calendar}
+                        <KpiCard value={loading ? 0 : fileCount * 4} suffix="h" label="Temps valorisé (est.)" icon={Calendar}
                             topColor="bg-[#f5c542]" iconColor="bg-yellow-50 text-yellow-600" delay={0.3} />
                     </div>
                 </section>
 
-                {/* ── CTA Génération ── */}
+                {/* ── CTA ── */}
                 <motion.section
-                    aria-label="Accès rapide à la génération de rapports"
+                    aria-label="Génération de rapports"
                     initial={{ opacity: 0, y: 16 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.5, delay: 0.4 }}
-                    className="relative rounded-3xl overflow-hidden shadow-lg"
+                    className="relative rounded-2xl overflow-hidden shadow-lg"
                 >
                     <video autoPlay muted loop playsInline
                         className="absolute inset-0 w-full h-full object-cover"
@@ -304,7 +290,7 @@ export function DashboardPage() {
                             </h2>
                             <p className="text-blue-100 text-base leading-relaxed">
                                 Sélectionnez une thématique, choisissez l'année de référence.
-                                Le fichier est prêt en moins de deux minutes, format Géoclip, prêt à l'import.
+                                Le fichier est prêt en moins de deux minutes, format Géoclip.
                             </p>
                         </div>
                         <Link
@@ -317,183 +303,208 @@ export function DashboardPage() {
                     </div>
                 </motion.section>
 
-                {/* ── Efficacité de production — Bento 2 colonnes ── */}
-                <section aria-label="Efficacité de production">
-                    <motion.div
-                        initial={{ opacity: 0, y: 24 }}
-                        whileInView={{ opacity: 1, y: 0 }}
-                        viewport={{ once: true }}
-                        transition={{ duration: 0.6 }}
-                        className="bg-white rounded-3xl shadow-sm border border-gray-100 overflow-hidden"
-                    >
-                        <div className="px-8 pt-8 pb-0">
-                            <h2 className="text-xl font-bold text-[#1a4b8c]">Efficacité de production</h2>
-                            <p className="text-sm text-gray-400 mt-1">
-                                Production conventionnelle vs génération automatisée.
-                                Référence : 4h/fichier (collecte multi-sources, saisie, contrôle, formatage Géoclip).
-                            </p>
-                        </div>
+                {/* ────────────────────────────────────────
+                    DATA VISUALIZATION — Bento grid
+                   ──────────────────────────────────────── */}
+                {loading ? (
+                    <div className="flex items-center justify-center py-20">
+                        <Loader2 className="w-8 h-8 animate-spin text-[#3bb3a9]" />
+                        <span className="sr-only">Chargement des données</span>
+                    </div>
+                ) : files.length === 0 ? (
+                    <div className="bg-white rounded-2xl border border-gray-100 p-12 text-center">
+                        <FileSpreadsheet className="w-12 h-12 mx-auto text-gray-200 mb-4" aria-hidden="true" />
+                        <p className="text-lg font-bold text-gray-800 mb-1">Aucune donnée de production</p>
+                        <p className="text-sm text-gray-400">
+                            Les graphiques apparaîtront après la première génération de fichiers.
+                        </p>
+                    </div>
+                ) : (
+                    <section aria-label="Visualisation des données de production" className="space-y-6">
 
-                        <div className="grid grid-cols-1 lg:grid-cols-3 gap-0 divide-y lg:divide-y-0 lg:divide-x divide-gray-100">
+                        {/* Row 1: Timeline (large) + Source donut (small) */}
+                        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
 
-                            {/* Colonne 1 : Donut centré */}
-                            <div className="flex flex-col items-center justify-center p-8 gap-4">
-                                <DonutChart
-                                    ratio={(240 - 2) / 240}
-                                    centerValue="99%"
-                                    subLabel="temps économisé par génération"
-                                    color="#3bb3a9"
-                                    size={190}
-                                    ariaLabel="Diagramme circulaire : 99% du temps économisé par rapport à la production conventionnelle"
-                                />
-                                <div className="text-center">
-                                    <p className="text-xs text-gray-400">
-                                        2 min (plateforme) vs 4h (conventionnel)
-                                    </p>
+                            {/* Area chart — Production timeline */}
+                            <ChartCard
+                                title="Production dans le temps"
+                                subtitle={`${timelineData.length} période${timelineData.length > 1 ? "s" : ""} de production`}
+                                className="lg:col-span-2"
+                            >
+                                <div className="h-[280px]" role="img" aria-label="Graphique en aire montrant l'évolution de la production par mois">
+                                    <ResponsiveContainer width="100%" height="100%">
+                                        <AreaChart data={timelineData} margin={{ top: 5, right: 10, left: -10, bottom: 5 }}>
+                                            <defs>
+                                                <linearGradient id="gradMoca" x1="0" y1="0" x2="0" y2="1">
+                                                    <stop offset="5%" stopColor={C.darkBlue} stopOpacity={0.3} />
+                                                    <stop offset="95%" stopColor={C.darkBlue} stopOpacity={0} />
+                                                </linearGradient>
+                                                <linearGradient id="gradOpen" x1="0" y1="0" x2="0" y2="1">
+                                                    <stop offset="5%" stopColor={C.teal} stopOpacity={0.3} />
+                                                    <stop offset="95%" stopColor={C.teal} stopOpacity={0} />
+                                                </linearGradient>
+                                            </defs>
+                                            <CartesianGrid strokeDasharray="3 3" stroke="#f1f5f9" vertical={false} />
+                                            <XAxis
+                                                dataKey="mois" tick={{ fontSize: 11, fill: "#94a3b8" }}
+                                                axisLine={false} tickLine={false}
+                                            />
+                                            <YAxis
+                                                tick={{ fontSize: 11, fill: "#94a3b8" }}
+                                                axisLine={false} tickLine={false}
+                                                allowDecimals={false}
+                                            />
+                                            <ReTooltip content={<CustomTooltip />} />
+                                            <Area
+                                                type="monotone" dataKey="MOCA-O" name="MOCA-O"
+                                                stroke={C.darkBlue} strokeWidth={2}
+                                                fill="url(#gradMoca)"
+                                                animationDuration={1500}
+                                            />
+                                            <Area
+                                                type="monotone" dataKey="Open Data" name="Open Data"
+                                                stroke={C.teal} strokeWidth={2}
+                                                fill="url(#gradOpen)"
+                                                animationDuration={1500}
+                                                animationBegin={300}
+                                            />
+                                        </AreaChart>
+                                    </ResponsiveContainer>
                                 </div>
-                            </div>
-
-                            {/* Colonne 2 : Barres de comparaison */}
-                            <div className="flex flex-col justify-center p-8 gap-5">
-                                <p className="text-sm font-semibold text-gray-700 mb-1">
-                                    Durée par indicateur / par année
-                                </p>
-
-                                {/* Barre conventionnel : 240min = 100% */}
-                                <ComparisonBar
-                                    label="Production conventionnelle"
-                                    value={240} max={240}
-                                    color="#94a3b8"
-                                    textValue="4 h 00"
-                                    delay={0}
-                                />
-                                {/* Barre PRISME : 2min = ~0.8% → on la scale différemment pour la lisibilité */}
-                                <div className="space-y-1.5">
-                                    <div className="flex items-center justify-between">
-                                        <span className="text-sm font-medium text-gray-600">Avec la plateforme</span>
-                                        <span className="text-sm font-bold text-[#3bb3a9]">2 min</span>
-                                    </div>
-                                    <div
-                                        className="bg-gray-100 rounded-full h-5 overflow-hidden"
-                                        role="progressbar"
-                                        aria-valuenow={2}
-                                        aria-valuemin={0}
-                                        aria-valuemax={240}
-                                        aria-label="Avec la plateforme : 2 minutes"
-                                    >
-                                        {/* Volontairement overscaled à 8% min pour la lisibilité visuelle */}
-                                        <motion.div
-                                            initial={{ width: 0 }}
-                                            whileInView={{ width: "8%" }}
-                                            viewport={{ once: true }}
-                                            transition={{ duration: 0.8, delay: 0.2, ease: "easeOut" }}
-                                            className="h-5 rounded-full"
-                                            style={{ backgroundColor: "#3bb3a9" }}
-                                        />
-                                    </div>
-                                    <p className="text-xs text-gray-400">Échelle ajustée pour la lisibilité</p>
+                                <div className="flex items-center gap-6 mt-3 text-xs text-gray-400">
+                                    <span className="flex items-center gap-1.5">
+                                        <span className="w-3 h-1 rounded-full bg-[#1a4b8c]" />
+                                        MOCA-O ({mocaCount})
+                                    </span>
+                                    <span className="flex items-center gap-1.5">
+                                        <span className="w-3 h-1 rounded-full bg-[#3bb3a9]" />
+                                        Open Data ({openDataCount})
+                                    </span>
                                 </div>
+                            </ChartCard>
 
-                                <div className="mt-2 flex items-center gap-3 bg-[#1a4b8c]/5 rounded-xl px-4 py-3">
-                                    <span className="text-2xl font-black text-[#1a4b8c]">×120</span>
-                                    <span className="text-sm text-gray-600">plus rapide qu'en production manuelle</span>
+                            {/* Donut — Source split */}
+                            <ChartCard
+                                title="Sources de données"
+                                subtitle={`${fileCount} fichiers au total`}
+                            >
+                                <div className="h-[220px]" role="img" aria-label={`Répartition des sources : MOCA-O ${mocaCount} fichiers, Open Data ${openDataCount} fichiers`}>
+                                    <ResponsiveContainer width="100%" height="100%">
+                                        <PieChart>
+                                            <Pie
+                                                data={sourceData}
+                                                cx="50%" cy="50%"
+                                                innerRadius={55} outerRadius={80}
+                                                paddingAngle={3}
+                                                dataKey="value"
+                                                animationDuration={1200}
+                                                stroke="none"
+                                            >
+                                                {sourceData.map((_entry, i) => (
+                                                    <Cell key={i} fill={SOURCE_COLORS[i % SOURCE_COLORS.length]} />
+                                                ))}
+                                                <PieLabel viewBox={undefined} value={fileCount.toString()} sub="fichiers" />
+                                            </Pie>
+                                            <ReTooltip content={<CustomTooltip />} />
+                                            <Legend
+                                                verticalAlign="bottom"
+                                                formatter={(value: string) => <span className="text-xs text-gray-600">{value}</span>}
+                                            />
+                                        </PieChart>
+                                    </ResponsiveContainer>
                                 </div>
-                            </div>
-
-                            {/* Colonne 3 : Total valorisé + Source split */}
-                            <div className="flex flex-col gap-4 p-8">
-
-                                {/* Total heures */}
-                                <div className="bg-gradient-to-br from-[#1a4b8c] to-[#3bb3a9] rounded-2xl p-5 text-white text-center">
-                                    {loading ? (
-                                        <Loader2 className="w-8 h-8 animate-spin mx-auto opacity-50" aria-label="Chargement" />
-                                    ) : (
-                                        <>
-                                            <p className="text-4xl font-black" aria-live="polite">
-                                                {hoursSaved.toLocaleString("fr-FR")}<span className="text-2xl ml-0.5">h</span>
-                                            </p>
-                                            <p className="text-xs text-blue-100 mt-1">de travail valorisé</p>
-                                            <div className="mt-3 pt-3 border-t border-white/20">
-                                                <p className="text-xs text-blue-200">
-                                                    soit ~{Math.round(hoursSaved / 7.5)} jours-personne
-                                                </p>
-                                            </div>
-                                        </>
-                                    )}
-                                </div>
-
-                                {/* Split MOCA-O vs Open Data — deux mini donuts */}
-                                {!loading && files.length > 0 && (
-                                    <div className="bg-gray-50 rounded-2xl p-5 border border-gray-100">
-                                        <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-4">
-                                            Source des données
+                                <div className="grid grid-cols-2 gap-3 mt-2">
+                                    <div className="bg-[#1a4b8c]/5 rounded-lg p-3 text-center">
+                                        <p className="text-lg font-black text-[#1a4b8c]">{mocaCount}</p>
+                                        <p className="text-[10px] text-gray-500 flex items-center justify-center gap-1">
+                                            <HardDrive className="w-3 h-3" aria-hidden="true" />
+                                            MOCA-O
                                         </p>
-                                        <div className="flex items-center justify-around gap-3">
-                                            <DonutChart
-                                                ratio={mocaCount / fileCount}
-                                                centerValue={`${Math.round((mocaCount / fileCount) * 100)}%`}
-                                                subLabel="MOCA-O"
-                                                color="#1a4b8c"
-                                                size={90}
-                                                ariaLabel={`MOCA-O : ${mocaCount} fichiers sur ${fileCount}, soit ${Math.round((mocaCount / fileCount) * 100)}%`}
-                                            />
-                                            <DonutChart
-                                                ratio={openDataCount / fileCount}
-                                                centerValue={`${Math.round((openDataCount / fileCount) * 100)}%`}
-                                                subLabel="Open Data"
-                                                color="#3bb3a9"
-                                                size={90}
-                                                ariaLabel={`Open Data : ${openDataCount} fichiers sur ${fileCount}, soit ${Math.round((openDataCount / fileCount) * 100)}%`}
-                                            />
-                                        </div>
-                                        <div className="flex justify-around mt-3 text-xs text-gray-500">
-                                            <span className="flex items-center gap-1.5">
-                                                <HardDrive className="w-3 h-3 text-[#1a4b8c]" aria-hidden="true" />
-                                                {mocaCount} fichiers
-                                            </span>
-                                            <span className="flex items-center gap-1.5">
-                                                <Globe className="w-3 h-3 text-[#3bb3a9]" aria-hidden="true" />
-                                                {openDataCount} fichiers
-                                            </span>
-                                        </div>
                                     </div>
-                                )}
-                            </div>
+                                    <div className="bg-[#3bb3a9]/5 rounded-lg p-3 text-center">
+                                        <p className="text-lg font-black text-[#3bb3a9]">{openDataCount}</p>
+                                        <p className="text-[10px] text-gray-500 flex items-center justify-center gap-1">
+                                            <Globe className="w-3 h-3" aria-hidden="true" />
+                                            Open Data
+                                        </p>
+                                    </div>
+                                </div>
+                            </ChartCard>
                         </div>
 
-                        <div className="px-8 py-3 border-t border-gray-50 bg-gray-50/50">
-                            <p className="text-xs text-gray-400">
-                                * Estimation. Base de référence : 4h/fichier en production manuelle (collecte multi-sources,
-                                saisie, contrôle qualité, formatage Géoclip). Durée réelle variable selon la complexité thématique.
-                            </p>
-                        </div>
-                    </motion.div>
-                </section>
+                        {/* Row 2: Theme bar chart + Year distribution */}
+                        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
 
-                {/* ── Répartition par thématique ── */}
-                {!loading && files.length > 0 && (
-                    <section aria-label="Répartition des productions par thématique">
-                        <motion.div
-                            initial={{ opacity: 0, y: 24 }}
-                            whileInView={{ opacity: 1, y: 0 }}
-                            viewport={{ once: true }}
-                            transition={{ duration: 0.6 }}
-                            className="bg-white rounded-3xl shadow-sm border border-gray-100 p-8"
-                        >
-                            <div className="mb-6">
-                                <h2 className="text-xl font-bold text-[#1a4b8c]">Répartition par thématique</h2>
-                                <p className="text-sm text-gray-400 mt-1">
-                                    {files.length} fichiers produits — 8 thématiques les plus actives
-                                </p>
-                            </div>
-                            <ThemeBarChart files={files} />
-                        </motion.div>
+                            {/* Horizontal bar — Theme distribution */}
+                            <ChartCard
+                                title="Répartition par thématique"
+                                subtitle={`${uniqueThemes} thématiques — top 8`}
+                            >
+                                <div className="h-[300px]" role="img" aria-label="Graphique en barres horizontales de la répartition par thématique">
+                                    <ResponsiveContainer width="100%" height="100%">
+                                        <BarChart data={themeData} layout="vertical" margin={{ top: 0, right: 20, left: 0, bottom: 0 }}>
+                                            <CartesianGrid strokeDasharray="3 3" stroke="#f1f5f9" horizontal={false} />
+                                            <XAxis type="number" tick={{ fontSize: 11, fill: "#94a3b8" }} axisLine={false} tickLine={false} allowDecimals={false} />
+                                            <YAxis
+                                                type="category" dataKey="name"
+                                                tick={{ fontSize: 11, fill: "#64748b" }}
+                                                axisLine={false} tickLine={false}
+                                                width={140}
+                                            />
+                                            <ReTooltip content={<CustomTooltip />} />
+                                            <Bar
+                                                dataKey="value" name="Fichiers" radius={[0, 6, 6, 0]}
+                                                animationDuration={1200}
+                                            >
+                                                {themeData.map((_entry, i) => (
+                                                    <Cell key={i} fill={THEME_COLORS[i % THEME_COLORS.length]} />
+                                                ))}
+                                            </Bar>
+                                        </BarChart>
+                                    </ResponsiveContainer>
+                                </div>
+                            </ChartCard>
+
+                            {/* Vertical stacked bar — Year distribution */}
+                            <ChartCard
+                                title="Distribution par année"
+                                subtitle="Fichiers produits par année de référence"
+                            >
+                                <div className="h-[300px]" role="img" aria-label="Graphique en barres verticales de la distribution par année de référence">
+                                    <ResponsiveContainer width="100%" height="100%">
+                                        <BarChart data={yearData} margin={{ top: 5, right: 10, left: -10, bottom: 5 }}>
+                                            <CartesianGrid strokeDasharray="3 3" stroke="#f1f5f9" vertical={false} />
+                                            <XAxis dataKey="annee" tick={{ fontSize: 11, fill: "#94a3b8" }} axisLine={false} tickLine={false} />
+                                            <YAxis tick={{ fontSize: 11, fill: "#94a3b8" }} axisLine={false} tickLine={false} allowDecimals={false} />
+                                            <ReTooltip content={<CustomTooltip />} />
+                                            <Bar
+                                                dataKey="MOCA-O" name="MOCA-O"
+                                                stackId="a" fill={C.darkBlue}
+                                                radius={[0, 0, 0, 0]}
+                                                animationDuration={1200}
+                                            />
+                                            <Bar
+                                                dataKey="Open Data" name="Open Data"
+                                                stackId="a" fill={C.teal}
+                                                radius={[4, 4, 0, 0]}
+                                                animationDuration={1200}
+                                                animationBegin={300}
+                                            />
+                                            <Legend
+                                                verticalAlign="top" align="right" height={30}
+                                                formatter={(value: string) => <span className="text-xs text-gray-600">{value}</span>}
+                                            />
+                                        </BarChart>
+                                    </ResponsiveContainer>
+                                </div>
+                            </ChartCard>
+                        </div>
                     </section>
                 )}
 
-                {/* ── Productions récentes ── */}
+                {/* ── Recent files ── */}
                 <section aria-label="Productions récentes">
-                    <div className="bg-white rounded-3xl shadow-sm border border-gray-100 overflow-hidden">
+                    <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
                         <div className="px-6 py-4 border-b border-gray-50 flex items-center justify-between">
                             <h2 className="font-bold text-[#1a4b8c] flex items-center gap-2 text-base">
                                 <History className="w-4 h-4 opacity-70" aria-hidden="true" />
@@ -514,7 +525,7 @@ export function DashboardPage() {
                                 </div>
                             ) : recentFiles.length === 0 ? (
                                 <div className="p-10 text-center text-sm text-gray-400">
-                                    Aucun fichier produit. Lancez une première génération depuis le module ci-dessus.
+                                    Aucun fichier produit.
                                 </div>
                             ) : (
                                 recentFiles.map((file, idx) => (
@@ -565,7 +576,7 @@ export function DashboardPage() {
                     </div>
                 </section>
 
-                {/* ── Navigation ── */}
+                {/* ── Nav cards ── */}
                 <nav aria-label="Navigation rapide" className="grid md:grid-cols-2 gap-5">
                     <Link
                         to="/history"
@@ -577,7 +588,7 @@ export function DashboardPage() {
                         <div>
                             <p className="font-bold text-gray-800">Historique des productions</p>
                             <p className="text-sm text-gray-500">
-                                {loading ? "..." : files.length} fichiers disponibles — recherche et téléchargement
+                                {loading ? "..." : files.length} fichiers disponibles
                             </p>
                         </div>
                         <ArrowRight className="w-5 h-5 text-gray-300 ml-auto group-hover:text-[#4caf50] group-hover:translate-x-1 transition-all" aria-hidden="true" />
@@ -593,7 +604,7 @@ export function DashboardPage() {
                         <div>
                             <p className="font-bold text-gray-800">Référentiel BDI</p>
                             <p className="text-sm text-gray-500">
-                                219 indicateurs documentés — définitions, sources, méthodes de calcul
+                                219 indicateurs documentés
                             </p>
                         </div>
                         <ArrowRight className="w-5 h-5 text-gray-300 ml-auto group-hover:text-yellow-500 group-hover:translate-x-1 transition-all" aria-hidden="true" />
