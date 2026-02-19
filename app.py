@@ -117,6 +117,40 @@ async def generate_opendata(theme: str, year: int):
             "error": str(e)
         }
 
+# Open Data Years Mapping
+OPENDATA_YEARS = {
+    "educ": [2017, 2018, 2019, 2020, 2021, 2022],
+    "densite": [2021],
+    "structure_quinq": [2020, 2021, 2022],
+    "structure_grp": [2020, 2021, 2022],
+    "indice_fecondite": [2022, 2023],
+    "fecondite": [2022, 2023],
+    "pop_inf3ans": [2020, 2021, 2022, 2023],
+    "emplois": [2020, 2021, 2022],
+    "revenu": [2021, 2022, 2023],
+    "alloc": [2020, 2021, 2022, 2023],
+    "pers_sup65ans_seules": [2020, 2021, 2022],
+    "familles_mono": [2020, 2021, 2022],
+    "pers_menages": [2020, 2021, 2022],
+    "types_menages": [2020, 2021],
+    "mortalite_gen": [2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023],
+    "mortalite_covid": [2020, 2021, 2022, 2023],
+    "mortalite_cardio": [2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023],
+    "mortalite_respi": [2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023],
+    "mortalite_neuro": [2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023],
+    "mortalite_tumeurs": [2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023],
+    "mortalite_diabete": [2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023],
+    "route": [2019, 2020, 2021, 2022, 2023]
+}
+
+@app.get("/api/available-years-opendata")
+async def get_available_years_opendata(dataset: str):
+    """
+    Returns available years for a given Open Data dataset.
+    """
+    years = OPENDATA_YEARS.get(dataset, [2022]) # Default to 2022 if not found
+    return {"success": True, "years": years}
+
 @app.get("/api/download/{filename}")
 async def download_file(filename: str):
     """
