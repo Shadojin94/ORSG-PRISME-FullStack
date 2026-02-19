@@ -2,9 +2,8 @@ import { useEffect, useRef, useState } from "react"
 import { motion, useInView } from "framer-motion"
 import { Link } from "react-router-dom"
 import {
-    ArrowRight, Wand2, History, BookOpen, Clock, Database,
-    FileSpreadsheet, TrendingUp, Zap, CheckCircle2, XCircle,
-    BarChart3, Download, Calendar, FileText, Loader2, Globe
+    ArrowRight, History, BookOpen, FileSpreadsheet,
+    TrendingUp, BarChart3, Download, Calendar, Loader2, Globe
 } from "lucide-react"
 import { getFiles } from "@/services/api"
 import type { GeneratedFile } from "@/services/api"
@@ -31,7 +30,7 @@ function useCountUp(target: number, duration = 1600, shouldStart = true) {
 }
 
 // ─────────────────────────────────────────────
-// Carte KPI animée
+// Carte KPI
 // ─────────────────────────────────────────────
 function KpiCard({ value, label, suffix = "", icon: Icon, topColor, iconColor, delay = 0 }: {
     value: number; label: string; suffix?: string
@@ -66,48 +65,50 @@ function KpiCard({ value, label, suffix = "", icon: Icon, topColor, iconColor, d
 }
 
 // ─────────────────────────────────────────────
-// Section Avant / Après — Pain Points
+// Camembert SVG animé — Temps économisé
 // ─────────────────────────────────────────────
-const PAIN_POINTS = [
-    {
-        icon: Clock,
-        before: "4h par indicateur",
-        beforeSub: "Saisie, vérification, mise en forme manuelle",
-        after: "~2 minutes",
-        afterSub: "Génération automatique et validation intégrée",
-    },
-    {
-        icon: Database,
-        before: "9 sources éparpillées",
-        beforeSub: "INSEE, CAF, IRCOM, DREES… accès séparés",
-        after: "1 interface unifiée",
-        afterSub: "Toutes les sources intégrées en un seul endroit",
-    },
-    {
-        icon: XCircle,
-        before: "Erreurs humaines fréquentes",
-        beforeSub: "Recopie manuelle, formules instables",
-        after: "Données fiables — 0 erreur",
-        afterSub: "Sourcées directement, format contrôlé",
-    },
-    {
-        icon: FileSpreadsheet,
-        before: "Format non standardisé",
-        beforeSub: "Chaque fichier différent selon l'analyste",
-        after: "Géoclip-ready (5 onglets)",
-        afterSub: "Structure normalisée, importable directement",
-    },
-    {
-        icon: BarChart3,
-        before: "Aucune traçabilité",
-        beforeSub: "Impossible de retrouver qui a fait quoi",
-        after: "Audit trail complet",
-        afterSub: "Historique horodaté de toutes les générations",
-    },
-]
+function DonutChart({ ratio, centerValue, centerLabel, color, size = 140 }: {
+    ratio: number; centerValue: string; centerLabel: string; color: string; size?: number
+}) {
+    const ref = useRef(null)
+    const inView = useInView(ref, { once: true })
+    const r = 40
+    const stroke = 11
+    const circumference = 2 * Math.PI * r
+
+    return (
+        <div ref={ref} className="flex flex-col items-center gap-2">
+            <div style={{ width: size, height: size }} className="relative">
+                <svg viewBox="0 0 100 100" className="w-full h-full" style={{ transform: "rotate(-90deg)" }}>
+                    {/* Piste */}
+                    <circle cx="50" cy="50" r={r} fill="none" stroke="#e5e7eb" strokeWidth={stroke} />
+                    {/* Arc */}
+                    <motion.circle
+                        cx="50" cy="50" r={r}
+                        fill="none"
+                        stroke={color}
+                        strokeWidth={stroke}
+                        strokeLinecap="round"
+                        strokeDasharray={circumference}
+                        initial={{ strokeDashoffset: circumference }}
+                        animate={inView
+                            ? { strokeDashoffset: circumference * (1 - ratio) }
+                            : { strokeDashoffset: circumference }
+                        }
+                        transition={{ duration: 1.8, ease: "easeOut" }}
+                    />
+                </svg>
+                <div className="absolute inset-0 flex flex-col items-center justify-center">
+                    <span className="font-black text-xl leading-none" style={{ color }}>{centerValue}</span>
+                    <span className="text-xs text-gray-400 mt-0.5">{centerLabel}</span>
+                </div>
+            </div>
+        </div>
+    )
+}
 
 // ─────────────────────────────────────────────
-// Bar Chart CSS — Distribution par thématique
+// Bar Chart CSS — Production par thématique
 // ─────────────────────────────────────────────
 const BAR_COLORS = ["#1a4b8c", "#3bb3a9", "#4caf50", "#f5c542", "#0083B0", "#9c27b0", "#ff9800", "#e91e63"]
 
@@ -131,13 +132,10 @@ function ThemeBarChart({ files }: { files: GeneratedFile[] }) {
         <div ref={ref} className="space-y-3">
             {sorted.map(([theme, count], i) => (
                 <div key={theme} className="flex items-center gap-4">
-                    <div
-                        className="w-52 text-xs font-semibold text-gray-500 truncate text-right flex-shrink-0"
-                        title={theme}
-                    >
+                    <div className="w-52 text-xs font-medium text-gray-500 truncate text-right flex-shrink-0" title={theme}>
                         {theme}
                     </div>
-                    <div className="flex-1 bg-gray-100 rounded-full h-8 overflow-hidden">
+                    <div className="flex-1 bg-gray-100 rounded-full h-7 overflow-hidden">
                         <motion.div
                             initial={{ width: 0 }}
                             animate={inView ? { width: `${(count / max) * 100}%` } : { width: 0 }}
@@ -150,37 +148,6 @@ function ThemeBarChart({ files }: { files: GeneratedFile[] }) {
                     </div>
                 </div>
             ))}
-        </div>
-    )
-}
-
-// ─────────────────────────────────────────────
-// Mini progress bar card
-// ─────────────────────────────────────────────
-function CoverageCard({ label, value, max, color, icon: Icon }: {
-    label: string; value: number; max: number; color: string; icon: React.ElementType
-}) {
-    const ref = useRef(null)
-    const inView = useInView(ref, { once: true })
-    return (
-        <div ref={ref} className="bg-white rounded-2xl p-5 border border-gray-100 shadow-sm">
-            <div className="flex items-center gap-2 mb-3">
-                <Icon className="w-4 h-4" style={{ color }} />
-                <span className="text-xs font-semibold text-gray-500 uppercase tracking-wide">{label}</span>
-            </div>
-            <div className="flex items-end gap-2 mb-3">
-                <span className="text-3xl font-black" style={{ color }}>{value}</span>
-                <span className="text-sm text-gray-400 mb-1">/ {max}</span>
-            </div>
-            <div className="bg-gray-100 rounded-full h-2 overflow-hidden">
-                <motion.div
-                    initial={{ width: 0 }}
-                    animate={inView ? { width: `${(value / max) * 100}%` } : { width: 0 }}
-                    transition={{ duration: 1, ease: "easeOut" }}
-                    className="h-full rounded-full"
-                    style={{ backgroundColor: color }}
-                />
-            </div>
         </div>
     )
 }
@@ -204,6 +171,9 @@ export function DashboardPage() {
     const uniqueThemes = new Set(files.map(f => f.theme)).size
     const recentFiles = files.slice(0, 4)
 
+    // Ratio camembert : 2min vs 4h (240min)
+    const timeRatio = (240 - 2) / 240 // ~0.992
+
     return (
         <div className="max-w-7xl mx-auto py-8 px-4 sm:px-6 lg:px-8 space-y-10">
 
@@ -211,15 +181,15 @@ export function DashboardPage() {
             <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
                 <div>
                     <h1 className="text-3xl font-bold text-[#1a4b8c] tracking-tight">
-                        Bonjour, Expert ORSG 👋
+                        Tableau de bord opérationnel
                     </h1>
                     <p className="text-gray-500 mt-1">
-                        Tableau de bord de pilotage — Indicateurs de santé de Guyane
+                        Indicateurs de santé de Guyane — ORSG-CTPS, {new Date().toLocaleDateString("fr-FR", { year: "numeric", month: "long", day: "numeric" })}
                     </p>
                 </div>
                 <div className="flex items-center gap-2 text-sm bg-white px-4 py-2 rounded-full border border-gray-200 shadow-sm">
                     <span className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
-                    <span className="font-medium text-gray-600">Système opérationnel</span>
+                    <span className="font-medium text-gray-600">Système actif</span>
                 </div>
             </div>
 
@@ -227,7 +197,7 @@ export function DashboardPage() {
             <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-5">
                 <KpiCard
                     value={loading ? 0 : fileCount}
-                    label="Fichiers Excel générés"
+                    label="Fichiers Excel produits"
                     icon={FileSpreadsheet}
                     topColor="bg-gradient-to-r from-[#1a4b8c] to-[#3bb3a9]"
                     iconColor="bg-blue-50 text-[#1a4b8c]"
@@ -235,7 +205,7 @@ export function DashboardPage() {
                 />
                 <KpiCard
                     value={219}
-                    label="Indicateurs BDI disponibles"
+                    label="Indicateurs BDI référencés"
                     icon={BarChart3}
                     topColor="bg-[#3bb3a9]"
                     iconColor="bg-teal-50 text-[#3bb3a9]"
@@ -252,107 +222,121 @@ export function DashboardPage() {
                 <KpiCard
                     value={loading ? 0 : hoursSaved}
                     suffix="h"
-                    label="Heures économisées vs. manuel"
-                    icon={Clock}
+                    label="Temps valorisé (estimé)"
+                    icon={Calendar}
                     topColor="bg-[#f5c542]"
                     iconColor="bg-yellow-50 text-yellow-600"
                     delay={0.3}
                 />
             </div>
 
-            {/* ── Impact PRISME — Avant / Après ── */}
+            {/* ── CTA Génération ── */}
+            <motion.div
+                initial={{ opacity: 0, y: 16 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5, delay: 0.4 }}
+                className="relative rounded-3xl overflow-hidden shadow-lg"
+            >
+                <video autoPlay muted loop playsInline className="absolute inset-0 w-full h-full object-cover" src="/bg-video.mp4" />
+                <div className="absolute inset-0 bg-gradient-to-r from-[#1a4b8c]/92 via-[#1a4b8c]/82 to-[#3bb3a9]/65" />
+                <div className="relative z-10 px-8 py-8 md:py-10 flex flex-col md:flex-row items-center justify-between gap-6">
+                    <div className="space-y-2 max-w-2xl">
+                        <p className="text-[#f5c542] text-xs font-semibold uppercase tracking-widest">
+                            Génération de rapports
+                        </p>
+                        <h2 className="text-2xl md:text-3xl font-bold text-white leading-tight">
+                            Produire un indicateur
+                        </h2>
+                        <p className="text-blue-100 text-base leading-relaxed">
+                            Sélectionnez une thématique, choisissez l'année de référence.
+                            Le fichier est prêt en moins de deux minutes, format Géoclip, prêt à l'import.
+                        </p>
+                    </div>
+                    <Link
+                        to="/generate"
+                        className="group/btn flex-shrink-0 flex items-center gap-3 bg-white text-[#1a4b8c] px-8 py-4 rounded-xl font-bold text-base shadow-xl hover:bg-[#f5c542] transition-all transform hover:scale-105"
+                    >
+                        Démarrer
+                        <ArrowRight className="w-5 h-5 transition-transform group-hover/btn:translate-x-1" />
+                    </Link>
+                </div>
+            </motion.div>
+
+            {/* ── Temps de production — Camembert + chiffres clés ── */}
             <motion.div
                 initial={{ opacity: 0, y: 24 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.6 }}
-                className="bg-white rounded-3xl shadow-sm border border-gray-100 overflow-hidden"
+                className="bg-white rounded-3xl shadow-sm border border-gray-100 p-8"
             >
-                {/* Header */}
-                <div className="bg-gradient-to-r from-[#1a4b8c] to-[#0083B0] px-8 py-6 flex items-center gap-4">
-                    <div className="p-2 bg-white/20 rounded-xl">
-                        <Zap className="w-6 h-6 text-[#f5c542]" />
-                    </div>
-                    <div>
-                        <h2 className="text-xl font-bold text-white">Impact PRISME</h2>
-                        <p className="text-blue-200 text-sm mt-0.5">
-                            Transformer la production d'indicateurs de santé en Guyane
-                        </p>
-                    </div>
-                    <div className="ml-auto hidden md:flex flex-col items-center bg-white/10 backdrop-blur-sm px-5 py-3 rounded-2xl border border-white/20">
-                        <span className="text-3xl font-black text-[#f5c542]">×120</span>
-                        <span className="text-xs text-blue-200 font-medium">plus rapide</span>
-                    </div>
+                <div className="mb-6">
+                    <h2 className="text-xl font-bold text-[#1a4b8c]">
+                        Temps de production par indicateur
+                    </h2>
+                    <p className="text-sm text-gray-400 mt-1">
+                        Comparaison : production conventionnelle vs génération automatisée.
+                        Base de référence : 4h par fichier (collecte manuelle, mise en forme, vérification).
+                    </p>
                 </div>
 
-                {/* Grille Avant / Après */}
-                <div className="grid grid-cols-1 lg:grid-cols-2 divide-y lg:divide-y-0 lg:divide-x divide-gray-100">
-                    {/* AVANT */}
-                    <div className="p-7 bg-red-50/40">
-                        <div className="flex items-center gap-2 mb-5">
-                            <XCircle className="w-5 h-5 text-red-400" />
-                            <h3 className="font-bold text-red-700 uppercase tracking-wider text-sm">Avant PRISME</h3>
+                <div className="grid grid-cols-1 md:grid-cols-4 gap-8 items-center">
+
+                    {/* Camembert */}
+                    <div className="flex flex-col items-center">
+                        <DonutChart
+                            ratio={timeRatio}
+                            centerValue="99%"
+                            centerLabel="économisé"
+                            color="#3bb3a9"
+                            size={150}
+                        />
+                        <p className="text-xs text-gray-400 mt-3 text-center">Part du temps évité<br />par génération</p>
+                    </div>
+
+                    {/* Comparaison chiffrée */}
+                    <div className="md:col-span-2 grid grid-cols-2 gap-4">
+                        <div className="bg-gray-50 rounded-2xl p-5 border border-gray-100">
+                            <p className="text-xs font-semibold text-gray-400 uppercase tracking-wide mb-2">
+                                Production conventionnelle
+                            </p>
+                            <p className="text-4xl font-black text-gray-700">4<span className="text-xl font-bold ml-0.5">h</span></p>
+                            <p className="text-xs text-gray-400 mt-1">par indicateur / par année</p>
                         </div>
-                        <div className="space-y-4">
-                            {PAIN_POINTS.map((p, i) => (
-                                <motion.div
-                                    key={i}
-                                    initial={{ opacity: 0, x: -16 }}
-                                    whileInView={{ opacity: 1, x: 0 }}
-                                    viewport={{ once: true }}
-                                    transition={{ delay: i * 0.07 }}
-                                    className="flex items-start gap-3"
-                                >
-                                    <div className="p-1.5 bg-red-100 rounded-lg mt-0.5 flex-shrink-0">
-                                        <p.icon className="w-4 h-4 text-red-400" />
-                                    </div>
-                                    <div>
-                                        <p className="text-sm font-semibold text-red-800">{p.before}</p>
-                                        <p className="text-xs text-red-500 mt-0.5">{p.beforeSub}</p>
-                                    </div>
-                                </motion.div>
-                            ))}
+                        <div className="bg-[#3bb3a9]/8 rounded-2xl p-5 border border-[#3bb3a9]/20">
+                            <p className="text-xs font-semibold text-[#3bb3a9] uppercase tracking-wide mb-2">
+                                Avec la plateforme
+                            </p>
+                            <p className="text-4xl font-black text-[#3bb3a9]">2<span className="text-xl font-bold ml-0.5">min</span></p>
+                            <p className="text-xs text-gray-400 mt-1">génération automatisée</p>
                         </div>
                     </div>
 
-                    {/* APRÈS */}
-                    <div className="p-7 bg-green-50/40">
-                        <div className="flex items-center gap-2 mb-5">
-                            <CheckCircle2 className="w-5 h-5 text-green-500" />
-                            <h3 className="font-bold text-green-700 uppercase tracking-wider text-sm">Après PRISME</h3>
-                        </div>
-                        <div className="space-y-4">
-                            {PAIN_POINTS.map((p, i) => (
-                                <motion.div
-                                    key={i}
-                                    initial={{ opacity: 0, x: 16 }}
-                                    whileInView={{ opacity: 1, x: 0 }}
-                                    viewport={{ once: true }}
-                                    transition={{ delay: i * 0.07 + 0.15 }}
-                                    className="flex items-start gap-3"
-                                >
-                                    <div className="p-1.5 bg-green-100 rounded-lg mt-0.5 flex-shrink-0">
-                                        <p.icon className="w-4 h-4 text-green-500" />
-                                    </div>
-                                    <div>
-                                        <p className="text-sm font-semibold text-green-800">{p.after}</p>
-                                        <p className="text-xs text-green-600 mt-0.5">{p.afterSub}</p>
-                                    </div>
-                                </motion.div>
-                            ))}
-                        </div>
+                    {/* Total valorisé */}
+                    <div className="flex flex-col items-center justify-center bg-gradient-to-br from-[#1a4b8c] to-[#3bb3a9] rounded-2xl p-6 text-white text-center">
+                        {loading ? (
+                            <Loader2 className="w-8 h-8 animate-spin opacity-50" />
+                        ) : (
+                            <>
+                                <p className="text-4xl font-black">{hoursSaved.toLocaleString("fr-FR")}<span className="text-xl ml-0.5">h</span></p>
+                                <p className="text-xs text-blue-100 mt-1">de travail valorisé</p>
+                                <div className="mt-3 pt-3 border-t border-white/20 w-full">
+                                    <p className="text-xs text-blue-200">
+                                        soit ~{Math.round(hoursSaved / 7.5)} jours-personne
+                                    </p>
+                                </div>
+                            </>
+                        )}
                     </div>
                 </div>
+
+                <p className="text-xs text-gray-300 mt-6">
+                    * Estimation basée sur un benchmark documenté de 4h par indicateur en production manuelle (collecte multi-sources, saisie, contrôle qualité, formatage Géoclip).
+                    Durée réelle variable selon la complexité thématique.
+                </p>
             </motion.div>
 
-            {/* ── Couverture données ── */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
-                <CoverageCard label="Sources Open Data intégrées" value={9} max={9} color="#3bb3a9" icon={Globe} />
-                <CoverageCard label="Années de données couvertes" value={9} max={9} color="#1a4b8c" icon={Calendar} />
-                <CoverageCard label="Niveaux géographiques" value={5} max={5} color="#4caf50" icon={FileText} />
-            </div>
-
-            {/* ── Distribution par thématique ── */}
+            {/* ── Production par thématique ── */}
             {!loading && files.length > 0 && (
                 <motion.div
                     initial={{ opacity: 0, y: 24 }}
@@ -362,117 +346,85 @@ export function DashboardPage() {
                     className="bg-white rounded-3xl shadow-sm border border-gray-100 p-8"
                 >
                     <div className="mb-6">
-                        <h2 className="text-xl font-bold text-[#1a4b8c] flex items-center gap-2">
-                            <BarChart3 className="w-5 h-5 text-[#3bb3a9]" />
-                            Production par thématique
+                        <h2 className="text-xl font-bold text-[#1a4b8c]">
+                            Répartition par thématique
                         </h2>
                         <p className="text-sm text-gray-400 mt-1">
-                            {files.length} fichiers générés · Top 8 thèmes
+                            {files.length} fichiers produits — 8 thématiques les plus actives
                         </p>
                     </div>
                     <ThemeBarChart files={files} />
                 </motion.div>
             )}
 
-            {/* ── CTA + Activité récente ── */}
-            <div className="grid md:grid-cols-5 gap-6">
-
-                {/* CTA Card avec video */}
-                <motion.div
-                    initial={{ opacity: 0, scale: 0.97 }}
-                    whileInView={{ opacity: 1, scale: 1 }}
-                    viewport={{ once: true }}
-                    transition={{ duration: 0.5 }}
-                    className="md:col-span-2 relative rounded-3xl overflow-hidden shadow-xl"
-                >
-                    <video autoPlay muted loop playsInline
-                        className="absolute inset-0 w-full h-full object-cover"
-                        src="/bg-video.mp4"
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-br from-[#1a4b8c]/90 to-[#3bb3a9]/80" />
-                    <div className="relative z-10 p-8 h-full flex flex-col justify-between min-h-[280px]">
-                        <div>
-                            <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/15 text-[#f5c542] text-xs font-bold uppercase tracking-wider border border-white/25 mb-4">
-                                <Wand2 className="w-3 h-3" />
-                                Assistant IA
-                            </div>
-                            <h2 className="text-2xl font-bold text-white leading-tight mb-2">
-                                Générer un nouveau rapport
-                            </h2>
-                            <p className="text-blue-100 text-sm leading-relaxed">
-                                3 étapes. Données validées. Format Géoclip.
-                            </p>
+            {/* ── Activité récente ── */}
+            <div className="bg-white rounded-3xl shadow-sm border border-gray-100 overflow-hidden">
+                <div className="px-6 py-4 border-b border-gray-50 flex items-center justify-between">
+                    <h2 className="font-bold text-[#1a4b8c] flex items-center gap-2 text-base">
+                        <History className="w-4 h-4 opacity-70" />
+                        Productions récentes
+                    </h2>
+                    <Link to="/history" className="text-xs font-semibold text-[#3bb3a9] hover:underline">
+                        Consulter l'historique
+                    </Link>
+                </div>
+                <div className="divide-y divide-gray-50">
+                    {loading ? (
+                        <div className="p-10 flex justify-center text-gray-200">
+                            <Loader2 className="w-6 h-6 animate-spin" />
                         </div>
-                        <Link
-                            to="/generate"
-                            className="mt-6 group/btn flex items-center justify-center gap-2 bg-white text-[#1a4b8c] px-6 py-3 rounded-xl font-bold shadow-lg hover:bg-[#f5c542] transition-all transform hover:scale-105"
-                        >
-                            Commencer
-                            <ArrowRight className="w-4 h-4 transition-transform group-hover/btn:translate-x-1" />
-                        </Link>
-                    </div>
-                </motion.div>
-
-                {/* Activité récente */}
-                <div className="md:col-span-3 bg-white rounded-3xl shadow-sm border border-gray-100 overflow-hidden">
-                    <div className="px-6 py-4 border-b border-gray-50 flex items-center justify-between">
-                        <h2 className="font-bold text-[#1a4b8c] flex items-center gap-2 text-base">
-                            <History className="w-4 h-4 opacity-70" />
-                            Dernières générations
-                        </h2>
-                        <Link to="/history" className="text-xs font-semibold text-[#3bb3a9] hover:underline">
-                            Voir tout →
-                        </Link>
-                    </div>
-                    <div className="divide-y divide-gray-50">
-                        {loading ? (
-                            <div className="p-8 flex justify-center text-gray-300">
-                                <Loader2 className="w-6 h-6 animate-spin" />
-                            </div>
-                        ) : recentFiles.length === 0 ? (
-                            <div className="p-8 text-center text-sm text-gray-400">
-                                Aucun fichier généré — lancez le générateur !
-                            </div>
-                        ) : (
-                            recentFiles.map((file, idx) => (
-                                <motion.div
-                                    key={idx}
-                                    initial={{ opacity: 0, x: 16 }}
-                                    animate={{ opacity: 1, x: 0 }}
-                                    transition={{ delay: idx * 0.07 }}
-                                    className="px-6 py-3.5 hover:bg-gray-50 transition-colors flex items-center justify-between group"
-                                >
-                                    <div className="flex items-center gap-3">
-                                        <div className="w-9 h-9 rounded-lg bg-blue-50 flex items-center justify-center text-[#1a4b8c] group-hover:bg-[#1a4b8c] group-hover:text-white transition-colors">
-                                            <FileSpreadsheet className="w-4 h-4" />
-                                        </div>
-                                        <div>
-                                            <p className="text-sm font-semibold text-gray-800 leading-none">{file.filename}</p>
-                                            <div className="flex items-center gap-2 mt-1">
-                                                <span className="text-xs text-gray-400">{file.theme}</span>
-                                                <span className="w-1 h-1 rounded-full bg-gray-300" />
-                                                <span className="text-xs text-gray-400">{file.size}</span>
-                                            </div>
+                    ) : recentFiles.length === 0 ? (
+                        <div className="p-10 text-center text-sm text-gray-400">
+                            Aucun fichier produit. Lancez une première génération depuis le module ci-dessus.
+                        </div>
+                    ) : (
+                        recentFiles.map((file, idx) => (
+                            <motion.div
+                                key={idx}
+                                initial={{ opacity: 0, x: 12 }}
+                                animate={{ opacity: 1, x: 0 }}
+                                transition={{ delay: idx * 0.07 }}
+                                className="px-6 py-4 hover:bg-gray-50 transition-colors flex items-center justify-between group"
+                            >
+                                <div className="flex items-center gap-4">
+                                    <div className="w-9 h-9 rounded-lg bg-blue-50 flex items-center justify-center text-[#1a4b8c] group-hover:bg-[#1a4b8c] group-hover:text-white transition-colors">
+                                        <FileSpreadsheet className="w-4 h-4" />
+                                    </div>
+                                    <div>
+                                        <p className="text-sm font-semibold text-gray-800">{file.filename}</p>
+                                        <div className="flex items-center gap-2 mt-0.5">
+                                            <span className="text-xs text-gray-400">{file.theme}</span>
+                                            <span className="w-1 h-1 rounded-full bg-gray-300" />
+                                            <span className="text-xs text-gray-400">{file.size}</span>
+                                            {file.source === "Open Data" && (
+                                                <>
+                                                    <span className="w-1 h-1 rounded-full bg-gray-300" />
+                                                    <span className="text-xs text-[#3bb3a9] flex items-center gap-1">
+                                                        <Globe className="w-3 h-3" />
+                                                        Open Data
+                                                    </span>
+                                                </>
+                                            )}
                                         </div>
                                     </div>
-                                    <div className="flex items-center gap-3">
-                                        <span className="text-xs text-gray-400">{file.date}</span>
-                                        <button
-                                            onClick={() => window.open(`/api/download/${file.filename}`, '_blank')}
-                                            className="opacity-0 group-hover:opacity-100 transition-opacity p-1.5 rounded-lg hover:bg-[#3bb3a9]/10 text-[#3bb3a9]"
-                                            title="Télécharger"
-                                        >
-                                            <Download className="w-4 h-4" />
-                                        </button>
-                                    </div>
-                                </motion.div>
-                            ))
-                        )}
-                    </div>
+                                </div>
+                                <div className="flex items-center gap-3">
+                                    <span className="text-xs text-gray-400">{file.date}</span>
+                                    <button
+                                        onClick={() => window.open(`/api/download/${file.filename}`, "_blank")}
+                                        className="opacity-0 group-hover:opacity-100 transition-opacity p-1.5 rounded-lg hover:bg-[#3bb3a9]/10 text-[#3bb3a9]"
+                                        title="Télécharger"
+                                    >
+                                        <Download className="w-4 h-4" />
+                                    </button>
+                                </div>
+                            </motion.div>
+                        ))
+                    )}
                 </div>
             </div>
 
-            {/* ── Raccourcis secondaires ── */}
+            {/* ── Navigation ── */}
             <div className="grid md:grid-cols-2 gap-5">
                 <Link to="/history"
                     className="group flex items-center gap-5 bg-white rounded-2xl p-5 border border-gray-100 shadow-sm hover:shadow-md hover:border-[#4caf50]/30 transition-all"
@@ -481,8 +433,10 @@ export function DashboardPage() {
                         <History className="w-6 h-6 text-[#4caf50] group-hover:text-white transition-colors" />
                     </div>
                     <div>
-                        <p className="font-bold text-gray-800">Historique complet</p>
-                        <p className="text-sm text-gray-500">{loading ? "..." : files.length} fichiers · Recherche &amp; téléchargement</p>
+                        <p className="font-bold text-gray-800">Historique des productions</p>
+                        <p className="text-sm text-gray-500">
+                            {loading ? "..." : files.length} fichiers disponibles — recherche et téléchargement
+                        </p>
                     </div>
                     <ArrowRight className="w-5 h-5 text-gray-300 ml-auto group-hover:text-[#4caf50] group-hover:translate-x-1 transition-all" />
                 </Link>
@@ -495,7 +449,9 @@ export function DashboardPage() {
                     </div>
                     <div>
                         <p className="font-bold text-gray-800">Référentiel BDI</p>
-                        <p className="text-sm text-gray-500">219 indicateurs · Documentation complète</p>
+                        <p className="text-sm text-gray-500">
+                            219 indicateurs documentés — définitions, sources, méthodes de calcul
+                        </p>
                     </div>
                     <ArrowRight className="w-5 h-5 text-gray-300 ml-auto group-hover:text-yellow-500 group-hover:translate-x-1 transition-all" />
                 </Link>
