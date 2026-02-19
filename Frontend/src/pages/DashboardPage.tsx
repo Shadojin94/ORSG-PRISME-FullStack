@@ -6,7 +6,7 @@ import {
     TrendingUp, BarChart3, Download, Calendar, Loader2, Globe, HardDrive
 } from "lucide-react"
 import {
-    AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip as ReTooltip,
+    XAxis, YAxis, CartesianGrid, Tooltip as ReTooltip,
     ResponsiveContainer, BarChart, Bar, PieChart, Pie, Cell, Legend
 } from "recharts"
 import { getFiles } from "@/services/api"
@@ -150,25 +150,20 @@ export function DashboardPage() {
     const uniqueThemes = new Set(files.map(f => f.theme)).size
     const recentFiles = files.slice(0, 5)
 
-    // ── Timeline data (files per month) ──
-    const timelineData = useMemo(() => {
+    // ── Theme × Source (grouped bars) ──
+    const themeSourceData = useMemo(() => {
         if (files.length === 0) return []
-        const byMonth: Record<string, { moca: number; opendata: number }> = {}
+        const acc: Record<string, { moca: number; opendata: number }> = {}
         for (const f of files) {
-            // date format: YYYY-MM-DD
-            const month = f.date?.slice(0, 7) || "inconnu"
-            if (!byMonth[month]) byMonth[month] = { moca: 0, opendata: 0 }
-            if (f.source === "Open Data") byMonth[month].opendata++
-            else byMonth[month].moca++
+            const label = f.theme || "Autre"
+            if (!acc[label]) acc[label] = { moca: 0, opendata: 0 }
+            if (f.source === "Open Data") acc[label].opendata++
+            else acc[label].moca++
         }
-        return Object.entries(byMonth)
-            .sort(([a], [b]) => a.localeCompare(b))
-            .map(([month, counts]) => ({
-                mois: month,
-                "MOCA-O": counts.moca,
-                "Open Data": counts.opendata,
-                total: counts.moca + counts.opendata,
-            }))
+        return Object.entries(acc)
+            .sort((a, b) => (b[1].moca + b[1].opendata) - (a[1].moca + a[1].opendata))
+            .slice(0, 8)
+            .map(([name, c]) => ({ name, "MOCA-O": c.moca, "Open Data": c.opendata }))
     }, [files])
 
     // ── Theme distribution (horizontal bar) ──
@@ -322,31 +317,22 @@ export function DashboardPage() {
                 ) : (
                     <section aria-label="Visualisation des données de production" className="space-y-6">
 
-                        {/* Row 1: Timeline (large) + Source donut (small) */}
+                        {/* Row 1: Year coverage (large) + Source donut (small) */}
                         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
 
-                            {/* Area chart — Production timeline */}
+                            {/* Stacked BarChart — Coverage by data year */}
                             <ChartCard
-                                title="Production dans le temps"
-                                subtitle={`${timelineData.length} période${timelineData.length > 1 ? "s" : ""} de production`}
+                                title="Couverture par année de référence"
+                                subtitle={`${yearData.length} années couvertes — fichiers disponibles par millésime`}
                                 className="lg:col-span-2"
                             >
-                                <div className="h-[280px]" role="img" aria-label="Graphique en aire montrant l'évolution de la production par mois">
+                                <div className="h-[280px]" role="img" aria-label="Graphique en barres empilées : nombre de fichiers disponibles par année de référence, distinguant MOCA-O et Open Data">
                                     <ResponsiveContainer width="100%" height="100%">
-                                        <AreaChart data={timelineData} margin={{ top: 5, right: 10, left: -10, bottom: 5 }}>
-                                            <defs>
-                                                <linearGradient id="gradMoca" x1="0" y1="0" x2="0" y2="1">
-                                                    <stop offset="5%" stopColor={C.darkBlue} stopOpacity={0.3} />
-                                                    <stop offset="95%" stopColor={C.darkBlue} stopOpacity={0} />
-                                                </linearGradient>
-                                                <linearGradient id="gradOpen" x1="0" y1="0" x2="0" y2="1">
-                                                    <stop offset="5%" stopColor={C.teal} stopOpacity={0.3} />
-                                                    <stop offset="95%" stopColor={C.teal} stopOpacity={0} />
-                                                </linearGradient>
-                                            </defs>
+                                        <BarChart data={yearData} margin={{ top: 5, right: 10, left: -10, bottom: 5 }} barCategoryGap="30%">
                                             <CartesianGrid strokeDasharray="3 3" stroke="#f1f5f9" vertical={false} />
                                             <XAxis
-                                                dataKey="mois" tick={{ fontSize: 11, fill: "#94a3b8" }}
+                                                dataKey="annee"
+                                                tick={{ fontSize: 12, fill: "#94a3b8", fontWeight: 600 }}
                                                 axisLine={false} tickLine={false}
                                             />
                                             <YAxis
@@ -355,30 +341,34 @@ export function DashboardPage() {
                                                 allowDecimals={false}
                                             />
                                             <ReTooltip content={<CustomTooltip />} />
-                                            <Area
-                                                type="monotone" dataKey="MOCA-O" name="MOCA-O"
-                                                stroke={C.darkBlue} strokeWidth={2}
-                                                fill="url(#gradMoca)"
-                                                animationDuration={1500}
+                                            <Legend
+                                                verticalAlign="top" align="right" height={30}
+                                                formatter={(value: string) => <span className="text-xs text-gray-600">{value}</span>}
                                             />
-                                            <Area
-                                                type="monotone" dataKey="Open Data" name="Open Data"
-                                                stroke={C.teal} strokeWidth={2}
-                                                fill="url(#gradOpen)"
-                                                animationDuration={1500}
-                                                animationBegin={300}
+                                            <Bar
+                                                dataKey="MOCA-O" name="MOCA-O"
+                                                stackId="a" fill={C.darkBlue}
+                                                radius={[0, 0, 0, 0]}
+                                                animationDuration={1200}
                                             />
-                                        </AreaChart>
+                                            <Bar
+                                                dataKey="Open Data" name="Open Data"
+                                                stackId="a" fill={C.teal}
+                                                radius={[4, 4, 0, 0]}
+                                                animationDuration={1200}
+                                                animationBegin={200}
+                                            />
+                                        </BarChart>
                                     </ResponsiveContainer>
                                 </div>
-                                <div className="flex items-center gap-6 mt-3 text-xs text-gray-400">
+                                <div className="flex items-center gap-6 mt-2 text-xs text-gray-400">
                                     <span className="flex items-center gap-1.5">
-                                        <span className="w-3 h-1 rounded-full bg-[#1a4b8c]" />
-                                        MOCA-O ({mocaCount})
+                                        <span className="inline-block w-3 h-3 rounded-sm bg-[#1a4b8c]" />
+                                        MOCA-O ({mocaCount} fichiers)
                                     </span>
                                     <span className="flex items-center gap-1.5">
-                                        <span className="w-3 h-1 rounded-full bg-[#3bb3a9]" />
-                                        Open Data ({openDataCount})
+                                        <span className="inline-block w-3 h-3 rounded-sm bg-[#3bb3a9]" />
+                                        Open Data ({openDataCount} fichiers)
                                     </span>
                                 </div>
                             </ChartCard>
@@ -465,34 +455,37 @@ export function DashboardPage() {
                                 </div>
                             </ChartCard>
 
-                            {/* Vertical stacked bar — Year distribution */}
+                            {/* Grouped bar — Theme × Source */}
                             <ChartCard
-                                title="Distribution par année"
-                                subtitle="Fichiers produits par année de référence"
+                                title="Thèmes par source"
+                                subtitle="MOCA-O vs Open Data — répartition par thématique"
                             >
-                                <div className="h-[300px]" role="img" aria-label="Graphique en barres verticales de la distribution par année de référence">
+                                <div className="h-[300px]" role="img" aria-label="Barres groupées montrant pour chaque thème le nombre de fichiers MOCA-O et Open Data">
                                     <ResponsiveContainer width="100%" height="100%">
-                                        <BarChart data={yearData} margin={{ top: 5, right: 10, left: -10, bottom: 5 }}>
-                                            <CartesianGrid strokeDasharray="3 3" stroke="#f1f5f9" vertical={false} />
-                                            <XAxis dataKey="annee" tick={{ fontSize: 11, fill: "#94a3b8" }} axisLine={false} tickLine={false} />
-                                            <YAxis tick={{ fontSize: 11, fill: "#94a3b8" }} axisLine={false} tickLine={false} allowDecimals={false} />
+                                        <BarChart data={themeSourceData} layout="vertical" margin={{ top: 0, right: 20, left: 0, bottom: 0 }} barGap={2}>
+                                            <CartesianGrid strokeDasharray="3 3" stroke="#f1f5f9" horizontal={false} />
+                                            <XAxis type="number" tick={{ fontSize: 11, fill: "#94a3b8" }} axisLine={false} tickLine={false} allowDecimals={false} />
+                                            <YAxis
+                                                type="category" dataKey="name"
+                                                tick={{ fontSize: 10, fill: "#64748b" }}
+                                                axisLine={false} tickLine={false}
+                                                width={130}
+                                            />
                                             <ReTooltip content={<CustomTooltip />} />
+                                            <Legend
+                                                verticalAlign="top" align="right" height={28}
+                                                formatter={(value: string) => <span className="text-xs text-gray-600">{value}</span>}
+                                            />
                                             <Bar
                                                 dataKey="MOCA-O" name="MOCA-O"
-                                                stackId="a" fill={C.darkBlue}
-                                                radius={[0, 0, 0, 0]}
+                                                fill={C.darkBlue} radius={[0, 4, 4, 0]}
                                                 animationDuration={1200}
                                             />
                                             <Bar
                                                 dataKey="Open Data" name="Open Data"
-                                                stackId="a" fill={C.teal}
-                                                radius={[4, 4, 0, 0]}
+                                                fill={C.teal} radius={[0, 4, 4, 0]}
                                                 animationDuration={1200}
-                                                animationBegin={300}
-                                            />
-                                            <Legend
-                                                verticalAlign="top" align="right" height={30}
-                                                formatter={(value: string) => <span className="text-xs text-gray-600">{value}</span>}
+                                                animationBegin={200}
                                             />
                                         </BarChart>
                                     </ResponsiveContainer>
