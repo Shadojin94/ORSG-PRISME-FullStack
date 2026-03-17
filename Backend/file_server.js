@@ -54,7 +54,8 @@ let pbAdmin = null;
 let pbAdminReady = false;
 
 async function getPbAdmin() {
-    if (pbAdminReady && pbAdmin) return pbAdmin;
+    // Re-auth if token expired or not ready
+    if (pbAdminReady && pbAdmin && pbAdmin.authStore.isValid) return pbAdmin;
     pbAdmin = new PocketBase(PB_URL);
     if (PB_ADMIN_EMAIL && PB_ADMIN_PASSWORD) {
         try {
@@ -63,11 +64,10 @@ async function getPbAdmin() {
             console.log('   PocketBase admin authenticated');
         } catch (e) {
             console.error(`   PocketBase admin auth failed for ${PB_ADMIN_EMAIL} at ${PB_URL}:`, e.message);
-            console.error('   Check POCKETBASE_ADMIN_EMAIL and POCKETBASE_ADMIN_PASSWORD in .env');
             pbAdminReady = false;
         }
     } else {
-        console.error('   PocketBase admin credentials not configured (POCKETBASE_ADMIN_EMAIL / POCKETBASE_ADMIN_PASSWORD)');
+        console.error('   PocketBase admin credentials not configured');
     }
     return pbAdmin;
 }
@@ -853,7 +853,7 @@ except Exception as e:
                     pbOk = true;
                 }
             } catch (e) {
-                console.error('[AUTH] PocketBase OTP flow failed:', e.message);
+                console.error('[AUTH] PocketBase OTP flow failed:', e.message, e.response || '');
             }
 
             // Fallback: PocketBase unavailable — dev bypass mode

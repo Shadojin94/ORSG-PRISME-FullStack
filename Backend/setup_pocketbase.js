@@ -109,7 +109,7 @@ async function main() {
                     { name: 'email', type: 'text', required: true },
                     { name: 'code', type: 'text', required: true },
                     { name: 'expires_at', type: 'date', required: true },
-                    { name: 'used', type: 'bool', required: true },
+                    { name: 'used', type: 'bool', required: false },
                 ],
                 listRule: null,   // admin only
                 viewRule: null,
