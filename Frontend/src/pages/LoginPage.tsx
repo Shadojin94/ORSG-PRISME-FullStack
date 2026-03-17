@@ -14,6 +14,7 @@ export function LoginPage() {
     const [code, setCode] = useState("")
     const [videoLoaded, setVideoLoaded] = useState(false)
     const [error, setError] = useState("")
+    const [isDevCode, setIsDevCode] = useState(false)
 
     // Redirect if already authenticated
     useEffect(() => {
@@ -43,6 +44,9 @@ export function LoginPage() {
             // Dev mode: auto-fill the code if returned by server
             if (result.dev_code) {
                 setCode(result.dev_code)
+                setIsDevCode(true)
+            } else {
+                setIsDevCode(false)
             }
         } else {
             setError(result.error || "Erreur lors de l'envoi du code")
@@ -195,7 +199,7 @@ export function LoginPage() {
                                 </div>
                                 <h3 className="text-xl font-bold text-white">Code envoye !</h3>
                                 <p className="text-sm text-gray-300 mt-2">
-                                    {code.length === 6 ? (
+                                    {isDevCode ? (
                                         <>Code pre-rempli automatiquement<br /><span className="text-xs text-amber-400">(mode dev — SMTP non configure)</span></>
                                     ) : (
                                         <>Un code a 6 chiffres a ete envoye a <br />

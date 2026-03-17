@@ -53,14 +53,19 @@ const SMTP_FROM = process.env.SMTP_FROM || 'Data Visus ORSG <noreply@orsg.fr>';
 let pbAdmin = null;
 let pbAdminReady = false;
 
+let pbAdminLastAuth = 0;
+const PB_AUTH_TTL = 10 * 60 * 1000; // Re-auth every 10 minutes
+
 async function getPbAdmin() {
-    // Re-auth if token expired or not ready
-    if (pbAdminReady && pbAdmin && pbAdmin.authStore.isValid) return pbAdmin;
+    const now = Date.now();
+    // Re-auth if: not ready, token stale, or TTL expired
+    if (pbAdminReady && pbAdmin && (now - pbAdminLastAuth) < PB_AUTH_TTL) return pbAdmin;
     pbAdmin = new PocketBase(PB_URL);
     if (PB_ADMIN_EMAIL && PB_ADMIN_PASSWORD) {
         try {
             await pbAdmin.admins.authWithPassword(PB_ADMIN_EMAIL, PB_ADMIN_PASSWORD);
             pbAdminReady = true;
+            pbAdminLastAuth = now;
             console.log('   PocketBase admin authenticated');
         } catch (e) {
             console.error(`   PocketBase admin auth failed for ${PB_ADMIN_EMAIL} at ${PB_URL}:`, e.message);
