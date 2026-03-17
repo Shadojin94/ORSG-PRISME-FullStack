@@ -1,121 +1,89 @@
-import { useState, useEffect } from "react"
-import { Users, Search, MoreVertical, CheckCircle2, XCircle, UserPlus, Shield, Settings, ToggleLeft, ToggleRight, Mail, Calendar } from "lucide-react"
+import { useState, useEffect, useCallback } from "react"
+import { useNavigate } from "react-router-dom"
+import { Users, Search, MoreVertical, CheckCircle2, XCircle, UserPlus, Shield, Mail, Calendar, X, Loader2 } from "lucide-react"
 import { cn } from "@/lib/utils"
+import { useAuth } from "@/hooks/useAuth"
+import { pb, roleLabelFr } from "@/lib/pocketbase"
+import type { PrismeUser } from "@/lib/pocketbase"
 
-// 5 fictitious users for demo
-const DEMO_USERS = [
-    {
-        id: "1",
-        name: "Dr. Marie Dupont",
-        email: "marie.dupont@orsg-ctps.fr",
-        role: "Administrateur",
-        status: "active",
-        lastLogin: "22/01/2026 09:30",
-        department: "Direction"
-    },
-    {
-        id: "2",
-        name: "Jean-Pierre Martin",
-        email: "jp.martin@orsg-ctps.fr",
-        role: "Expert",
-        status: "active",
-        lastLogin: "21/01/2026 14:15",
-        department: "Études & Analyses"
-    },
-    {
-        id: "3",
-        name: "Sophie Bernard",
-        email: "sophie.bernard@orsg-ctps.fr",
-        role: "Analyste",
-        status: "active",
-        lastLogin: "20/01/2026 11:45",
-        department: "Data & Statistiques"
-    },
-    {
-        id: "4",
-        name: "Thomas Leroy",
-        email: "thomas.leroy@orsg-ctps.fr",
-        role: "Utilisateur",
-        status: "active",
-        lastLogin: "18/01/2026 16:00",
-        department: "Communication"
-    },
-    {
-        id: "5",
-        name: "Claire Moreau",
-        email: "claire.moreau@externe.fr",
-        role: "Invité",
-        status: "inactive",
-        lastLogin: "10/01/2026 10:30",
-        department: "Consultant Externe"
-    },
-]
+const ROLE_OPTIONS = ['admin', 'expert', 'analyste', 'utilisateur', 'invite'] as const
 
 export function AdminUsersPage() {
-    const [users, setUsers] = useState<typeof DEMO_USERS>([])
+    const { isAdmin } = useAuth()
+    const navigate = useNavigate()
+    const [users, setUsers] = useState<PrismeUser[]>([])
     const [searchTerm, setSearchTerm] = useState("")
-    const [simulationMode, setSimulationMode] = useState(true)
-    const [loading, setLoading] = useState(false)
+    const [loading, setLoading] = useState(true)
+    const [showCreateModal, setShowCreateModal] = useState(false)
+    const [editingUser, setEditingUser] = useState<PrismeUser | null>(null)
+    const [menuOpen, setMenuOpen] = useState<string | null>(null)
 
+    // Redirect non-admin
     useEffect(() => {
-        loadUsers()
-    }, [simulationMode])
+        if (!isAdmin) navigate('/dashboard', { replace: true })
+    }, [isAdmin, navigate])
 
-    async function loadUsers() {
+    const loadUsers = useCallback(async () => {
         setLoading(true)
+        try {
+            const records = await pb.collection('users').getFullList<PrismeUser>({ sort: '-created' })
+            setUsers(records)
+        } catch (err) {
+            console.error("Error loading users:", err)
+            setUsers([])
+        }
+        setLoading(false)
+    }, [])
 
-        if (simulationMode) {
-            // Use demo data in simulation mode
-            setTimeout(() => {
-                setUsers(DEMO_USERS)
-                setLoading(false)
-            }, 300)
-        } else {
-            // Try to load from PocketBase (will likely fail without server)
-            try {
-                // In real mode, we would fetch from PocketBase
-                // For now, show empty state
-                setUsers([])
-                setLoading(false)
-            } catch (err) {
-                console.error("Error loading users:", err)
-                setUsers([])
-                setLoading(false)
-            }
+    useEffect(() => { loadUsers() }, [loadUsers])
+
+    const toggleStatus = async (user: PrismeUser) => {
+        const newStatus = user.status === 'active' ? 'inactive' : 'active'
+        try {
+            await pb.collection('users').update(user.id, { status: newStatus })
+            setUsers(prev => prev.map(u => u.id === user.id ? { ...u, status: newStatus } : u))
+        } catch (err) {
+            console.error("Error toggling status:", err)
+            alert("Erreur lors du changement de statut.")
         }
     }
 
-    const toggleStatus = (id: string) => {
-        setUsers(users.map(u =>
-            u.id === id ? { ...u, status: u.status === 'active' ? 'inactive' : 'active' } : u
-        ))
+    const updateRole = async (userId: string, newRole: string) => {
+        try {
+            await pb.collection('users').update(userId, { role: newRole })
+            setUsers(prev => prev.map(u => u.id === userId ? { ...u, role: newRole as PrismeUser['role'] } : u))
+            setEditingUser(null)
+        } catch (err) {
+            console.error("Error updating role:", err)
+            alert("Erreur lors du changement de role.")
+        }
     }
 
     const filteredUsers = users.filter(user =>
-        user.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        user.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        user.role.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        user.department.toLowerCase().includes(searchTerm.toLowerCase())
+        (user.name || '').toLowerCase().includes(searchTerm.toLowerCase()) ||
+        (user.email || '').toLowerCase().includes(searchTerm.toLowerCase()) ||
+        roleLabelFr(user.role).toLowerCase().includes(searchTerm.toLowerCase()) ||
+        (user.department || '').toLowerCase().includes(searchTerm.toLowerCase())
     )
 
     const getRoleBadgeColor = (role: string) => {
         switch (role) {
-            case 'Administrateur': return 'bg-purple-100 text-purple-800 border-purple-200'
-            case 'Expert': return 'bg-blue-100 text-blue-800 border-blue-200'
-            case 'Analyste': return 'bg-cyan-100 text-cyan-800 border-cyan-200'
-            case 'Utilisateur': return 'bg-gray-100 text-gray-800 border-gray-200'
-            case 'Invité': return 'bg-yellow-100 text-yellow-800 border-yellow-200'
+            case 'admin': return 'bg-purple-100 text-purple-800 border-purple-200'
+            case 'expert': return 'bg-blue-100 text-blue-800 border-blue-200'
+            case 'analyste': return 'bg-cyan-100 text-cyan-800 border-cyan-200'
+            case 'utilisateur': return 'bg-gray-100 text-gray-800 border-gray-200'
+            case 'invite': return 'bg-yellow-100 text-yellow-800 border-yellow-200'
             default: return 'bg-gray-100 text-gray-800 border-gray-200'
         }
     }
 
     const getRoleAvatarColor = (role: string) => {
         switch (role) {
-            case 'Administrateur': return 'bg-purple-500'
-            case 'Expert': return 'bg-blue-500'
-            case 'Analyste': return 'bg-cyan-500'
-            case 'Utilisateur': return 'bg-gray-500'
-            case 'Invité': return 'bg-yellow-500'
+            case 'admin': return 'bg-purple-500'
+            case 'expert': return 'bg-blue-500'
+            case 'analyste': return 'bg-cyan-500'
+            case 'utilisateur': return 'bg-gray-500'
+            case 'invite': return 'bg-yellow-500'
             default: return 'bg-gray-400'
         }
     }
@@ -127,52 +95,15 @@ export function AdminUsersPage() {
                 <div>
                     <h1 className="text-3xl font-bold text-[#1a4b8c] mb-2">Gestion des Utilisateurs</h1>
                     <p className="text-gray-600">
-                        Administration des accès et des rôles de la plateforme.
+                        Administration des acces et des roles de la plateforme.
                     </p>
                 </div>
-                <button className="bg-[#3bb3a9] hover:bg-[#2f9a91] text-white px-4 py-2 rounded-lg text-sm font-bold shadow-md transition-colors flex items-center gap-2">
+                <button
+                    onClick={() => setShowCreateModal(true)}
+                    className="bg-[#3bb3a9] hover:bg-[#2f9a91] text-white px-4 py-2 rounded-lg text-sm font-bold shadow-md transition-colors flex items-center gap-2"
+                >
                     <UserPlus className="w-4 h-4" /> Nouvel Utilisateur
                 </button>
-            </div>
-
-            {/* Simulation Mode Toggle */}
-            <div className="bg-gradient-to-r from-amber-50 to-orange-50 border border-amber-200 rounded-xl p-4 mb-6">
-                <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-3">
-                        <div className="w-10 h-10 bg-amber-100 rounded-lg flex items-center justify-center">
-                            <Settings className="w-5 h-5 text-amber-600" />
-                        </div>
-                        <div>
-                            <h3 className="font-bold text-amber-900">Mode Simulation</h3>
-                            <p className="text-sm text-amber-700">
-                                {simulationMode
-                                    ? "Données de démonstration actives - Aucune modification réelle"
-                                    : "Mode production - Connexion à la base de données requise"}
-                            </p>
-                        </div>
-                    </div>
-                    <button
-                        onClick={() => setSimulationMode(!simulationMode)}
-                        className={cn(
-                            "flex items-center gap-2 px-4 py-2 rounded-lg font-bold text-sm transition-all",
-                            simulationMode
-                                ? "bg-amber-500 text-white hover:bg-amber-600"
-                                : "bg-gray-200 text-gray-700 hover:bg-gray-300"
-                        )}
-                    >
-                        {simulationMode ? (
-                            <>
-                                <ToggleRight className="w-5 h-5" />
-                                Simulation Active
-                            </>
-                        ) : (
-                            <>
-                                <ToggleLeft className="w-5 h-5" />
-                                Simulation Désactivée
-                            </>
-                        )}
-                    </button>
-                </div>
             </div>
 
             {/* Stats */}
@@ -190,7 +121,7 @@ export function AdminUsersPage() {
                     <div className="text-xs text-gray-500">Inactifs</div>
                 </div>
                 <div className="bg-white rounded-xl p-4 border border-gray-200 shadow-sm">
-                    <div className="text-2xl font-bold text-purple-500">{users.filter(u => u.role === 'Administrateur').length}</div>
+                    <div className="text-2xl font-bold text-purple-500">{users.filter(u => u.role === 'admin').length}</div>
                     <div className="text-xs text-gray-500">Administrateurs</div>
                 </div>
             </div>
@@ -227,9 +158,7 @@ export function AdminUsersPage() {
                         </div>
                         <h3 className="font-bold text-gray-700 mb-2">Aucun utilisateur</h3>
                         <p className="text-gray-500 text-sm max-w-md mx-auto">
-                            {simulationMode
-                                ? "Activez le mode simulation pour voir les utilisateurs de démonstration."
-                                : "Connectez-vous à la base de données pour gérer les utilisateurs."}
+                            Aucun utilisateur ne correspond a votre recherche.
                         </p>
                     </div>
                 ) : (
@@ -241,12 +170,12 @@ export function AdminUsersPage() {
                                         "w-12 h-12 rounded-full flex items-center justify-center font-bold text-white text-lg",
                                         getRoleAvatarColor(user.role)
                                     )}>
-                                        {user.name.split(' ').map(n => n[0]).join('')}
+                                        {(user.name || '?').split(' ').map(n => n[0]).join('').slice(0, 2)}
                                     </div>
                                     <div>
                                         <div className="font-bold text-gray-900 flex items-center gap-2">
-                                            {user.name}
-                                            {user.role === 'Administrateur' && (
+                                            {user.name || user.email}
+                                            {user.role === 'admin' && (
                                                 <Shield className="w-4 h-4 text-purple-500" />
                                             )}
                                         </div>
@@ -255,12 +184,16 @@ export function AdminUsersPage() {
                                                 <Mail className="w-3 h-3" />
                                                 {user.email}
                                             </span>
-                                            <span className="text-gray-300">•</span>
-                                            <span>{user.department}</span>
+                                            {user.department && (
+                                                <>
+                                                    <span className="text-gray-300">&bull;</span>
+                                                    <span>{user.department}</span>
+                                                </>
+                                            )}
                                         </div>
                                         <div className="flex items-center gap-1 text-xs text-gray-400 mt-1">
                                             <Calendar className="w-3 h-3" />
-                                            Dernière connexion: {user.lastLogin}
+                                            Cree le: {new Date(user.created).toLocaleDateString('fr-FR')}
                                         </div>
                                     </div>
                                 </div>
@@ -270,11 +203,11 @@ export function AdminUsersPage() {
                                         "inline-flex items-center px-3 py-1 rounded-full text-xs font-medium border",
                                         getRoleBadgeColor(user.role)
                                     )}>
-                                        {user.role}
+                                        {roleLabelFr(user.role)}
                                     </span>
 
                                     <button
-                                        onClick={() => toggleStatus(user.id)}
+                                        onClick={() => toggleStatus(user)}
                                         className={cn(
                                             "flex items-center gap-2 px-4 py-1.5 rounded-full text-xs font-bold transition-colors",
                                             user.status === 'active'
@@ -283,19 +216,37 @@ export function AdminUsersPage() {
                                         )}
                                     >
                                         {user.status === 'active' ? (
-                                            <>
-                                                <CheckCircle2 className="w-4 h-4" /> Actif
-                                            </>
+                                            <><CheckCircle2 className="w-4 h-4" /> Actif</>
                                         ) : (
-                                            <>
-                                                <XCircle className="w-4 h-4" /> Inactif
-                                            </>
+                                            <><XCircle className="w-4 h-4" /> Inactif</>
                                         )}
                                     </button>
 
-                                    <button className="text-gray-400 hover:text-gray-600 p-2 rounded-lg hover:bg-gray-100">
-                                        <MoreVertical className="w-5 h-5" />
-                                    </button>
+                                    <div className="relative">
+                                        <button
+                                            onClick={() => setMenuOpen(menuOpen === user.id ? null : user.id)}
+                                            className="text-gray-400 hover:text-gray-600 p-2 rounded-lg hover:bg-gray-100"
+                                        >
+                                            <MoreVertical className="w-5 h-5" />
+                                        </button>
+                                        {menuOpen === user.id && (
+                                            <div className="absolute right-0 top-full mt-1 bg-white rounded-lg shadow-lg border border-gray-200 py-2 z-20 w-48">
+                                                <div className="px-3 py-1 text-xs font-bold text-gray-400 uppercase">Changer le role</div>
+                                                {ROLE_OPTIONS.map(role => (
+                                                    <button
+                                                        key={role}
+                                                        onClick={() => { updateRole(user.id, role); setMenuOpen(null); }}
+                                                        className={cn(
+                                                            "w-full text-left px-3 py-1.5 text-sm hover:bg-gray-50",
+                                                            user.role === role ? "text-orsg-blue font-bold" : "text-gray-700"
+                                                        )}
+                                                    >
+                                                        {roleLabelFr(role)}
+                                                    </button>
+                                                ))}
+                                            </div>
+                                        )}
+                                    </div>
                                 </div>
                             </div>
                         ))}
@@ -304,24 +255,144 @@ export function AdminUsersPage() {
 
             </div>
 
-            {/* Info Card */}
-            {simulationMode && (
-                <div className="mt-6 bg-[#3bb3a9]/10 border border-[#3bb3a9]/20 rounded-xl p-4">
-                    <div className="flex items-start gap-3">
-                        <div className="w-8 h-8 bg-[#3bb3a9]/20 rounded-lg flex items-center justify-center flex-shrink-0">
-                            <Shield className="w-4 h-4 text-[#3bb3a9]" />
+            {/* Create User Modal */}
+            {showCreateModal && (
+                <CreateUserModal
+                    onClose={() => setShowCreateModal(false)}
+                    onCreated={() => { setShowCreateModal(false); loadUsers(); }}
+                />
+            )}
+
+            {/* Close menu on outside click */}
+            {menuOpen && (
+                <div className="fixed inset-0 z-10" onClick={() => setMenuOpen(null)} />
+            )}
+
+            {editingUser && (
+                <div className="fixed inset-0 z-10" onClick={() => setEditingUser(null)} />
+            )}
+        </div>
+    )
+}
+
+// ===== Create User Modal =====
+
+function CreateUserModal({ onClose, onCreated }: { onClose: () => void; onCreated: () => void }) {
+    const [form, setForm] = useState({
+        name: '',
+        email: '',
+        role: 'utilisateur' as string,
+        department: '',
+        organization: 'ORSG-CTPS',
+    })
+    const [creating, setCreating] = useState(false)
+    const [error, setError] = useState('')
+
+    const handleCreate = async () => {
+        if (!form.name.trim() || !form.email.trim()) {
+            setError("Le nom et l'email sont obligatoires.")
+            return
+        }
+        setCreating(true)
+        setError('')
+        try {
+            // Create user via backend API (which handles password generation)
+            const res = await fetch('/api/auth/create-user', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(form),
+            })
+            const data = await res.json()
+            if (!res.ok || !data.success) {
+                setError(data.error || "Erreur lors de la creation de l'utilisateur.")
+                setCreating(false)
+                return
+            }
+            onCreated()
+        } catch {
+            setError("Impossible de contacter le serveur.")
+            setCreating(false)
+        }
+    }
+
+    return (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
+            <div className="bg-white rounded-2xl shadow-2xl w-full max-w-md p-6 mx-4">
+                <div className="flex items-center justify-between mb-6">
+                    <h3 className="text-xl font-bold text-gray-900">Nouvel Utilisateur</h3>
+                    <button onClick={onClose} className="p-2 hover:bg-gray-100 rounded-lg">
+                        <X className="w-5 h-5 text-gray-500" />
+                    </button>
+                </div>
+
+                <div className="space-y-4">
+                    <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-1">Nom complet *</label>
+                        <input
+                            type="text"
+                            value={form.name}
+                            onChange={(e) => setForm({ ...form, name: e.target.value })}
+                            className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-orsg-blue/20 outline-none"
+                            placeholder="Prenom Nom"
+                        />
+                    </div>
+                    <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-1">Email *</label>
+                        <input
+                            type="email"
+                            value={form.email}
+                            onChange={(e) => setForm({ ...form, email: e.target.value })}
+                            className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-orsg-blue/20 outline-none"
+                            placeholder="prenom.nom@orsg.fr"
+                        />
+                    </div>
+                    <div className="grid grid-cols-2 gap-4">
+                        <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-1">Role</label>
+                            <select
+                                value={form.role}
+                                onChange={(e) => setForm({ ...form, role: e.target.value })}
+                                className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-orsg-blue/20 outline-none"
+                            >
+                                {ROLE_OPTIONS.map(r => (
+                                    <option key={r} value={r}>{roleLabelFr(r)}</option>
+                                ))}
+                            </select>
                         </div>
                         <div>
-                            <h4 className="font-bold text-[#1a4b8c] mb-1">Mode Démonstration</h4>
-                            <p className="text-sm text-gray-600">
-                                Les modifications effectuées en mode simulation ne sont pas persistées.
-                                Vous pouvez activer/désactiver les utilisateurs pour tester l'interface.
-                                Pour gérer les utilisateurs réels, désactivez le mode simulation et connectez-vous à PocketBase.
-                            </p>
+                            <label className="block text-sm font-medium text-gray-700 mb-1">Departement</label>
+                            <input
+                                type="text"
+                                value={form.department}
+                                onChange={(e) => setForm({ ...form, department: e.target.value })}
+                                className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-orsg-blue/20 outline-none"
+                                placeholder="Direction"
+                            />
                         </div>
                     </div>
+
+                    {error && (
+                        <p className="text-sm text-red-600 bg-red-50 p-2 rounded-lg">{error}</p>
+                    )}
+
+                    <div className="flex gap-3 pt-2">
+                        <button
+                            onClick={onClose}
+                            className="flex-1 px-4 py-2 border border-gray-300 rounded-lg text-gray-700 font-medium hover:bg-gray-50"
+                        >
+                            Annuler
+                        </button>
+                        <button
+                            onClick={handleCreate}
+                            disabled={creating}
+                            className="flex-1 px-4 py-2 bg-[#3bb3a9] text-white rounded-lg font-bold hover:bg-[#2f9a91] disabled:opacity-60 flex items-center justify-center gap-2"
+                        >
+                            {creating ? <Loader2 className="w-4 h-4 animate-spin" /> : <UserPlus className="w-4 h-4" />}
+                            Creer
+                        </button>
+                    </div>
                 </div>
-            )}
+            </div>
         </div>
     )
 }

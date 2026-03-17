@@ -1,5 +1,7 @@
 import { Link, useLocation, useNavigate } from "react-router-dom"
 import { cn } from "@/lib/utils"
+import { useAuth } from "@/hooks/useAuth"
+import { userInitials, roleLabelFr } from "@/lib/pocketbase"
 import {
     Home,
     Layers,
@@ -12,15 +14,6 @@ import {
     X
 } from "lucide-react"
 
-const menuItems = [
-    { icon: Home, label: "Accueil", path: "/dashboard" },
-    { icon: Layers, label: "Thématiques", path: "/generate" },
-    { icon: History, label: "Historique", path: "/history" },
-    { icon: BookOpen, label: "Référentiel BDI", path: "/docs" },
-    { icon: Users, label: "Gestion Utilisateurs", path: "/admin" },
-    { icon: LifeBuoy, label: "Aide & Support", path: "/support" },
-]
-
 interface SidebarProps {
     isOpen?: boolean
     onClose?: () => void
@@ -29,21 +22,33 @@ interface SidebarProps {
 export function Sidebar({ isOpen = false, onClose }: SidebarProps) {
     const location = useLocation()
     const navigate = useNavigate()
+    const { user, isAdmin, logout } = useAuth()
+
+    const menuItems = [
+        { icon: Home, label: "Accueil", path: "/dashboard" },
+        { icon: Layers, label: "Thematiques", path: "/generate" },
+        { icon: History, label: "Historique", path: "/history" },
+        { icon: BookOpen, label: "Referentiel BDI", path: "/docs" },
+        ...(isAdmin ? [{ icon: Users, label: "Gestion Utilisateurs", path: "/admin" }] : []),
+        { icon: LifeBuoy, label: "Aide & Support", path: "/support" },
+    ]
 
     const handleNavClick = (path: string) => {
-        // Clicking "Thématiques" always resets generator to step 1
         if (path === '/generate') {
-            try { sessionStorage.removeItem('prisme_generator_state'); } catch (e) { }
+            try { sessionStorage.removeItem('prisme_generator_state'); } catch (_e) { /* ignore */ }
         }
         onClose?.()
     }
 
     const handleLogout = () => {
-        localStorage.removeItem("demo_authenticated")
-        sessionStorage.clear()
+        logout()
         onClose?.()
         navigate("/login", { replace: true })
     }
+
+    const displayName = user?.name || 'Utilisateur'
+    const displayRole = user ? roleLabelFr(user.role) : 'Mon Profil'
+    const initials = userInitials(user)
 
     return (
         <div className={cn(
@@ -110,20 +115,24 @@ export function Sidebar({ isOpen = false, onClose }: SidebarProps) {
                 >
                     <div className="relative">
                         <div className="w-10 h-10 rounded-full bg-gradient-to-br from-[#3bb3a9] to-[#2f9a91] flex items-center justify-center border-2 border-white/20 group-hover:border-white transition-colors shadow-lg">
-                            <UserCircle className="w-6 h-6 text-white" />
+                            {user ? (
+                                <span className="text-sm font-bold text-white">{initials}</span>
+                            ) : (
+                                <UserCircle className="w-6 h-6 text-white" />
+                            )}
                         </div>
                         <span className="absolute bottom-0 right-0 w-3 h-3 bg-green-400 border-2 border-[#153e75] rounded-full"></span>
                     </div>
                     <div className="overflow-hidden flex-1">
-                        <p className="text-sm font-bold text-white truncate">Expert ORSG</p>
-                        <p className="text-xs text-white/50 group-hover:text-white/80 transition-colors">Mon Profil</p>
+                        <p className="text-sm font-bold text-white truncate">{displayName}</p>
+                        <p className="text-xs text-white/50 group-hover:text-white/80 transition-colors">{displayRole}</p>
                     </div>
                 </Link>
                 <button
                     onClick={handleLogout}
                     className="flex items-center justify-center gap-2 mt-3 p-2 w-full text-xs font-medium text-white/60 hover:text-white hover:bg-red-500/20 rounded-lg transition-all border border-transparent hover:border-red-500/30 cursor-pointer"
                 >
-                    <LogOut className="w-3 h-3" /> Déconnexion
+                    <LogOut className="w-3 h-3" /> Deconnexion
                 </button>
             </div>
         </div>

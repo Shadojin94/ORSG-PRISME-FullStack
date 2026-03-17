@@ -1,14 +1,22 @@
 # PRISME - Dockerfile for production deployment
-# Architecture: Node.js (file_server.js) + Python (generate_from_opendata.py + prisme_engine.py)
+# Architecture: Node.js (file_server.js) + Python (generate_from_opendata.py + prisme_engine.py) + PocketBase
 
 FROM node:20-slim
 
 WORKDIR /app
 
-# Install Python 3 + curl for data downloads
+# Install Python 3 + curl + unzip for data downloads and PocketBase
 RUN apt-get update && \
-    apt-get install -y --no-install-recommends python3 python3-pip curl && \
+    apt-get install -y --no-install-recommends python3 python3-pip curl unzip && \
     rm -rf /var/lib/apt/lists/*
+
+# Download PocketBase (Linux AMD64)
+ARG PB_VERSION=0.22.27
+RUN curl -fsSL "https://github.com/pocketbase/pocketbase/releases/download/v${PB_VERSION}/pocketbase_${PB_VERSION}_linux_amd64.zip" \
+    -o /tmp/pocketbase.zip && \
+    unzip /tmp/pocketbase.zip -d /app/pocketbase && \
+    chmod +x /app/pocketbase/pocketbase && \
+    rm /tmp/pocketbase.zip
 
 # Python dependencies
 COPY requirements.txt .
@@ -37,21 +45,22 @@ COPY Backend/inputs/opendata/superficie_communes.json ./Backend/_seed_data/super
 COPY Frontend/dist/ ./Frontend/dist/
 
 # Create directories
-RUN mkdir -p Backend/output Backend/inputs/opendata
+RUN mkdir -p Backend/output Backend/inputs/opendata pb_data
 
-# Entrypoint script (downloads data on first run, then starts server)
+# Entrypoint script (starts PocketBase + downloads data + starts server)
 COPY entrypoint.sh ./
 RUN chmod +x entrypoint.sh
 
 # Environment
 ENV PYTHON_EXE=python3
 ENV PORT=8000
+ENV POCKETBASE_URL=http://127.0.0.1:8090
 
-# Persistent data volume (OpenData inputs survive container restarts)
-VOLUME ["/app/Backend/inputs/opendata"]
+# Persistent data volumes
+VOLUME ["/app/Backend/inputs/opendata", "/app/pb_data"]
 
 # Match the port cercleonline expects
 EXPOSE 8000
 
-# Entrypoint: download missing data then start server
+# Entrypoint: start PocketBase + download missing data + start server
 ENTRYPOINT ["./entrypoint.sh"]

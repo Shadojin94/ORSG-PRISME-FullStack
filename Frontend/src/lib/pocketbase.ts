@@ -1,10 +1,66 @@
 import PocketBase from 'pocketbase';
+import type { RecordModel } from 'pocketbase';
 
-// Connect to the local PocketBase server
-// In production, this URL should probably be in an environment variable
-export const pb = new PocketBase('http://127.0.0.1:8090');
+// PocketBase URL configurable via env
+const PB_URL = import.meta.env.VITE_PB_URL || 'http://127.0.0.1:8090';
 
-// Optional: Global error handler or auth change listener
-pb.authStore.onChange((token, model) => {
-    console.log('Auth Changed:', { token, model });
-});
+export const pb = new PocketBase(PB_URL);
+
+// Disable auto-cancellation (causes issues with React strict mode)
+pb.autoCancellation(false);
+
+// ===== TypeScript Interfaces =====
+
+export interface PrismeUser extends RecordModel {
+    email: string;
+    name: string;
+    phone: string;
+    organization: string;
+    department: string;
+    role: 'admin' | 'expert' | 'analyste' | 'utilisateur' | 'invite';
+    status: 'active' | 'inactive';
+    avatar: string;
+}
+
+export interface SupportTicket extends RecordModel {
+    subject: string;
+    description: string;
+    priority: 'low' | 'medium' | 'high' | 'critical';
+    category: 'account' | 'generation' | 'bug' | 'question' | 'other';
+    status: 'open' | 'in_progress' | 'resolved' | 'closed';
+    user: string;
+    admin_notes: string;
+}
+
+// ===== Helpers =====
+
+export function currentUser(): PrismeUser | null {
+    if (!pb.authStore.isValid) return null;
+    return (pb.authStore as any).record as PrismeUser;
+}
+
+export function isAdmin(): boolean {
+    const user = currentUser();
+    return user?.role === 'admin';
+}
+
+export function userInitials(user: PrismeUser | null): string {
+    if (!user?.name) return '?';
+    return user.name
+        .split(' ')
+        .map(n => n[0])
+        .join('')
+        .toUpperCase()
+        .slice(0, 2);
+}
+
+export function roleLabelFr(role: string): string {
+    const labels: Record<string, string> = {
+        admin: 'Administrateur',
+        expert: 'Expert',
+        analyste: 'Analyste',
+        utilisateur: 'Utilisateur',
+        invite: 'Invité',
+    };
+    return labels[role] || role;
+}

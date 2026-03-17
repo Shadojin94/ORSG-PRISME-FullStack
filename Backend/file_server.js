@@ -1,13 +1,31 @@
 /**
  * PRISME File Server with On-Demand Generation + Metadata API
- * Handles file generation (via Python), file serving, and config metadata
+ * Handles file generation (via Python), file serving, config metadata, and OTP auth
  */
 
 const http = require('http');
 const fs = require('fs');
 const path = require('path');
+const crypto = require('crypto');
 const { spawn } = require('child_process');
 const Busboy = require('busboy');
+const PocketBase = require('pocketbase').default || require('pocketbase');
+
+// Load .env file if present (simple parser, no dotenv dependency)
+const envPath = path.join(__dirname, '.env');
+if (fs.existsSync(envPath)) {
+    const envContent = fs.readFileSync(envPath, 'utf8');
+    for (const line of envContent.split('\n')) {
+        const trimmed = line.trim();
+        if (!trimmed || trimmed.startsWith('#')) continue;
+        const eqIdx = trimmed.indexOf('=');
+        if (eqIdx > 0) {
+            const key = trimmed.slice(0, eqIdx).trim();
+            const val = trimmed.slice(eqIdx + 1).trim().replace(/^["']|["']$/g, '');
+            if (!process.env[key]) process.env[key] = val;
+        }
+    }
+}
 
 const PORT = process.env.PORT || 3001;
 const OUTPUT_DIR = path.join(__dirname, 'output');
@@ -17,6 +35,76 @@ const IMPORT_HISTORY_FILE = path.join(CSV_SOURCES_DIR, 'import_history.json');
 const FRONTEND_DIST = path.join(__dirname, '..', 'Frontend', 'dist');
 const PYTHON_EXE = process.env.PYTHON_EXE || 'py';
 const ACTIVITY_LOG_FILE = path.join(__dirname, 'activity_log.json');
+
+// PocketBase config
+const PB_URL = process.env.POCKETBASE_URL || 'http://127.0.0.1:8090';
+const PB_ADMIN_EMAIL = process.env.POCKETBASE_ADMIN_EMAIL || '';
+const PB_ADMIN_PASSWORD = process.env.POCKETBASE_ADMIN_PASSWORD || '';
+const PB_SYSTEM_PASSWORD = process.env.PB_SYSTEM_PASSWORD || 'PrismeSystemAuth2026!';
+
+// SMTP config (optional — if absent, codes are logged to console)
+const SMTP_HOST = process.env.SMTP_HOST || '';
+const SMTP_PORT = parseInt(process.env.SMTP_PORT || '587');
+const SMTP_USER = process.env.SMTP_USER || '';
+const SMTP_PASS = process.env.SMTP_PASS || '';
+const SMTP_FROM = process.env.SMTP_FROM || 'Data Visus ORSG <noreply@orsg.fr>';
+
+// PocketBase admin client (initialized lazily)
+let pbAdmin = null;
+let pbAdminReady = false;
+
+async function getPbAdmin() {
+    if (pbAdminReady && pbAdmin) return pbAdmin;
+    pbAdmin = new PocketBase(PB_URL);
+    if (PB_ADMIN_EMAIL && PB_ADMIN_PASSWORD) {
+        try {
+            await pbAdmin.admins.authWithPassword(PB_ADMIN_EMAIL, PB_ADMIN_PASSWORD);
+            pbAdminReady = true;
+            console.log('   PocketBase admin authenticated');
+        } catch (e) {
+            console.error('   PocketBase admin auth failed:', e.message);
+            pbAdminReady = false;
+        }
+    }
+    return pbAdmin;
+}
+
+// Nodemailer (loaded lazily to not crash if not installed)
+let nodemailer = null;
+try {
+    nodemailer = require('nodemailer');
+} catch (_e) {
+    console.warn('   nodemailer not installed — OTP codes will be logged to console only');
+}
+
+async function sendEmailCode(email, code) {
+    if (!nodemailer || !SMTP_HOST || !SMTP_USER) {
+        console.log(`\n   [OTP] Code for ${email}: ${code}  (email not configured, showing in console)\n`);
+        return;
+    }
+    const transporter = nodemailer.createTransport({
+        host: SMTP_HOST,
+        port: SMTP_PORT,
+        secure: SMTP_PORT === 465,
+        auth: { user: SMTP_USER, pass: SMTP_PASS },
+    });
+    await transporter.sendMail({
+        from: SMTP_FROM,
+        to: email,
+        subject: `Votre code de connexion Data Visus : ${code}`,
+        text: `Votre code de connexion Data Visus est : ${code}\n\nCe code expire dans 5 minutes.\nSi vous n'avez pas demande ce code, ignorez ce message.`,
+        html: `<div style="font-family:Arial,sans-serif;max-width:480px;margin:0 auto;padding:32px;border:1px solid #e5e7eb;border-radius:16px">
+            <h2 style="color:#1a4b8c;margin-bottom:8px">Data Visus</h2>
+            <p style="color:#374151">Votre code de connexion :</p>
+            <div style="background:#f0f9ff;border:2px solid #3bb3a9;border-radius:12px;padding:24px;text-align:center;margin:16px 0">
+                <span style="font-size:32px;font-weight:bold;letter-spacing:8px;color:#1a4b8c">${code}</span>
+            </div>
+            <p style="color:#6b7280;font-size:14px">Ce code expire dans <strong>5 minutes</strong>.</p>
+            <p style="color:#9ca3af;font-size:12px;margin-top:24px">Si vous n'avez pas demande ce code, ignorez ce message.</p>
+        </div>`,
+    });
+    console.log(`   [OTP] Code sent to ${email}`);
+}
 
 // Ensure output directory exists
 if (!fs.existsSync(OUTPUT_DIR)) {
@@ -34,6 +122,24 @@ function loadConfig() {
         console.error(`Failed to load config: ${e.message}`);
         return { datasets: {}, themeTree: [], geoLevels: {} };
     }
+}
+
+/**
+ * Read JSON body from a request
+ */
+function readJsonBody(req) {
+    return new Promise((resolve, reject) => {
+        let body = '';
+        req.on('data', chunk => { body += chunk.toString(); });
+        req.on('end', () => {
+            try {
+                resolve(body ? JSON.parse(body) : {});
+            } catch (e) {
+                reject(new Error('Invalid JSON body'));
+            }
+        });
+        req.on('error', reject);
+    });
 }
 
 function jsonResponse(res, statusCode, data) {
@@ -649,6 +755,160 @@ except Exception as e:
         return;
     }
 
+    // ========== AUTH: SEND OTP CODE ==========
+    if (urlPath === '/auth/send-code' && req.method === 'POST') {
+        try {
+            const body = await readJsonBody(req);
+            const email = (body.email || '').trim().toLowerCase();
+            if (!email) {
+                jsonResponse(res, 400, { success: false, error: 'Email requis' });
+                return;
+            }
+
+            const pb = await getPbAdmin();
+            // Check user exists and is active
+            let user;
+            try {
+                const records = await pb.collection('users').getFullList({ filter: `email="${email}"` });
+                user = records[0];
+            } catch (_e) { user = null; }
+
+            if (!user) {
+                jsonResponse(res, 404, { success: false, error: 'Aucun compte associe a cet email' });
+                return;
+            }
+            if (user.status === 'inactive') {
+                jsonResponse(res, 403, { success: false, error: 'Ce compte est desactive. Contactez un administrateur.' });
+                return;
+            }
+
+            // Generate 6-digit code
+            const code = String(crypto.randomInt(100000, 999999));
+            const expiresAt = new Date(Date.now() + 5 * 60 * 1000).toISOString();
+
+            // Store in login_codes collection
+            try {
+                await pb.collection('login_codes').create({
+                    email: email,
+                    code: code,
+                    expires_at: expiresAt,
+                    used: false,
+                });
+            } catch (e) {
+                console.error('Failed to store login code:', e.message);
+                jsonResponse(res, 500, { success: false, error: 'Erreur interne lors de la creation du code' });
+                return;
+            }
+
+            // Send email
+            try {
+                await sendEmailCode(email, code);
+            } catch (e) {
+                console.error('Failed to send email:', e.message);
+                // Code is still valid in DB, user can retry or we log it
+            }
+
+            jsonResponse(res, 200, { success: true, message: 'Code envoye' });
+        } catch (e) {
+            jsonResponse(res, 500, { success: false, error: e.message });
+        }
+        return;
+    }
+
+    // ========== AUTH: VERIFY OTP CODE ==========
+    if (urlPath === '/auth/verify-code' && req.method === 'POST') {
+        try {
+            const body = await readJsonBody(req);
+            const email = (body.email || '').trim().toLowerCase();
+            const code = (body.code || '').trim();
+
+            if (!email || !code) {
+                jsonResponse(res, 400, { success: false, error: 'Email et code requis' });
+                return;
+            }
+
+            const pb = await getPbAdmin();
+
+            // Find valid code
+            const now = new Date().toISOString();
+            let codeRecords;
+            try {
+                codeRecords = await pb.collection('login_codes').getFullList({
+                    filter: `email="${email}" && code="${code}" && used=false && expires_at>"${now}"`,
+                    sort: '-created',
+                });
+            } catch (_e) { codeRecords = []; }
+
+            if (!codeRecords || codeRecords.length === 0) {
+                jsonResponse(res, 401, { success: false, error: 'Code invalide ou expire' });
+                return;
+            }
+
+            // Mark code as used
+            try {
+                await pb.collection('login_codes').update(codeRecords[0].id, { used: true });
+            } catch (_e) { /* best effort */ }
+
+            // Authenticate user — use authWithPassword with system password
+            try {
+                const userPb = new PocketBase(PB_URL);
+                const authData = await userPb.collection('users').authWithPassword(email, PB_SYSTEM_PASSWORD);
+                jsonResponse(res, 200, {
+                    success: true,
+                    token: authData.token,
+                    record: authData.record,
+                });
+            } catch (e) {
+                console.error('PB auth failed:', e.message);
+                jsonResponse(res, 500, { success: false, error: 'Erreur d\'authentification. Contactez un administrateur.' });
+            }
+        } catch (e) {
+            jsonResponse(res, 500, { success: false, error: e.message });
+        }
+        return;
+    }
+
+    // ========== AUTH: CREATE USER (admin only) ==========
+    if (urlPath === '/auth/create-user' && req.method === 'POST') {
+        try {
+            const body = await readJsonBody(req);
+            const { name, email, role, department, organization } = body;
+
+            if (!name || !email) {
+                jsonResponse(res, 400, { success: false, error: 'Nom et email requis' });
+                return;
+            }
+
+            const pb = await getPbAdmin();
+
+            // Check if email already exists
+            const existing = await pb.collection('users').getFullList({ filter: `email="${email.trim().toLowerCase()}"` });
+            if (existing.length > 0) {
+                jsonResponse(res, 409, { success: false, error: 'Un utilisateur avec cet email existe deja' });
+                return;
+            }
+
+            const userData = {
+                email: email.trim().toLowerCase(),
+                name: name.trim(),
+                password: PB_SYSTEM_PASSWORD,
+                passwordConfirm: PB_SYSTEM_PASSWORD,
+                role: role || 'utilisateur',
+                status: 'active',
+                department: department || '',
+                organization: organization || '',
+                emailVisibility: true,
+            };
+
+            const record = await pb.collection('users').create(userData);
+            jsonResponse(res, 200, { success: true, user: record });
+        } catch (e) {
+            console.error('Create user error:', e.message);
+            jsonResponse(res, 500, { success: false, error: e.message });
+        }
+        return;
+    }
+
     // ========== STATIC FILE SERVING (Frontend dist/) ==========
     if (fs.existsSync(FRONTEND_DIST)) {
         const MIME_TYPES = {
@@ -1030,5 +1290,12 @@ server.listen(PORT, () => {
     console.log(`   - POST /delete-csv?file=X   (delete a CSV)`);
     console.log(`   - GET  /files               (metadata: filename, date, size, theme)`);
     console.log(`   - GET  /activity-log        (persistent activity logs)`);
+    console.log(`   - POST /auth/send-code      (OTP: send code by email)`);
+    console.log(`   - POST /auth/verify-code    (OTP: verify code & get token)`);
+    console.log(`   - POST /auth/create-user    (create new user)`);
+    console.log(`   PocketBase: ${PB_URL}`);
+    console.log(`   SMTP: ${SMTP_HOST ? SMTP_HOST + ':' + SMTP_PORT : '(not configured — codes in console)'}`);
     console.log(`${'='.repeat(50)}\n`);
+    // Initialize PocketBase admin connection
+    getPbAdmin().catch(e => console.warn('PB admin init deferred:', e.message));
 });

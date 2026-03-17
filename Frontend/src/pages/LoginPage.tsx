@@ -2,22 +2,27 @@ import { useState, useRef, useEffect } from "react"
 import { useNavigate } from "react-router-dom"
 import { ArrowRight, Loader2, ShieldCheck, Mail } from "lucide-react"
 import { cn } from "@/lib/utils"
+import { useAuth } from "@/hooks/useAuth"
 
 export function LoginPage() {
     const navigate = useNavigate()
+    const { sendCode, verifyCode, isAuthenticated } = useAuth()
     const videoRef = useRef<HTMLVideoElement>(null)
     const [loading, setLoading] = useState(false)
     const [step, setStep] = useState<'email' | 'code'>('email')
     const [email, setEmail] = useState("")
     const [code, setCode] = useState("")
     const [videoLoaded, setVideoLoaded] = useState(false)
-
     const [error, setError] = useState("")
 
-    const DEMO_CODE = "30012026"
+    // Redirect if already authenticated
+    useEffect(() => {
+        if (isAuthenticated) {
+            navigate("/dashboard", { replace: true })
+        }
+    }, [isAuthenticated, navigate])
 
     useEffect(() => {
-        // Ensure video plays on mount (some browsers block autoplay)
         if (videoRef.current) {
             videoRef.current.play().catch(() => {})
         }
@@ -29,10 +34,15 @@ export function LoginPage() {
 
         setLoading(true)
         setError("")
-        // Simulation envoi du code par email
-        await new Promise(resolve => setTimeout(resolve, 800))
+
+        const result = await sendCode(email.trim())
+
         setLoading(false)
-        setStep('code')
+        if (result.success) {
+            setStep('code')
+        } else {
+            setError(result.error || "Erreur lors de l'envoi du code")
+        }
     }
 
     const handleCodeSubmit = async (e: React.FormEvent) => {
@@ -41,16 +51,14 @@ export function LoginPage() {
 
         setLoading(true)
         setError("")
-        // Vérification du code démo
-        await new Promise(resolve => setTimeout(resolve, 500))
 
-        // Vérifier le code (enlever les espaces)
         const cleanCode = code.replace(/\s/g, '')
-        if (cleanCode === DEMO_CODE) {
-            localStorage.setItem("demo_authenticated", "true")
-            navigate("/dashboard")
+        const result = await verifyCode(email.trim(), cleanCode)
+
+        if (result.success) {
+            navigate("/dashboard", { replace: true })
         } else {
-            setError("Code incorrect. Veuillez réessayer.")
+            setError(result.error || "Code incorrect. Veuillez réessayer.")
             setLoading(false)
         }
     }
@@ -99,7 +107,7 @@ export function LoginPage() {
                         </div>
                     </div>
                     <h1 className="text-3xl sm:text-4xl font-bold text-white mb-2 drop-shadow-lg">Data Visus</h1>
-                    <p className="text-white/70 text-sm sm:text-base">Portail de Génération & Analyse BDI</p>
+                    <p className="text-white/70 text-sm sm:text-base">Portail de Gestion & Analyse BDI</p>
                 </div>
 
                 {/* Login Form - Glass morphism */}
@@ -132,7 +140,7 @@ export function LoginPage() {
                     {step === 'email' ? (
                         <form onSubmit={handleEmailSubmit} className="space-y-6">
                             <div className="text-center mb-4">
-                                <h3 className="text-xl font-bold text-white">Connexion Sécurisée</h3>
+                                <h3 className="text-xl font-bold text-white">Connexion Securisee</h3>
                                 <p className="text-sm text-gray-300 mt-2">
                                     Entrez votre email pour recevoir un code d'authentification
                                 </p>
@@ -153,6 +161,9 @@ export function LoginPage() {
                                         placeholder="prenom.nom@orsg.fr"
                                     />
                                 </div>
+                                {error && step === 'email' && (
+                                    <p className="text-sm text-red-400 text-center mt-2">{error}</p>
+                                )}
                             </div>
 
                             <button
@@ -178,9 +189,9 @@ export function LoginPage() {
                                 <div className="w-12 h-12 bg-ors-green/20 rounded-full flex items-center justify-center mx-auto mb-3 shadow-lg shadow-ors-green/20">
                                     <ShieldCheck className="w-6 h-6 text-ors-green" />
                                 </div>
-                                <h3 className="text-xl font-bold text-white">Code envoyé !</h3>
+                                <h3 className="text-xl font-bold text-white">Code envoye !</h3>
                                 <p className="text-sm text-gray-300 mt-2">
-                                    Un code à 6 chiffres a été envoyé à <br />
+                                    Un code a 6 chiffres a ete envoye a <br />
                                     <span className="font-semibold text-sky-400">{email}</span>
                                 </p>
                             </div>
@@ -197,9 +208,9 @@ export function LoginPage() {
                                         onChange={(e) => { setCode(e.target.value.replace(/[^0-9]/g, '')); setError(""); }}
                                         autoComplete="off"
                                         autoFocus
-                                        maxLength={8}
+                                        maxLength={6}
                                         className="block w-full pl-10 pr-3 py-3 border border-white/25 rounded-xl leading-5 bg-white/20 backdrop-blur-sm text-white placeholder-gray-400 focus:outline-none focus:bg-white/30 focus:ring-2 focus:ring-ors-green/50 focus:border-ors-green/70 transition-all duration-200 font-mono tracking-widest text-center text-lg"
-                                        placeholder="••••••••"
+                                        placeholder="••••••"
                                     />
                                 </div>
                                 {error && (
@@ -226,17 +237,17 @@ export function LoginPage() {
 
                             <button
                                 type="button"
-                                onClick={() => { setStep('email'); setCode(''); }}
+                                onClick={() => { setStep('email'); setCode(''); setError(''); }}
                                 className="w-full text-sm text-gray-400 hover:text-white py-2 transition-colors"
                             >
-                                ← Modifier l'adresse email
+                                &larr; Modifier l'adresse email
                             </button>
                         </form>
                     )}
                 </div>
 
                 <p className="mt-8 text-center text-xs text-gray-500">
-                    © 2026 ORSG-CTPS. Système sécurisé.
+                    &copy; 2026 ORSG-CTPS. Systeme securise.
                 </p>
 
             </div>

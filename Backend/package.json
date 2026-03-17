@@ -13,6 +13,7 @@
   "dependencies": {
     "busboy": "^1.6.0",
     "cross-fetch": "^4.1.0",
+    "nodemailer": "^8.0.2",
     "pocketbase": "0.21.5"
   }
 }
