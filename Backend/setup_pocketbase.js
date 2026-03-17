@@ -95,27 +95,26 @@ async function main() {
         console.error('Failed to update users collection:', e.message);
     }
 
-    // ===== 2. Create login_codes collection =====
-    console.log('\n--- Creating login_codes collection ---');
+    // ===== 2. Create/update login_codes collection =====
+    console.log('\n--- Setting up login_codes collection ---');
+    const loginCodesSchema = [
+        { name: 'email', type: 'text', required: true },
+        { name: 'code', type: 'text', required: true },
+        { name: 'expires_at', type: 'date', required: true },
+        { name: 'used', type: 'bool', required: false },
+    ];
     try {
-        await pb.collections.getOne('login_codes');
-        console.log('  Collection login_codes already exists.');
+        const existing = await pb.collections.getOne('login_codes');
+        // Always update schema to fix any issues (e.g. used:required)
+        await pb.collections.update(existing.id, { schema: loginCodesSchema });
+        console.log('  Collection login_codes updated.');
     } catch (_e) {
         try {
             await pb.collections.create({
                 name: 'login_codes',
                 type: 'base',
-                schema: [
-                    { name: 'email', type: 'text', required: true },
-                    { name: 'code', type: 'text', required: true },
-                    { name: 'expires_at', type: 'date', required: true },
-                    { name: 'used', type: 'bool', required: false },
-                ],
-                listRule: null,   // admin only
-                viewRule: null,
-                createRule: null,
-                updateRule: null,
-                deleteRule: null,
+                schema: loginCodesSchema,
+                listRule: null, viewRule: null, createRule: null, updateRule: null, deleteRule: null,
             });
             console.log('  Collection login_codes created.');
         } catch (e) {
