@@ -22,11 +22,11 @@ POCKETBASE_URL=http://127.0.0.1:8090
 POCKETBASE_ADMIN_EMAIL=${PB_ADMIN_EMAIL}
 POCKETBASE_ADMIN_PASSWORD=${PB_ADMIN_PASS}
 PB_SYSTEM_PASSWORD=${PB_SYSTEM_PASSWORD:-PrismeSystemAuth2026!}
-SMTP_HOST=${SMTP_HOST:-smtp.office365.com}
-SMTP_PORT=${SMTP_PORT:-587}
-SMTP_USER=${SMTP_USER:-cedric.atticot@live.fr}
-SMTP_PASS=${SMTP_PASS:-fmtpduasovpaestf}
-SMTP_FROM=${SMTP_FROM:-Data Visus ORSG <cedric.atticot@live.fr>}
+SMTP_HOST=${SMTP_HOST:-smtp.resend.com}
+SMTP_PORT=${SMTP_PORT:-465}
+SMTP_USER=${SMTP_USER:-resend}
+SMTP_PASS=${SMTP_PASS:-re_JgvpFiDq_PeTzbD3rBubuvb9W1bbdLwoJ}
+SMTP_FROM=${SMTP_FROM:-Data Visus <onboarding@resend.dev>}
 ENVEOF
 
     # Start PocketBase in background
