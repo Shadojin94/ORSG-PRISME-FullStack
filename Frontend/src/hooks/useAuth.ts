@@ -10,6 +10,8 @@ interface AuthContextType {
     loading: boolean;
     sendCode: (email: string) => Promise<{ success: boolean; error?: string; dev_code?: string }>;
     verifyCode: (email: string, code: string) => Promise<{ success: boolean; error?: string }>;
+    loginWithPassword: (email: string, password: string) => Promise<{ success: boolean; error?: string }>;
+    forgotPassword: (email: string) => Promise<{ success: boolean; error?: string; message?: string }>;
     logout: () => void;
     refreshUser: () => Promise<void>;
 }
@@ -96,6 +98,43 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         }
     }, [syncUser]);
 
+    const loginWithPassword = useCallback(async (email: string, password: string) => {
+        try {
+            const res = await fetch('/api/auth/login-password', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ email, password }),
+            });
+            const data = await res.json();
+            if (!res.ok || !data.success) {
+                return { success: false, error: data.error || 'Email ou mot de passe incorrect' };
+            }
+            pb.authStore.save(data.token, data.record);
+            localStorage.removeItem('demo_authenticated');
+            syncUser();
+            return { success: true };
+        } catch {
+            return { success: false, error: 'Impossible de contacter le serveur' };
+        }
+    }, [syncUser]);
+
+    const forgotPassword = useCallback(async (email: string) => {
+        try {
+            const res = await fetch('/api/auth/forgot-password', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ email }),
+            });
+            const data = await res.json();
+            if (!res.ok || !data.success) {
+                return { success: false, error: data.error || 'Erreur lors de la reinitialisation' };
+            }
+            return { success: true, message: data.message };
+        } catch {
+            return { success: false, error: 'Impossible de contacter le serveur' };
+        }
+    }, []);
+
     const logout = useCallback(() => {
         pb.authStore.clear();
         localStorage.removeItem('demo_authenticated');
@@ -121,6 +160,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         loading,
         sendCode,
         verifyCode,
+        loginWithPassword,
+        forgotPassword,
         logout,
         refreshUser,
     };

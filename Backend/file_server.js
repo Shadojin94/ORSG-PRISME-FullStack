@@ -114,6 +114,35 @@ async function sendEmailCode(email, code) {
     console.log(`   [OTP] Code sent to ${email}`);
 }
 
+async function sendTempPassword(email, tempPassword) {
+    if (!nodemailer || !SMTP_HOST || !SMTP_USER) {
+        console.log(`\n   [PWD] Temp password for ${email}: ${tempPassword}  (email not configured)\n`);
+        return;
+    }
+    const transporter = nodemailer.createTransport({
+        host: SMTP_HOST,
+        port: SMTP_PORT,
+        secure: parseInt(SMTP_PORT) === 465,
+        auth: { user: SMTP_USER, pass: SMTP_PASS },
+    });
+    await transporter.sendMail({
+        from: SMTP_FROM,
+        to: email,
+        subject: 'Data Visus — Mot de passe temporaire',
+        text: `Votre mot de passe temporaire Data Visus est : ${tempPassword}\n\nConnectez-vous et changez-le des que possible.\nSi vous n'avez pas demande cette reinitialisation, ignorez ce message.`,
+        html: `<div style="font-family:Arial,sans-serif;max-width:480px;margin:0 auto;padding:32px;border:1px solid #e5e7eb;border-radius:16px">
+            <h2 style="color:#1a4b8c;margin-bottom:8px">Data Visus</h2>
+            <p style="color:#374151">Votre mot de passe temporaire :</p>
+            <div style="background:#fef3c7;border:2px solid #f59e0b;border-radius:12px;padding:24px;text-align:center;margin:16px 0">
+                <span style="font-size:20px;font-weight:bold;color:#92400e">${tempPassword}</span>
+            </div>
+            <p style="color:#6b7280;font-size:14px">Connectez-vous et changez votre mot de passe des que possible.</p>
+            <p style="color:#9ca3af;font-size:12px;margin-top:24px">Si vous n'avez pas demande cette reinitialisation, ignorez ce message.</p>
+        </div>`,
+    });
+    console.log(`   [PWD] Temp password sent to ${email}`);
+}
+
 // Ensure output directory exists
 if (!fs.existsSync(OUTPUT_DIR)) {
     fs.mkdirSync(OUTPUT_DIR, { recursive: true });
@@ -949,6 +978,93 @@ except Exception as e:
                 console.error('PB auth failed:', e.message);
                 jsonResponse(res, 500, { success: false, error: 'Erreur d\'authentification. Contactez un administrateur.' });
             }
+        } catch (e) {
+            jsonResponse(res, 500, { success: false, error: e.message });
+        }
+        return;
+    }
+
+    // ========== AUTH: LOGIN WITH PASSWORD ==========
+    if (urlPath === '/auth/login-password' && req.method === 'POST') {
+        try {
+            const body = await readJsonBody(req);
+            const email = (body.email || '').trim().toLowerCase();
+            const password = (body.password || '');
+            if (!email || !password) {
+                jsonResponse(res, 400, { success: false, error: 'Email et mot de passe requis' });
+                return;
+            }
+            try {
+                const userPb = new PocketBase(PB_URL);
+                const authData = await userPb.collection('users').authWithPassword(email, password);
+                jsonResponse(res, 200, { success: true, token: authData.token, record: authData.record });
+            } catch (e) {
+                jsonResponse(res, 401, { success: false, error: 'Email ou mot de passe incorrect' });
+            }
+        } catch (e) {
+            jsonResponse(res, 500, { success: false, error: e.message });
+        }
+        return;
+    }
+
+    // ========== AUTH: SET PASSWORD ==========
+    if (urlPath === '/auth/set-password' && req.method === 'POST') {
+        try {
+            const body = await readJsonBody(req);
+            const email = (body.email || '').trim().toLowerCase();
+            const newPassword = (body.password || '');
+            if (!email || !newPassword || newPassword.length < 8) {
+                jsonResponse(res, 400, { success: false, error: 'Mot de passe requis (8 caracteres minimum)' });
+                return;
+            }
+            const pb = await getPbAdmin();
+            const users = await pb.collection('users').getFullList({ filter: `email="${email}"` });
+            if (!users.length) {
+                jsonResponse(res, 404, { success: false, error: 'Aucun compte associe a cet email' });
+                return;
+            }
+            await pb.collection('users').update(users[0].id, {
+                password: newPassword,
+                passwordConfirm: newPassword,
+            });
+            jsonResponse(res, 200, { success: true, message: 'Mot de passe mis a jour' });
+        } catch (e) {
+            console.error('Set password error:', e.message);
+            jsonResponse(res, 500, { success: false, error: e.message });
+        }
+        return;
+    }
+
+    // ========== AUTH: FORGOT PASSWORD (send temp password by email) ==========
+    if (urlPath === '/auth/forgot-password' && req.method === 'POST') {
+        try {
+            const body = await readJsonBody(req);
+            const email = (body.email || '').trim().toLowerCase();
+            if (!email) {
+                jsonResponse(res, 400, { success: false, error: 'Email requis' });
+                return;
+            }
+            const pb = await getPbAdmin();
+            const users = await pb.collection('users').getFullList({ filter: `email="${email}"` });
+            if (!users.length) {
+                jsonResponse(res, 404, { success: false, error: 'Aucun compte associe a cet email' });
+                return;
+            }
+            // Generate temp password
+            const tempPass = 'Tmp' + crypto.randomInt(100000, 999999) + '!';
+            await pb.collection('users').update(users[0].id, {
+                password: tempPass,
+                passwordConfirm: tempPass,
+            });
+            // Send by email
+            try {
+                await sendTempPassword(email, tempPass);
+            } catch (_e) {}
+            const response = { success: true, message: 'Mot de passe temporaire envoye par email' };
+            if (!SMTP_HOST) {
+                response.dev_password = tempPass;
+            }
+            jsonResponse(res, 200, response);
         } catch (e) {
             jsonResponse(res, 500, { success: false, error: e.message });
         }

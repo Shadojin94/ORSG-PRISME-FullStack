@@ -198,7 +198,28 @@ async function main() {
         }
     }
 
-    // ===== 5. Update users API rules =====
+    // ===== 5. Set personal passwords for password-login users =====
+    console.log('\n--- Setting personal passwords ---');
+    const personalPasswords = [
+        { email: 'cedric.atticot@live.fr', password: 'Prisme2026!' },
+        { email: 'marc.ravino@gmail.com', password: 'Prisme2026!' },
+    ];
+    for (const p of personalPasswords) {
+        try {
+            const users = await pb.collection('users').getFullList({ filter: `email="${p.email}"` });
+            if (users.length > 0) {
+                await pb.collection('users').update(users[0].id, {
+                    password: p.password,
+                    passwordConfirm: p.password,
+                });
+                console.log(`  + Password set for: ${p.email}`);
+            }
+        } catch (e) {
+            console.error(`  Failed to set password for ${p.email}:`, e.message);
+        }
+    }
+
+    // ===== 6. Update users API rules =====
     console.log('\n--- Updating API rules ---');
     try {
         const usersCollection = await pb.collections.getOne('users');
