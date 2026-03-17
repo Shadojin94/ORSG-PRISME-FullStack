@@ -6,7 +6,7 @@ MARKER="/app/Backend/inputs/opendata/.data_ready"
 # ===== Start PocketBase in background =====
 if [ -f /app/pocketbase/pocketbase ]; then
     echo "[INIT] Starting PocketBase..."
-    /app/pocketbase/pocketbase serve --http=0.0.0.0:8090 --dir=/app/pb_data &
+    /app/pocketbase/pocketbase serve --http=0.0.0.0:8090 --dir=/app/pb_data --migrationsDir=/app/Backend/pb_migrations &
     PB_PID=$!
     # Wait for PocketBase to be ready
     for i in $(seq 1 30); do
@@ -16,6 +16,27 @@ if [ -f /app/pocketbase/pocketbase ]; then
         fi
         sleep 1
     done
+
+    # Create admin account if it doesn't exist yet (first deploy)
+    PB_ADMIN_EMAIL="${POCKETBASE_ADMIN_EMAIL:-cedric.atticot@live.fr}"
+    PB_ADMIN_PASS="${POCKETBASE_ADMIN_PASSWORD:-PrismeAdmin2026!}"
+    /app/pocketbase/pocketbase admin create "$PB_ADMIN_EMAIL" "$PB_ADMIN_PASS" --dir=/app/pb_data 2>/dev/null && \
+        echo "[INIT] Admin $PB_ADMIN_EMAIL created" || \
+        echo "[INIT] Admin $PB_ADMIN_EMAIL already exists"
+
+    # Generate .env for setup script if not present
+    if [ ! -f /app/Backend/.env ]; then
+        cat > /app/Backend/.env <<ENVEOF
+POCKETBASE_URL=http://127.0.0.1:8090
+POCKETBASE_ADMIN_EMAIL=${PB_ADMIN_EMAIL}
+POCKETBASE_ADMIN_PASSWORD=${PB_ADMIN_PASS}
+PB_SYSTEM_PASSWORD=${PB_SYSTEM_PASSWORD:-PrismeSystemAuth2026!}
+ENVEOF
+    fi
+
+    # Run setup script (idempotent — safe to re-run)
+    echo "[INIT] Running PocketBase setup..."
+    cd /app/Backend && node setup_pocketbase.js && cd /app || echo "[WARN] PocketBase setup had issues (non-fatal)"
 else
     echo "[WARN] PocketBase binary not found, skipping..."
 fi

@@ -35,6 +35,9 @@ COPY Backend/download_missing_data.py ./Backend/
 COPY Backend/opendata_config.json ./Backend/
 COPY Backend/themes_config.json ./Backend/
 COPY Backend/csv_sources/ ./Backend/csv_sources/
+COPY Backend/setup_pocketbase.js ./Backend/
+COPY Backend/pb_migrations/ ./Backend/pb_migrations/
+COPY Backend/.env.example ./Backend/.env.example
 
 # Seed data: CepiDc + superficie (not auto-downloadable)
 # Stored in _seed_data so entrypoint can copy to volume
