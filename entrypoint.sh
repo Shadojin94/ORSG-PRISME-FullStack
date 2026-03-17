@@ -26,7 +26,7 @@ SMTP_HOST=${SMTP_HOST:-smtp.resend.com}
 SMTP_PORT=${SMTP_PORT:-465}
 SMTP_USER=${SMTP_USER:-resend}
 SMTP_PASS=${SMTP_PASS:-re_JgvpFiDq_PeTzbD3rBubuvb9W1bbdLwoJ}
-SMTP_FROM=${SMTP_FROM:-Data Visus <onboarding@resend.dev>}
+SMTP_FROM=${SMTP_FROM:-Data Visus <noreply@live.cercleonline.com>}
 ENVEOF
 
     # Start PocketBase in background
