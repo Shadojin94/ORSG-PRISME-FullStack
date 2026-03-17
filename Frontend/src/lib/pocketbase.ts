@@ -1,8 +1,11 @@
 import PocketBase from 'pocketbase';
 import type { RecordModel } from 'pocketbase';
 
-// PocketBase URL configurable via env
-const PB_URL = import.meta.env.VITE_PB_URL || 'http://127.0.0.1:8090';
+// PocketBase URL: use /pb proxy in production (PB is internal to Docker)
+// In dev, connect directly to localhost:8090
+const PB_URL = import.meta.env.VITE_PB_URL || (
+    import.meta.env.DEV ? 'http://127.0.0.1:8090' : '/pb'
+);
 
 export const pb = new PocketBase(PB_URL);
 

@@ -157,12 +157,34 @@ function jsonResponse(res, statusCode, data) {
 const server = http.createServer(async (req, res) => {
     // Enable CORS
     res.setHeader('Access-Control-Allow-Origin', '*');
-    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
-    res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, PATCH, DELETE, OPTIONS');
+    res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
 
     if (req.method === 'OPTIONS') {
         res.writeHead(200);
         res.end();
+        return;
+    }
+
+    // ========== POCKETBASE REVERSE PROXY ==========
+    // Forward /pb/* requests to internal PocketBase (not accessible from outside Docker)
+    if (req.url.startsWith('/pb/')) {
+        const pbPath = req.url.slice(3); // strip /pb prefix -> /api/...
+        const pbUrl = new URL(pbPath, PB_URL);
+        const proxyReq = require('http').request(pbUrl.toString(), {
+            method: req.method,
+            headers: { ...req.headers, host: new URL(PB_URL).host },
+            timeout: 15000,
+        }, (proxyRes) => {
+            res.writeHead(proxyRes.statusCode, proxyRes.headers);
+            proxyRes.pipe(res);
+        });
+        proxyReq.on('error', (e) => {
+            console.error('[PB-PROXY] Error:', e.message);
+            res.writeHead(502, { 'Content-Type': 'application/json' });
+            res.end(JSON.stringify({ code: 502, message: 'PocketBase unavailable' }));
+        });
+        req.pipe(proxyReq);
         return;
     }
 
