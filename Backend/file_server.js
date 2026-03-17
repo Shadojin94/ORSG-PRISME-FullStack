@@ -62,9 +62,12 @@ async function getPbAdmin() {
             pbAdminReady = true;
             console.log('   PocketBase admin authenticated');
         } catch (e) {
-            console.error('   PocketBase admin auth failed:', e.message);
+            console.error(`   PocketBase admin auth failed for ${PB_ADMIN_EMAIL} at ${PB_URL}:`, e.message);
+            console.error('   Check POCKETBASE_ADMIN_EMAIL and POCKETBASE_ADMIN_PASSWORD in .env');
             pbAdminReady = false;
         }
+    } else {
+        console.error('   PocketBase admin credentials not configured (POCKETBASE_ADMIN_EMAIL / POCKETBASE_ADMIN_PASSWORD)');
     }
     return pbAdmin;
 }
