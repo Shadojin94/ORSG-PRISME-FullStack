@@ -913,15 +913,18 @@ except Exception as e:
             // Normal PocketBase flow
             const pb = await getPbAdmin();
 
-            // Find valid code
-            const now = new Date().toISOString();
+            // Find valid code (PocketBase uses space-separated dates, not ISO T format)
+            const now = new Date().toISOString().replace('T', ' ');
             let codeRecords;
             try {
                 codeRecords = await pb.collection('login_codes').getFullList({
                     filter: `email="${email}" && code="${code}" && used=false && expires_at>"${now}"`,
                     sort: '-created',
                 });
-            } catch (_e) { codeRecords = []; }
+            } catch (e) {
+                console.error('[VERIFY] login_codes query failed:', e.message);
+                codeRecords = [];
+            }
 
             if (!codeRecords || codeRecords.length === 0) {
                 jsonResponse(res, 401, { success: false, error: 'Code invalide ou expire' });
