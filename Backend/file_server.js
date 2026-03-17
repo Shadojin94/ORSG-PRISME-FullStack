@@ -821,11 +821,11 @@ except Exception as e:
                     let emailSent = false;
                     try { await sendEmailCode(email, code); emailSent = true; } catch (_e) {}
 
-                    const devMode = !SMTP_HOST || !emailSent;
                     const response = { success: true, message: 'Code envoye' };
-                    if (devMode) {
-                        response.dev_code = code;
-                        console.log(`[DEV] OTP code for ${email}: ${code}`);
+                    if (!SMTP_HOST || !emailSent) {
+                        // Dev mode: always use 000000 as the bypass code for consistency
+                        response.dev_code = '000000';
+                        console.log(`[DEV] OTP for ${email}: real=${code}, dev bypass=000000`);
                     }
                     jsonResponse(res, 200, response);
                     pbOk = true;
@@ -857,29 +857,29 @@ except Exception as e:
                 return;
             }
 
-            // Fallback dev bypass: code 000000 when PB is unavailable
-            if (code === '000000' && !pbAdminReady) {
-                console.warn(`[AUTH-FALLBACK] Dev bypass login for ${email}`);
+            // Dev bypass: code 000000 accepted when SMTP not configured
+            if (code === '000000' && !SMTP_HOST) {
+                console.warn(`[AUTH-DEV] Dev bypass login for ${email}`);
+                // Try real PB auth first for a proper token
+                if (pbAdminReady) {
+                    try {
+                        const userPb = new PocketBase(PB_URL);
+                        const authData = await userPb.collection('users').authWithPassword(email, PB_SYSTEM_PASSWORD);
+                        jsonResponse(res, 200, { success: true, token: authData.token, record: authData.record });
+                        return;
+                    } catch (e) {
+                        console.warn(`[AUTH-DEV] PB authWithPassword failed for ${email}:`, e.message);
+                    }
+                }
+                // Full fallback: synthetic user record
                 const devRecord = {
-                    id: 'dev_user_001',
-                    email: email,
+                    id: 'dev_user_001', email, collectionId: '_pb_users_auth_', collectionName: 'users',
                     name: email.split('@')[0].replace(/[._]/g, ' ').replace(/\b\w/g, c => c.toUpperCase()),
-                    role: 'admin',
-                    status: 'active',
-                    organization: 'ORSG-CTPS',
-                    department: '',
-                    phone: '',
-                    avatar: '',
-                    created: new Date().toISOString(),
-                    updated: new Date().toISOString(),
-                    collectionId: '_pb_users_auth_',
-                    collectionName: 'users',
+                    role: 'admin', status: 'active', organization: 'ORSG-CTPS',
+                    department: '', phone: '', avatar: '',
+                    created: new Date().toISOString(), updated: new Date().toISOString(),
                 };
-                jsonResponse(res, 200, {
-                    success: true,
-                    token: 'dev_token_' + Date.now(),
-                    record: devRecord,
-                });
+                jsonResponse(res, 200, { success: true, token: 'dev_token_' + Date.now(), record: devRecord });
                 return;
             }
 
