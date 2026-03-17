@@ -164,7 +164,7 @@ export function LoginPage() {
                                         type="email"
                                         value={email}
                                         onChange={(e) => setEmail(e.target.value)}
-                                        autoComplete="off"
+                                        autoComplete="email"
                                         className="block w-full pl-10 pr-3 py-3 border border-white/25 rounded-xl leading-5 bg-white/20 backdrop-blur-sm text-white placeholder-gray-400 focus:outline-none focus:bg-white/30 focus:ring-2 focus:ring-ors-blue/50 focus:border-ors-blue/70 transition-all duration-200"
                                         placeholder="prenom.nom@orsg.fr"
                                     />
