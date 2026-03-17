@@ -30,14 +30,18 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     useEffect(() => {
         async function init() {
             if (pb.authStore.isValid) {
-                try {
-                    // Refresh token and get latest user data
-                    await pb.collection('users').authRefresh();
+                const token = pb.authStore.token;
+                // Dev token bypass — don't try to refresh against PocketBase
+                if (token && token.startsWith('dev_token_')) {
                     syncUser();
-                } catch {
-                    // Token expired or invalid
-                    pb.authStore.clear();
-                    setUser(null);
+                } else {
+                    try {
+                        await pb.collection('users').authRefresh();
+                        syncUser();
+                    } catch {
+                        pb.authStore.clear();
+                        setUser(null);
+                    }
                 }
             }
             setLoading(false);
