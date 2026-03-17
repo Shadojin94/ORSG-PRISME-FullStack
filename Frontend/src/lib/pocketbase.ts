@@ -36,7 +36,9 @@ export interface SupportTicket extends RecordModel {
 
 export function currentUser(): PrismeUser | null {
     if (!pb.authStore.isValid) return null;
-    return (pb.authStore as any).record as PrismeUser;
+    // SDK 0.21.x uses .model, SDK 0.22+ uses .record
+    const record = (pb.authStore as any).record || (pb.authStore as any).model;
+    return record as PrismeUser || null;
 }
 
 export function isAdmin(): boolean {
