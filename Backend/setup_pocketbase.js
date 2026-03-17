@@ -168,6 +168,10 @@ async function main() {
     const seedUsers = [
         { email: 'naissa.chateau@ors-guyane.org', name: 'Naissa Chateau Remy', role: 'admin', organization: 'ORSG-CTPS', department: 'Direction' },
         { email: 'cedric.atticot@live.fr', name: 'Cedric Atticot', role: 'admin', organization: 'N.O.V.I. Connected', department: 'Developpement' },
+        { email: 'marc.ravino@gmail.com', name: 'Cedric Atticot', role: 'admin', organization: 'N.O.V.I. Connected', department: 'Developpement' },
+        { email: 'm-j.castor@ors-guyane.org', name: 'Marie-Josiane Castor', role: 'expert', organization: 'ORSG-CTPS', department: 'Observation' },
+        { email: 'jessy.pajot@ors-guyane.org', name: 'Jessy Pajot', role: 'expert', organization: 'ORSG-CTPS', department: 'Observation' },
+        { email: 'm.imounga-desroziers@ors-guyane.org', name: 'Manuella Imounga-Desroziers', role: 'expert', organization: 'ORSG-CTPS', department: 'Observation' },
     ];
 
     for (const u of seedUsers) {
