@@ -8,7 +8,7 @@ interface AuthContextType {
     isAuthenticated: boolean;
     isAdmin: boolean;
     loading: boolean;
-    sendCode: (email: string) => Promise<{ success: boolean; error?: string }>;
+    sendCode: (email: string) => Promise<{ success: boolean; error?: string; dev_code?: string }>;
     verifyCode: (email: string, code: string) => Promise<{ success: boolean; error?: string }>;
     logout: () => void;
     refreshUser: () => Promise<void>;
@@ -64,7 +64,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
             if (!res.ok || !data.success) {
                 return { success: false, error: data.error || 'Erreur lors de l\'envoi du code' };
             }
-            return { success: true };
+            return { success: true, dev_code: data.dev_code };
         } catch {
             return { success: false, error: 'Impossible de contacter le serveur' };
         }

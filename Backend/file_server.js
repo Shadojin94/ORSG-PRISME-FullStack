@@ -804,14 +804,23 @@ except Exception as e:
             }
 
             // Send email
+            let emailSent = false;
             try {
                 await sendEmailCode(email, code);
+                emailSent = true;
             } catch (e) {
                 console.error('Failed to send email:', e.message);
                 // Code is still valid in DB, user can retry or we log it
             }
 
-            jsonResponse(res, 200, { success: true, message: 'Code envoye' });
+            // Dev mode: return code in response if SMTP not configured or email failed
+            const devMode = !SMTP_HOST || !emailSent;
+            const response = { success: true, message: 'Code envoye' };
+            if (devMode) {
+                response.dev_code = code;
+                console.log(`[DEV] OTP code for ${email}: ${code}`);
+            }
+            jsonResponse(res, 200, response);
         } catch (e) {
             jsonResponse(res, 500, { success: false, error: e.message });
         }
