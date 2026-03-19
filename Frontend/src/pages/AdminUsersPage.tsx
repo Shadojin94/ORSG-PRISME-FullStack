@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback } from "react"
 import { useNavigate } from "react-router-dom"
-import { Users, Search, MoreVertical, CheckCircle2, XCircle, UserPlus, Shield, Mail, Calendar, X, Loader2 } from "lucide-react"
+import { Users, Search, MoreVertical, CheckCircle2, XCircle, UserPlus, Shield, Mail, Calendar, X, Loader2, ShieldCheck, ShieldOff } from "lucide-react"
 import { cn } from "@/lib/utils"
 import { useAuth } from "@/hooks/useAuth"
 import { pb, roleLabelFr } from "@/lib/pocketbase"
@@ -45,6 +45,19 @@ export function AdminUsersPage() {
         } catch (err) {
             console.error("Error toggling status:", err)
             alert("Erreur lors du changement de statut.")
+        }
+    }
+
+    const toggleOtp = async (user: PrismeUser) => {
+        // otp_enabled defaults to true when null/undefined
+        const currentOtp = user.otp_enabled !== false
+        const newOtp = !currentOtp
+        try {
+            await pb.collection('users').update(user.id, { otp_enabled: newOtp })
+            setUsers(prev => prev.map(u => u.id === user.id ? { ...u, otp_enabled: newOtp } : u))
+        } catch (err) {
+            console.error("Error toggling OTP:", err)
+            alert("Erreur lors du changement du mode d'authentification.")
         }
     }
 
@@ -198,7 +211,7 @@ export function AdminUsersPage() {
                                     </div>
                                 </div>
 
-                                <div className="flex items-center gap-6">
+                                <div className="flex items-center gap-3 flex-wrap justify-end">
                                     <span className={cn(
                                         "inline-flex items-center px-3 py-1 rounded-full text-xs font-medium border",
                                         getRoleBadgeColor(user.role)
@@ -206,6 +219,25 @@ export function AdminUsersPage() {
                                         {roleLabelFr(user.role)}
                                     </span>
 
+                                    {/* OTP toggle */}
+                                    <button
+                                        onClick={() => toggleOtp(user)}
+                                        title={user.otp_enabled !== false ? "OTP actif — cliquer pour desactiver" : "OTP inactif — cliquer pour activer"}
+                                        className={cn(
+                                            "flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-bold transition-colors",
+                                            user.otp_enabled !== false
+                                                ? 'bg-sky-100 text-sky-700 hover:bg-sky-200'
+                                                : 'bg-gray-100 text-gray-500 hover:bg-gray-200'
+                                        )}
+                                    >
+                                        {user.otp_enabled !== false ? (
+                                            <><ShieldCheck className="w-3.5 h-3.5" /> OTP</>
+                                        ) : (
+                                            <><ShieldOff className="w-3.5 h-3.5" /> OTP off</>
+                                        )}
+                                    </button>
+
+                                    {/* Status toggle */}
                                     <button
                                         onClick={() => toggleStatus(user)}
                                         className={cn(

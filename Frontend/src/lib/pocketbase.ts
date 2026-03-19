@@ -23,6 +23,8 @@ export interface PrismeUser extends RecordModel {
     role: 'admin' | 'expert' | 'analyste' | 'utilisateur' | 'invite';
     status: 'active' | 'inactive';
     avatar: string;
+    otp_enabled: boolean;
+    personal_password_hash?: string;
 }
 
 export interface SupportTicket extends RecordModel {

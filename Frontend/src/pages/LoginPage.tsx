@@ -19,6 +19,9 @@ export function LoginPage() {
     const [error, setError] = useState("")
     const [success, setSuccess] = useState("")
     const [isDevCode, setIsDevCode] = useState(false)
+    // Info from check-email endpoint
+    const [otpEnabled, setOtpEnabled] = useState(true)
+    const [canUsePassword, setCanUsePassword] = useState(false)
 
     useEffect(() => {
         if (isAuthenticated) {
@@ -32,19 +35,55 @@ export function LoginPage() {
         }
     }, [])
 
-    const handleEmailSubmit = (e: React.FormEvent) => {
+    const handleEmailSubmit = async (e: React.FormEvent) => {
         e.preventDefault()
-        if (!email.trim()) return
+        const trimmed = email.trim()
+        if (!trimmed) return
         setError("")
-        setStep('choose')
+        setLoading(true)
+
+        // Ask server which login method(s) are available for this email
+        let otp = true
+        let canPwd = false
+        try {
+            const res = await fetch('/api/auth/check-email', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ email: trimmed }),
+            })
+            const data = await res.json()
+            if (!res.ok || !data.success) {
+                setError(data.error || "Adresse email non reconnue.")
+                setLoading(false)
+                return
+            }
+            otp = data.otp_enabled !== false
+            canPwd = !!data.can_use_password
+        } catch {
+            setError("Impossible de contacter le serveur.")
+            setLoading(false)
+            return
+        }
+
+        setOtpEnabled(otp)
+        setCanUsePassword(canPwd)
+
+        if (!otp && canPwd) {
+            // OTP disabled, password available → go directly to password
+            setLoading(false)
+            setStep('password')
+        } else if (otp && canPwd) {
+            // Both methods available → show choice
+            setLoading(false)
+            setStep('choose')
+        } else {
+            // OTP only (standard case) → send code immediately
+            await doSendOTP(trimmed)
+        }
     }
 
-    const handleSendOTP = async () => {
-        setLoading(true)
-        setError("")
-
-        const result = await sendCode(email.trim())
-
+    const doSendOTP = async (emailVal: string) => {
+        const result = await sendCode(emailVal)
         setLoading(false)
         if (result.success) {
             setStep('code')
@@ -52,23 +91,26 @@ export function LoginPage() {
                 setCode(result.dev_code)
                 setIsDevCode(true)
             } else {
+                setCode("")
                 setIsDevCode(false)
             }
         } else {
-            setError(result.error || "Erreur lors de l'envoi du code")
+            setError(result.error || "Erreur lors de l'envoi du code.")
         }
+    }
+
+    const handleSendOTP = async () => {
+        setLoading(true)
+        setError("")
+        await doSendOTP(email.trim())
     }
 
     const handleCodeSubmit = async (e: React.FormEvent) => {
         e.preventDefault()
         if (!code.trim()) return
-
         setLoading(true)
         setError("")
-
-        const cleanCode = code.replace(/\s/g, '')
-        const result = await verifyCode(email.trim(), cleanCode)
-
+        const result = await verifyCode(email.trim(), code.replace(/\s/g, ''))
         if (result.success) {
             navigate("/dashboard", { replace: true })
         } else {
@@ -80,16 +122,13 @@ export function LoginPage() {
     const handlePasswordSubmit = async (e: React.FormEvent) => {
         e.preventDefault()
         if (!password.trim()) return
-
         setLoading(true)
         setError("")
-
         const result = await loginWithPassword(email.trim(), password)
-
         if (result.success) {
             navigate("/dashboard", { replace: true })
         } else {
-            setError(result.error || "Email ou mot de passe incorrect")
+            setError(result.error || "Email ou mot de passe incorrect.")
             setLoading(false)
         }
     }
@@ -99,21 +138,21 @@ export function LoginPage() {
         setLoading(true)
         setError("")
         setSuccess("")
-
         const result = await forgotPassword(email.trim())
-
         setLoading(false)
         if (result.success) {
             setSuccess(result.message || "Un mot de passe temporaire a ete envoye a votre adresse email.")
         } else {
-            setError(result.error || "Erreur lors de la reinitialisation")
+            setError(result.error || "Erreur lors de la reinitialisation.")
         }
     }
 
     const goBack = () => {
         setError("")
         setSuccess("")
-        if (step === 'code' || step === 'password') setStep('choose')
+        setCode("")
+        if (step === 'code') setStep(canUsePassword ? 'choose' : 'email')
+        else if (step === 'password') setStep(otpEnabled ? 'choose' : 'email')
         else if (step === 'forgot') setStep('password')
         else if (step === 'choose') setStep('email')
     }
@@ -167,31 +206,20 @@ export function LoginPage() {
                     <p className="text-white/70 text-sm sm:text-base">Portail de Gestion & Analyse BDI</p>
                 </div>
 
-                {/* Login Form - Glass morphism */}
+                {/* Login Form */}
                 <div className="bg-gray-900/80 backdrop-blur-2xl rounded-2xl shadow-[0_8px_60px_rgba(0,0,0,0.6)] border border-white/20 p-6 sm:p-8 animate-in fade-in zoom-in-95 duration-500 delay-150 ring-1 ring-white/10">
 
                     {/* Step Indicator */}
                     <div className="flex items-center justify-center gap-3 mb-6">
                         <div className={cn(
                             "w-8 h-8 rounded-full flex items-center justify-center font-bold text-sm transition-all shadow-lg",
-                            stepNumber >= 1
-                                ? "bg-ors-blue text-white shadow-ors-blue/40"
-                                : "bg-white/15 text-gray-400 border border-white/30"
-                        )}>
-                            1
-                        </div>
-                        <div className={cn(
-                            "w-12 h-1 rounded-full transition-all",
-                            stepNumber >= 2 ? "bg-ors-green" : "bg-white/20"
-                        )} />
+                            stepNumber >= 1 ? "bg-ors-blue text-white shadow-ors-blue/40" : "bg-white/15 text-gray-400 border border-white/30"
+                        )}>1</div>
+                        <div className={cn("w-12 h-1 rounded-full transition-all", stepNumber >= 2 ? "bg-ors-green" : "bg-white/20")} />
                         <div className={cn(
                             "w-8 h-8 rounded-full flex items-center justify-center font-bold text-sm transition-all",
-                            stepNumber >= 2
-                                ? "bg-ors-green text-white shadow-lg shadow-ors-green/40"
-                                : "bg-white/15 text-gray-400 border border-white/30"
-                        )}>
-                            2
-                        </div>
+                            stepNumber >= 2 ? "bg-ors-green text-white shadow-lg shadow-ors-green/40" : "bg-white/15 text-gray-400 border border-white/30"
+                        )}>2</div>
                     </div>
 
                     {/* STEP: EMAIL */}
@@ -216,7 +244,7 @@ export function LoginPage() {
                                         onChange={(e) => setEmail(e.target.value)}
                                         autoComplete="email"
                                         className="block w-full pl-10 pr-3 py-3 border border-white/25 rounded-xl leading-5 bg-white/20 backdrop-blur-sm text-white placeholder-gray-400 focus:outline-none focus:bg-white/30 focus:ring-2 focus:ring-ors-blue/50 focus:border-ors-blue/70 transition-all duration-200"
-                                        placeholder="prenom.nom@orsg.fr"
+                                        placeholder="prenom.nom@ors-guyane.org"
                                     />
                                 </div>
                                 {error && (
@@ -226,13 +254,13 @@ export function LoginPage() {
 
                             <button
                                 type="submit"
-                                disabled={!email.trim()}
+                                disabled={!email.trim() || loading}
                                 className={cn(
-                                    "w-full flex justify-center items-center py-3 px-4 border border-transparent rounded-xl shadow-lg text-sm font-bold text-white transition-all transform hover:scale-[1.02] disabled:opacity-70 disabled:cursor-not-allowed focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-transparent",
-                                    "bg-gradient-to-r from-ors-blue to-blue-600 shadow-ors-blue/30 hover:from-blue-600 hover:to-blue-700 focus:ring-ors-blue hover:shadow-ors-blue/50"
+                                    "w-full flex justify-center items-center py-3 px-4 border border-transparent rounded-xl shadow-lg text-sm font-bold text-white transition-all transform hover:scale-[1.02] disabled:opacity-70 disabled:cursor-not-allowed",
+                                    "bg-gradient-to-r from-ors-blue to-blue-600 shadow-ors-blue/30 hover:from-blue-600 hover:to-blue-700"
                                 )}
                             >
-                                Continuer <ArrowRight className="ml-2 w-4 h-4" />
+                                {loading ? <Loader2 className="w-5 h-5 animate-spin" /> : <>Continuer <ArrowRight className="ml-2 w-4 h-4" /></>}
                             </button>
                         </form>
                     )}
@@ -256,11 +284,7 @@ export function LoginPage() {
                                 )}
                             >
                                 <div className="w-10 h-10 rounded-full bg-ors-blue/20 flex items-center justify-center flex-shrink-0">
-                                    {loading ? (
-                                        <Loader2 className="w-5 h-5 text-ors-blue animate-spin" />
-                                    ) : (
-                                        <Mail className="w-5 h-5 text-ors-blue" />
-                                    )}
+                                    {loading ? <Loader2 className="w-5 h-5 text-ors-blue animate-spin" /> : <Mail className="w-5 h-5 text-ors-blue" />}
                                 </div>
                                 <div className="text-left">
                                     <div className="font-bold text-sm">Code par email</div>
@@ -283,15 +307,10 @@ export function LoginPage() {
                                 <ArrowRight className="w-4 h-4 ml-auto text-gray-400" />
                             </button>
 
-                            {error && (
-                                <p className="text-sm text-red-400 text-center">{error}</p>
-                            )}
+                            {error && <p className="text-sm text-red-400 text-center">{error}</p>}
 
-                            <button
-                                type="button"
-                                onClick={() => { setStep('email'); setError(''); }}
-                                className="w-full text-sm text-gray-400 hover:text-white py-2 transition-colors flex items-center justify-center gap-1"
-                            >
+                            <button type="button" onClick={() => { setStep('email'); setError(''); }}
+                                className="w-full text-sm text-gray-400 hover:text-white py-2 transition-colors flex items-center justify-center gap-1">
                                 <ArrowLeft className="w-3 h-3" /> Modifier l'adresse email
                             </button>
                         </div>
@@ -309,8 +328,7 @@ export function LoginPage() {
                                     {isDevCode ? (
                                         <>Code pre-rempli automatiquement<br /><span className="text-xs text-amber-400">(mode dev — SMTP non configure)</span></>
                                     ) : (
-                                        <>Un code a 6 chiffres a ete envoye a <br />
-                                        <span className="font-semibold text-sky-400">{email}</span></>
+                                        <>Un code a 6 chiffres a ete envoye a <br /><span className="font-semibold text-sky-400">{email}</span></>
                                     )}
                                 </p>
                             </div>
@@ -332,33 +350,19 @@ export function LoginPage() {
                                         placeholder="••••••"
                                     />
                                 </div>
-                                {error && (
-                                    <p className="text-sm text-red-400 text-center mt-2">{error}</p>
-                                )}
+                                {error && <p className="text-sm text-red-400 text-center mt-2">{error}</p>}
                             </div>
 
-                            <button
-                                type="submit"
-                                disabled={loading || !code.trim()}
+                            <button type="submit" disabled={loading || !code.trim()}
                                 className={cn(
-                                    "w-full flex justify-center items-center py-3 px-4 border border-transparent rounded-xl shadow-lg text-sm font-bold text-white transition-all transform hover:scale-[1.02] disabled:opacity-70 disabled:cursor-not-allowed focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-transparent",
-                                    "bg-gradient-to-r from-ors-green to-green-600 shadow-ors-green/30 hover:from-green-600 hover:to-green-700 focus:ring-ors-green hover:shadow-ors-green/50"
-                                )}
-                            >
-                                {loading ? (
-                                    <Loader2 className="w-5 h-5 animate-spin" />
-                                ) : (
-                                    <>
-                                        Se connecter <ArrowRight className="ml-2 w-4 h-4" />
-                                    </>
-                                )}
+                                    "w-full flex justify-center items-center py-3 px-4 border border-transparent rounded-xl shadow-lg text-sm font-bold text-white transition-all transform hover:scale-[1.02] disabled:opacity-70 disabled:cursor-not-allowed",
+                                    "bg-gradient-to-r from-ors-green to-green-600 shadow-ors-green/30 hover:from-green-600 hover:to-green-700"
+                                )}>
+                                {loading ? <Loader2 className="w-5 h-5 animate-spin" /> : <>Se connecter <ArrowRight className="ml-2 w-4 h-4" /></>}
                             </button>
 
-                            <button
-                                type="button"
-                                onClick={goBack}
-                                className="w-full text-sm text-gray-400 hover:text-white py-2 transition-colors flex items-center justify-center gap-1"
-                            >
+                            <button type="button" onClick={goBack}
+                                className="w-full text-sm text-gray-400 hover:text-white py-2 transition-colors flex items-center justify-center gap-1">
                                 <ArrowLeft className="w-3 h-3" /> Retour
                             </button>
                         </form>
@@ -393,41 +397,24 @@ export function LoginPage() {
                                         placeholder="Votre mot de passe"
                                     />
                                 </div>
-                                {error && (
-                                    <p className="text-sm text-red-400 text-center mt-2">{error}</p>
-                                )}
+                                {error && <p className="text-sm text-red-400 text-center mt-2">{error}</p>}
                             </div>
 
-                            <button
-                                type="submit"
-                                disabled={loading || !password.trim()}
+                            <button type="submit" disabled={loading || !password.trim()}
                                 className={cn(
-                                    "w-full flex justify-center items-center py-3 px-4 border border-transparent rounded-xl shadow-lg text-sm font-bold text-white transition-all transform hover:scale-[1.02] disabled:opacity-70 disabled:cursor-not-allowed focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-transparent",
-                                    "bg-gradient-to-r from-ors-green to-green-600 shadow-ors-green/30 hover:from-green-600 hover:to-green-700 focus:ring-ors-green hover:shadow-ors-green/50"
-                                )}
-                            >
-                                {loading ? (
-                                    <Loader2 className="w-5 h-5 animate-spin" />
-                                ) : (
-                                    <>
-                                        Se connecter <ArrowRight className="ml-2 w-4 h-4" />
-                                    </>
-                                )}
+                                    "w-full flex justify-center items-center py-3 px-4 border border-transparent rounded-xl shadow-lg text-sm font-bold text-white transition-all transform hover:scale-[1.02] disabled:opacity-70 disabled:cursor-not-allowed",
+                                    "bg-gradient-to-r from-ors-green to-green-600 shadow-ors-green/30 hover:from-green-600 hover:to-green-700"
+                                )}>
+                                {loading ? <Loader2 className="w-5 h-5 animate-spin" /> : <>Se connecter <ArrowRight className="ml-2 w-4 h-4" /></>}
                             </button>
 
                             <div className="flex flex-col gap-2">
-                                <button
-                                    type="button"
-                                    onClick={() => { setStep('forgot'); setError(''); setSuccess(''); }}
-                                    className="w-full text-sm text-amber-400/80 hover:text-amber-300 py-1 transition-colors"
-                                >
+                                <button type="button" onClick={() => { setStep('forgot'); setError(''); setSuccess(''); }}
+                                    className="w-full text-sm text-amber-400/80 hover:text-amber-300 py-1 transition-colors">
                                     Mot de passe oublie ?
                                 </button>
-                                <button
-                                    type="button"
-                                    onClick={goBack}
-                                    className="w-full text-sm text-gray-400 hover:text-white py-1 transition-colors flex items-center justify-center gap-1"
-                                >
+                                <button type="button" onClick={goBack}
+                                    className="w-full text-sm text-gray-400 hover:text-white py-1 transition-colors flex items-center justify-center gap-1">
                                     <ArrowLeft className="w-3 h-3" /> Retour
                                 </button>
                             </div>
@@ -453,46 +440,30 @@ export function LoginPage() {
                                     <div className="bg-green-500/10 border border-green-500/30 rounded-xl p-4">
                                         <p className="text-sm text-green-400 text-center">{success}</p>
                                     </div>
-                                    <button
-                                        type="button"
+                                    <button type="button"
                                         onClick={() => { setStep('password'); setPassword(''); setSuccess(''); }}
                                         className={cn(
                                             "w-full flex justify-center items-center py-3 px-4 border border-transparent rounded-xl shadow-lg text-sm font-bold text-white transition-all transform hover:scale-[1.02]",
                                             "bg-gradient-to-r from-ors-green to-green-600 shadow-ors-green/30 hover:from-green-600 hover:to-green-700"
-                                        )}
-                                    >
+                                        )}>
                                         Se connecter avec le mot de passe temporaire <ArrowRight className="ml-2 w-4 h-4" />
                                     </button>
                                 </div>
                             ) : (
                                 <>
-                                    {error && (
-                                        <p className="text-sm text-red-400 text-center">{error}</p>
-                                    )}
-                                    <button
-                                        type="submit"
-                                        disabled={loading}
+                                    {error && <p className="text-sm text-red-400 text-center">{error}</p>}
+                                    <button type="submit" disabled={loading}
                                         className={cn(
                                             "w-full flex justify-center items-center py-3 px-4 border border-transparent rounded-xl shadow-lg text-sm font-bold text-white transition-all transform hover:scale-[1.02] disabled:opacity-70 disabled:cursor-not-allowed",
                                             "bg-gradient-to-r from-amber-500 to-amber-600 shadow-amber-500/30 hover:from-amber-600 hover:to-amber-700"
-                                        )}
-                                    >
-                                        {loading ? (
-                                            <Loader2 className="w-5 h-5 animate-spin" />
-                                        ) : (
-                                            <>
-                                                Envoyer un mot de passe temporaire <Mail className="ml-2 w-4 h-4" />
-                                            </>
-                                        )}
+                                        )}>
+                                        {loading ? <Loader2 className="w-5 h-5 animate-spin" /> : <>Envoyer un mot de passe temporaire <Mail className="ml-2 w-4 h-4" /></>}
                                     </button>
                                 </>
                             )}
 
-                            <button
-                                type="button"
-                                onClick={goBack}
-                                className="w-full text-sm text-gray-400 hover:text-white py-2 transition-colors flex items-center justify-center gap-1"
-                            >
+                            <button type="button" onClick={goBack}
+                                className="w-full text-sm text-gray-400 hover:text-white py-2 transition-colors flex items-center justify-center gap-1">
                                 <ArrowLeft className="w-3 h-3" /> Retour
                             </button>
                         </form>
@@ -502,7 +473,6 @@ export function LoginPage() {
                 <p className="mt-8 text-center text-xs text-gray-500">
                     &copy; 2026 ORSG-CTPS. Systeme securise.
                 </p>
-
             </div>
         </div>
     )

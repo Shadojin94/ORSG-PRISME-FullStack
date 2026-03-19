@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react"
-import { User, Shield, Save, Loader2, CheckCircle2, Mail, Clock } from "lucide-react"
+import { User, Shield, Save, Loader2, CheckCircle2, Mail, Clock, ShieldCheck, ShieldOff } from "lucide-react"
 import { cn } from "@/lib/utils"
 import { useAuth } from "@/hooks/useAuth"
 import { pb, userInitials } from "@/lib/pocketbase"
@@ -9,6 +9,7 @@ export function ProfilePage() {
     const [activeTab, setActiveTab] = useState<'account' | 'security'>('account')
     const [saving, setSaving] = useState(false)
     const [saved, setSaved] = useState(false)
+    const [togglingOtp, setTogglingOtp] = useState(false)
 
     const [form, setForm] = useState({
         name: '',
@@ -48,6 +49,26 @@ export function ProfilePage() {
             alert('Erreur lors de la sauvegarde du profil.')
         }
         setSaving(false)
+    }
+
+    const handleToggleOtp = async () => {
+        if (!user) return
+        const currentOtp = user.otp_enabled !== false
+        const newOtp = !currentOtp
+        // Warn if disabling OTP without a password set
+        if (!newOtp && !user.personal_password_hash) {
+            alert("Vous devez d'abord definir un mot de passe avant de desactiver l'OTP. Contactez un administrateur.")
+            return
+        }
+        setTogglingOtp(true)
+        try {
+            await pb.collection('users').update(user.id, { otp_enabled: newOtp })
+            await refreshUser()
+        } catch (err) {
+            console.error('Failed to toggle OTP:', err)
+            alert("Erreur lors du changement du mode d'authentification.")
+        }
+        setTogglingOtp(false)
     }
 
     const initials = userInitials(user)
@@ -182,20 +203,61 @@ export function ProfilePage() {
                             <div className="space-y-6 animate-in fade-in duration-300">
                                 <h2 className="text-xl font-bold text-gray-800 border-b border-gray-100 pb-4">Securite & Connexion</h2>
 
-                                <div className="flex items-center justify-between p-4 bg-green-50 rounded-xl border border-green-100">
+                                {/* OTP Toggle */}
+                                <div className={cn(
+                                    "flex items-center justify-between p-4 rounded-xl border",
+                                    user?.otp_enabled !== false
+                                        ? "bg-sky-50 border-sky-100"
+                                        : "bg-gray-50 border-gray-200"
+                                )}>
                                     <div className="flex items-center gap-4">
-                                        <div className="w-10 h-10 bg-white rounded-full flex items-center justify-center text-green-600 shadow-sm">
-                                            <Shield className="w-5 h-5" />
+                                        <div className={cn(
+                                            "w-10 h-10 bg-white rounded-full flex items-center justify-center shadow-sm",
+                                            user?.otp_enabled !== false ? "text-sky-600" : "text-gray-400"
+                                        )}>
+                                            {user?.otp_enabled !== false
+                                                ? <ShieldCheck className="w-5 h-5" />
+                                                : <ShieldOff className="w-5 h-5" />
+                                            }
                                         </div>
                                         <div>
-                                            <p className="font-semibold text-gray-900">Authentification par code email</p>
-                                            <p className="text-xs text-green-700">
-                                                Chaque connexion necessite un code a 6 chiffres envoye a votre adresse email.
+                                            <p className="font-semibold text-gray-900">Authentification par code email (OTP)</p>
+                                            <p className={cn("text-xs", user?.otp_enabled !== false ? "text-sky-700" : "text-gray-500")}>
+                                                {user?.otp_enabled !== false
+                                                    ? "Un code a 6 chiffres vous est envoye a chaque connexion."
+                                                    : "Desactive — connexion par mot de passe uniquement."
+                                                }
                                             </p>
                                         </div>
                                     </div>
-                                    <span className="px-3 py-1 bg-green-100 text-green-700 rounded-full text-xs font-bold">Actif</span>
+                                    <button
+                                        onClick={handleToggleOtp}
+                                        disabled={togglingOtp}
+                                        className={cn(
+                                            "relative inline-flex h-6 w-11 items-center rounded-full transition-colors focus:outline-none disabled:opacity-60",
+                                            user?.otp_enabled !== false ? "bg-sky-500" : "bg-gray-300"
+                                        )}
+                                    >
+                                        {togglingOtp ? (
+                                            <Loader2 className="w-3 h-3 text-white animate-spin mx-auto" />
+                                        ) : (
+                                            <span className={cn(
+                                                "inline-block h-4 w-4 transform rounded-full bg-white transition-transform shadow",
+                                                user?.otp_enabled !== false ? "translate-x-6" : "translate-x-1"
+                                            )} />
+                                        )}
+                                    </button>
                                 </div>
+
+                                {/* Warning if OTP disabled and no password */}
+                                {user?.otp_enabled === false && !user?.personal_password_hash && (
+                                    <div className="p-4 bg-amber-50 rounded-xl border border-amber-200">
+                                        <p className="text-sm text-amber-800">
+                                            <strong>Attention :</strong> L'OTP est desactive mais aucun mot de passe n'est configure.
+                                            Contactez un administrateur pour definir un mot de passe.
+                                        </p>
+                                    </div>
+                                )}
 
                                 <div className="flex items-center justify-between p-4 bg-gray-50 rounded-xl border border-gray-200">
                                     <div className="flex items-center gap-4">
@@ -223,14 +285,6 @@ export function ProfilePage() {
                                             </p>
                                         </div>
                                     </div>
-                                </div>
-
-                                <div className="mt-6 p-4 bg-blue-50 rounded-xl border border-blue-100">
-                                    <p className="text-sm text-blue-800">
-                                        <strong>Pas de mot de passe a retenir.</strong> Votre compte est protege par un code temporaire
-                                        envoye par email a chaque connexion. Ce mecanisme garantit un haut niveau de securite
-                                        sans risque de mot de passe compromis.
-                                    </p>
                                 </div>
                             </div>
                         )}

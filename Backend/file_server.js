@@ -835,6 +835,52 @@ except Exception as e:
     }
 
     // ========== AUTH: SEND OTP CODE ==========
+    // ========== AUTH: CHECK EMAIL — returns login method for this address ==========
+    // Returns: { exists, otp_enabled, can_use_password }
+    // Used by LoginPage to decide which step to show without exposing sensitive data.
+    if (urlPath === '/auth/check-email' && req.method === 'POST') {
+        try {
+            const body = await readJsonBody(req);
+            const email = (body.email || '').trim().toLowerCase();
+            if (!email) {
+                jsonResponse(res, 400, { success: false, error: 'Email requis' });
+                return;
+            }
+            const pb = await getPbAdmin();
+            if (!pbAdminReady) {
+                // Fallback: allow login without PB info (dev mode)
+                jsonResponse(res, 200, { success: true, exists: true, otp_enabled: true, can_use_password: false });
+                return;
+            }
+            let user = null;
+            try {
+                const records = await pb.collection('users').getFullList({ filter: `email="${email}"` });
+                user = records[0] || null;
+            } catch (_e) { user = null; }
+
+            if (!user) {
+                jsonResponse(res, 404, { success: false, error: 'Aucun compte associe a cet email' });
+                return;
+            }
+            if (user.status === 'inactive') {
+                jsonResponse(res, 403, { success: false, error: 'Ce compte est desactive. Contactez un administrateur.' });
+                return;
+            }
+            // otp_enabled defaults to true when field is null/undefined
+            const otpEnabled = user.otp_enabled !== false;
+            const canUsePassword = !!user.personal_password_hash;
+            jsonResponse(res, 200, {
+                success: true,
+                exists: true,
+                otp_enabled: otpEnabled,
+                can_use_password: canUsePassword,
+            });
+        } catch (e) {
+            jsonResponse(res, 500, { success: false, error: e.message });
+        }
+        return;
+    }
+
     if (urlPath === '/auth/send-code' && req.method === 'POST') {
         try {
             const body = await readJsonBody(req);
@@ -985,6 +1031,8 @@ except Exception as e:
     }
 
     // ========== AUTH: LOGIN WITH PASSWORD ==========
+    // Personal passwords are stored as sha256 hashes in personal_password_hash field.
+    // PB auth password is always PB_SYSTEM_PASSWORD — we verify hash then auth with system password.
     if (urlPath === '/auth/login-password' && req.method === 'POST') {
         try {
             const body = await readJsonBody(req);
@@ -994,12 +1042,31 @@ except Exception as e:
                 jsonResponse(res, 400, { success: false, error: 'Email et mot de passe requis' });
                 return;
             }
+            const pb = await getPbAdmin();
+            const users = await pb.collection('users').getFullList({ filter: `email="${email}"` });
+            if (!users.length) {
+                jsonResponse(res, 401, { success: false, error: 'Email ou mot de passe incorrect' });
+                return;
+            }
+            const user = users[0];
+            if (user.status === 'inactive') {
+                jsonResponse(res, 403, { success: false, error: 'Ce compte est desactive. Contactez un administrateur.' });
+                return;
+            }
+            // Verify personal password hash
+            const providedHash = crypto.createHash('sha256').update(password).digest('hex');
+            if (!user.personal_password_hash || user.personal_password_hash !== providedHash) {
+                jsonResponse(res, 401, { success: false, error: 'Email ou mot de passe incorrect' });
+                return;
+            }
+            // Hash matches — authenticate via PB using system password to get a valid user token
             try {
                 const userPb = new PocketBase(PB_URL);
-                const authData = await userPb.collection('users').authWithPassword(email, password);
+                const authData = await userPb.collection('users').authWithPassword(email, PB_SYSTEM_PASSWORD);
                 jsonResponse(res, 200, { success: true, token: authData.token, record: authData.record });
             } catch (e) {
-                jsonResponse(res, 401, { success: false, error: 'Email ou mot de passe incorrect' });
+                console.error('[AUTH] login-password PB auth failed:', e.message);
+                jsonResponse(res, 500, { success: false, error: 'Erreur d\'authentification. Contactez un administrateur.' });
             }
         } catch (e) {
             jsonResponse(res, 500, { success: false, error: e.message });
@@ -1036,6 +1103,8 @@ except Exception as e:
     }
 
     // ========== AUTH: FORGOT PASSWORD (send temp password by email) ==========
+    // Stores sha256 hash of temp password in personal_password_hash.
+    // PB auth password (PB_SYSTEM_PASSWORD) is NOT changed — OTP flow stays intact.
     if (urlPath === '/auth/forgot-password' && req.method === 'POST') {
         try {
             const body = await readJsonBody(req);
@@ -1050,11 +1119,11 @@ except Exception as e:
                 jsonResponse(res, 404, { success: false, error: 'Aucun compte associe a cet email' });
                 return;
             }
-            // Generate temp password
+            // Generate temp password and store its sha256 hash (NOT changing PB auth password)
             const tempPass = 'Tmp' + crypto.randomInt(100000, 999999) + '!';
+            const tempHash = crypto.createHash('sha256').update(tempPass).digest('hex');
             await pb.collection('users').update(users[0].id, {
-                password: tempPass,
-                passwordConfirm: tempPass,
+                personal_password_hash: tempHash,
             });
             // Send by email
             try {

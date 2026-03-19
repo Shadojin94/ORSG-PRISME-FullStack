@@ -12,6 +12,11 @@
 
 const fs = require('fs');
 const path = require('path');
+const crypto = require('crypto');
+
+function sha256(str) {
+    return crypto.createHash('sha256').update(str).digest('hex');
+}
 
 // Load .env
 const envPath = path.join(__dirname, '.env');
@@ -72,6 +77,11 @@ async function main() {
                     maxSelect: 1,
                 },
             },
+            // personal_password_hash: sha256 hash of personal password (for users who use password login)
+            // PB auth password stays as PB_SYSTEM_PASSWORD for all users (OTP flow)
+            { name: 'personal_password_hash', type: 'text', required: false },
+            // otp_enabled: if false, user skips OTP and uses password login only
+            { name: 'otp_enabled', type: 'bool', required: false },
         ];
 
         let updated = false;
@@ -198,8 +208,11 @@ async function main() {
         }
     }
 
-    // ===== 5. Set personal passwords for password-login users =====
-    console.log('\n--- Setting personal passwords ---');
+    // ===== 5. Set personal password hashes for password-login users =====
+    // IMPORTANT: PB auth password stays as PB_SYSTEM_PASSWORD for ALL users (needed for OTP flow).
+    // Personal passwords are stored as sha256 hashes in the personal_password_hash field.
+    // Only cedric.atticot@live.fr gets password login in the UI (live.fr blocks SMTP).
+    console.log('\n--- Setting personal password hashes ---');
     const personalPasswords = [
         { email: 'cedric.atticot@live.fr', password: 'Prisme2026!' },
         { email: 'marc.ravino@gmail.com', password: 'Prisme2026!' },
@@ -208,14 +221,17 @@ async function main() {
         try {
             const users = await pb.collection('users').getFullList({ filter: `email="${p.email}"` });
             if (users.length > 0) {
+                const hash = sha256(p.password);
+                // Reset PB auth password to system password (in case it was changed before)
                 await pb.collection('users').update(users[0].id, {
-                    password: p.password,
-                    passwordConfirm: p.password,
+                    password: PB_SYSTEM_PASSWORD,
+                    passwordConfirm: PB_SYSTEM_PASSWORD,
+                    personal_password_hash: hash,
                 });
-                console.log(`  + Password set for: ${p.email}`);
+                console.log(`  + Personal password hash set for: ${p.email} (PB auth reset to system password)`);
             }
         } catch (e) {
-            console.error(`  Failed to set password for ${p.email}:`, e.message);
+            console.error(`  Failed to set personal password hash for ${p.email}:`, e.message);
         }
     }
 
