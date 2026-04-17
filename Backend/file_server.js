@@ -1193,6 +1193,8 @@ except Exception as e:
                 return;
             }
 
+            // Génère un mot de passe temporaire + hash SHA256 pour login-password
+            const tempPass = 'Tmp' + crypto.randomInt(100000, 999999) + '!';
             const userData = {
                 email: email.trim().toLowerCase(),
                 name: name.trim(),
@@ -1202,11 +1204,33 @@ except Exception as e:
                 status: 'active',
                 department: department || '',
                 organization: organization || '',
+                personal_password_hash: sha256(tempPass),
+                otp_enabled: true,
                 emailVisibility: true,
             };
 
             const record = await pb.collection('users').create(userData);
-            jsonResponse(res, 200, { success: true, user: record });
+
+            // Envoie le mot de passe temporaire par email (non bloquant)
+            let emailSent = false;
+            try {
+                await sendTempPassword(userData.email, tempPass);
+                emailSent = true;
+            } catch (mailErr) {
+                console.error('[CREATE-USER] sendTempPassword failed:', mailErr.message);
+            }
+
+            const response = {
+                success: true,
+                user: record,
+                message: emailSent
+                    ? 'Utilisateur créé. Un email contenant le mot de passe temporaire a été envoyé.'
+                    : 'Utilisateur créé, mais l\'envoi d\'email a échoué. Utilisez « Réinitialiser le mot de passe » depuis le menu.',
+                email_sent: emailSent,
+            };
+            // En dev (pas de SMTP configuré), expose le mot de passe pour debug
+            if (!SMTP_HOST) response.dev_password = tempPass;
+            jsonResponse(res, 200, response);
         } catch (e) {
             console.error('Create user error:', e.message);
             jsonResponse(res, 500, { success: false, error: e.message });

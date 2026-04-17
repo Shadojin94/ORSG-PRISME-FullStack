@@ -243,10 +243,12 @@ async function main() {
             // Authenticated users can view all users (needed for admin page)
             listRule: '@request.auth.id != ""',
             viewRule: '@request.auth.id != ""',
-            // Users can update their own profile
-            updateRule: '@request.auth.id = id',
+            // Users edit their own profile OR admins edit anyone
+            updateRule: '@request.auth.id = id || @request.auth.role = "admin"',
+            // Admins can delete any account (soft guard: also block self-delete at app level)
+            deleteRule: '@request.auth.role = "admin"',
         });
-        console.log('  Users API rules updated.');
+        console.log('  Users API rules updated (admin + self-edit).');
     } catch (e) {
         console.error('  Failed to update API rules:', e.message);
     }
