@@ -31,6 +31,29 @@ OUTPUT_DIR.mkdir(exist_ok=True)
 
 ORANGE_FILL = PatternFill(start_color="FFC000", end_color="FFC000", fill_type="solid")
 
+
+# ============================================================================
+# CALCULATED VARIABLE FILTER (client-side recomputes tx_*)
+# ============================================================================
+
+def is_calculated_variable(var_config_or_name):
+    """Retourne True si la variable est calculée côté client PRISME
+    (ne doit pas être exportée dans les fichiers Excel).
+
+    Règle robuste :
+    - Champ 'calculated: true' explicite dans la config (source of truth), OU
+    - Nom de variable commençant par 'tx_' (préfixe taux historique ORSG).
+
+    Accepte soit un dict de config de colonne, soit une string (var_id).
+    """
+    if isinstance(var_config_or_name, dict):
+        if var_config_or_name.get('calculated') is True:
+            return True
+        name = var_config_or_name.get('id', '')
+    else:
+        name = var_config_or_name or ''
+    return str(name).lower().startswith('tx_')
+
 # ============================================================================
 # CHARGER LA CONFIGURATION DEPUIS themes_config.json
 # ============================================================================
@@ -841,7 +864,14 @@ def generate_prisme_excel(dataset_id, year):
     geo_col = next((c for c in columns if c['type'] == 'geo_id'), None)
     time_col = next((c for c in columns if c['type'] in ('year', 'period')), None)
     dim_cols = [c for c in columns if c['type'] == 'dimension']
-    var_cols = [c for c in columns if c['type'] == 'variable']
+    var_cols_all = [c for c in columns if c['type'] == 'variable']
+    # Exclure les variables calculées (ex: tx_*) — PRISME les recalcule côté client
+    var_cols = []
+    for c in var_cols_all:
+        if is_calculated_variable(c):
+            print(f"  [FILTER] Skipped calculated variable: {c.get('id')}")
+        else:
+            var_cols.append(c)
 
     time_col_id = time_col['id'] if time_col else 'annee'
     variable_ids = [c['id'] for c in var_cols]
@@ -1006,6 +1036,9 @@ def generate_prisme_excel(dataset_id, year):
             col_keys_template.append(c['id'])
             header_suffixes.append(c['id'])
         elif c['type'] == 'variable':
+            if is_calculated_variable(c):
+                # Sécurité : ne jamais écrire une variable calculée dans l'Excel
+                continue
             col_keys_template.append(c['id'])
             header_suffixes.append(c['id'])
 

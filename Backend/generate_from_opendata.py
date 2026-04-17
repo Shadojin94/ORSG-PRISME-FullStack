@@ -25,6 +25,15 @@ OUTPUT_DIR = BASE_DIR / "output"
 
 ORANGE_FILL = PatternFill(start_color="FFC000", end_color="FFC000", fill_type="solid")
 
+
+def is_calculated_variable(var_name: str) -> bool:
+    """Retourne True pour les variables calculées côté client PRISME (tx_*).
+
+    PRISME recalcule les taux automatiquement : l'outil d'automatisation
+    doit fournir uniquement les données brutes (effectifs).
+    """
+    return bool(var_name) and str(var_name).lower().startswith('tx_')
+
 GEO_FOLDER_MAPPING = {
     "com": "Commune",
     "reg": "Region",
@@ -805,7 +814,14 @@ def _build_cepidc_levels(theme: str, year: int):
 
 def _generate_excel_and_zip(theme: str, year: int, all_levels):
     cfg = THEME_CONFIGS[theme]
-    variables = cfg["variables"]
+    all_variables = cfg["variables"]
+    # Exclure les variables calculées (tx_*) — PRISME les recalcule côté client
+    variables = []
+    for v in all_variables:
+        if is_calculated_variable(v):
+            print(f"  [FILTER] Skipped calculated variable: {v}")
+        else:
+            variables.append(v)
     excel_name = cfg["excel_name"]
 
     root_dir = OUTPUT_DIR / f"{theme}_opendata" / str(year)

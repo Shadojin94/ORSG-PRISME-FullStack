@@ -1,7 +1,7 @@
 {
-  "version": "1.0",
+  "version": "1.1",
   "description": "Configuration des sources Open Data pour PRISME (alternative à MOCA-O)",
-  "lastUpdated": "2026-02-02",
+  "lastUpdated": "2026-04-17",
 
   "sources": {
     "insee_diplomes_formation": {
@@ -151,6 +151,103 @@
       "providesDatasets": ["revenu"]
     },
 
+    "baac_onisr": {
+      "name": "BAAC — Bases annuelles des accidents corporels de la circulation (ONISR)",
+      "provider": "Ministère de l'Intérieur / ONISR",
+      "url": "https://www.data.gouv.fr/datasets/bases-de-donnees-annuelles-des-accidents-corporels-de-la-circulation-routiere-annees-de-2005-a-2024/",
+      "localRoot": "inputs/opendata/baac",
+      "structure": "annees_{YYYY}/{caract|usagers|vehicules|lieux}_{YYYY}.csv",
+      "years": ["2019", "2020", "2021", "2022", "2023", "2024"],
+      "encoding": "utf-8",
+      "separator": ";",
+      "geoColumns": {"dep": "dep", "com": "com"},
+      "variables": {
+        "nb_acci": {
+          "source": "caract",
+          "formula": "COUNT(DISTINCT Num_Acc)",
+          "description": "Nombre d'accidents corporels"
+        },
+        "nb_blesses": {
+          "source": "usagers",
+          "formula": "COUNT(grav IN (3,4))",
+          "description": "Nombre de blessés (hospitalisés + légers)"
+        },
+        "nb_morts": {
+          "source": "usagers",
+          "formula": "COUNT(grav = 2)",
+          "description": "Nombre de tués"
+        }
+      },
+      "providesDatasets": ["route"]
+    },
+
+    "spf_noyades_odisse": {
+      "name": "Enquête NOYADES — Santé Publique France (portail Odissé)",
+      "provider": "Santé Publique France",
+      "url": "https://odisse.santepubliquefrance.fr/explore/dataset/noyade-nombre-de-noyades-et-deces/",
+      "apiEndpoint": "https://odisse.santepubliquefrance.fr/api/explore/v2.1/catalog/datasets/noyade-nombre-de-noyades-et-deces/exports/csv",
+      "localFile": "inputs/opendata/spf_noyades/noyades_departement_2003_2021.csv",
+      "encoding": "utf-8",
+      "separator": ";",
+      "geoColumn": "Département Code",
+      "yearsAvailable": [2003, 2004, 2006, 2009, 2012, 2015, 2018, 2021],
+      "note": "Enquête triennale depuis 2006. Années 2022-2024 disponibles uniquement en bilans PDF — template manuel fourni dans csv_sources/noyades_template.csv",
+      "variables": {
+        "nb_noyades": {
+          "column": "Nombre de noyades accidentelles",
+          "description": "Nombre total de noyades"
+        },
+        "nb_noyades_deces": {
+          "column": "Nombres de noyades accidentelles suivies de décès",
+          "description": "Décès par noyade"
+        }
+      },
+      "providesDatasets": ["noyades"]
+    },
+
+    "cepidc_mortalite_comportementale": {
+      "name": "Mortalité comportementale — CépiDc via Odissé + CSV sources manuels",
+      "provider": "CépiDc INSERM / Santé Publique France / Odissé",
+      "localRoot": "inputs/opendata/cepidc/mortalite_causes_comportementales",
+      "sources": {
+        "suicides_departement": {
+          "file": "suicides_deces_departement.csv",
+          "url": "https://odisse.santepubliquefrance.fr/explore/dataset/suicides-deces-departement/",
+          "years": "2019-2023",
+          "cim10": "X60-X84",
+          "columns": {"dep": "Département Code", "annee": "Année", "nb": "Nombre de décès"},
+          "variable": "m_suicide"
+        },
+        "suicides_region": {
+          "file": "suicides_deces_region.csv",
+          "url": "https://odisse.santepubliquefrance.fr/explore/dataset/suicides-deces-region/",
+          "years": "2019-2023",
+          "cim10": "X60-X84",
+          "variable": "m_suicide"
+        },
+        "alcool_consommation_region": {
+          "file": "alcool_consommation_quotidienne_region.csv",
+          "url": "https://odisse.santepubliquefrance.fr/explore/dataset/alcool-consommation-quotidienne-region/",
+          "years": "2000-2023",
+          "note": "CONSOMMATION (prévalence), PAS mortalité — proxy uniquement pour m_alcool",
+          "variable": "m_alcool_proxy"
+        },
+        "tabac_consommation_region": {
+          "file": "tabac_consommation_quotidienne_region.csv",
+          "url": "https://odisse.santepubliquefrance.fr/explore/dataset/tabac-consommation-quotidienne_reg/",
+          "years": "2000-2023",
+          "note": "CONSOMMATION (prévalence), PAS mortalité — proxy uniquement pour m_tabac",
+          "variable": "m_tabac_proxy"
+        }
+      },
+      "todo": [
+        "Mortalité directe alcool (F10, K70, K73, K74, K86) par département : pas en CSV Odissé — export manuel CépiDc requis",
+        "Mortalité directe tabac (C33-C34, F17) par département : idem",
+        "Demande à soumettre à CépiDc INSERM ou parsing Selenium opendata-cepidc.inserm.fr"
+      ],
+      "providesDatasets": ["mortalite_comportementale"]
+    },
+
     "cafdata_allocataires": {
       "name": "CAF Data - Allocataires par commune",
       "provider": "CNAF",
@@ -227,6 +324,35 @@
         "rp": "PMUN (fallback: PTOT)",
         "superficie": "superficie (fallback: SUPERFICIE | surface_km2 | surface)"
       }
+    },
+    "route": {
+      "source": "baac_onisr",
+      "outputColumns": ["nb_acci", "nb_blesses", "nb_morts"],
+      "formula": {
+        "nb_acci": "caract: COUNT(DISTINCT Num_Acc) par (annee, dep, com)",
+        "nb_blesses": "usagers: COUNT(grav IN (3,4)) joint sur Num_Acc",
+        "nb_morts": "usagers: COUNT(grav = 2) joint sur Num_Acc"
+      },
+      "note": "Niveaux géo : COM (caract.com), DEP (caract.dep), REG (mapping DEP→REG), FR entière"
+    },
+    "noyades": {
+      "source": "spf_noyades_odisse",
+      "outputColumns": ["nb_noyades", "nb_noyades_deces"],
+      "formula": {
+        "nb_noyades": "Nombre de noyades accidentelles (dep + annee)",
+        "nb_noyades_deces": "Nombres de noyades accidentelles suivies de décès"
+      },
+      "note": "Niveau DEP uniquement (pas de ventilation communale). Années disponibles : 2003,04,06,09,12,15,18,21. Template manuel pour 2022-2024 : csv_sources/noyades_template.csv"
+    },
+    "mortalite_comportementale": {
+      "source": "cepidc_mortalite_comportementale",
+      "outputColumns": ["m_suicide", "m_alcool", "m_tabac"],
+      "formula": {
+        "m_suicide": "suicides_deces_departement.csv: SUM(Nombre de décès) par (Année, Département Code)",
+        "m_alcool": "TODO — CépiDc F10,K70,K73,K74,K86 non disponible en Open Data automatisée (proxy consommation région)",
+        "m_tabac": "TODO — CépiDc C33-C34,F17 non disponible en Open Data automatisée (proxy consommation région)"
+      },
+      "note": "m_suicide OK niveau DEP 2019-2023. m_alcool/m_tabac : export manuel CépiDc requis (voir csv_sources/README_TRAUMATISMES.md)"
     }
   },
 
