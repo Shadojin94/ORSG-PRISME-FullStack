@@ -11,6 +11,16 @@ const { spawn } = require('child_process');
 const Busboy = require('busboy');
 const PocketBase = require('pocketbase').default || require('pocketbase');
 
+// Utility: SHA256 hash
+function sha256(str) {
+    return crypto.createHash('sha256').update(str).digest('hex');
+}
+
+// Utility: escape double quotes for PocketBase filter values (prevents filter injection)
+function pbEscape(value) {
+    return String(value).replace(/"/g, '\\"');
+}
+
 // Load .env file if present (simple parser, no dotenv dependency)
 const envPath = path.join(__dirname, '.env');
 if (fs.existsSync(envPath)) {
@@ -854,8 +864,7 @@ except Exception as e:
             }
             let user = null;
             try {
-                const records = await pb.collection('users').getFullList({ filter: `email="${email}"` });
-                user = records[0] || null;
+                user = await pb.collection('users').getFirstListItem(`email="${pbEscape(email)}"`);
             } catch (_e) { user = null; }
 
             if (!user) {
@@ -898,8 +907,7 @@ except Exception as e:
                     // Check user exists and is active
                     let user;
                     try {
-                        const records = await pb.collection('users').getFullList({ filter: `email="${email}"` });
-                        user = records[0];
+                        user = await pb.collection('users').getFirstListItem(`email="${pbEscape(email)}"`);
                     } catch (_e) { user = null; }
 
                     if (!user) {
@@ -993,7 +1001,7 @@ except Exception as e:
             let codeRecords;
             try {
                 codeRecords = await pb.collection('login_codes').getFullList({
-                    filter: `email="${email}" && code="${code}" && used=false && expires_at>"${now}"`,
+                    filter: `email="${pbEscape(email)}" && code="${pbEscape(code)}" && used=false && expires_at>"${now}"`,
                     sort: '-created',
                 });
             } catch (e) {
@@ -1043,19 +1051,23 @@ except Exception as e:
                 return;
             }
             const pb = await getPbAdmin();
-            const users = await pb.collection('users').getFullList({ filter: `email="${email}"` });
-            if (!users.length) {
+            let user;
+            try {
+                user = await pb.collection('users').getFirstListItem(`email="${pbEscape(email)}"`);
+            } catch (_e) { user = null; }
+            if (!user) {
                 jsonResponse(res, 401, { success: false, error: 'Email ou mot de passe incorrect' });
                 return;
             }
-            const user = users[0];
             if (user.status === 'inactive') {
                 jsonResponse(res, 403, { success: false, error: 'Ce compte est desactive. Contactez un administrateur.' });
                 return;
             }
-            // Verify personal password hash
-            const providedHash = crypto.createHash('sha256').update(password).digest('hex');
-            if (!user.personal_password_hash || user.personal_password_hash !== providedHash) {
+            // Verify personal password hash (timing-safe comparison)
+            const providedHash = sha256(password);
+            const storedHash = user.personal_password_hash || '';
+            if (!storedHash || storedHash.length !== providedHash.length ||
+                !crypto.timingSafeEqual(Buffer.from(storedHash, 'hex'), Buffer.from(providedHash, 'hex'))) {
                 jsonResponse(res, 401, { success: false, error: 'Email ou mot de passe incorrect' });
                 return;
             }
@@ -1079,20 +1091,23 @@ except Exception as e:
         try {
             const body = await readJsonBody(req);
             const email = (body.email || '').trim().toLowerCase();
-            const newPassword = (body.password || '');
+            const newPassword = (body.password || body.newPassword || '');
             if (!email || !newPassword || newPassword.length < 8) {
                 jsonResponse(res, 400, { success: false, error: 'Mot de passe requis (8 caracteres minimum)' });
                 return;
             }
             const pb = await getPbAdmin();
-            const users = await pb.collection('users').getFullList({ filter: `email="${email}"` });
-            if (!users.length) {
+            let user;
+            try {
+                user = await pb.collection('users').getFirstListItem(`email="${pbEscape(email)}"`);
+            } catch (_e) { user = null; }
+            if (!user) {
                 jsonResponse(res, 404, { success: false, error: 'Aucun compte associe a cet email' });
                 return;
             }
-            await pb.collection('users').update(users[0].id, {
-                password: newPassword,
-                passwordConfirm: newPassword,
+            // Stocke le hash personnel utilisé par /auth/login-password
+            await pb.collection('users').update(user.id, {
+                personal_password_hash: sha256(newPassword),
             });
             jsonResponse(res, 200, { success: true, message: 'Mot de passe mis a jour' });
         } catch (e) {
@@ -1114,15 +1129,18 @@ except Exception as e:
                 return;
             }
             const pb = await getPbAdmin();
-            const users = await pb.collection('users').getFullList({ filter: `email="${email}"` });
-            if (!users.length) {
+            let user;
+            try {
+                user = await pb.collection('users').getFirstListItem(`email="${pbEscape(email)}"`);
+            } catch (_e) { user = null; }
+            if (!user) {
                 jsonResponse(res, 404, { success: false, error: 'Aucun compte associe a cet email' });
                 return;
             }
             // Generate temp password and store its sha256 hash (NOT changing PB auth password)
             const tempPass = 'Tmp' + crypto.randomInt(100000, 999999) + '!';
-            const tempHash = crypto.createHash('sha256').update(tempPass).digest('hex');
-            await pb.collection('users').update(users[0].id, {
+            const tempHash = sha256(tempPass);
+            await pb.collection('users').update(user.id, {
                 personal_password_hash: tempHash,
             });
             // Send by email
@@ -1154,7 +1172,7 @@ except Exception as e:
             const pb = await getPbAdmin();
 
             // Check if email already exists
-            const existing = await pb.collection('users').getFullList({ filter: `email="${email.trim().toLowerCase()}"` });
+            const existing = await pb.collection('users').getFullList({ filter: `email="${pbEscape(email.trim().toLowerCase())}"` });
             if (existing.length > 0) {
                 jsonResponse(res, 409, { success: false, error: 'Un utilisateur avec cet email existe deja' });
                 return;

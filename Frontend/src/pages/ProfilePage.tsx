@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react"
-import { User, Shield, Save, Loader2, CheckCircle2, Mail, Clock, ShieldCheck, ShieldOff } from "lucide-react"
+import { User, Shield, Save, Loader2, CheckCircle2, Mail, Clock, ShieldCheck, ShieldOff, KeyRound, Eye, EyeOff } from "lucide-react"
 import { cn } from "@/lib/utils"
 import { useAuth } from "@/hooks/useAuth"
 import { pb, userInitials } from "@/lib/pocketbase"
@@ -17,6 +17,12 @@ export function ProfilePage() {
         organization: '',
         department: '',
     })
+
+    // Password change
+    const [pwdForm, setPwdForm] = useState({ newPassword: '', confirmPassword: '' })
+    const [pwdShow, setPwdShow] = useState(false)
+    const [pwdSaving, setPwdSaving] = useState(false)
+    const [pwdMessage, setPwdMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null)
 
     // Load user data into form
     useEffect(() => {
@@ -49,6 +55,37 @@ export function ProfilePage() {
             alert('Erreur lors de la sauvegarde du profil.')
         }
         setSaving(false)
+    }
+
+    const handleChangePassword = async () => {
+        if (!user?.email) return
+        setPwdMessage(null)
+        if (pwdForm.newPassword.length < 8) {
+            setPwdMessage({ type: 'error', text: 'Le mot de passe doit contenir au moins 8 caractères.' })
+            return
+        }
+        if (pwdForm.newPassword !== pwdForm.confirmPassword) {
+            setPwdMessage({ type: 'error', text: 'La confirmation ne correspond pas au nouveau mot de passe.' })
+            return
+        }
+        setPwdSaving(true)
+        try {
+            const res = await fetch('/api/auth/set-password', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ email: user.email, newPassword: pwdForm.newPassword }),
+            })
+            const data = await res.json()
+            if (!res.ok || !data.success) {
+                throw new Error(data.error || 'Échec de la mise à jour du mot de passe.')
+            }
+            setPwdMessage({ type: 'success', text: 'Mot de passe mis à jour. Utilisez-le à votre prochaine connexion.' })
+            setPwdForm({ newPassword: '', confirmPassword: '' })
+            await refreshUser()
+        } catch (err: any) {
+            setPwdMessage({ type: 'error', text: err?.message || 'Erreur lors du changement de mot de passe.' })
+        }
+        setPwdSaving(false)
     }
 
     const handleToggleOtp = async () => {
@@ -253,11 +290,75 @@ export function ProfilePage() {
                                 {user?.otp_enabled === false && !user?.personal_password_hash && (
                                     <div className="p-4 bg-amber-50 rounded-xl border border-amber-200">
                                         <p className="text-sm text-amber-800">
-                                            <strong>Attention :</strong> L'OTP est desactive mais aucun mot de passe n'est configure.
-                                            Contactez un administrateur pour definir un mot de passe.
+                                            <strong>Attention :</strong> L'OTP est désactivé mais aucun mot de passe n'est configuré.
+                                            Définissez-en un ci-dessous pour pouvoir vous connecter sans OTP.
                                         </p>
                                     </div>
                                 )}
+
+                                {/* Password change */}
+                                <div className="p-4 bg-gray-50 rounded-xl border border-gray-200 space-y-3">
+                                    <div className="flex items-center gap-3">
+                                        <div className="w-10 h-10 bg-white rounded-full flex items-center justify-center text-gray-600 shadow-sm">
+                                            <KeyRound className="w-5 h-5" />
+                                        </div>
+                                        <div>
+                                            <p className="font-semibold text-gray-900">Mot de passe personnel</p>
+                                            <p className="text-xs text-gray-500">
+                                                {user?.personal_password_hash
+                                                    ? "Un mot de passe est déjà configuré. Vous pouvez le modifier ci-dessous."
+                                                    : "Aucun mot de passe défini. Définissez-en un pour vous connecter sans code email."
+                                                }
+                                            </p>
+                                        </div>
+                                    </div>
+                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                                        <div className="relative">
+                                            <input
+                                                type={pwdShow ? "text" : "password"}
+                                                value={pwdForm.newPassword}
+                                                onChange={(e) => setPwdForm({ ...pwdForm, newPassword: e.target.value })}
+                                                placeholder="Nouveau mot de passe"
+                                                autoComplete="new-password"
+                                                className="w-full px-4 py-2 pr-10 rounded-lg border border-gray-300 bg-white focus:ring-2 focus:ring-orsg-blue/20 outline-none text-sm"
+                                            />
+                                            <button
+                                                type="button"
+                                                onClick={() => setPwdShow(!pwdShow)}
+                                                className="absolute right-2 top-1/2 -translate-y-1/2 p-1 text-gray-400 hover:text-gray-700"
+                                                tabIndex={-1}
+                                            >
+                                                {pwdShow ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                                            </button>
+                                        </div>
+                                        <input
+                                            type={pwdShow ? "text" : "password"}
+                                            value={pwdForm.confirmPassword}
+                                            onChange={(e) => setPwdForm({ ...pwdForm, confirmPassword: e.target.value })}
+                                            placeholder="Confirmation"
+                                            autoComplete="new-password"
+                                            className="w-full px-4 py-2 rounded-lg border border-gray-300 bg-white focus:ring-2 focus:ring-orsg-blue/20 outline-none text-sm"
+                                        />
+                                    </div>
+                                    {pwdMessage && (
+                                        <div className={cn(
+                                            "text-sm px-3 py-2 rounded-lg",
+                                            pwdMessage.type === 'success' ? "bg-green-50 text-green-700 border border-green-200" : "bg-red-50 text-red-700 border border-red-200"
+                                        )}>
+                                            {pwdMessage.text}
+                                        </div>
+                                    )}
+                                    <div className="flex justify-end">
+                                        <button
+                                            onClick={handleChangePassword}
+                                            disabled={pwdSaving || !pwdForm.newPassword}
+                                            className="bg-orsg-blue hover:bg-blue-700 text-white px-5 py-2 rounded-lg font-bold text-sm shadow-sm transition-colors flex items-center gap-2 disabled:opacity-60"
+                                        >
+                                            {pwdSaving ? <Loader2 className="w-4 h-4 animate-spin" /> : <Save className="w-4 h-4" />}
+                                            Mettre à jour
+                                        </button>
+                                    </div>
+                                </div>
 
                                 <div className="flex items-center justify-between p-4 bg-gray-50 rounded-xl border border-gray-200">
                                     <div className="flex items-center gap-4">

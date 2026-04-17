@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback } from "react"
 import { useNavigate } from "react-router-dom"
-import { Users, Search, MoreVertical, CheckCircle2, XCircle, UserPlus, Shield, Mail, Calendar, X, Loader2, ShieldCheck, ShieldOff } from "lucide-react"
+import { Users, Search, MoreVertical, CheckCircle2, XCircle, UserPlus, Shield, Mail, Calendar, X, Loader2, ShieldCheck, ShieldOff, Pencil, KeyRound, Trash2 } from "lucide-react"
 import { cn } from "@/lib/utils"
 import { useAuth } from "@/hooks/useAuth"
 import { pb, roleLabelFr } from "@/lib/pocketbase"
@@ -65,10 +65,52 @@ export function AdminUsersPage() {
         try {
             await pb.collection('users').update(userId, { role: newRole })
             setUsers(prev => prev.map(u => u.id === userId ? { ...u, role: newRole as PrismeUser['role'] } : u))
-            setEditingUser(null)
         } catch (err) {
             console.error("Error updating role:", err)
             alert("Erreur lors du changement de role.")
+        }
+    }
+
+    const resetPassword = async (user: PrismeUser) => {
+        if (!user.email) return
+        if (!confirm(`Envoyer un mot de passe temporaire à ${user.email} ? L'utilisateur recevra un email pour se reconnecter.`)) return
+        try {
+            const res = await fetch('/api/auth/forgot-password', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ email: user.email }),
+            })
+            const data = await res.json()
+            if (!res.ok || !data.success) {
+                throw new Error(data.error || 'Échec de la réinitialisation.')
+            }
+            alert(`Email envoyé à ${user.email}. L'utilisateur pourra se reconnecter avec le mot de passe temporaire reçu.`)
+        } catch (err: any) {
+            console.error('Reset password error:', err)
+            alert(err?.message || "Erreur lors de la réinitialisation du mot de passe.")
+        }
+    }
+
+    const deleteUser = async (user: PrismeUser) => {
+        if (!confirm(`Supprimer définitivement le compte ${user.name || user.email} ? Cette action est irréversible.`)) return
+        try {
+            await pb.collection('users').delete(user.id)
+            setUsers(prev => prev.filter(u => u.id !== user.id))
+        } catch (err) {
+            console.error('Delete user error:', err)
+            alert("Erreur lors de la suppression du compte.")
+        }
+    }
+
+    const saveEdit = async (patch: Partial<PrismeUser>) => {
+        if (!editingUser) return
+        try {
+            const updated = await pb.collection('users').update<PrismeUser>(editingUser.id, patch)
+            setUsers(prev => prev.map(u => u.id === editingUser.id ? { ...u, ...updated } : u))
+            setEditingUser(null)
+        } catch (err) {
+            console.error('Edit user error:', err)
+            alert("Erreur lors de la modification du profil utilisateur.")
         }
     }
 
@@ -262,20 +304,40 @@ export function AdminUsersPage() {
                                             <MoreVertical className="w-5 h-5" />
                                         </button>
                                         {menuOpen === user.id && (
-                                            <div className="absolute right-0 top-full mt-1 bg-white rounded-lg shadow-lg border border-gray-200 py-2 z-20 w-48">
-                                                <div className="px-3 py-1 text-xs font-bold text-gray-400 uppercase">Changer le role</div>
+                                            <div className="absolute right-0 top-full mt-1 bg-white rounded-lg shadow-lg border border-gray-200 py-2 z-20 w-56">
+                                                <button
+                                                    onClick={() => { setEditingUser(user); setMenuOpen(null); }}
+                                                    className="w-full text-left px-3 py-2 text-sm hover:bg-gray-50 flex items-center gap-2 text-gray-700"
+                                                >
+                                                    <Pencil className="w-3.5 h-3.5 text-gray-500" /> Modifier le profil
+                                                </button>
+                                                <button
+                                                    onClick={() => { resetPassword(user); setMenuOpen(null); }}
+                                                    className="w-full text-left px-3 py-2 text-sm hover:bg-gray-50 flex items-center gap-2 text-gray-700"
+                                                >
+                                                    <KeyRound className="w-3.5 h-3.5 text-gray-500" /> Réinitialiser le mot de passe
+                                                </button>
+                                                <div className="border-t border-gray-100 my-1" />
+                                                <div className="px-3 py-1 text-xs font-bold text-gray-400 uppercase">Changer le rôle</div>
                                                 {ROLE_OPTIONS.map(role => (
                                                     <button
                                                         key={role}
                                                         onClick={() => { updateRole(user.id, role); setMenuOpen(null); }}
                                                         className={cn(
                                                             "w-full text-left px-3 py-1.5 text-sm hover:bg-gray-50",
-                                                            user.role === role ? "text-orsg-blue font-bold" : "text-gray-700"
+                                                            user.role === role ? "text-[#1a4b8c] font-bold" : "text-gray-700"
                                                         )}
                                                     >
                                                         {roleLabelFr(role)}
                                                     </button>
                                                 ))}
+                                                <div className="border-t border-gray-100 my-1" />
+                                                <button
+                                                    onClick={() => { deleteUser(user); setMenuOpen(null); }}
+                                                    className="w-full text-left px-3 py-2 text-sm hover:bg-red-50 flex items-center gap-2 text-red-600"
+                                                >
+                                                    <Trash2 className="w-3.5 h-3.5" /> Supprimer le compte
+                                                </button>
                                             </div>
                                         )}
                                     </div>
@@ -301,8 +363,98 @@ export function AdminUsersPage() {
             )}
 
             {editingUser && (
-                <div className="fixed inset-0 z-10" onClick={() => setEditingUser(null)} />
+                <EditUserModal
+                    user={editingUser}
+                    onClose={() => setEditingUser(null)}
+                    onSave={saveEdit}
+                />
             )}
+        </div>
+    )
+}
+
+// ===== Edit User Modal =====
+
+function EditUserModal({ user, onClose, onSave }: { user: PrismeUser; onClose: () => void; onSave: (patch: Partial<PrismeUser>) => Promise<void> | void }) {
+    const [form, setForm] = useState({
+        name: user.name || '',
+        phone: user.phone || '',
+        organization: user.organization || 'ORSG-CTPS',
+        department: user.department || '',
+    })
+    const [saving, setSaving] = useState(false)
+
+    const submit = async () => {
+        setSaving(true)
+        await onSave(form)
+        setSaving(false)
+    }
+
+    return (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
+            <div className="bg-white rounded-2xl shadow-2xl w-full max-w-md p-6 mx-4">
+                <div className="flex items-center justify-between mb-6">
+                    <h3 className="text-xl font-bold text-gray-900">Modifier le profil</h3>
+                    <button onClick={onClose} className="p-2 hover:bg-gray-100 rounded-lg">
+                        <X className="w-5 h-5 text-gray-500" />
+                    </button>
+                </div>
+
+                <div className="space-y-4">
+                    <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-1">Email</label>
+                        <input type="email" value={user.email || ''} readOnly className="w-full px-4 py-2 rounded-lg border border-gray-200 bg-gray-50 text-gray-500" />
+                        <p className="text-xs text-gray-400 mt-1">L'email n'est pas modifiable depuis cette interface.</p>
+                    </div>
+                    <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-1">Nom complet</label>
+                        <input
+                            type="text"
+                            value={form.name}
+                            onChange={(e) => setForm({ ...form, name: e.target.value })}
+                            className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-[#3bb3a9]/20 outline-none"
+                        />
+                    </div>
+                    <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-1">Téléphone</label>
+                        <input
+                            type="tel"
+                            value={form.phone}
+                            onChange={(e) => setForm({ ...form, phone: e.target.value })}
+                            placeholder="+594 694 XX XX XX"
+                            className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-[#3bb3a9]/20 outline-none"
+                        />
+                    </div>
+                    <div className="grid grid-cols-2 gap-4">
+                        <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-1">Organisation</label>
+                            <input
+                                type="text"
+                                value={form.organization}
+                                onChange={(e) => setForm({ ...form, organization: e.target.value })}
+                                className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-[#3bb3a9]/20 outline-none"
+                            />
+                        </div>
+                        <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-1">Département</label>
+                            <input
+                                type="text"
+                                value={form.department}
+                                onChange={(e) => setForm({ ...form, department: e.target.value })}
+                                className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-[#3bb3a9]/20 outline-none"
+                            />
+                        </div>
+                    </div>
+
+                    <div className="flex gap-3 pt-2">
+                        <button onClick={onClose} className="flex-1 px-4 py-2 border border-gray-300 rounded-lg text-gray-700 font-medium hover:bg-gray-50">Annuler</button>
+                        <button onClick={submit} disabled={saving} className="flex-1 px-4 py-2 bg-[#3bb3a9] text-white rounded-lg font-bold hover:bg-[#2f9a91] disabled:opacity-60 flex items-center justify-center gap-2">
+                            {saving ? <Loader2 className="w-4 h-4 animate-spin" /> : null}
+                            Enregistrer
+                        </button>
+                    </div>
+                </div>
+            </div>
         </div>
     )
 }
