@@ -155,6 +155,32 @@ THEME_CONFIGS = {
         "source_type": "cepidc",
         "cepidc_sheet": "Covid19",
     },
+    # Comportements / addictions (Odissé) - DEP-level for suicide, REG-level for alcool/tabac
+    "comp_mortalite": {
+        "excel_name": "comp_mortalite",
+        "variables": ["m_suicide"],
+        "source_type": "odisse_suicide",
+    },
+    "suicide": {
+        "excel_name": "suicide",
+        "variables": ["m_suicide"],
+        "source_type": "odisse_suicide",
+    },
+    "addictions_alcool": {
+        "excel_name": "addictions_alcool",
+        "variables": ["prev_alcool_quotidien"],
+        "source_type": "odisse_alcool",
+    },
+    "addictions_tabac": {
+        "excel_name": "addictions_tabac",
+        "variables": ["prev_tabac_quotidien"],
+        "source_type": "odisse_tabac",
+    },
+    "noyades": {
+        "excel_name": "noyades",
+        "variables": ["nb_noyades", "nb_noyades_deces"],
+        "source_type": "spf_noyades",
+    },
 }
 
 
@@ -812,6 +838,215 @@ def _build_cepidc_levels(theme: str, year: int):
     return _add_year(all_levels, year)
 
 
+# ---------------------------------------------------------------------------
+# Odissé (Santé Publique France) - Suicide / Alcool / Tabac
+# ---------------------------------------------------------------------------
+
+ODISSE_DIR = INPUTS_DIR / "cepidc" / "mortalite_causes_comportementales"
+
+
+def _read_odisse(path: Path) -> pd.DataFrame:
+    """Odissé CSVs: try utf-8-sig then latin-1, semicolon-separated."""
+    for enc in ("utf-8-sig", "utf-8", "latin-1"):
+        try:
+            df = pd.read_csv(path, sep=";", encoding=enc, low_memory=False)
+            # Heuristique : si plus d'une colonne, encoding OK
+            if len(df.columns) > 1:
+                return df
+        except Exception:
+            continue
+    return pd.read_csv(path, sep=";", encoding="latin-1", low_memory=False)
+
+
+def _find_col(df: pd.DataFrame, *needles) -> str:
+    """Return the first column whose name contains all needles (case-insensitive, tolerant of encoding)."""
+    for col in df.columns:
+        low = col.lower()
+        if all(n.lower() in low for n in needles):
+            return col
+    raise KeyError(f"Colonne contenant {needles} introuvable dans {list(df.columns)[:8]}...")
+
+
+def _build_odisse_suicide_levels(year: int):
+    path = ODISSE_DIR / "suicides_deces_departement.csv"
+    if not path.exists():
+        raise FileNotFoundError(f"Source Odissé manquante: {path}")
+    df = _read_odisse(path)
+    yr_col = _find_col(df, "nn")  # Année
+    dep_col = _find_col(df, "partement", "code")  # Département Code
+    n_col = _find_col(df, "nombre")  # Nombre de décès
+
+    df = df[df[yr_col] == year].copy()
+    if df.empty:
+        raise ValueError(f"Aucune donnée suicide pour {year}")
+
+    df["dep_raw"] = df[dep_col].astype(str).str.strip()
+    # Normaliser dep: 1->01, 2A/2B gardés, 971-976 gardés (3 chars)
+    def norm_dep(v: str) -> str:
+        v = v.strip()
+        if v in ("2A", "2B"):
+            return v
+        if v.isdigit():
+            if len(v) <= 2:
+                return v.zfill(2)
+            return v
+        return v
+    df["dep"] = df["dep_raw"].apply(norm_dep)
+    df["reg"] = df["dep"].map(DEP_TO_REG)
+    df["m_suicide"] = pd.to_numeric(df[n_col], errors="coerce").fillna(0)
+
+    # DEP aggregation (all ages/sexes) - used for commune proxy in Guyane (973)
+    dep_agg = df.groupby("dep", as_index=False)["m_suicide"].sum()
+
+    # REG aggregation
+    reg_agg = df.dropna(subset=["reg"]).groupby("reg", as_index=False)["m_suicide"].sum()
+    reg_full = pd.DataFrame({"codgeo": REGION_ORDER})
+    reg = reg_full.merge(reg_agg.rename(columns={"reg": "codgeo"}), on="codgeo", how="left").fillna(0)
+
+    # Commune Guyane : proxy = valeur DEP 973
+    dep973 = dep_agg[dep_agg["dep"] == "973"]["m_suicide"].sum()
+    com = pd.DataFrame({
+        "codgeo": COMMUNES_GUYANE,
+        "m_suicide": [None] * len(COMMUNES_GUYANE),  # Pas de données communales
+    })
+
+    dom_n = reg[reg["codgeo"].isin(DOM_CODES)]["m_suicide"].sum()
+    fh_n = reg[reg["codgeo"].isin(FH_REGIONS)]["m_suicide"].sum()
+    fra_n = reg["m_suicide"].sum()
+
+    dom = pd.DataFrame({"codgeo": ["DOM"], "m_suicide": [dom_n]})
+    fh = pd.DataFrame({"codgeo": ["0"], "m_suicide": [fh_n]})
+    fra = pd.DataFrame({"codgeo": ["99"], "m_suicide": [fra_n]})
+
+    return _add_year({"com": com, "reg": reg, "dom": dom, "fh": fh, "fra": fra}, year)
+
+
+def _build_odisse_consommation_levels(year: int, kind: str):
+    """kind: 'alcool' or 'tabac'. REG-level only (consommation quotidienne)."""
+    if kind == "alcool":
+        path = ODISSE_DIR / "alcool_consommation_quotidienne_region.csv"
+        out_var = "prev_alcool_quotidien"
+    else:
+        path = ODISSE_DIR / "tabac_consommation_quotidienne_region.csv"
+        out_var = "prev_tabac_quotidien"
+    if not path.exists():
+        raise FileNotFoundError(f"Source Odissé manquante: {path}")
+    df = _read_odisse(path)
+    yr_col = _find_col(df, "nn")
+    reg_col = _find_col(df, "gion", "code")
+    tx_col = _find_col(df, "taux", "standardis")
+    sexe_col = _find_col(df, "exe")
+
+    df = df[df[yr_col] == year].copy()
+    if df.empty:
+        available = sorted(pd.read_csv(path, sep=";", encoding="latin-1")[yr_col].dropna().unique().tolist())
+        raise ValueError(f"Aucune donnée {kind} pour {year}. Années dispo: {available}")
+
+    # Prendre "Hommes et Femmes" en priorité, sinon moyenne H+F
+    if df[sexe_col].astype(str).str.contains("Hommes et Femmes", case=False, na=False).any():
+        df = df[df[sexe_col].astype(str).str.contains("Hommes et Femmes", case=False, na=False)]
+    def _norm_reg(v):
+        s = str(v).strip()
+        if s.endswith(".0"):
+            s = s[:-2]
+        if s.isdigit() and len(s) <= 2:
+            return s.zfill(2)
+        return s
+    df["codgeo"] = df[reg_col].apply(_norm_reg)
+    df[out_var] = pd.to_numeric(df[tx_col], errors="coerce").fillna(0)
+
+    reg_agg = df.groupby("codgeo", as_index=False)[out_var].mean()
+    reg_full = pd.DataFrame({"codgeo": REGION_ORDER})
+    reg = reg_full.merge(reg_agg, on="codgeo", how="left").fillna(0)
+    reg[out_var] = reg[out_var].round(2)
+
+    # Guyane = reg 03
+    gy_tx = float(reg[reg["codgeo"] == "03"][out_var].iloc[0]) if (reg["codgeo"] == "03").any() else 0
+    com = pd.DataFrame({
+        "codgeo": COMMUNES_GUYANE,
+        out_var: [gy_tx] * len(COMMUNES_GUYANE),
+    })
+
+    dom_tx = reg[reg["codgeo"].isin(DOM_CODES)][out_var].mean()
+    fh_tx = reg[reg["codgeo"].isin(FH_REGIONS)][out_var].mean()
+    fra_tx = reg[out_var].mean()
+
+    dom = pd.DataFrame({"codgeo": ["DOM"], out_var: [round(dom_tx, 2)]})
+    fh = pd.DataFrame({"codgeo": ["0"], out_var: [round(fh_tx, 2)]})
+    fra = pd.DataFrame({"codgeo": ["99"], out_var: [round(fra_tx, 2)]})
+
+    return _add_year({"com": com, "reg": reg, "dom": dom, "fh": fh, "fra": fra}, year)
+
+
+def _build_spf_noyades_levels(year: int):
+    path = INPUTS_DIR / "spf_noyades" / "noyades_departement_2003_2021.csv"
+    if not path.exists():
+        raise FileNotFoundError(f"Source noyades manquante: {path}")
+    df = pd.read_csv(path, sep=";", encoding="utf-8-sig")
+    yr_col = _find_col(df, "nn")  # Année
+    dep_col = _find_col(df, "partement", "code")
+    reg_col = _find_col(df, "gion", "code")
+    n_col = _find_col(df, "noyades", "accidentelles")
+    # Colonne exacte "Nombre de noyades accidentelles" (pas "suivies de décès")
+    for c in df.columns:
+        if "noyades accidentelles" in c.lower() and "d" not in c.lower()[-10:]:
+            n_col = c
+            break
+    d_col = None
+    for c in df.columns:
+        cl = c.lower()
+        if "suivies" in cl and ("décès" in cl or "deces" in cl):
+            d_col = c
+            break
+
+    df_year = df[df[yr_col] == year].copy()
+    if df_year.empty:
+        available = sorted(df[yr_col].dropna().unique().tolist())
+        raise ValueError(f"Aucune donnée noyades pour {year}. Années dispo (enquête triennale): {available}")
+
+    df_year["dep"] = df_year[dep_col].astype(str).str.strip()
+    # Région Code parfois float (93.0) -> int puis str, puis zfill(2)
+    def _norm_reg(v):
+        s = str(v).strip()
+        if s.endswith(".0"):
+            s = s[:-2]
+        if s.isdigit() and len(s) <= 2:
+            return s.zfill(2)
+        return s
+    df_year["reg"] = df_year[reg_col].apply(_norm_reg)
+    df_year["nb_noyades"] = pd.to_numeric(df_year[n_col], errors="coerce").fillna(0)
+    df_year["nb_noyades_deces"] = pd.to_numeric(df_year[d_col], errors="coerce").fillna(0) if d_col else 0
+
+    reg_agg = df_year.groupby("reg", as_index=False)[["nb_noyades", "nb_noyades_deces"]].sum()
+    reg_full = pd.DataFrame({"codgeo": REGION_ORDER})
+    reg = reg_full.merge(reg_agg.rename(columns={"reg": "codgeo"}), on="codgeo", how="left").fillna(0)
+
+    # Commune Guyane: pas de ventilation communale
+    com = pd.DataFrame({
+        "codgeo": COMMUNES_GUYANE,
+        "nb_noyades": [None] * len(COMMUNES_GUYANE),
+        "nb_noyades_deces": [None] * len(COMMUNES_GUYANE),
+    })
+
+    dom = pd.DataFrame({
+        "codgeo": ["DOM"],
+        "nb_noyades": [reg[reg["codgeo"].isin(DOM_CODES)]["nb_noyades"].sum()],
+        "nb_noyades_deces": [reg[reg["codgeo"].isin(DOM_CODES)]["nb_noyades_deces"].sum()],
+    })
+    fh = pd.DataFrame({
+        "codgeo": ["0"],
+        "nb_noyades": [reg[reg["codgeo"].isin(FH_REGIONS)]["nb_noyades"].sum()],
+        "nb_noyades_deces": [reg[reg["codgeo"].isin(FH_REGIONS)]["nb_noyades_deces"].sum()],
+    })
+    fra = pd.DataFrame({
+        "codgeo": ["99"],
+        "nb_noyades": [reg["nb_noyades"].sum()],
+        "nb_noyades_deces": [reg["nb_noyades_deces"].sum()],
+    })
+
+    return _add_year({"com": com, "reg": reg, "dom": dom, "fh": fh, "fra": fra}, year)
+
+
 def _generate_excel_and_zip(theme: str, year: int, all_levels):
     cfg = THEME_CONFIGS[theme]
     all_variables = cfg["variables"]
@@ -922,6 +1157,14 @@ def generate_theme(theme: str, year: int):
         all_levels = _build_route_levels(year)
     elif source_type == "cepidc":
         all_levels = _build_cepidc_levels(theme, year)
+    elif source_type == "odisse_suicide":
+        all_levels = _build_odisse_suicide_levels(year)
+    elif source_type == "odisse_alcool":
+        all_levels = _build_odisse_consommation_levels(year, "alcool")
+    elif source_type == "odisse_tabac":
+        all_levels = _build_odisse_consommation_levels(year, "tabac")
+    elif source_type == "spf_noyades":
+        all_levels = _build_spf_noyades_levels(year)
     else:
         raise ValueError(f"Source type inconnu: {source_type}")
 

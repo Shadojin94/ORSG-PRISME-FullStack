@@ -301,8 +301,8 @@ a:hover { text-decoration: underline; }
     <h1>Corrections post-livraison — 17 avril 2026</h1>
     <p>Suite à la réunion du 2 avril, la plateforme PRISME a été mise à jour avec l'ensemble des retours prioritaires. Livraison ce matin, déploiement automatique en cours.</p>
     <div class="meta">
-      <span>Client : ORSG-CTPS · Naïssa Chateau Remy</span>
-      <span>Prestataire : Cédric Atticot / N.O.V.I. Connected</span>
+      <span>Client : ORSG-CTPS · Dr. Marie-Josiane CASTOR (Directrice), Naïssa CHATEAU REMY, Jessy PAJOT, Manuella IMOUNGA-DESROZIERS, Marie-Thérèse DANIEL</span>
+      <span>MVP : N.O.V.I. Connected · Déploiement / maintenance : Cédric ATTICOT DIT RAVINO</span>
       <span>Env. prod : orsgdemo.console.cercleonline.com</span>
     </div>
   </div>
@@ -388,7 +388,7 @@ a:hover { text-decoration: underline; }
         <span class="tag">Réglé</span>
         <div class="fix-body">
           <div class="fix-title">Utilisateurs ORSG passés en administrateur</div>
-          <div class="fix-desc">Naïssa, Marie-Josiane Castor, Manuela et Jessie ont maintenant les droits d'administration sur la plateforme (gestion des utilisateurs, des imports, des paramètres).</div>
+          <div class="fix-desc">Les comptes ORSG (Dr. Castor, Naïssa, Jessy, Manuella) sont configurés en rôle Expert. Cédric reste Administrateur. Gestion des utilisateurs pleinement fonctionnelle : modification du profil, réinitialisation du mot de passe par email, activation/désactivation, changement de rôle, suppression de compte.</div>
         </div>
       </div>
 
@@ -415,80 +415,120 @@ a:hover { text-decoration: underline; }
     </div>
 
     <div class="card">
-      <h2>Prochaines étapes proposées</h2>
+      <h2>Roadmap de clôture — d'ici le 30 avril 2026</h2>
       <div class="next-steps">
         <div class="step">
           <div class="step-num">1</div>
-          <div class="step-title">Recette conjointe</div>
-          <div class="step-desc">Parcours de test avec Naïssa et Marie-Josiane sur les 6 points corrigés + 1 indicateur non-MOCA.</div>
+          <div class="step-title">Semaine du 21 avril — Recette conjointe</div>
+          <div class="step-desc">Dr. Castor + Naïssa + Cédric valident les corrections livrées sur l'environnement de démonstration.</div>
         </div>
         <div class="step">
           <div class="step-num">2</div>
-          <div class="step-title">Rapport Traumatismes fin mai</div>
-          <div class="step-desc">Cap prioritaire ORSG : accidents route, noyades, suicide. Les 3 blocs sont désormais traités par les corrections livrées ce matin.</div>
+          <div class="step-title">Semaine du 28 avril — Mise à disposition VM</div>
+          <div class="step-desc">Le prestataire technique ORSG fournit la machine virtuelle dédiée à PRISME dans leur infrastructure.</div>
         </div>
         <div class="step">
           <div class="step-num">3</div>
-          <div class="step-title">Solde MVP + contractualisation</div>
-          <div class="step-desc">Émission du solde (7 000 € HT) après recette, puis passage aux offres déploiement et maintenance N.O.V.I. Connected ci-dessous.</div>
+          <div class="step-title">29-30 avril — Déploiement sur la VM ORSG</div>
+          <div class="step-desc">Cédric installe la plateforme sur la VM ORSG, configure l'accès via VPN et remet la documentation administrateur.</div>
         </div>
+        <div class="step">
+          <div class="step-num">4</div>
+          <div class="step-title">Vendredi 30 avril — Clôture officielle</div>
+          <div class="step-desc">Remise officielle de la plateforme et clôture administrative du MVP. Le MVP est soldé : BDC N250219 entièrement payé.</div>
+        </div>
+      </div>
+      <p style="color: var(--orsg-gray-500); font-size: 13px; margin-top: 14px;"><strong>Formation utilisateurs</strong> (Cédric ATTICOT DIT RAVINO, 2 h à distance) — disponible à partir du lundi 4 mai, tous les jours ouvrés sauf les mercredis. Créneaux proposés : lundi 4 mai 14h, jeudi 7 mai 10h, mardi 12 mai 14h (heures de Paris).</p>
+    </div>
+
+    <div class="card">
+      <h2>Ce qui a été livré gratuitement — hors périmètre du BDC N250219</h2>
+      <p style="color: var(--orsg-gray-500); margin-bottom: 14px;">Geste volontaire de N.O.V.I. Connected pour la qualité du livrable. Valeur catalogue estimée : <strong style="color: var(--orsg-blue);">environ 25 000 € HT</strong> offerts en complément du MVP.</p>
+      <div class="tech-list">
+        <dt>Application web complète</dt><dd>8 pages, interface moderne, responsive — valeur estimée 12 000 € HT</dd>
+        <dt>Authentification à double facteur</dt><dd>Code à 6 chiffres par email + mot de passe optionnel — valeur estimée 2 500 € HT</dd>
+        <dt>Gestion des utilisateurs avec rôles</dt><dd>Admin, Expert, Analyste, Utilisateur, Invité + workflow complet — valeur estimée 2 000 € HT</dd>
+        <dt>Système de tickets / support intégré</dt><dd>Formulaire, historique, notifications — valeur estimée 1 500 € HT</dd>
+        <dt>Pipeline Open Data automatisé</dt><dd>INSEE, CAF, IRCOM, Ministère de l'Intérieur, INSERM-CépiDc (14 thématiques, 928 Mo indexés) — valeur estimée 5 500 € HT</dd>
+        <dt>Documentation complète</dt><dd>Guide utilisateur, guide administrateur, guide technique — valeur estimée 1 500 € HT</dd>
       </div>
     </div>
 
     <div class="card" id="tarifs" style="border: 2px solid var(--orsg-teal);">
-      <h2>Offres N.O.V.I. Connected — Déploiement &amp; Maintenance</h2>
-      <p style="color: var(--orsg-gray-500); margin-bottom: 18px;">Prolongation du MVP livré. Phases hors contrat initial, à contractualiser séparément.</p>
+      <h2>Offres post-MVP — Cédric ATTICOT DIT RAVINO</h2>
+      <p style="color: var(--orsg-gray-500); margin-bottom: 18px;">Le déploiement, la maintenance et le support ne sont pas inclus dans le BDC initial. Ils sont proposés <strong>par Cédric ATTICOT DIT RAVINO (Architecte Digital, consultant partenaire N.O.V.I. Connected)</strong> en direct. Tarifs hors taxes, négociables.</p>
 
-      <h3 style="color: var(--orsg-blue); font-size: 17px; margin-top: 6px;">1. Déploiement sur infrastructure ORSG — 3 500 € HT (forfait)</h3>
+      <h3 style="color: var(--orsg-blue); font-size: 17px; margin-top: 6px;">1. Déploiement sur infrastructure ORSG — forfait 6 500 € HT</h3>
+      <p style="color: var(--orsg-gray-500); font-size: 13px; margin-bottom: 8px;">5 jours ouvrés. Paiement à la livraison. Tarif indicatif, négociable selon le périmètre final.</p>
       <ul>
-        <li>Installation sur serveur ORSG (Ubuntu/Debian) ou cloud dédié</li>
-        <li>Configuration reverse proxy + SSL Let's Encrypt</li>
-        <li>Sauvegardes quotidiennes automatiques (base PocketBase + fichiers générés)</li>
-        <li>Transfert complet du code, de la documentation et des identifiants</li>
-        <li>Formation administrateurs (1 h, à distance)</li>
-        <li>Garantie 30 jours post-déploiement, correctifs inclus</li>
+        <li>Audit de la VM fournie par le prestataire technique ORSG</li>
+        <li>Installation complète de la plateforme PRISME</li>
+        <li>Configuration VPN ORSG et certificat SSL</li>
+        <li>Sauvegardes quotidiennes automatiques (base + fichiers générés)</li>
+        <li>Transfert complet : code source, documentation, identifiants</li>
+        <li>Formation de l'administrateur ORSG (3 h en visio)</li>
+        <li>Garantie 60 jours post-déploiement — correctifs inclus</li>
       </ul>
-      <p style="color: var(--orsg-gray-500); font-size: 13px;">Durée : 3 à 5 jours ouvrés. Paiement à la livraison.</p>
 
-      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 24px;">
-        <div style="border: 1px solid var(--orsg-gray-200); border-radius: 12px; padding: 18px; background: var(--orsg-gray-100);">
-          <div style="font-size: 12px; color: var(--orsg-teal); font-weight: 700; letter-spacing: .1em; text-transform: uppercase;">Maintenance annuelle</div>
-          <div style="font-size: 20px; font-weight: 800; color: var(--orsg-blue); margin: 4px 0 2px;">Formule Essentielle</div>
-          <div style="font-size: 26px; font-weight: 800; color: var(--orsg-gray-900);">2 400 € HT / an</div>
-          <div style="font-size: 12px; color: var(--orsg-gray-500); margin-bottom: 10px;">Soit 200 € HT / mois</div>
-          <ul style="font-size: 14px;">
-            <li>Maintien en condition opérationnelle</li>
-            <li>Correctifs + mises à jour de sécurité</li>
-            <li>Support email sous 48 h ouvrées</li>
+      <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; margin-top: 24px;">
+        <div style="border: 1px solid var(--orsg-gray-200); border-radius: 12px; padding: 16px; background: var(--orsg-gray-100);">
+          <div style="font-size: 11px; color: var(--orsg-teal); font-weight: 700; letter-spacing: .1em; text-transform: uppercase;">Maintenance annuelle</div>
+          <div style="font-size: 18px; font-weight: 800; color: var(--orsg-blue); margin: 4px 0 2px;">Essentielle</div>
+          <div style="font-size: 22px; font-weight: 800; color: var(--orsg-gray-900);">3 600 € HT / an</div>
+          <div style="font-size: 12px; color: var(--orsg-gray-500); margin-bottom: 10px;">300 € HT / mois</div>
+          <ul style="font-size: 13px;">
+            <li>Correctifs + sécurité</li>
             <li>Sauvegardes supervisées</li>
-            <li>4 h / mois d'évolutif (non cumulables)</li>
+            <li>Support email sous 72 h</li>
+            <li>3 h / mois d'évolutif</li>
           </ul>
         </div>
-        <div style="border: 2px solid var(--orsg-teal); border-radius: 12px; padding: 18px; background: rgba(59,179,169,.08); position: relative;">
-          <span style="position: absolute; top: -10px; right: 14px; background: var(--orsg-teal); color: white; font-size: 10px; font-weight: 700; padding: 3px 10px; border-radius: 999px; letter-spacing: .08em;">RECOMMANDÉE</span>
-          <div style="font-size: 12px; color: var(--orsg-teal); font-weight: 700; letter-spacing: .1em; text-transform: uppercase;">Maintenance annuelle</div>
-          <div style="font-size: 20px; font-weight: 800; color: var(--orsg-blue); margin: 4px 0 2px;">Formule Étendue</div>
-          <div style="font-size: 26px; font-weight: 800; color: var(--orsg-gray-900);">4 800 € HT / an</div>
-          <div style="font-size: 12px; color: var(--orsg-gray-500); margin-bottom: 10px;">Soit 400 € HT / mois</div>
-          <ul style="font-size: 14px;">
+        <div style="border: 2px solid var(--orsg-teal); border-radius: 12px; padding: 16px; background: rgba(59,179,169,.08); position: relative;">
+          <span style="position: absolute; top: -10px; right: 12px; background: var(--orsg-teal); color: white; font-size: 10px; font-weight: 700; padding: 3px 10px; border-radius: 999px; letter-spacing: .08em;">RECOMMANDÉE</span>
+          <div style="font-size: 11px; color: var(--orsg-teal); font-weight: 700; letter-spacing: .1em; text-transform: uppercase;">Maintenance annuelle</div>
+          <div style="font-size: 18px; font-weight: 800; color: var(--orsg-blue); margin: 4px 0 2px;">Standard</div>
+          <div style="font-size: 22px; font-weight: 800; color: var(--orsg-gray-900);">7 200 € HT / an</div>
+          <div style="font-size: 12px; color: var(--orsg-gray-500); margin-bottom: 10px;">600 € HT / mois</div>
+          <ul style="font-size: 13px;">
             <li>Tout l'Essentielle, et :</li>
-            <li>Support email sous 24 h + téléphone</li>
-            <li>10 h / mois d'évolutif (cumulables sur le trimestre)</li>
-            <li>Revue trimestrielle avec recommandations</li>
-            <li>Intégration de nouvelles sources Open Data à la demande</li>
+            <li>Support email sous 48 h</li>
+            <li>8 h / mois (cumulables trim.)</li>
+            <li>Revue trimestrielle</li>
+            <li>Intégration nouvelles sources Open Data</li>
+          </ul>
+        </div>
+        <div style="border: 1px solid var(--orsg-gray-200); border-radius: 12px; padding: 16px; background: var(--orsg-gray-100);">
+          <div style="font-size: 11px; color: var(--orsg-teal); font-weight: 700; letter-spacing: .1em; text-transform: uppercase;">Maintenance annuelle</div>
+          <div style="font-size: 18px; font-weight: 800; color: var(--orsg-blue); margin: 4px 0 2px;">Étendue</div>
+          <div style="font-size: 22px; font-weight: 800; color: var(--orsg-gray-900);">14 400 € HT / an</div>
+          <div style="font-size: 12px; color: var(--orsg-gray-500); margin-bottom: 10px;">1 200 € HT / mois</div>
+          <ul style="font-size: 13px;">
+            <li>Tout la Standard, et :</li>
+            <li>Support téléphonique + SLA 24 h</li>
+            <li>18 h / mois d'évolutif</li>
+            <li>Revue mensuelle</li>
+            <li>1 journée sur site par an</li>
           </ul>
         </div>
       </div>
-      <p style="color: var(--orsg-gray-500); font-size: 12px; margin-top: 14px;">Hors forfait : refonte majeure, migration infra, intégration tierce lourde — devis dédié.</p>
+
+      <h3 style="color: var(--orsg-blue); font-size: 16px; margin-top: 22px;">Support à la carte (hors forfait maintenance)</h3>
+      <ul>
+        <li>TJM Architecte Digital : <strong>950 € HT / jour</strong> (intervention minimum 4 h = 475 € HT)</li>
+        <li>Pack 10 h prépayé : <strong>1 100 € HT</strong> (valable 12 mois)</li>
+        <li>Délai d'intervention : sous 5 jours ouvrés (best-effort)</li>
+      </ul>
+
+      <p style="color: var(--orsg-gray-500); font-size: 12px; margin-top: 14px;">Toutes les formules sont reconductibles tacitement, résiliables à 90 jours. Tarifs hors taxes, négociables dans le cadre d'un engagement pluriannuel.</p>
     </div>
 
     <div class="card">
       <h2>Contacts</h2>
       <div class="tech-list">
-        <dt>Client</dt><dd>Naïssa Chateau Remy — naissa.chateau@ors-guyane.org</dd>
-        <dt>Prestataire</dt><dd>Cédric Atticot — N.O.V.I. Connected</dd>
-        <dt>Plateforme</dt><dd><a href="https://orsgdemo.console.cercleonline.com/">orsgdemo.console.cercleonline.com</a></dd>
-        <dt>Code source</dt><dd><a href="https://github.com/Shadojin94/ORSG-PRISME-FullStack">github.com/Shadojin94/ORSG-PRISME-FullStack</a></dd>
+        <dt>ORSG-CTPS (client)</dt><dd>Dr. Marie-Josiane CASTOR, Directrice — m-j.castor@ors-guyane.org<br>Naïssa CHATEAU REMY — naissa.chateau@ors-guyane.org<br>Jessy PAJOT, Manuella IMOUNGA-DESROZIERS, Marie-Thérèse DANIEL</dd>
+        <dt>MVP — Prestataire</dt><dd>N.O.V.I. Connected — contact@novi-connected.fr</dd>
+        <dt>Déploiement / Maintenance / Support</dt><dd>Cédric ATTICOT DIT RAVINO — Architecte Digital, consultant partenaire N.O.V.I. Connected<br>cedric.atticot@live.fr · +33 6 50 75 43 89</dd>
+        <dt>Plateforme (démo)</dt><dd><a href="https://orsgdemo.console.cercleonline.com/">orsgdemo.console.cercleonline.com</a></dd>
       </div>
     </div>
   </div>
@@ -534,28 +574,29 @@ a:hover { text-decoration: underline; }
     </div>
 
     <div class="card">
-      <h2>Reste à faire (hors scope 17 avril)</h2>
+      <h2>Reste à faire avant clôture (30 avril)</h2>
       <ul>
-        <li>Exécuter <code>Backend/set_all_admin.py</code> sur l'instance PocketBase prod (nécessite accès VPS Coolify + credentials <code>.env</code>).</li>
-        <li>Alimenter réellement les datasets <code>route</code>, <code>noyades</code>, <code>comp_mortalite</code> côté <code>prisme_engine.py</code> (stubs actuels suffisent pour l'import via <code>/upload-csv</code>, mais la génération exacte dépendra des patterns de colonnes fournis par ORSG).</li>
-        <li>Recette formelle avec Naïssa + Marie-Josiane.</li>
-        <li>Phase 3 (hors contrat MVP) : déploiement on-premise chez ORSG, archives, API publique, 2FA — à chiffrer séparément.</li>
+        <li>Recette conjointe (Dr. Castor + Naïssa + Cédric) sur l'environnement de démonstration.</li>
+        <li>Mise à disposition de la VM par le prestataire technique ORSG (semaine du 28 avril).</li>
+        <li>Déploiement sur la VM ORSG et connexion au VPN ORSG (29-30 avril).</li>
+        <li>Clôture administrative du MVP le 30 avril.</li>
+        <li>Session formation utilisateurs à planifier à partir du 4 mai (hors mercredis).</li>
       </ul>
     </div>
 
     <div class="card">
-      <h2>Liens utiles</h2>
+      <h2>Liens utiles (interne)</h2>
       <div class="tech-list">
-        <dt>Prod</dt><dd><a href="https://orsgdemo.console.cercleonline.com/">orsgdemo.console.cercleonline.com</a></dd>
-        <dt>Repo GitHub</dt><dd><a href="https://github.com/Shadojin94/ORSG-PRISME-FullStack">Shadojin94/ORSG-PRISME-FullStack</a></dd>
-        <dt>Commit</dt><dd><code>b59880c</code> sur <code>main</code> (9 fichiers, +377 / -78)</dd>
+        <dt>Plateforme (démo)</dt><dd><a href="https://orsgdemo.console.cercleonline.com/">orsgdemo.console.cercleonline.com</a></dd>
+        <dt>Dernier commit</dt><dd><code>7299a26</code> sur <code>main</code> — gestion utilisateurs production-ready + fix set-password</dd>
         <dt>Dossier livrables</dt><dd><code>livrables_17avril/</code></dd>
+        <dt>Code source</dt><dd>Dépôt privé — non communiqué au client</dd>
       </div>
     </div>
   </div>
 
   <div class="footer">
-    Document généré le 17 avril 2026 · PRISME / ORSG-CTPS · N.O.V.I. Connected
+    Document préparé par Cédric ATTICOT DIT RAVINO (consultant partenaire N.O.V.I. Connected) · 17 avril 2026 · Réunion ORSG-CTPS
   </div>
 </div>
 

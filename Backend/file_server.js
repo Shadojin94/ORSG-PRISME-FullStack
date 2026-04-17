@@ -394,16 +394,29 @@ else:
             y = p.stem.split("_")[-1]
             if y.isdigit(): years.append(int(y))
     elif src == "baac":
+        # Données BAAC/ONISR disponibles en open data — années expose même si fichiers pas encore présents sur la VM
         baac_dir = INPUTS_DIR / "baac"
         if baac_dir.exists():
             for p in sorted(baac_dir.glob("caract_*.csv")):
                 y = p.stem.split("_")[-1]
                 if y.isdigit(): years.append(int(y))
+        if not years:
+            years = [2019, 2020, 2021, 2022, 2023, 2024]
     elif src == "cepidc":
         cepidc_dir = INPUTS_DIR / "cepidc"
         src_file = cepidc_dir / "taux_effectifs_regions_15_23.xlsx"
         if src_file.exists():
             years = list(range(2015, 2024))
+        if not years:
+            years = list(range(2015, 2024))
+    elif src == "odisse_suicide":
+        years = [2019, 2020, 2021, 2022, 2023]
+    elif src == "odisse_alcool":
+        years = [2000, 2005, 2010, 2014, 2017, 2021]
+    elif src == "odisse_tabac":
+        years = [2000, 2005, 2010, 2014, 2017, 2021]
+    elif src == "spf_noyades":
+        years = [2003, 2004, 2006, 2009, 2012, 2015, 2018, 2021]
     years = sorted(set(years))
     print(json.dumps({"success": True, "years": years}))
 `);
@@ -720,7 +733,8 @@ except Exception as e:
             'educ', 'pers_sup65ans_seules', 'familles_mono', 'pop_inf3ans',
             'pers_menages', 'types_menages', 'alloc', 'revenu', 'densite',
             'route', 'mortalite_gen', 'mortalite_cardio', 'mortalite_tumeurs',
-            'mortalite_respi', 'mortalite_neuro', 'mortalite_diabete', 'mortalite_covid'
+            'mortalite_respi', 'mortalite_neuro', 'mortalite_diabete', 'mortalite_covid',
+            'comp_mortalite', 'suicide', 'addictions_alcool', 'addictions_tabac', 'noyades'
         ];
 
         if (!supportedThemes.includes(theme)) {
