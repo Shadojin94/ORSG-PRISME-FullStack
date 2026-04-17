@@ -1004,6 +1004,176 @@
           "source": "DREES"
         }
       ]
+    },
+    "route": {
+      "name": "Accidents de la circulation",
+      "folderPath": "Traumatismes/Accidents route",
+      "fileName": "route",
+      "sheets": [
+        "com",
+        "reg",
+        "dom",
+        "fh",
+        "fra"
+      ],
+      "columns": [
+        {
+          "id": "geo",
+          "type": "geo_id"
+        },
+        {
+          "id": "annee",
+          "type": "year"
+        },
+        {
+          "id": "nb_acci",
+          "type": "variable",
+          "label": "Nombre d'accidents",
+          "csvPattern": "nb_acci",
+          "parser": "external",
+          "source": "BAAC/ONISR"
+        },
+        {
+          "id": "tx_acci",
+          "type": "variable",
+          "label": "Taux d'accidents",
+          "csvPattern": "tx_acci",
+          "parser": "external",
+          "source": "BAAC/ONISR"
+        },
+        {
+          "id": "nb_blesses",
+          "type": "variable",
+          "label": "Nombre de blessés",
+          "csvPattern": "nb_blesses",
+          "parser": "external",
+          "source": "BAAC/ONISR"
+        },
+        {
+          "id": "tx_blesses",
+          "type": "variable",
+          "label": "Taux de blessés",
+          "csvPattern": "tx_blesses",
+          "parser": "external",
+          "source": "BAAC/ONISR"
+        },
+        {
+          "id": "nb_morts",
+          "type": "variable",
+          "label": "Nombre de morts",
+          "csvPattern": "nb_morts",
+          "parser": "external",
+          "source": "BAAC/ONISR"
+        },
+        {
+          "id": "tx_morts",
+          "type": "variable",
+          "label": "Taux de morts",
+          "csvPattern": "tx_morts",
+          "parser": "external",
+          "source": "BAAC/ONISR"
+        }
+      ]
+    },
+    "noyades": {
+      "name": "Noyades",
+      "folderPath": "Traumatismes/Noyades",
+      "fileName": "noyades",
+      "sheets": [
+        "com",
+        "reg",
+        "dom",
+        "fh",
+        "fra"
+      ],
+      "columns": [
+        {
+          "id": "geo",
+          "type": "geo_id"
+        },
+        {
+          "id": "annee",
+          "type": "year"
+        },
+        {
+          "id": "nb_noyades",
+          "type": "variable",
+          "label": "Nombre de noyades",
+          "csvPattern": "nb_noyades",
+          "parser": "external",
+          "source": "SPF-GEODES"
+        },
+        {
+          "id": "tx_noyades",
+          "type": "variable",
+          "label": "Taux de noyades",
+          "csvPattern": "tx_noyades",
+          "parser": "external",
+          "source": "SPF-GEODES"
+        },
+        {
+          "id": "nb_noyades_deces",
+          "type": "variable",
+          "label": "Nombre de décès par noyade",
+          "csvPattern": "nb_noyades_deces",
+          "parser": "external",
+          "source": "SPF-GEODES"
+        },
+        {
+          "id": "tx_noyades_deces",
+          "type": "variable",
+          "label": "Taux de décès par noyade",
+          "csvPattern": "tx_noyades_deces",
+          "parser": "external",
+          "source": "SPF-GEODES"
+        }
+      ]
+    },
+    "comp_mortalite": {
+      "name": "Mortalité liée aux comportements",
+      "folderPath": "Comportements/Mortalité",
+      "fileName": "comp_mortalite",
+      "sheets": [
+        "com",
+        "reg",
+        "dom",
+        "fh",
+        "fra"
+      ],
+      "columns": [
+        {
+          "id": "geo",
+          "type": "geo_id"
+        },
+        {
+          "id": "annee",
+          "type": "year"
+        },
+        {
+          "id": "m_alcool",
+          "type": "variable",
+          "label": "Mortalité liée à l'alcool",
+          "csvPattern": "m_alcool",
+          "parser": "external",
+          "source": "CépiDc"
+        },
+        {
+          "id": "m_tabac",
+          "type": "variable",
+          "label": "Mortalité liée au tabac",
+          "csvPattern": "m_tabac",
+          "parser": "external",
+          "source": "CépiDc"
+        },
+        {
+          "id": "m_suicide",
+          "type": "variable",
+          "label": "Mortalité par suicide",
+          "csvPattern": "m_suicide",
+          "parser": "external",
+          "source": "CépiDc"
+        }
+      ]
     }
   },
   "calculatedIndicators": [

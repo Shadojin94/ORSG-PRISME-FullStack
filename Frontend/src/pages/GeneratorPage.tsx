@@ -37,6 +37,7 @@ interface SavedState {
     selectedThemeId: string | null;
     selectedSubThemeId: string | null;
     selectedDatasetId: string | null;
+    selectedDatasetVariable: string | null;
     sourceMode: 'opendata' | 'moca';
     year: string;
     format: string;
@@ -69,6 +70,7 @@ export function GeneratorPage() {
     const [selectedThemeId, setSelectedThemeId] = useState<string | null>(saved.selectedThemeId || null);
     const [selectedSubThemeId, setSelectedSubThemeId] = useState<string | null>(saved.selectedSubThemeId || null);
     const [selectedDatasetId, setSelectedDatasetId] = useState<string | null>(saved.selectedDatasetId || null);
+    const [selectedDatasetVariable, setSelectedDatasetVariable] = useState<string | null>(saved.selectedDatasetVariable || null);
 
     // Config
     const [year, setYear] = useState<string>(saved.year || "");
@@ -87,10 +89,10 @@ export function GeneratorPage() {
     // Persist state on every change
     useEffect(() => {
         saveState({
-            step, selectedThemeId, selectedSubThemeId, selectedDatasetId,
+            step, selectedThemeId, selectedSubThemeId, selectedDatasetId, selectedDatasetVariable,
             sourceMode, year, format, generatedFile
         });
-    }, [step, selectedThemeId, selectedSubThemeId, selectedDatasetId, sourceMode, year, format, generatedFile]);
+    }, [step, selectedThemeId, selectedSubThemeId, selectedDatasetId, selectedDatasetVariable, sourceMode, year, format, generatedFile]);
 
     // ----------------------------------------------------
     // Computed Checks
@@ -100,17 +102,23 @@ export function GeneratorPage() {
         ? OPEN_DATA_SUPPORTED_THEMES.includes(selectedDatasetId)
         : false;
 
-    // Compute labels for breadcrumb in Step2
+    // Compute labels for breadcrumb in Step2 — match by (id + variable) because
+    // the same dataset id can be reused across sub-themes (ex: comp_mortalite
+    // pour alcool / tabac / suicide) with different variables/labels.
     const { themeLabel, datasetLabel } = useMemo(() => {
         if (!selectedThemeId || !selectedDatasetId) return { themeLabel: "", datasetLabel: "" };
         const theme = (BDI_THEMES as any[]).find(t => t.id === selectedThemeId);
         if (!theme) return { themeLabel: "", datasetLabel: "" };
 
+        const matches = (d: any) =>
+            d.id === selectedDatasetId &&
+            (selectedDatasetVariable ? d.variable === selectedDatasetVariable : true);
+
         let dsLabel = "";
         const findDataset = (items: any[]) => {
             for (const item of items) {
                 if (item.datasets) {
-                    const ds = item.datasets.find((d: any) => d.id === selectedDatasetId);
+                    const ds = item.datasets.find(matches);
                     if (ds) { dsLabel = ds.label; return; }
                 }
                 if (item.subThemes) findDataset(item.subThemes);
@@ -119,11 +127,11 @@ export function GeneratorPage() {
         };
         findDataset(theme.subThemes || []);
         if (!dsLabel && theme.datasets) {
-            const ds = theme.datasets.find((d: any) => d.id === selectedDatasetId);
+            const ds = theme.datasets.find(matches);
             if (ds) dsLabel = ds.label;
         }
         return { themeLabel: theme.shortTitle || theme.title, datasetLabel: dsLabel };
-    }, [selectedThemeId, selectedDatasetId]);
+    }, [selectedThemeId, selectedDatasetId, selectedDatasetVariable]);
 
     // Load years for selected dataset based on CURRENT source mode
     const { years: availableYears, loading: yearsLoading, reload: reloadYears } = useDatasetYears(
@@ -147,10 +155,11 @@ export function GeneratorPage() {
     // ----------------------------------------------------
     // Handlers
     // ----------------------------------------------------
-    const handleDatasetSelect = (themeId: string, subThemeId: string, datasetId: string) => {
+    const handleDatasetSelect = (themeId: string, subThemeId: string, datasetId: string, variable: string) => {
         setSelectedThemeId(themeId);
         setSelectedSubThemeId(subThemeId);
         setSelectedDatasetId(datasetId);
+        setSelectedDatasetVariable(variable);
 
         // Auto-detect best mode
         // If dataset supports OpenData, default to it? Or user preference?
@@ -221,6 +230,7 @@ export function GeneratorPage() {
         setStep(1);
         setSelectedSubThemeId(null);
         setSelectedDatasetId(null);
+        setSelectedDatasetVariable(null);
         setSelectedThemeId(null);
         setGeneratedFile(null);
         setYear("");
@@ -293,6 +303,7 @@ export function GeneratorPage() {
                             selectedThemeId={selectedThemeId}
                             selectedSubThemeId={selectedSubThemeId}
                             selectedDatasetId={selectedDatasetId}
+                            selectedDatasetVariable={selectedDatasetVariable}
                         />
                     )}
 
@@ -336,6 +347,7 @@ export function GeneratorPage() {
                         selectedThemeId={selectedThemeId}
                         selectedSubThemeId={selectedSubThemeId}
                         selectedDatasetId={selectedDatasetId}
+                        selectedDatasetVariable={selectedDatasetVariable}
                         year={year}
                         format={format}
                         isProcessing={isProcessing}

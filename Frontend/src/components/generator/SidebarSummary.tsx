@@ -7,6 +7,7 @@ interface SidebarSummaryProps {
     selectedThemeId: string | null;
     selectedSubThemeId: string | null;
     selectedDatasetId: string | null;
+    selectedDatasetVariable: string | null;
     year: string;
     format: string;
     isProcessing: boolean;
@@ -21,6 +22,7 @@ export function SidebarSummary({
     selectedThemeId,
     selectedSubThemeId,
     selectedDatasetId,
+    selectedDatasetVariable,
     year,
     format,
     isProcessing,
@@ -50,25 +52,28 @@ export function SidebarSummary({
             subThemeTitle = findSubThemeTitle(selectedTheme.subThemes || [], selectedSubThemeId) || "--";
         }
 
-        const findDatasetLabel = (items: any[], id: string): string | null => {
+        const matches = (d: any) =>
+            d.id === selectedDatasetId &&
+            (selectedDatasetVariable ? d.variable === selectedDatasetVariable : true);
+        const findDatasetLabel = (items: any[]): string | null => {
             for (const item of items) {
                 if (item.datasets) {
-                    const ds = item.datasets.find((d: any) => d.id === id);
+                    const ds = item.datasets.find(matches);
                     if (ds) return ds.label;
                 }
                 if (item.subThemes) {
-                    const found = findDatasetLabel(item.subThemes, id);
+                    const found = findDatasetLabel(item.subThemes);
                     if (found) return found;
                 }
             }
             if (selectedTheme.datasets) {
-                const ds = selectedTheme.datasets.find((d: any) => d.id === id);
+                const ds = selectedTheme.datasets.find(matches);
                 if (ds) return ds.label;
             }
             return null;
         };
         if (selectedDatasetId) {
-            datasetLabel = findDatasetLabel(selectedTheme.subThemes || [], selectedDatasetId) || "--";
+            datasetLabel = findDatasetLabel(selectedTheme.subThemes || []) || "--";
         }
     }
 

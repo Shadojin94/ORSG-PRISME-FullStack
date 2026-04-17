@@ -1,21 +1,24 @@
 import { useState } from "react";
 import { cn } from "@/lib/utils";
 import { BDI_THEMES } from "@/data/bdi_themes";
-import { ChevronDown, ChevronRight, Database, Lock } from "lucide-react";
+import { ChevronDown, ChevronRight, Database, Upload } from "lucide-react";
 
 interface Step1Props {
-    onDatasetSelect: (themeId: string, subThemeId: string, datasetId: string) => void;
+    onDatasetSelect: (themeId: string, subThemeId: string, datasetId: string, variable: string) => void;
     selectedThemeId: string | null;
     selectedSubThemeId: string | null;
     selectedDatasetId: string | null;
+    selectedDatasetVariable: string | null;
 }
 
-// Count how many demoReady datasets exist in a theme/subtheme (recursive)
+const isCalculated = (d: any) => d?.tool === "Calcul";
+const isSelectable = (d: any) => !isCalculated(d);
+
 function countReadyDatasets(items: any[]): number {
     let count = 0;
     for (const item of items) {
         if (item.datasets) {
-            count += item.datasets.filter((d: any) => d.demoReady).length;
+            count += item.datasets.filter((d: any) => isSelectable(d) && d.demoReady).length;
         }
         if (item.subThemes) {
             count += countReadyDatasets(item.subThemes);
@@ -26,7 +29,7 @@ function countReadyDatasets(items: any[]): number {
 function countAllDatasets(items: any[]): number {
     let count = 0;
     for (const item of items) {
-        if (item.datasets) count += item.datasets.length;
+        if (item.datasets) count += item.datasets.filter((d: any) => isSelectable(d)).length;
         if (item.subThemes) count += countAllDatasets(item.subThemes);
     }
     return count;
@@ -35,7 +38,8 @@ function countAllDatasets(items: any[]): number {
 export function Step1_ThemeSelection({
     onDatasetSelect,
     selectedThemeId,
-    selectedDatasetId
+    selectedDatasetId,
+    selectedDatasetVariable
 }: Step1Props) {
     const [expandedThemeId, setExpandedThemeId] = useState<string | null>(selectedThemeId);
     const [expandedSubThemeId, setExpandedSubThemeId] = useState<string | null>(null);
@@ -53,7 +57,7 @@ export function Step1_ThemeSelection({
         }
         setExpandedSubThemeId(id);
 
-        // Auto-select if only 1 dataset total (direct + nested)
+        // Auto-select if only 1 selectable dataset
         const allDs: any[] = [];
         if (subTheme.datasets) allDs.push(...subTheme.datasets);
         if (subTheme.subThemes) {
@@ -61,19 +65,21 @@ export function Step1_ThemeSelection({
                 if (nested.datasets) allDs.push(...nested.datasets);
             }
         }
-        if (allDs.length === 1) {
-            onDatasetSelect(themeId, id, allDs[0].id);
+        const selectable = allDs.filter(isSelectable);
+        if (selectable.length === 1) {
+            onDatasetSelect(themeId, id, selectable[0].id, selectable[0].variable);
         }
     };
 
     const renderDatasetButton = (ds: any, themeId: string, subThemeId: string) => {
-        const isSelected = selectedDatasetId === ds.id;
+        if (isCalculated(ds)) return null;
+        const isSelected = selectedDatasetId === ds.id && selectedDatasetVariable === ds.variable;
         return (
             <button
-                key={ds.id}
+                key={`${subThemeId}::${ds.id}::${ds.variable}`}
                 onClick={(e) => {
                     e.stopPropagation();
-                    onDatasetSelect(themeId, subThemeId, ds.id);
+                    onDatasetSelect(themeId, subThemeId, ds.id, ds.variable);
                 }}
                 className={cn(
                     "w-full text-left py-2.5 px-3 rounded-lg text-sm transition-all flex items-center justify-between gap-2",
@@ -81,9 +87,8 @@ export function Step1_ThemeSelection({
                         ? "bg-[#3bb3a9]/10 text-[#2f9a91] font-semibold ring-1 ring-[#3bb3a9]/30"
                         : ds.demoReady
                             ? "text-gray-700 hover:bg-[#3bb3a9]/5 hover:text-[#2f9a91] cursor-pointer"
-                            : "text-gray-400 cursor-default"
+                            : "text-gray-700 hover:bg-amber-50 hover:text-amber-700 cursor-pointer"
                 )}
-                disabled={!ds.demoReady}
             >
                 <span className="flex-1">{ds.label}</span>
                 <span className="flex items-center gap-1.5 shrink-0">
@@ -93,9 +98,9 @@ export function Step1_ThemeSelection({
                             Disponible
                         </span>
                     ) : (
-                        <span className="text-[10px] bg-gray-100 text-gray-500 px-2 py-0.5 rounded-full font-medium flex items-center gap-1">
-                            <Lock className="w-3 h-3" />
-                            Bientôt
+                        <span className="text-[10px] bg-amber-100 text-amber-700 px-2 py-0.5 rounded-full font-medium flex items-center gap-1">
+                            <Upload className="w-3 h-3" />
+                            Import requis
                         </span>
                     )}
                 </span>
