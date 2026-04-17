@@ -734,7 +734,8 @@ except Exception as e:
             'pers_menages', 'types_menages', 'alloc', 'revenu', 'densite',
             'route', 'mortalite_gen', 'mortalite_cardio', 'mortalite_tumeurs',
             'mortalite_respi', 'mortalite_neuro', 'mortalite_diabete', 'mortalite_covid',
-            'comp_mortalite', 'suicide', 'addictions_alcool', 'addictions_tabac', 'noyades'
+            'comp_mortalite', 'suicide', 'addictions_alcool', 'addictions_tabac', 'noyades',
+            'accidents_route', 'blesses_route', 'deces_route'
         ];
 
         if (!supportedThemes.includes(theme)) {
