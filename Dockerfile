@@ -39,10 +39,12 @@ COPY Backend/setup_pocketbase.js ./Backend/
 COPY Backend/pb_migrations/ ./Backend/pb_migrations/
 COPY Backend/.env.example ./Backend/.env.example
 
-# Seed data: CepiDc + superficie (not auto-downloadable)
+# Seed data: CepiDc + superficie + BAAC Guyane + SPF noyades (not auto-downloadable)
 # Stored in _seed_data so entrypoint can copy to volume
 COPY Backend/inputs/opendata/cepidc/ ./Backend/_seed_data/cepidc/
 COPY Backend/inputs/opendata/superficie_communes.json ./Backend/_seed_data/superficie_communes.json
+COPY Backend/inputs/opendata/baac_guyane/ ./Backend/_seed_data/baac_guyane/
+COPY Backend/inputs/opendata/spf_noyades/ ./Backend/_seed_data/spf_noyades/
 
 # Copy Frontend build (served by file_server.js)
 COPY Frontend/dist/ ./Frontend/dist/

@@ -49,11 +49,15 @@ else
     echo "[WARN] PocketBase binary not found, skipping..."
 fi
 
-# Copy seed data (CepiDc, superficie) from image to volume if needed
+# Copy seed data (CepiDc, superficie, BAAC Guyane, SPF noyades) from image to volume if needed
 if [ -d /app/Backend/_seed_data ]; then
-    mkdir -p /app/Backend/inputs/opendata/cepidc
-    cp -n /app/Backend/_seed_data/cepidc/* /app/Backend/inputs/opendata/cepidc/ 2>/dev/null || true
+    mkdir -p /app/Backend/inputs/opendata/cepidc /app/Backend/inputs/opendata/baac_guyane /app/Backend/inputs/opendata/spf_noyades
+    # Replicate the full cepidc tree (including nested mortalite_causes_comportementales/)
+    cp -rn /app/Backend/_seed_data/cepidc/. /app/Backend/inputs/opendata/cepidc/ 2>/dev/null || true
     cp -n /app/Backend/_seed_data/superficie_communes.json /app/Backend/inputs/opendata/ 2>/dev/null || true
+    cp -rn /app/Backend/_seed_data/baac_guyane/. /app/Backend/inputs/opendata/baac_guyane/ 2>/dev/null || true
+    cp -rn /app/Backend/_seed_data/spf_noyades/. /app/Backend/inputs/opendata/spf_noyades/ 2>/dev/null || true
+    echo "[INIT] Seed data copied to /app/Backend/inputs/opendata (cepidc + baac_guyane + spf_noyades)"
 fi
 
 # Download missing data on first run
