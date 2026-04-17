@@ -1,0 +1,3194 @@
+;;;Date_deces_Cim10#Annee;Cause_deces#Causes_de_deces_alphabetique;Lieu_domicile#commune;Nb_deces_standardises
+;;;;;;
+;;;2018;Alzheimer;97301 - Régina;0,00
+;;;2018;Asthme;97301 - Régina;0,00
+;;;2018;Cancer de la prostate;97301 - Régina;0,00
+;;;2018;Cancer de la trachée, des bronches et du poumon;97301 - Régina;0,00
+;;;2018;Cancer du côlon-rectum;97301 - Régina;0,00
+;;;2018;Cancer du sein;97301 - Régina;0,00
+;;;2018;Cardiopathies ischémiques;97301 - Régina;0,00
+;;;2018;Chap 10 : Maladies de l'appareil respiratoire;97301 - Régina;0,00
+;;;2018;Diabète;97301 - Régina;0,00
+;;;2018;Maladie chronique du foie;97301 - Régina;0,00
+;;;2018;Maladie de Parkinson;97301 - Régina;0,00
+;;;2018;Maladie hypertensive;97301 - Régina;0,00
+;;;2018;Maladies vasculaires cérébrales;97301 - Régina;0,00
+;;;2018;Sida;97301 - Régina;0,00
+;;;2018;Alzheimer;97302 - Cayenne;74,26
+;;;2018;Asthme;97302 - Cayenne;0,00
+;;;2018;Cancer de la prostate;97302 - Cayenne;85,21
+;;;2018;Cancer de la trachée, des bronches et du poumon;97302 - Cayenne;17,47
+;;;2018;Cancer du côlon-rectum;97302 - Cayenne;66,77
+;;;2018;Cancer du sein;97302 - Cayenne;36,04
+;;;2018;Cardiopathies ischémiques;97302 - Cayenne;83,86
+;;;2018;Chap 10 : Maladies de l'appareil respiratoire;97302 - Cayenne;124,71
+;;;2018;Diabète;97302 - Cayenne;384,77
+;;;2018;Maladie chronique du foie;97302 - Cayenne;22,65
+;;;2018;Maladie de Parkinson;97302 - Cayenne;28,66
+;;;2018;Maladie hypertensive;97302 - Cayenne;362,57
+;;;2018;Maladies vasculaires cérébrales;97302 - Cayenne;162,42
+;;;2018;Sida;97302 - Cayenne;11,37
+;;;2018;Alzheimer;97304 - Kourou;0,00
+;;;2018;Asthme;97304 - Kourou;11,80
+;;;2018;Cancer de la prostate;97304 - Kourou;100,82
+;;;2018;Cancer de la trachée, des bronches et du poumon;97304 - Kourou;134,81
+;;;2018;Cancer du côlon-rectum;97304 - Kourou;100,82
+;;;2018;Cancer du sein;97304 - Kourou;0,00
+;;;2018;Cardiopathies ischémiques;97304 - Kourou;87,35
+;;;2018;Chap 10 : Maladies de l'appareil respiratoire;97304 - Kourou;30,08
+;;;2018;Diabète;97304 - Kourou;110,56
+;;;2018;Maladie chronique du foie;97304 - Kourou;18,28
+;;;2018;Maladie de Parkinson;97304 - Kourou;0,00
+;;;2018;Maladie hypertensive;97304 - Kourou;148,93
+;;;2018;Maladies vasculaires cérébrales;97304 - Kourou;36,32
+;;;2018;Sida;97304 - Kourou;12,72
+;;;2018;Alzheimer;97305 - Macouria;344,27
+;;;2018;Asthme;97305 - Macouria;0,00
+;;;2018;Cancer de la prostate;97305 - Macouria;51,66
+;;;2018;Cancer de la trachée, des bronches et du poumon;97305 - Macouria;0,00
+;;;2018;Cancer du côlon-rectum;97305 - Macouria;20,26
+;;;2018;Cancer du sein;97305 - Macouria;49,16
+;;;2018;Cardiopathies ischémiques;97305 - Macouria;0,00
+;;;2018;Chap 10 : Maladies de l'appareil respiratoire;97305 - Macouria;16,36
+;;;2018;Diabète;97305 - Macouria;155,12
+;;;2018;Maladie chronique du foie;97305 - Macouria;17,42
+;;;2018;Maladie de Parkinson;97305 - Macouria;137,70
+;;;2018;Maladie hypertensive;97305 - Macouria;319,69
+;;;2018;Maladies vasculaires cérébrales;97305 - Macouria;619,68
+;;;2018;Sida;97305 - Macouria;0,00
+;;;2018;Alzheimer;97306 - Mana;0,00
+;;;2018;Asthme;97306 - Mana;0,00
+;;;2018;Cancer de la prostate;97306 - Mana;214,55
+;;;2018;Cancer de la trachée, des bronches et du poumon;97306 - Mana;0,00
+;;;2018;Cancer du côlon-rectum;97306 - Mana;0,00
+;;;2018;Cancer du sein;97306 - Mana;0,00
+;;;2018;Cardiopathies ischémiques;97306 - Mana;0,00
+;;;2018;Chap 10 : Maladies de l'appareil respiratoire;97306 - Mana;643,66
+;;;2018;Diabète;97306 - Mana;0,00
+;;;2018;Maladie chronique du foie;97306 - Mana;0,00
+;;;2018;Maladie de Parkinson;97306 - Mana;0,00
+;;;2018;Maladie hypertensive;97306 - Mana;816,63
+;;;2018;Maladies vasculaires cérébrales;97306 - Mana;0,00
+;;;2018;Sida;97306 - Mana;0,00
+;;;2018;Alzheimer;97307 - Matoury;40,81
+;;;2018;Asthme;97307 - Matoury;0,00
+;;;2018;Cancer de la prostate;97307 - Matoury;134,22
+;;;2018;Cancer de la trachée, des bronches et du poumon;97307 - Matoury;43,97
+;;;2018;Cancer du côlon-rectum;97307 - Matoury;40,81
+;;;2018;Cancer du sein;97307 - Matoury;37,43
+;;;2018;Cardiopathies ischémiques;97307 - Matoury;72,78
+;;;2018;Chap 10 : Maladies de l'appareil respiratoire;97307 - Matoury;92,10
+;;;2018;Diabète;97307 - Matoury;241,37
+;;;2018;Maladie chronique du foie;97307 - Matoury;63,71
+;;;2018;Maladie de Parkinson;97307 - Matoury;0,00
+;;;2018;Maladie hypertensive;97307 - Matoury;325,10
+;;;2018;Maladies vasculaires cérébrales;97307 - Matoury;82,32
+;;;2018;Sida;97307 - Matoury;17,54
+;;;2018;Alzheimer;97308 - Saint-Georges;0,00
+;;;2018;Asthme;97308 - Saint-Georges;0,00
+;;;2018;Cancer de la prostate;97308 - Saint-Georges;0,00
+;;;2018;Cancer de la trachée, des bronches et du poumon;97308 - Saint-Georges;30,38
+;;;2018;Cancer du côlon-rectum;97308 - Saint-Georges;0,00
+;;;2018;Cancer du sein;97308 - Saint-Georges;0,00
+;;;2018;Cardiopathies ischémiques;97308 - Saint-Georges;0,00
+;;;2018;Chap 10 : Maladies de l'appareil respiratoire;97308 - Saint-Georges;0,00
+;;;2018;Diabète;97308 - Saint-Georges;93,67
+;;;2018;Maladie chronique du foie;97308 - Saint-Georges;0,00
+;;;2018;Maladie de Parkinson;97308 - Saint-Georges;0,00
+;;;2018;Maladie hypertensive;97308 - Saint-Georges;0,00
+;;;2018;Maladies vasculaires cérébrales;97308 - Saint-Georges;0,00
+;;;2018;Sida;97308 - Saint-Georges;0,00
+;;;2018;Alzheimer;97309 - Remire-Montjoly;0,00
+;;;2018;Asthme;97309 - Remire-Montjoly;0,00
+;;;2018;Cancer de la prostate;97309 - Remire-Montjoly;41,65
+;;;2018;Cancer de la trachée, des bronches et du poumon;97309 - Remire-Montjoly;37,85
+;;;2018;Cancer du côlon-rectum;97309 - Remire-Montjoly;19,90
+;;;2018;Cancer du sein;97309 - Remire-Montjoly;36,58
+;;;2018;Cardiopathies ischémiques;97309 - Remire-Montjoly;74,99
+;;;2018;Chap 10 : Maladies de l'appareil respiratoire;97309 - Remire-Montjoly;48,56
+;;;2018;Diabète;97309 - Remire-Montjoly;150,00
+;;;2018;Maladie chronique du foie;97309 - Remire-Montjoly;42,06
+;;;2018;Maladie de Parkinson;97309 - Remire-Montjoly;41,65
+;;;2018;Maladie hypertensive;97309 - Remire-Montjoly;273,66
+;;;2018;Maladies vasculaires cérébrales;97309 - Remire-Montjoly;83,47
+;;;2018;Sida;97309 - Remire-Montjoly;10,00
+;;;2018;Alzheimer;97310 - Roura;0,00
+;;;2018;Asthme;97310 - Roura;0,00
+;;;2018;Cancer de la prostate;97310 - Roura;48,00
+;;;2018;Cancer de la trachée, des bronches et du poumon;97310 - Roura;0,00
+;;;2018;Cancer du côlon-rectum;97310 - Roura;0,00
+;;;2018;Cancer du sein;97310 - Roura;0,00
+;;;2018;Cardiopathies ischémiques;97310 - Roura;0,00
+;;;2018;Chap 10 : Maladies de l'appareil respiratoire;97310 - Roura;118,88
+;;;2018;Diabète;97310 - Roura;0,00
+;;;2018;Maladie chronique du foie;97310 - Roura;0,00
+;;;2018;Maladie de Parkinson;97310 - Roura;0,00
+;;;2018;Maladie hypertensive;97310 - Roura;0,00
+;;;2018;Maladies vasculaires cérébrales;97310 - Roura;0,00
+;;;2018;Sida;97310 - Roura;0,00
+;;;2018;Alzheimer;97311 - Saint-Laurent-du-Maroni;0,00
+;;;2018;Asthme;97311 - Saint-Laurent-du-Maroni;0,00
+;;;2018;Cancer de la prostate;97311 - Saint-Laurent-du-Maroni;422,02
+;;;2018;Cancer de la trachée, des bronches et du poumon;97311 - Saint-Laurent-du-Maroni;88,63
+;;;2018;Cancer du côlon-rectum;97311 - Saint-Laurent-du-Maroni;18,14
+;;;2018;Cancer du sein;97311 - Saint-Laurent-du-Maroni;39,15
+;;;2018;Cardiopathies ischémiques;97311 - Saint-Laurent-du-Maroni;330,55
+;;;2018;Chap 10 : Maladies de l'appareil respiratoire;97311 - Saint-Laurent-du-Maroni;197,20
+;;;2018;Diabète;97311 - Saint-Laurent-du-Maroni;212,61
+;;;2018;Maladie chronique du foie;97311 - Saint-Laurent-du-Maroni;36,22
+;;;2018;Maladie de Parkinson;97311 - Saint-Laurent-du-Maroni;0,00
+;;;2018;Maladie hypertensive;97311 - Saint-Laurent-du-Maroni;488,23
+;;;2018;Maladies vasculaires cérébrales;97311 - Saint-Laurent-du-Maroni;663,05
+;;;2018;Sida;97311 - Saint-Laurent-du-Maroni;18,14
+;;;2018;Alzheimer;97312 - Sinnamary;0,00
+;;;2018;Asthme;97312 - Sinnamary;0,00
+;;;2018;Cancer de la prostate;97312 - Sinnamary;0,00
+;;;2018;Cancer de la trachée, des bronches et du poumon;97312 - Sinnamary;0,00
+;;;2018;Cancer du côlon-rectum;97312 - Sinnamary;298,79
+;;;2018;Cancer du sein;97312 - Sinnamary;0,00
+;;;2018;Cardiopathies ischémiques;97312 - Sinnamary;0,00
+;;;2018;Chap 10 : Maladies de l'appareil respiratoire;97312 - Sinnamary;0,00
+;;;2018;Diabète;97312 - Sinnamary;0,00
+;;;2018;Maladie chronique du foie;97312 - Sinnamary;0,00
+;;;2018;Maladie de Parkinson;97312 - Sinnamary;0,00
+;;;2018;Maladie hypertensive;97312 - Sinnamary;0,00
+;;;2018;Maladies vasculaires cérébrales;97312 - Sinnamary;122,30
+;;;2018;Sida;97312 - Sinnamary;0,00
+;;;2018;Alzheimer;97314 - Ouanary;0,00
+;;;2018;Asthme;97314 - Ouanary;0,00
+;;;2018;Cancer de la prostate;97314 - Ouanary;0,00
+;;;2018;Cancer de la trachée, des bronches et du poumon;97314 - Ouanary;0,00
+;;;2018;Cancer du côlon-rectum;97314 - Ouanary;0,00
+;;;2018;Cancer du sein;97314 - Ouanary;0,00
+;;;2018;Cardiopathies ischémiques;97314 - Ouanary;0,00
+;;;2018;Chap 10 : Maladies de l'appareil respiratoire;97314 - Ouanary;0,00
+;;;2018;Diabète;97314 - Ouanary;0,00
+;;;2018;Maladie chronique du foie;97314 - Ouanary;0,00
+;;;2018;Maladie de Parkinson;97314 - Ouanary;0,00
+;;;2018;Maladie hypertensive;97314 - Ouanary;0,00
+;;;2018;Maladies vasculaires cérébrales;97314 - Ouanary;0,00
+;;;2018;Sida;97314 - Ouanary;0,00
+;;;2018;Alzheimer;97352 - Saül;0,00
+;;;2018;Asthme;97352 - Saül;0,00
+;;;2018;Cancer de la prostate;97352 - Saül;0,00
+;;;2018;Cancer de la trachée, des bronches et du poumon;97352 - Saül;0,00
+;;;2018;Cancer du côlon-rectum;97352 - Saül;0,00
+;;;2018;Cancer du sein;97352 - Saül;0,00
+;;;2018;Cardiopathies ischémiques;97352 - Saül;0,00
+;;;2018;Chap 10 : Maladies de l'appareil respiratoire;97352 - Saül;0,00
+;;;2018;Diabète;97352 - Saül;0,00
+;;;2018;Maladie chronique du foie;97352 - Saül;0,00
+;;;2018;Maladie de Parkinson;97352 - Saül;0,00
+;;;2018;Maladie hypertensive;97352 - Saül;0,00
+;;;2018;Maladies vasculaires cérébrales;97352 - Saül;0,00
+;;;2018;Sida;97352 - Saül;0,00
+;;;2018;Alzheimer;97353 - Maripasoula;0,00
+;;;2018;Asthme;97353 - Maripasoula;0,00
+;;;2018;Cancer de la prostate;97353 - Maripasoula;392,75
+;;;2018;Cancer de la trachée, des bronches et du poumon;97353 - Maripasoula;0,00
+;;;2018;Cancer du côlon-rectum;97353 - Maripasoula;0,00
+;;;2018;Cancer du sein;97353 - Maripasoula;0,00
+;;;2018;Cardiopathies ischémiques;97353 - Maripasoula;0,00
+;;;2018;Chap 10 : Maladies de l'appareil respiratoire;97353 - Maripasoula;4,94
+;;;2018;Diabète;97353 - Maripasoula;0,00
+;;;2018;Maladie chronique du foie;97353 - Maripasoula;0,00
+;;;2018;Maladie de Parkinson;97353 - Maripasoula;0,00
+;;;2018;Maladie hypertensive;97353 - Maripasoula;17,94
+;;;2018;Maladies vasculaires cérébrales;97353 - Maripasoula;0,00
+;;;2018;Sida;97353 - Maripasoula;0,00
+;;;2018;Alzheimer;97357 - Grand-Santi;0,00
+;;;2018;Asthme;97357 - Grand-Santi;0,00
+;;;2018;Cancer de la prostate;97357 - Grand-Santi;0,00
+;;;2018;Cancer de la trachée, des bronches et du poumon;97357 - Grand-Santi;0,00
+;;;2018;Cancer du côlon-rectum;97357 - Grand-Santi;0,00
+;;;2018;Cancer du sein;97357 - Grand-Santi;0,00
+;;;2018;Cardiopathies ischémiques;97357 - Grand-Santi;0,00
+;;;2018;Chap 10 : Maladies de l'appareil respiratoire;97357 - Grand-Santi;0,00
+;;;2018;Diabète;97357 - Grand-Santi;0,00
+;;;2018;Maladie chronique du foie;97357 - Grand-Santi;0,00
+;;;2018;Maladie de Parkinson;97357 - Grand-Santi;0,00
+;;;2018;Maladie hypertensive;97357 - Grand-Santi;176,50
+;;;2018;Maladies vasculaires cérébrales;97357 - Grand-Santi;176,50
+;;;2018;Sida;97357 - Grand-Santi;0,00
+;;;2018;Alzheimer;97358 - Saint-Élie;0,00
+;;;2018;Asthme;97358 - Saint-Élie;0,00
+;;;2018;Cancer de la prostate;97358 - Saint-Élie;0,00
+;;;2018;Cancer de la trachée, des bronches et du poumon;97358 - Saint-Élie;0,00
+;;;2018;Cancer du côlon-rectum;97358 - Saint-Élie;0,00
+;;;2018;Cancer du sein;97358 - Saint-Élie;0,00
+;;;2018;Cardiopathies ischémiques;97358 - Saint-Élie;0,00
+;;;2018;Chap 10 : Maladies de l'appareil respiratoire;97358 - Saint-Élie;0,00
+;;;2018;Diabète;97358 - Saint-Élie;0,00
+;;;2018;Maladie chronique du foie;97358 - Saint-Élie;0,00
+;;;2018;Maladie de Parkinson;97358 - Saint-Élie;0,00
+;;;2018;Maladie hypertensive;97358 - Saint-Élie;0,00
+;;;2018;Maladies vasculaires cérébrales;97358 - Saint-Élie;0,00
+;;;2018;Sida;97358 - Saint-Élie;0,00
+;;;2018;Alzheimer;97360 - Apatou;0,00
+;;;2018;Asthme;97360 - Apatou;0,00
+;;;2018;Cancer de la prostate;97360 - Apatou;0,00
+;;;2018;Cancer de la trachée, des bronches et du poumon;97360 - Apatou;0,00
+;;;2018;Cancer du côlon-rectum;97360 - Apatou;0,00
+;;;2018;Cancer du sein;97360 - Apatou;0,00
+;;;2018;Cardiopathies ischémiques;97360 - Apatou;0,00
+;;;2018;Chap 10 : Maladies de l'appareil respiratoire;97360 - Apatou;0,00
+;;;2018;Diabète;97360 - Apatou;0,00
+;;;2018;Maladie chronique du foie;97360 - Apatou;0,00
+;;;2018;Maladie de Parkinson;97360 - Apatou;0,00
+;;;2018;Maladie hypertensive;97360 - Apatou;64,52
+;;;2018;Maladies vasculaires cérébrales;97360 - Apatou;119,69
+;;;2018;Sida;97360 - Apatou;0,00
+;;;2018;Alzheimer;97362 - Papaichton;0,00
+;;;2018;Asthme;97362 - Papaichton;0,00
+;;;2018;Cancer de la prostate;97362 - Papaichton;0,00
+;;;2018;Cancer de la trachée, des bronches et du poumon;97362 - Papaichton;0,00
+;;;2018;Cancer du côlon-rectum;97362 - Papaichton;0,00
+;;;2018;Cancer du sein;97362 - Papaichton;0,00
+;;;2018;Cardiopathies ischémiques;97362 - Papaichton;0,00
+;;;2018;Chap 10 : Maladies de l'appareil respiratoire;97362 - Papaichton;11,05
+;;;2018;Diabète;97362 - Papaichton;215,59
+;;;2018;Maladie chronique du foie;97362 - Papaichton;0,00
+;;;2018;Maladie de Parkinson;97362 - Papaichton;0,00
+;;;2018;Maladie hypertensive;97362 - Papaichton;0,00
+;;;2018;Maladies vasculaires cérébrales;97362 - Papaichton;215,59
+;;;2018;Sida;97362 - Papaichton;0,00
+;;;2018;Alzheimer;Auvergne-Rhône-Alpes;134,60
+;;;2018;Asthme;Auvergne-Rhône-Alpes;3,22
+;;;2018;Cancer de la prostate;Auvergne-Rhône-Alpes;43,02
+;;;2018;Cancer de la trachée, des bronches et du poumon;Auvergne-Rhône-Alpes;139,11
+;;;2018;Cancer du côlon-rectum;Auvergne-Rhône-Alpes;74,70
+;;;2018;Cancer du sein;Auvergne-Rhône-Alpes;51,11
+;;;2018;Cardiopathies ischémiques;Auvergne-Rhône-Alpes;135,64
+;;;2018;Chap 10 : Maladies de l'appareil respiratoire;Auvergne-Rhône-Alpes;192,80
+;;;2018;Diabète;Auvergne-Rhône-Alpes;170,56
+;;;2018;Maladie chronique du foie;Auvergne-Rhône-Alpes;46,06
+;;;2018;Maladie de Parkinson;Auvergne-Rhône-Alpes;58,23
+;;;2018;Maladie hypertensive;Auvergne-Rhône-Alpes;236,36
+;;;2018;Maladies vasculaires cérébrales;Auvergne-Rhône-Alpes;127,69
+;;;2018;Sida;Auvergne-Rhône-Alpes;0,62
+;;;2018;Alzheimer;Bourgogne-Franche-Comté;128,18
+;;;2018;Asthme;Bourgogne-Franche-Comté;3,56
+;;;2018;Cancer de la prostate;Bourgogne-Franche-Comté;49,22
+;;;2018;Cancer de la trachée, des bronches et du poumon;Bourgogne-Franche-Comté;143,99
+;;;2018;Cancer du côlon-rectum;Bourgogne-Franche-Comté;78,39
+;;;2018;Cancer du sein;Bourgogne-Franche-Comté;56,21
+;;;2018;Cardiopathies ischémiques;Bourgogne-Franche-Comté;157,74
+;;;2018;Chap 10 : Maladies de l'appareil respiratoire;Bourgogne-Franche-Comté;202,81
+;;;2018;Diabète;Bourgogne-Franche-Comté;191,27
+;;;2018;Maladie chronique du foie;Bourgogne-Franche-Comté;51,54
+;;;2018;Maladie de Parkinson;Bourgogne-Franche-Comté;57,30
+;;;2018;Maladie hypertensive;Bourgogne-Franche-Comté;286,43
+;;;2018;Maladies vasculaires cérébrales;Bourgogne-Franche-Comté;139,73
+;;;2018;Sida;Bourgogne-Franche-Comté;0,72
+;;;2018;Alzheimer;Bretagne;123,07
+;;;2018;Asthme;Bretagne;2,98
+;;;2018;Cancer de la prostate;Bretagne;52,38
+;;;2018;Cancer de la trachée, des bronches et du poumon;Bretagne;144,67
+;;;2018;Cancer du côlon-rectum;Bretagne;85,28
+;;;2018;Cancer du sein;Bretagne;53,13
+;;;2018;Cardiopathies ischémiques;Bretagne;179,65
+;;;2018;Chap 10 : Maladies de l'appareil respiratoire;Bretagne;223,26
+;;;2018;Diabète;Bretagne;125,84
+;;;2018;Maladie chronique du foie;Bretagne;75,44
+;;;2018;Maladie de Parkinson;Bretagne;45,99
+;;;2018;Maladie hypertensive;Bretagne;225,77
+;;;2018;Maladies vasculaires cérébrales;Bretagne;156,51
+;;;2018;Sida;Bretagne;0,69
+;;;2018;Alzheimer;Centre-Val de Loire;128,47
+;;;2018;Asthme;Centre-Val de Loire;4,59
+;;;2018;Cancer de la prostate;Centre-Val de Loire;54,66
+;;;2018;Cancer de la trachée, des bronches et du poumon;Centre-Val de Loire;134,29
+;;;2018;Cancer du côlon-rectum;Centre-Val de Loire;85,52
+;;;2018;Cancer du sein;Centre-Val de Loire;51,50
+;;;2018;Cardiopathies ischémiques;Centre-Val de Loire;165,59
+;;;2018;Chap 10 : Maladies de l'appareil respiratoire;Centre-Val de Loire;192,05
+;;;2018;Diabète;Centre-Val de Loire;189,37
+;;;2018;Maladie chronique du foie;Centre-Val de Loire;50,44
+;;;2018;Maladie de Parkinson;Centre-Val de Loire;45,54
+;;;2018;Maladie hypertensive;Centre-Val de Loire;244,59
+;;;2018;Maladies vasculaires cérébrales;Centre-Val de Loire;156,50
+;;;2018;Sida;Centre-Val de Loire;1,73
+;;;2018;Alzheimer;Corse;99,97
+;;;2018;Asthme;Corse;1,53
+;;;2018;Cancer de la prostate;Corse;29,22
+;;;2018;Cancer de la trachée, des bronches et du poumon;Corse;163,62
+;;;2018;Cancer du côlon-rectum;Corse;54,56
+;;;2018;Cancer du sein;Corse;39,06
+;;;2018;Cardiopathies ischémiques;Corse;163,16
+;;;2018;Chap 10 : Maladies de l'appareil respiratoire;Corse;152,69
+;;;2018;Diabète;Corse;124,32
+;;;2018;Maladie chronique du foie;Corse;32,44
+;;;2018;Maladie de Parkinson;Corse;40,27
+;;;2018;Maladie hypertensive;Corse;162,37
+;;;2018;Maladies vasculaires cérébrales;Corse;108,91
+;;;2018;Sida;Corse;1,69
+;;;2018;Alzheimer;Departements d'outre mer;112,54
+;;;2018;Asthme;Departements d'outre mer;8,21
+;;;2018;Cancer de la prostate;Departements d'outre mer;84,03
+;;;2018;Cancer de la trachée, des bronches et du poumon;Departements d'outre mer;71,62
+;;;2018;Cancer du côlon-rectum;Departements d'outre mer;59,98
+;;;2018;Cancer du sein;Departements d'outre mer;38,35
+;;;2018;Cardiopathies ischémiques;Departements d'outre mer;115,11
+;;;2018;Chap 10 : Maladies de l'appareil respiratoire;Departements d'outre mer;158,98
+;;;2018;Diabète;Departements d'outre mer;316,44
+;;;2018;Maladie chronique du foie;Departements d'outre mer;45,02
+;;;2018;Maladie de Parkinson;Departements d'outre mer;50,41
+;;;2018;Maladie hypertensive;Departements d'outre mer;371,18
+;;;2018;Maladies vasculaires cérébrales;Departements d'outre mer;188,90
+;;;2018;Sida;Departements d'outre mer;3,31
+;;;2018;Alzheimer;France (y compris Mayotte);124,35
+;;;2018;Asthme;France (y compris Mayotte);3,64
+;;;2018;Cancer de la prostate;France (y compris Mayotte);47,84
+;;;2018;Cancer de la trachée, des bronches et du poumon;France (y compris Mayotte);143,81
+;;;2018;Cancer du côlon-rectum;France (y compris Mayotte);78,74
+;;;2018;Cancer du sein;France (y compris Mayotte);53,61
+;;;2018;Cardiopathies ischémiques;France (y compris Mayotte);150,36
+;;;2018;Chap 10 : Maladies de l'appareil respiratoire;France (y compris Mayotte);205,80
+;;;2018;Diabète;France (y compris Mayotte);169,60
+;;;2018;Maladie chronique du foie;France (y compris Mayotte);54,08
+;;;2018;Maladie de Parkinson;France (y compris Mayotte);52,07
+;;;2018;Maladie hypertensive;France (y compris Mayotte);241,08
+;;;2018;Maladies vasculaires cérébrales;France (y compris Mayotte);141,23
+;;;2018;Sida;France (y compris Mayotte);1,11
+;;;2018;Alzheimer;France métropolitaine;124,51
+;;;2018;Asthme;France métropolitaine;3,52
+;;;2018;Cancer de la prostate;France métropolitaine;47,02
+;;;2018;Cancer de la trachée, des bronches et du poumon;France métropolitaine;145,18
+;;;2018;Cancer du côlon-rectum;France métropolitaine;78,92
+;;;2018;Cancer du sein;France métropolitaine;53,72
+;;;2018;Cardiopathies ischémiques;France métropolitaine;150,10
+;;;2018;Chap 10 : Maladies de l'appareil respiratoire;France métropolitaine;206,25
+;;;2018;Diabète;France métropolitaine;166,06
+;;;2018;Maladie chronique du foie;France métropolitaine;54,15
+;;;2018;Maladie de Parkinson;France métropolitaine;52,02
+;;;2018;Maladie hypertensive;France métropolitaine;237,71
+;;;2018;Maladies vasculaires cérébrales;France métropolitaine;139,70
+;;;2018;Sida;France métropolitaine;1,04
+;;;2018;Alzheimer;Grand Est;125,32
+;;;2018;Asthme;Grand Est;3,07
+;;;2018;Cancer de la prostate;Grand Est;44,13
+;;;2018;Cancer de la trachée, des bronches et du poumon;Grand Est;164,01
+;;;2018;Cancer du côlon-rectum;Grand Est;82,16
+;;;2018;Cancer du sein;Grand Est;51,49
+;;;2018;Cardiopathies ischémiques;Grand Est;162,00
+;;;2018;Chap 10 : Maladies de l'appareil respiratoire;Grand Est;238,38
+;;;2018;Diabète;Grand Est;226,69
+;;;2018;Maladie chronique du foie;Grand Est;60,19
+;;;2018;Maladie de Parkinson;Grand Est;51,46
+;;;2018;Maladie hypertensive;Grand Est;334,31
+;;;2018;Maladies vasculaires cérébrales;Grand Est;150,45
+;;;2018;Sida;Grand Est;0,88
+;;;2018;Alzheimer;Guadeloupe;119,17
+;;;2018;Asthme;Guadeloupe;9,26
+;;;2018;Cancer de la prostate;Guadeloupe;103,58
+;;;2018;Cancer de la trachée, des bronches et du poumon;Guadeloupe;58,85
+;;;2018;Cancer du côlon-rectum;Guadeloupe;51,81
+;;;2018;Cancer du sein;Guadeloupe;45,06
+;;;2018;Cardiopathies ischémiques;Guadeloupe;75,34
+;;;2018;Chap 10 : Maladies de l'appareil respiratoire;Guadeloupe;103,21
+;;;2018;Diabète;Guadeloupe;270,59
+;;;2018;Maladie chronique du foie;Guadeloupe;41,87
+;;;2018;Maladie de Parkinson;Guadeloupe;63,95
+;;;2018;Maladie hypertensive;Guadeloupe;361,05
+;;;2018;Maladies vasculaires cérébrales;Guadeloupe;187,37
+;;;2018;Sida;Guadeloupe;5,73
+;;;2018;Alzheimer;Guyane;42,07
+;;;2018;Asthme;Guyane;1,15
+;;;2018;Cancer de la prostate;Guyane;112,62
+;;;2018;Cancer de la trachée, des bronches et du poumon;Guyane;39,20
+;;;2018;Cancer du côlon-rectum;Guyane;46,32
+;;;2018;Cancer du sein;Guyane;32,06
+;;;2018;Cardiopathies ischémiques;Guyane;85,07
+;;;2018;Chap 10 : Maladies de l'appareil respiratoire;Guyane;117,33
+;;;2018;Diabète;Guyane;229,68
+;;;2018;Maladie chronique du foie;Guyane;30,16
+;;;2018;Maladie de Parkinson;Guyane;22,77
+;;;2018;Maladie hypertensive;Guyane;330,74
+;;;2018;Maladies vasculaires cérébrales;Guyane;183,24
+;;;2018;Sida;Guyane;10,23
+;;;2018;Alzheimer;Hauts-de-France;137,54
+;;;2018;Asthme;Hauts-de-France;4,69
+;;;2018;Cancer de la prostate;Hauts-de-France;53,68
+;;;2018;Cancer de la trachée, des bronches et du poumon;Hauts-de-France;162,57
+;;;2018;Cancer du côlon-rectum;Hauts-de-France;97,70
+;;;2018;Cancer du sein;Hauts-de-France;65,50
+;;;2018;Cardiopathies ischémiques;Hauts-de-France;168,78
+;;;2018;Chap 10 : Maladies de l'appareil respiratoire;Hauts-de-France;269,32
+;;;2018;Diabète;Hauts-de-France;207,37
+;;;2018;Maladie chronique du foie;Hauts-de-France;89,49
+;;;2018;Maladie de Parkinson;Hauts-de-France;60,69
+;;;2018;Maladie hypertensive;Hauts-de-France;278,46
+;;;2018;Maladies vasculaires cérébrales;Hauts-de-France;151,22
+;;;2018;Sida;Hauts-de-France;0,35
+;;;2018;Alzheimer;Martinique;128,39
+;;;2018;Asthme;Martinique;5,35
+;;;2018;Cancer de la prostate;Martinique;100,68
+;;;2018;Cancer de la trachée, des bronches et du poumon;Martinique;43,12
+;;;2018;Cancer du côlon-rectum;Martinique;66,64
+;;;2018;Cancer du sein;Martinique;46,17
+;;;2018;Cardiopathies ischémiques;Martinique;77,83
+;;;2018;Chap 10 : Maladies de l'appareil respiratoire;Martinique;139,17
+;;;2018;Diabète;Martinique;260,22
+;;;2018;Maladie chronique du foie;Martinique;26,20
+;;;2018;Maladie de Parkinson;Martinique;53,53
+;;;2018;Maladie hypertensive;Martinique;316,65
+;;;2018;Maladies vasculaires cérébrales;Martinique;198,94
+;;;2018;Sida;Martinique;3,97
+;;;2018;Alzheimer;Normandie;132,03
+;;;2018;Asthme;Normandie;3,20
+;;;2018;Cancer de la prostate;Normandie;54,16
+;;;2018;Cancer de la trachée, des bronches et du poumon;Normandie;152,96
+;;;2018;Cancer du côlon-rectum;Normandie;80,48
+;;;2018;Cancer du sein;Normandie;60,87
+;;;2018;Cardiopathies ischémiques;Normandie;178,20
+;;;2018;Chap 10 : Maladies de l'appareil respiratoire;Normandie;207,70
+;;;2018;Diabète;Normandie;164,79
+;;;2018;Maladie chronique du foie;Normandie;64,95
+;;;2018;Maladie de Parkinson;Normandie;48,67
+;;;2018;Maladie hypertensive;Normandie;253,81
+;;;2018;Maladies vasculaires cérébrales;Normandie;155,70
+;;;2018;Sida;Normandie;0,71
+;;;2018;Alzheimer;Nouvelle-Aquitaine;113,05
+;;;2018;Asthme;Nouvelle-Aquitaine;3,50
+;;;2018;Cancer de la prostate;Nouvelle-Aquitaine;48,36
+;;;2018;Cancer de la trachée, des bronches et du poumon;Nouvelle-Aquitaine;149,73
+;;;2018;Cancer du côlon-rectum;Nouvelle-Aquitaine;81,99
+;;;2018;Cancer du sein;Nouvelle-Aquitaine;52,31
+;;;2018;Cardiopathies ischémiques;Nouvelle-Aquitaine;151,49
+;;;2018;Chap 10 : Maladies de l'appareil respiratoire;Nouvelle-Aquitaine;201,71
+;;;2018;Diabète;Nouvelle-Aquitaine;159,16
+;;;2018;Maladie chronique du foie;Nouvelle-Aquitaine;44,49
+;;;2018;Maladie de Parkinson;Nouvelle-Aquitaine;51,62
+;;;2018;Maladie hypertensive;Nouvelle-Aquitaine;211,54
+;;;2018;Maladies vasculaires cérébrales;Nouvelle-Aquitaine;148,52
+;;;2018;Sida;Nouvelle-Aquitaine;0,99
+;;;2018;Alzheimer;Occitanie;150,53
+;;;2018;Asthme;Occitanie;2,86
+;;;2018;Cancer de la prostate;Occitanie;44,18
+;;;2018;Cancer de la trachée, des bronches et du poumon;Occitanie;147,26
+;;;2018;Cancer du côlon-rectum;Occitanie;77,10
+;;;2018;Cancer du sein;Occitanie;49,82
+;;;2018;Cardiopathies ischémiques;Occitanie;150,48
+;;;2018;Chap 10 : Maladies de l'appareil respiratoire;Occitanie;198,87
+;;;2018;Diabète;Occitanie;158,98
+;;;2018;Maladie chronique du foie;Occitanie;43,82
+;;;2018;Maladie de Parkinson;Occitanie;48,88
+;;;2018;Maladie hypertensive;Occitanie;202,00
+;;;2018;Maladies vasculaires cérébrales;Occitanie;138,15
+;;;2018;Sida;Occitanie;0,81
+;;;2018;Alzheimer;Pays de la Loire;116,84
+;;;2018;Asthme;Pays de la Loire;4,28
+;;;2018;Cancer de la prostate;Pays de la Loire;52,25
+;;;2018;Cancer de la trachée, des bronches et du poumon;Pays de la Loire;133,37
+;;;2018;Cancer du côlon-rectum;Pays de la Loire;80,85
+;;;2018;Cancer du sein;Pays de la Loire;54,75
+;;;2018;Cardiopathies ischémiques;Pays de la Loire;153,75
+;;;2018;Chap 10 : Maladies de l'appareil respiratoire;Pays de la Loire;197,80
+;;;2018;Diabète;Pays de la Loire;139,16
+;;;2018;Maladie chronique du foie;Pays de la Loire;64,24
+;;;2018;Maladie de Parkinson;Pays de la Loire;55,28
+;;;2018;Maladie hypertensive;Pays de la Loire;208,80
+;;;2018;Maladies vasculaires cérébrales;Pays de la Loire;149,64
+;;;2018;Sida;Pays de la Loire;0,57
+;;;2018;Alzheimer;Provence-Alpes-Côte d'Azur;112,95
+;;;2018;Asthme;Provence-Alpes-Côte d'Azur;2,94
+;;;2018;Cancer de la prostate;Provence-Alpes-Côte d'Azur;41,75
+;;;2018;Cancer de la trachée, des bronches et du poumon;Provence-Alpes-Côte d'Azur;146,87
+;;;2018;Cancer du côlon-rectum;Provence-Alpes-Côte d'Azur;69,43
+;;;2018;Cancer du sein;Provence-Alpes-Côte d'Azur;50,75
+;;;2018;Cardiopathies ischémiques;Provence-Alpes-Côte d'Azur;130,26
+;;;2018;Chap 10 : Maladies de l'appareil respiratoire;Provence-Alpes-Côte d'Azur;205,30
+;;;2018;Diabète;Provence-Alpes-Côte d'Azur;145,59
+;;;2018;Maladie chronique du foie;Provence-Alpes-Côte d'Azur;46,21
+;;;2018;Maladie de Parkinson;Provence-Alpes-Côte d'Azur;55,25
+;;;2018;Maladie hypertensive;Provence-Alpes-Côte d'Azur;198,80
+;;;2018;Maladies vasculaires cérébrales;Provence-Alpes-Côte d'Azur;131,25
+;;;2018;Sida;Provence-Alpes-Côte d'Azur;2,06
+;;;2018;Alzheimer;Réunion;103,60
+;;;2018;Asthme;Réunion;10,57
+;;;2018;Cancer de la prostate;Réunion;51,43
+;;;2018;Cancer de la trachée, des bronches et du poumon;Réunion;105,71
+;;;2018;Cancer du côlon-rectum;Réunion;66,08
+;;;2018;Cancer du sein;Réunion;30,55
+;;;2018;Cardiopathies ischémiques;Réunion;176,81
+;;;2018;Chap 10 : Maladies de l'appareil respiratoire;Réunion;222,82
+;;;2018;Diabète;Réunion;403,92
+;;;2018;Maladie chronique du foie;Réunion;61,44
+;;;2018;Maladie de Parkinson;Réunion;40,69
+;;;2018;Maladie hypertensive;Réunion;426,19
+;;;2018;Maladies vasculaires cérébrales;Réunion;180,30
+;;;2018;Sida;Réunion;0,38
+;;;2018;Alzheimer;Île-de-France;104,25
+;;;2018;Asthme;Île-de-France;4,09
+;;;2018;Cancer de la prostate;Île-de-France;43,28
+;;;2018;Cancer de la trachée, des bronches et du poumon;Île-de-France;131,18
+;;;2018;Cancer du côlon-rectum;Île-de-France;70,01
+;;;2018;Cancer du sein;Île-de-France;53,87
+;;;2018;Cardiopathies ischémiques;Île-de-France;124,21
+;;;2018;Chap 10 : Maladies de l'appareil respiratoire;Île-de-France;176,97
+;;;2018;Diabète;Île-de-France;138,16
+;;;2018;Maladie chronique du foie;Île-de-France;42,46
+;;;2018;Maladie de Parkinson;Île-de-France;45,50
+;;;2018;Maladie hypertensive;Île-de-France;223,42
+;;;2018;Maladies vasculaires cérébrales;Île-de-France;114,62
+;;;2018;Sida;Île-de-France;1,69
+;;;2019;Alzheimer;97302 - Cayenne;102,07
+;;;2019;Asthme;97302 - Cayenne;0,00
+;;;2019;Cancer de la prostate;97302 - Cayenne;110,73
+;;;2019;Cancer de la trachée, des bronches et du poumon;97302 - Cayenne;38,44
+;;;2019;Cancer du côlon-rectum;97302 - Cayenne;159,63
+;;;2019;Cancer du sein;97302 - Cayenne;47,81
+;;;2019;Cardiopathies ischémiques;97302 - Cayenne;99,30
+;;;2019;Chap 10 : Maladies de l'appareil respiratoire;97302 - Cayenne;239,89
+;;;2019;Diabète;97302 - Cayenne;412,24
+;;;2019;Maladie chronique du foie;97302 - Cayenne;55,67
+;;;2019;Maladie de Parkinson;97302 - Cayenne;25,66
+;;;2019;Maladie hypertensive;97302 - Cayenne;585,20
+;;;2019;Maladies vasculaires cérébrales;97302 - Cayenne;268,68
+;;;2019;Sida;97302 - Cayenne;18,60
+;;;2019;Alzheimer;97303 - Iracoubo;0,00
+;;;2019;Asthme;97303 - Iracoubo;0,00
+;;;2019;Cancer de la prostate;97303 - Iracoubo;0,00
+;;;2019;Cancer de la trachée, des bronches et du poumon;97303 - Iracoubo;0,00
+;;;2019;Cancer du côlon-rectum;97303 - Iracoubo;0,00
+;;;2019;Cancer du sein;97303 - Iracoubo;0,00
+;;;2019;Cardiopathies ischémiques;97303 - Iracoubo;169,95
+;;;2019;Chap 10 : Maladies de l'appareil respiratoire;97303 - Iracoubo;0,00
+;;;2019;Diabète;97303 - Iracoubo;568,52
+;;;2019;Maladie chronique du foie;97303 - Iracoubo;228,62
+;;;2019;Maladie de Parkinson;97303 - Iracoubo;0,00
+;;;2019;Maladie hypertensive;97303 - Iracoubo;743,66
+;;;2019;Maladies vasculaires cérébrales;97303 - Iracoubo;82,08
+;;;2019;Sida;97303 - Iracoubo;0,00
+;;;2019;Alzheimer;97304 - Kourou;164,72
+;;;2019;Asthme;97304 - Kourou;0,00
+;;;2019;Cancer de la prostate;97304 - Kourou;0,00
+;;;2019;Cancer de la trachée, des bronches et du poumon;97304 - Kourou;146,38
+;;;2019;Cancer du côlon-rectum;97304 - Kourou;18,37
+;;;2019;Cancer du sein;97304 - Kourou;11,79
+;;;2019;Cardiopathies ischémiques;97304 - Kourou;34,36
+;;;2019;Chap 10 : Maladies de l'appareil respiratoire;97304 - Kourou;68,74
+;;;2019;Diabète;97304 - Kourou;183,07
+;;;2019;Maladie chronique du foie;97304 - Kourou;18,37
+;;;2019;Maladie de Parkinson;97304 - Kourou;82,36
+;;;2019;Maladie hypertensive;97304 - Kourou;498,31
+;;;2019;Maladies vasculaires cérébrales;97304 - Kourou;96,48
+;;;2019;Sida;97304 - Kourou;0,00
+;;;2019;Alzheimer;97305 - Macouria;0,00
+;;;2019;Asthme;97305 - Macouria;0,00
+;;;2019;Cancer de la prostate;97305 - Macouria;0,00
+;;;2019;Cancer de la trachée, des bronches et du poumon;97305 - Macouria;205,77
+;;;2019;Cancer du côlon-rectum;97305 - Macouria;127,52
+;;;2019;Cancer du sein;97305 - Macouria;0,00
+;;;2019;Cardiopathies ischémiques;97305 - Macouria;29,85
+;;;2019;Chap 10 : Maladies de l'appareil respiratoire;97305 - Macouria;29,21
+;;;2019;Diabète;97305 - Macouria;282,24
+;;;2019;Maladie chronique du foie;97305 - Macouria;0,00
+;;;2019;Maladie de Parkinson;97305 - Macouria;0,00
+;;;2019;Maladie hypertensive;97305 - Macouria;432,95
+;;;2019;Maladies vasculaires cérébrales;97305 - Macouria;256,08
+;;;2019;Sida;97305 - Macouria;0,00
+;;;2019;Alzheimer;97306 - Mana;0,00
+;;;2019;Asthme;97306 - Mana;0,00
+;;;2019;Cancer de la prostate;97306 - Mana;0,00
+;;;2019;Cancer de la trachée, des bronches et du poumon;97306 - Mana;0,00
+;;;2019;Cancer du côlon-rectum;97306 - Mana;0,00
+;;;2019;Cancer du sein;97306 - Mana;0,00
+;;;2019;Cardiopathies ischémiques;97306 - Mana;121,87
+;;;2019;Chap 10 : Maladies de l'appareil respiratoire;97306 - Mana;124,62
+;;;2019;Diabète;97306 - Mana;0,00
+;;;2019;Maladie chronique du foie;97306 - Mana;10,48
+;;;2019;Maladie de Parkinson;97306 - Mana;101,99
+;;;2019;Maladie hypertensive;97306 - Mana;30,31
+;;;2019;Maladies vasculaires cérébrales;97306 - Mana;132,30
+;;;2019;Sida;97306 - Mana;10,48
+;;;2019;Alzheimer;97307 - Matoury;38,11
+;;;2019;Asthme;97307 - Matoury;0,00
+;;;2019;Cancer de la prostate;97307 - Matoury;89,54
+;;;2019;Cancer de la trachée, des bronches et du poumon;97307 - Matoury;16,58
+;;;2019;Cancer du côlon-rectum;97307 - Matoury;89,64
+;;;2019;Cancer du sein;97307 - Matoury;17,77
+;;;2019;Cardiopathies ischémiques;97307 - Matoury;29,51
+;;;2019;Chap 10 : Maladies de l'appareil respiratoire;97307 - Matoury;67,62
+;;;2019;Diabète;97307 - Matoury;133,77
+;;;2019;Maladie chronique du foie;97307 - Matoury;27,74
+;;;2019;Maladie de Parkinson;97307 - Matoury;0,00
+;;;2019;Maladie hypertensive;97307 - Matoury;141,27
+;;;2019;Maladies vasculaires cérébrales;97307 - Matoury;118,07
+;;;2019;Sida;97307 - Matoury;8,68
+;;;2019;Alzheimer;97308 - Saint-Georges;0,00
+;;;2019;Asthme;97308 - Saint-Georges;0,00
+;;;2019;Cancer de la prostate;97308 - Saint-Georges;92,85
+;;;2019;Cancer de la trachée, des bronches et du poumon;97308 - Saint-Georges;56,25
+;;;2019;Cancer du côlon-rectum;97308 - Saint-Georges;0,00
+;;;2019;Cancer du sein;97308 - Saint-Georges;0,00
+;;;2019;Cardiopathies ischémiques;97308 - Saint-Georges;0,00
+;;;2019;Chap 10 : Maladies de l'appareil respiratoire;97308 - Saint-Georges;0,00
+;;;2019;Diabète;97308 - Saint-Georges;30,01
+;;;2019;Maladie chronique du foie;97308 - Saint-Georges;0,00
+;;;2019;Maladie de Parkinson;97308 - Saint-Georges;0,00
+;;;2019;Maladie hypertensive;97308 - Saint-Georges;0,00
+;;;2019;Maladies vasculaires cérébrales;97308 - Saint-Georges;111,36
+;;;2019;Sida;97308 - Saint-Georges;0,00
+;;;2019;Alzheimer;97309 - Remire-Montjoly;29,87
+;;;2019;Asthme;97309 - Remire-Montjoly;0,00
+;;;2019;Cancer de la prostate;97309 - Remire-Montjoly;159,29
+;;;2019;Cancer de la trachée, des bronches et du poumon;97309 - Remire-Montjoly;88,93
+;;;2019;Cancer du côlon-rectum;97309 - Remire-Montjoly;29,87
+;;;2019;Cancer du sein;97309 - Remire-Montjoly;26,49
+;;;2019;Cardiopathies ischémiques;97309 - Remire-Montjoly;136,01
+;;;2019;Chap 10 : Maladies de l'appareil respiratoire;97309 - Remire-Montjoly;89,02
+;;;2019;Diabète;97309 - Remire-Montjoly;80,75
+;;;2019;Maladie chronique du foie;97309 - Remire-Montjoly;65,38
+;;;2019;Maladie de Parkinson;97309 - Remire-Montjoly;79,64
+;;;2019;Maladie hypertensive;97309 - Remire-Montjoly;213,78
+;;;2019;Maladies vasculaires cérébrales;97309 - Remire-Montjoly;128,10
+;;;2019;Sida;97309 - Remire-Montjoly;0,00
+;;;2019;Alzheimer;97310 - Roura;0,00
+;;;2019;Asthme;97310 - Roura;0,00
+;;;2019;Cancer de la prostate;97310 - Roura;0,00
+;;;2019;Cancer de la trachée, des bronches et du poumon;97310 - Roura;81,00
+;;;2019;Cancer du côlon-rectum;97310 - Roura;48,70
+;;;2019;Cancer du sein;97310 - Roura;0,00
+;;;2019;Cardiopathies ischémiques;97310 - Roura;242,29
+;;;2019;Chap 10 : Maladies de l'appareil respiratoire;97310 - Roura;48,70
+;;;2019;Diabète;97310 - Roura;149,01
+;;;2019;Maladie chronique du foie;97310 - Roura;0,00
+;;;2019;Maladie de Parkinson;97310 - Roura;0,00
+;;;2019;Maladie hypertensive;97310 - Roura;121,15
+;;;2019;Maladies vasculaires cérébrales;97310 - Roura;0,00
+;;;2019;Sida;97310 - Roura;0,00
+;;;2019;Alzheimer;97311 - Saint-Laurent-du-Maroni;0,00
+;;;2019;Asthme;97311 - Saint-Laurent-du-Maroni;0,00
+;;;2019;Cancer de la prostate;97311 - Saint-Laurent-du-Maroni;326,09
+;;;2019;Cancer de la trachée, des bronches et du poumon;97311 - Saint-Laurent-du-Maroni;110,84
+;;;2019;Cancer du côlon-rectum;97311 - Saint-Laurent-du-Maroni;49,30
+;;;2019;Cancer du sein;97311 - Saint-Laurent-du-Maroni;0,00
+;;;2019;Cardiopathies ischémiques;97311 - Saint-Laurent-du-Maroni;144,61
+;;;2019;Chap 10 : Maladies de l'appareil respiratoire;97311 - Saint-Laurent-du-Maroni;270,42
+;;;2019;Diabète;97311 - Saint-Laurent-du-Maroni;169,56
+;;;2019;Maladie chronique du foie;97311 - Saint-Laurent-du-Maroni;46,78
+;;;2019;Maladie de Parkinson;97311 - Saint-Laurent-du-Maroni;55,37
+;;;2019;Maladie hypertensive;97311 - Saint-Laurent-du-Maroni;436,97
+;;;2019;Maladies vasculaires cérébrales;97311 - Saint-Laurent-du-Maroni;479,84
+;;;2019;Sida;97311 - Saint-Laurent-du-Maroni;63,83
+;;;2019;Alzheimer;97312 - Sinnamary;0,00
+;;;2019;Asthme;97312 - Sinnamary;0,00
+;;;2019;Cancer de la prostate;97312 - Sinnamary;295,49
+;;;2019;Cancer de la trachée, des bronches et du poumon;97312 - Sinnamary;0,00
+;;;2019;Cancer du côlon-rectum;97312 - Sinnamary;0,00
+;;;2019;Cancer du sein;97312 - Sinnamary;0,00
+;;;2019;Cardiopathies ischémiques;97312 - Sinnamary;0,00
+;;;2019;Chap 10 : Maladies de l'appareil respiratoire;97312 - Sinnamary;295,49
+;;;2019;Diabète;97312 - Sinnamary;64,67
+;;;2019;Maladie chronique du foie;97312 - Sinnamary;0,00
+;;;2019;Maladie de Parkinson;97312 - Sinnamary;0,00
+;;;2019;Maladie hypertensive;97312 - Sinnamary;571,29
+;;;2019;Maladies vasculaires cérébrales;97312 - Sinnamary;295,49
+;;;2019;Sida;97312 - Sinnamary;0,00
+;;;2019;Alzheimer;97314 - Ouanary;0,00
+;;;2019;Asthme;97314 - Ouanary;0,00
+;;;2019;Cancer de la prostate;97314 - Ouanary;0,00
+;;;2019;Cancer de la trachée, des bronches et du poumon;97314 - Ouanary;0,00
+;;;2019;Cancer du côlon-rectum;97314 - Ouanary;0,00
+;;;2019;Cancer du sein;97314 - Ouanary;0,00
+;;;2019;Cardiopathies ischémiques;97314 - Ouanary;0,00
+;;;2019;Chap 10 : Maladies de l'appareil respiratoire;97314 - Ouanary;0,00
+;;;2019;Diabète;97314 - Ouanary;0,00
+;;;2019;Maladie chronique du foie;97314 - Ouanary;0,00
+;;;2019;Maladie de Parkinson;97314 - Ouanary;0,00
+;;;2019;Maladie hypertensive;97314 - Ouanary;0,00
+;;;2019;Maladies vasculaires cérébrales;97314 - Ouanary;0,00
+;;;2019;Sida;97314 - Ouanary;0,00
+;;;2019;Alzheimer;97353 - Maripasoula;456,38
+;;;2019;Asthme;97353 - Maripasoula;0,00
+;;;2019;Cancer de la prostate;97353 - Maripasoula;0,00
+;;;2019;Cancer de la trachée, des bronches et du poumon;97353 - Maripasoula;0,00
+;;;2019;Cancer du côlon-rectum;97353 - Maripasoula;0,00
+;;;2019;Cancer du sein;97353 - Maripasoula;0,00
+;;;2019;Cardiopathies ischémiques;97353 - Maripasoula;19,62
+;;;2019;Chap 10 : Maladies de l'appareil respiratoire;97353 - Maripasoula;1023,15
+;;;2019;Diabète;97353 - Maripasoula;0,00
+;;;2019;Maladie chronique du foie;97353 - Maripasoula;181,43
+;;;2019;Maladie de Parkinson;97353 - Maripasoula;0,00
+;;;2019;Maladie hypertensive;97353 - Maripasoula;19,62
+;;;2019;Maladies vasculaires cérébrales;97353 - Maripasoula;514,02
+;;;2019;Sida;97353 - Maripasoula;0,00
+;;;2019;Alzheimer;97357 - Grand-Santi;0,00
+;;;2019;Asthme;97357 - Grand-Santi;0,00
+;;;2019;Cancer de la prostate;97357 - Grand-Santi;0,00
+;;;2019;Cancer de la trachée, des bronches et du poumon;97357 - Grand-Santi;0,00
+;;;2019;Cancer du côlon-rectum;97357 - Grand-Santi;0,00
+;;;2019;Cancer du sein;97357 - Grand-Santi;0,00
+;;;2019;Cardiopathies ischémiques;97357 - Grand-Santi;0,00
+;;;2019;Chap 10 : Maladies de l'appareil respiratoire;97357 - Grand-Santi;0,00
+;;;2019;Diabète;97357 - Grand-Santi;16,08
+;;;2019;Maladie chronique du foie;97357 - Grand-Santi;0,00
+;;;2019;Maladie de Parkinson;97357 - Grand-Santi;0,00
+;;;2019;Maladie hypertensive;97357 - Grand-Santi;16,08
+;;;2019;Maladies vasculaires cérébrales;97357 - Grand-Santi;0,00
+;;;2019;Sida;97357 - Grand-Santi;0,00
+;;;2019;Alzheimer;97358 - Saint-Élie;0,00
+;;;2019;Asthme;97358 - Saint-Élie;0,00
+;;;2019;Cancer de la prostate;97358 - Saint-Élie;0,00
+;;;2019;Cancer de la trachée, des bronches et du poumon;97358 - Saint-Élie;0,00
+;;;2019;Cancer du côlon-rectum;97358 - Saint-Élie;0,00
+;;;2019;Cancer du sein;97358 - Saint-Élie;0,00
+;;;2019;Cardiopathies ischémiques;97358 - Saint-Élie;0,00
+;;;2019;Chap 10 : Maladies de l'appareil respiratoire;97358 - Saint-Élie;0,00
+;;;2019;Diabète;97358 - Saint-Élie;0,00
+;;;2019;Maladie chronique du foie;97358 - Saint-Élie;0,00
+;;;2019;Maladie de Parkinson;97358 - Saint-Élie;0,00
+;;;2019;Maladie hypertensive;97358 - Saint-Élie;0,00
+;;;2019;Maladies vasculaires cérébrales;97358 - Saint-Élie;0,00
+;;;2019;Sida;97358 - Saint-Élie;0,00
+;;;2019;Alzheimer;97362 - Papaichton;0,00
+;;;2019;Asthme;97362 - Papaichton;0,00
+;;;2019;Cancer de la prostate;97362 - Papaichton;0,00
+;;;2019;Cancer de la trachée, des bronches et du poumon;97362 - Papaichton;0,00
+;;;2019;Cancer du côlon-rectum;97362 - Papaichton;0,00
+;;;2019;Cancer du sein;97362 - Papaichton;0,00
+;;;2019;Cardiopathies ischémiques;97362 - Papaichton;0,00
+;;;2019;Chap 10 : Maladies de l'appareil respiratoire;97362 - Papaichton;0,00
+;;;2019;Diabète;97362 - Papaichton;0,00
+;;;2019;Maladie chronique du foie;97362 - Papaichton;0,00
+;;;2019;Maladie de Parkinson;97362 - Papaichton;0,00
+;;;2019;Maladie hypertensive;97362 - Papaichton;0,00
+;;;2019;Maladies vasculaires cérébrales;97362 - Papaichton;0,00
+;;;2019;Sida;97362 - Papaichton;0,00
+;;;2019;Alzheimer;Auvergne-Rhône-Alpes;130,68
+;;;2019;Asthme;Auvergne-Rhône-Alpes;3,26
+;;;2019;Cancer de la prostate;Auvergne-Rhône-Alpes;46,17
+;;;2019;Cancer de la trachée, des bronches et du poumon;Auvergne-Rhône-Alpes;133,87
+;;;2019;Cancer du côlon-rectum;Auvergne-Rhône-Alpes;75,26
+;;;2019;Cancer du sein;Auvergne-Rhône-Alpes;51,08
+;;;2019;Cardiopathies ischémiques;Auvergne-Rhône-Alpes;136,38
+;;;2019;Chap 10 : Maladies de l'appareil respiratoire;Auvergne-Rhône-Alpes;192,41
+;;;2019;Diabète;Auvergne-Rhône-Alpes;163,02
+;;;2019;Maladie chronique du foie;Auvergne-Rhône-Alpes;45,72
+;;;2019;Maladie de Parkinson;Auvergne-Rhône-Alpes;56,13
+;;;2019;Maladie hypertensive;Auvergne-Rhône-Alpes;233,22
+;;;2019;Maladies vasculaires cérébrales;Auvergne-Rhône-Alpes;129,68
+;;;2019;Sida;Auvergne-Rhône-Alpes;0,60
+;;;2019;Alzheimer;Bourgogne-Franche-Comté;115,97
+;;;2019;Asthme;Bourgogne-Franche-Comté;3,43
+;;;2019;Cancer de la prostate;Bourgogne-Franche-Comté;47,83
+;;;2019;Cancer de la trachée, des bronches et du poumon;Bourgogne-Franche-Comté;143,47
+;;;2019;Cancer du côlon-rectum;Bourgogne-Franche-Comté;81,16
+;;;2019;Cancer du sein;Bourgogne-Franche-Comté;54,20
+;;;2019;Cardiopathies ischémiques;Bourgogne-Franche-Comté;160,08
+;;;2019;Chap 10 : Maladies de l'appareil respiratoire;Bourgogne-Franche-Comté;209,53
+;;;2019;Diabète;Bourgogne-Franche-Comté;196,14
+;;;2019;Maladie chronique du foie;Bourgogne-Franche-Comté;56,40
+;;;2019;Maladie de Parkinson;Bourgogne-Franche-Comté;61,82
+;;;2019;Maladie hypertensive;Bourgogne-Franche-Comté;289,21
+;;;2019;Maladies vasculaires cérébrales;Bourgogne-Franche-Comté;145,23
+;;;2019;Sida;Bourgogne-Franche-Comté;0,93
+;;;2019;Alzheimer;Bretagne;110,02
+;;;2019;Asthme;Bretagne;4,38
+;;;2019;Cancer de la prostate;Bretagne;50,06
+;;;2019;Cancer de la trachée, des bronches et du poumon;Bretagne;148,46
+;;;2019;Cancer du côlon-rectum;Bretagne;84,20
+;;;2019;Cancer du sein;Bretagne;50,20
+;;;2019;Cardiopathies ischémiques;Bretagne;170,73
+;;;2019;Chap 10 : Maladies de l'appareil respiratoire;Bretagne;215,97
+;;;2019;Diabète;Bretagne;128,17
+;;;2019;Maladie chronique du foie;Bretagne;69,13
+;;;2019;Maladie de Parkinson;Bretagne;42,74
+;;;2019;Maladie hypertensive;Bretagne;215,04
+;;;2019;Maladies vasculaires cérébrales;Bretagne;160,24
+;;;2019;Sida;Bretagne;0,81
+;;;2019;Alzheimer;Centre-Val de Loire;116,75
+;;;2019;Asthme;Centre-Val de Loire;2,43
+;;;2019;Cancer de la prostate;Centre-Val de Loire;51,36
+;;;2019;Cancer de la trachée, des bronches et du poumon;Centre-Val de Loire;144,04
+;;;2019;Cancer du côlon-rectum;Centre-Val de Loire;85,66
+;;;2019;Cancer du sein;Centre-Val de Loire;55,97
+;;;2019;Cardiopathies ischémiques;Centre-Val de Loire;156,96
+;;;2019;Chap 10 : Maladies de l'appareil respiratoire;Centre-Val de Loire;190,59
+;;;2019;Diabète;Centre-Val de Loire;182,05
+;;;2019;Maladie chronique du foie;Centre-Val de Loire;58,71
+;;;2019;Maladie de Parkinson;Centre-Val de Loire;52,72
+;;;2019;Maladie hypertensive;Centre-Val de Loire;229,59
+;;;2019;Maladies vasculaires cérébrales;Centre-Val de Loire;151,80
+;;;2019;Sida;Centre-Val de Loire;0,79
+;;;2019;Alzheimer;Corse;105,66
+;;;2019;Asthme;Corse;1,51
+;;;2019;Cancer de la prostate;Corse;37,56
+;;;2019;Cancer de la trachée, des bronches et du poumon;Corse;155,99
+;;;2019;Cancer du côlon-rectum;Corse;52,65
+;;;2019;Cancer du sein;Corse;43,74
+;;;2019;Cardiopathies ischémiques;Corse;151,04
+;;;2019;Chap 10 : Maladies de l'appareil respiratoire;Corse;155,65
+;;;2019;Diabète;Corse;123,74
+;;;2019;Maladie chronique du foie;Corse;34,70
+;;;2019;Maladie de Parkinson;Corse;41,00
+;;;2019;Maladie hypertensive;Corse;160,34
+;;;2019;Maladies vasculaires cérébrales;Corse;95,50
+;;;2019;Sida;Corse;0,00
+;;;2019;Alzheimer;Departements d'outre mer;122,21
+;;;2019;Asthme;Departements d'outre mer;7,83
+;;;2019;Cancer de la prostate;Departements d'outre mer;81,69
+;;;2019;Cancer de la trachée, des bronches et du poumon;Departements d'outre mer;76,44
+;;;2019;Cancer du côlon-rectum;Departements d'outre mer;71,11
+;;;2019;Cancer du sein;Departements d'outre mer;37,67
+;;;2019;Cardiopathies ischémiques;Departements d'outre mer;135,94
+;;;2019;Chap 10 : Maladies de l'appareil respiratoire;Departements d'outre mer;175,91
+;;;2019;Diabète;Departements d'outre mer;344,94
+;;;2019;Maladie chronique du foie;Departements d'outre mer;48,89
+;;;2019;Maladie de Parkinson;Departements d'outre mer;52,49
+;;;2019;Maladie hypertensive;Departements d'outre mer;405,81
+;;;2019;Maladies vasculaires cérébrales;Departements d'outre mer;212,16
+;;;2019;Sida;Departements d'outre mer;4,49
+;;;2019;Alzheimer;France (y compris Mayotte);116,56
+;;;2019;Asthme;France (y compris Mayotte);3,60
+;;;2019;Cancer de la prostate;France (y compris Mayotte);47,42
+;;;2019;Cancer de la trachée, des bronches et du poumon;France (y compris Mayotte);141,55
+;;;2019;Cancer du côlon-rectum;France (y compris Mayotte);78,13
+;;;2019;Cancer du sein;France (y compris Mayotte);52,61
+;;;2019;Cardiopathies ischémiques;France (y compris Mayotte);145,74
+;;;2019;Chap 10 : Maladies de l'appareil respiratoire;France (y compris Mayotte);204,92
+;;;2019;Diabète;France (y compris Mayotte);168,56
+;;;2019;Maladie chronique du foie;France (y compris Mayotte);54,08
+;;;2019;Maladie de Parkinson;France (y compris Mayotte);50,99
+;;;2019;Maladie hypertensive;France (y compris Mayotte);237,58
+;;;2019;Maladies vasculaires cérébrales;France (y compris Mayotte);140,87
+;;;2019;Sida;France (y compris Mayotte);1,11
+;;;2019;Alzheimer;France métropolitaine;116,37
+;;;2019;Asthme;France métropolitaine;3,49
+;;;2019;Cancer de la prostate;France métropolitaine;46,60
+;;;2019;Cancer de la trachée, des bronches et du poumon;France métropolitaine;142,75
+;;;2019;Cancer du côlon-rectum;France métropolitaine;78,03
+;;;2019;Cancer du sein;France métropolitaine;52,76
+;;;2019;Cardiopathies ischémiques;France métropolitaine;144,75
+;;;2019;Chap 10 : Maladies de l'appareil respiratoire;France métropolitaine;205,08
+;;;2019;Diabète;France métropolitaine;164,50
+;;;2019;Maladie chronique du foie;France métropolitaine;53,95
+;;;2019;Maladie de Parkinson;France métropolitaine;50,90
+;;;2019;Maladie hypertensive;France métropolitaine;233,43
+;;;2019;Maladies vasculaires cérébrales;France métropolitaine;138,85
+;;;2019;Sida;France métropolitaine;0,98
+;;;2019;Alzheimer;Grand Est;116,77
+;;;2019;Asthme;Grand Est;3,29
+;;;2019;Cancer de la prostate;Grand Est;46,19
+;;;2019;Cancer de la trachée, des bronches et du poumon;Grand Est;162,74
+;;;2019;Cancer du côlon-rectum;Grand Est;81,32
+;;;2019;Cancer du sein;Grand Est;56,04
+;;;2019;Cardiopathies ischémiques;Grand Est;152,42
+;;;2019;Chap 10 : Maladies de l'appareil respiratoire;Grand Est;231,68
+;;;2019;Diabète;Grand Est;229,59
+;;;2019;Maladie chronique du foie;Grand Est;55,66
+;;;2019;Maladie de Parkinson;Grand Est;49,09
+;;;2019;Maladie hypertensive;Grand Est;324,51
+;;;2019;Maladies vasculaires cérébrales;Grand Est;148,12
+;;;2019;Sida;Grand Est;0,93
+;;;2019;Alzheimer;Guadeloupe;124,50
+;;;2019;Asthme;Guadeloupe;10,09
+;;;2019;Cancer de la prostate;Guadeloupe;103,14
+;;;2019;Cancer de la trachée, des bronches et du poumon;Guadeloupe;63,57
+;;;2019;Cancer du côlon-rectum;Guadeloupe;64,00
+;;;2019;Cancer du sein;Guadeloupe;44,85
+;;;2019;Cardiopathies ischémiques;Guadeloupe;92,84
+;;;2019;Chap 10 : Maladies de l'appareil respiratoire;Guadeloupe;145,28
+;;;2019;Diabète;Guadeloupe;319,84
+;;;2019;Maladie chronique du foie;Guadeloupe;42,00
+;;;2019;Maladie de Parkinson;Guadeloupe;57,12
+;;;2019;Maladie hypertensive;Guadeloupe;380,73
+;;;2019;Maladies vasculaires cérébrales;Guadeloupe;215,65
+;;;2019;Sida;Guadeloupe;3,55
+;;;2019;Alzheimer;Guyane;60,46
+;;;2019;Asthme;Guyane;0,00
+;;;2019;Cancer de la prostate;Guyane;116,97
+;;;2019;Cancer de la trachée, des bronches et du poumon;Guyane;73,13
+;;;2019;Cancer du côlon-rectum;Guyane;87,73
+;;;2019;Cancer du sein;Guyane;25,92
+;;;2019;Cardiopathies ischémiques;Guyane;95,12
+;;;2019;Chap 10 : Maladies de l'appareil respiratoire;Guyane;157,97
+;;;2019;Diabète;Guyane;237,82
+;;;2019;Maladie chronique du foie;Guyane;40,38
+;;;2019;Maladie de Parkinson;Guyane;37,97
+;;;2019;Maladie hypertensive;Guyane;390,98
+;;;2019;Maladies vasculaires cérébrales;Guyane;212,41
+;;;2019;Sida;Guyane;13,72
+;;;2019;Alzheimer;Hauts-de-France;133,14
+;;;2019;Asthme;Hauts-de-France;4,95
+;;;2019;Cancer de la prostate;Hauts-de-France;49,62
+;;;2019;Cancer de la trachée, des bronches et du poumon;Hauts-de-France;157,81
+;;;2019;Cancer du côlon-rectum;Hauts-de-France;92,32
+;;;2019;Cancer du sein;Hauts-de-France;64,83
+;;;2019;Cardiopathies ischémiques;Hauts-de-France;162,38
+;;;2019;Chap 10 : Maladies de l'appareil respiratoire;Hauts-de-France;257,14
+;;;2019;Diabète;Hauts-de-France;209,51
+;;;2019;Maladie chronique du foie;Hauts-de-France;89,93
+;;;2019;Maladie de Parkinson;Hauts-de-France;62,52
+;;;2019;Maladie hypertensive;Hauts-de-France;273,47
+;;;2019;Maladies vasculaires cérébrales;Hauts-de-France;153,74
+;;;2019;Sida;Hauts-de-France;0,51
+;;;2019;Alzheimer;Martinique;160,03
+;;;2019;Asthme;Martinique;4,41
+;;;2019;Cancer de la prostate;Martinique;100,58
+;;;2019;Cancer de la trachée, des bronches et du poumon;Martinique;64,15
+;;;2019;Cancer du côlon-rectum;Martinique;88,06
+;;;2019;Cancer du sein;Martinique;50,46
+;;;2019;Cardiopathies ischémiques;Martinique;93,77
+;;;2019;Chap 10 : Maladies de l'appareil respiratoire;Martinique;157,26
+;;;2019;Diabète;Martinique;321,05
+;;;2019;Maladie chronique du foie;Martinique;29,74
+;;;2019;Maladie de Parkinson;Martinique;66,62
+;;;2019;Maladie hypertensive;Martinique;413,50
+;;;2019;Maladies vasculaires cérébrales;Martinique;201,83
+;;;2019;Sida;Martinique;6,49
+;;;2019;Alzheimer;Normandie;121,68
+;;;2019;Asthme;Normandie;3,57
+;;;2019;Cancer de la prostate;Normandie;57,95
+;;;2019;Cancer de la trachée, des bronches et du poumon;Normandie;151,33
+;;;2019;Cancer du côlon-rectum;Normandie;82,60
+;;;2019;Cancer du sein;Normandie;54,69
+;;;2019;Cardiopathies ischémiques;Normandie;165,88
+;;;2019;Chap 10 : Maladies de l'appareil respiratoire;Normandie;212,82
+;;;2019;Diabète;Normandie;168,73
+;;;2019;Maladie chronique du foie;Normandie;69,44
+;;;2019;Maladie de Parkinson;Normandie;47,93
+;;;2019;Maladie hypertensive;Normandie;254,53
+;;;2019;Maladies vasculaires cérébrales;Normandie;145,36
+;;;2019;Sida;Normandie;0,97
+;;;2019;Alzheimer;Nouvelle-Aquitaine;100,58
+;;;2019;Asthme;Nouvelle-Aquitaine;2,89
+;;;2019;Cancer de la prostate;Nouvelle-Aquitaine;46,13
+;;;2019;Cancer de la trachée, des bronches et du poumon;Nouvelle-Aquitaine;150,15
+;;;2019;Cancer du côlon-rectum;Nouvelle-Aquitaine;79,71
+;;;2019;Cancer du sein;Nouvelle-Aquitaine;49,26
+;;;2019;Cardiopathies ischémiques;Nouvelle-Aquitaine;145,81
+;;;2019;Chap 10 : Maladies de l'appareil respiratoire;Nouvelle-Aquitaine;202,11
+;;;2019;Diabète;Nouvelle-Aquitaine;157,34
+;;;2019;Maladie chronique du foie;Nouvelle-Aquitaine;47,54
+;;;2019;Maladie de Parkinson;Nouvelle-Aquitaine;52,95
+;;;2019;Maladie hypertensive;Nouvelle-Aquitaine;211,52
+;;;2019;Maladies vasculaires cérébrales;Nouvelle-Aquitaine;146,35
+;;;2019;Sida;Nouvelle-Aquitaine;0,77
+;;;2019;Alzheimer;Occitanie;137,03
+;;;2019;Asthme;Occitanie;3,18
+;;;2019;Cancer de la prostate;Occitanie;44,07
+;;;2019;Cancer de la trachée, des bronches et du poumon;Occitanie;143,33
+;;;2019;Cancer du côlon-rectum;Occitanie;74,02
+;;;2019;Cancer du sein;Occitanie;48,56
+;;;2019;Cardiopathies ischémiques;Occitanie;145,04
+;;;2019;Chap 10 : Maladies de l'appareil respiratoire;Occitanie;194,85
+;;;2019;Diabète;Occitanie;153,44
+;;;2019;Maladie chronique du foie;Occitanie;43,23
+;;;2019;Maladie de Parkinson;Occitanie;47,78
+;;;2019;Maladie hypertensive;Occitanie;197,71
+;;;2019;Maladies vasculaires cérébrales;Occitanie;131,18
+;;;2019;Sida;Occitanie;0,82
+;;;2019;Alzheimer;Pays de la Loire;107,54
+;;;2019;Asthme;Pays de la Loire;3,84
+;;;2019;Cancer de la prostate;Pays de la Loire;54,69
+;;;2019;Cancer de la trachée, des bronches et du poumon;Pays de la Loire;129,10
+;;;2019;Cancer du côlon-rectum;Pays de la Loire;78,58
+;;;2019;Cancer du sein;Pays de la Loire;52,23
+;;;2019;Cardiopathies ischémiques;Pays de la Loire;142,78
+;;;2019;Chap 10 : Maladies de l'appareil respiratoire;Pays de la Loire;191,85
+;;;2019;Diabète;Pays de la Loire;136,22
+;;;2019;Maladie chronique du foie;Pays de la Loire;63,45
+;;;2019;Maladie de Parkinson;Pays de la Loire;50,71
+;;;2019;Maladie hypertensive;Pays de la Loire;207,72
+;;;2019;Maladies vasculaires cérébrales;Pays de la Loire;144,77
+;;;2019;Sida;Pays de la Loire;0,31
+;;;2019;Alzheimer;Provence-Alpes-Côte d'Azur;107,84
+;;;2019;Asthme;Provence-Alpes-Côte d'Azur;3,08
+;;;2019;Cancer de la prostate;Provence-Alpes-Côte d'Azur;38,71
+;;;2019;Cancer de la trachée, des bronches et du poumon;Provence-Alpes-Côte d'Azur;144,42
+;;;2019;Cancer du côlon-rectum;Provence-Alpes-Côte d'Azur;72,27
+;;;2019;Cancer du sein;Provence-Alpes-Côte d'Azur;49,76
+;;;2019;Cardiopathies ischémiques;Provence-Alpes-Côte d'Azur;127,49
+;;;2019;Chap 10 : Maladies de l'appareil respiratoire;Provence-Alpes-Côte d'Azur;213,51
+;;;2019;Diabète;Provence-Alpes-Côte d'Azur;146,12
+;;;2019;Maladie chronique du foie;Provence-Alpes-Côte d'Azur;44,53
+;;;2019;Maladie de Parkinson;Provence-Alpes-Côte d'Azur;50,31
+;;;2019;Maladie hypertensive;Provence-Alpes-Côte d'Azur;197,15
+;;;2019;Maladies vasculaires cérébrales;Provence-Alpes-Côte d'Azur;135,16
+;;;2019;Sida;Provence-Alpes-Côte d'Azur;1,78
+;;;2019;Alzheimer;Réunion;97,38
+;;;2019;Asthme;Réunion;10,34
+;;;2019;Cancer de la prostate;Réunion;46,36
+;;;2019;Cancer de la trachée, des bronches et du poumon;Réunion;97,16
+;;;2019;Cancer du côlon-rectum;Réunion;64,03
+;;;2019;Cancer du sein;Réunion;28,91
+;;;2019;Cardiopathies ischémiques;Réunion;202,46
+;;;2019;Chap 10 : Maladies de l'appareil respiratoire;Réunion;215,21
+;;;2019;Diabète;Réunion;395,60
+;;;2019;Maladie chronique du foie;Réunion;64,81
+;;;2019;Maladie de Parkinson;Réunion;39,34
+;;;2019;Maladie hypertensive;Réunion;419,29
+;;;2019;Maladies vasculaires cérébrales;Réunion;211,85
+;;;2019;Sida;Réunion;1,14
+;;;2019;Alzheimer;Île-de-France;101,72
+;;;2019;Asthme;Île-de-France;3,65
+;;;2019;Cancer de la prostate;Île-de-France;42,02
+;;;2019;Cancer de la trachée, des bronches et du poumon;Île-de-France;124,87
+;;;2019;Cancer du côlon-rectum;Île-de-France;68,86
+;;;2019;Cancer du sein;Île-de-France;52,52
+;;;2019;Cardiopathies ischémiques;Île-de-France;120,15
+;;;2019;Chap 10 : Maladies de l'appareil respiratoire;Île-de-France;178,60
+;;;2019;Diabète;Île-de-France;135,24
+;;;2019;Maladie chronique du foie;Île-de-France;40,51
+;;;2019;Maladie de Parkinson;Île-de-France;42,46
+;;;2019;Maladie hypertensive;Île-de-France;216,82
+;;;2019;Maladies vasculaires cérébrales;Île-de-France;116,06
+;;;2019;Sida;Île-de-France;1,73
+;;;2020;Alzheimer;97302 - Cayenne;115,70
+;;;2020;Asthme;97302 - Cayenne;0,00
+;;;2020;Cancer de la prostate;97302 - Cayenne;59,16
+;;;2020;Cancer de la trachée, des bronches et du poumon;97302 - Cayenne;53,92
+;;;2020;Cancer du côlon-rectum;97302 - Cayenne;48,44
+;;;2020;Cancer du sein;97302 - Cayenne;80,00
+;;;2020;Cardiopathies ischémiques;97302 - Cayenne;52,86
+;;;2020;Chap 10 : Maladies de l'appareil respiratoire;97302 - Cayenne;117,59
+;;;2020;Diabète;97302 - Cayenne;325,77
+;;;2020;Maladie chronique du foie;97302 - Cayenne;16,54
+;;;2020;Maladie de Parkinson;97302 - Cayenne;109,64
+;;;2020;Maladie hypertensive;97302 - Cayenne;454,14
+;;;2020;Maladies vasculaires cérébrales;97302 - Cayenne;165,96
+;;;2020;Sida;97302 - Cayenne;4,60
+;;;2020;Alzheimer;97303 - Iracoubo;186,26
+;;;2020;Asthme;97303 - Iracoubo;0,00
+;;;2020;Cancer de la prostate;97303 - Iracoubo;0,00
+;;;2020;Cancer de la trachée, des bronches et du poumon;97303 - Iracoubo;0,00
+;;;2020;Cancer du côlon-rectum;97303 - Iracoubo;0,00
+;;;2020;Cancer du sein;97303 - Iracoubo;0,00
+;;;2020;Cardiopathies ischémiques;97303 - Iracoubo;0,00
+;;;2020;Chap 10 : Maladies de l'appareil respiratoire;97303 - Iracoubo;0,00
+;;;2020;Diabète;97303 - Iracoubo;179,94
+;;;2020;Maladie chronique du foie;97303 - Iracoubo;179,94
+;;;2020;Maladie de Parkinson;97303 - Iracoubo;0,00
+;;;2020;Maladie hypertensive;97303 - Iracoubo;476,57
+;;;2020;Maladies vasculaires cérébrales;97303 - Iracoubo;0,00
+;;;2020;Sida;97303 - Iracoubo;0,00
+;;;2020;Alzheimer;97304 - Kourou;154,38
+;;;2020;Asthme;97304 - Kourou;0,00
+;;;2020;Cancer de la prostate;97304 - Kourou;80,12
+;;;2020;Cancer de la trachée, des bronches et du poumon;97304 - Kourou;12,98
+;;;2020;Cancer du côlon-rectum;97304 - Kourou;34,52
+;;;2020;Cancer du sein;97304 - Kourou;0,00
+;;;2020;Cardiopathies ischémiques;97304 - Kourou;11,90
+;;;2020;Chap 10 : Maladies de l'appareil respiratoire;97304 - Kourou;93,09
+;;;2020;Diabète;97304 - Kourou;53,42
+;;;2020;Maladie chronique du foie;97304 - Kourou;17,59
+;;;2020;Maladie de Parkinson;97304 - Kourou;160,23
+;;;2020;Maladie hypertensive;97304 - Kourou;231,80
+;;;2020;Maladies vasculaires cérébrales;97304 - Kourou;47,78
+;;;2020;Sida;97304 - Kourou;9,45
+;;;2020;Alzheimer;97305 - Macouria;0,00
+;;;2020;Asthme;97305 - Macouria;0,00
+;;;2020;Cancer de la prostate;97305 - Macouria;45,42
+;;;2020;Cancer de la trachée, des bronches et du poumon;97305 - Macouria;35,30
+;;;2020;Cancer du côlon-rectum;97305 - Macouria;153,81
+;;;2020;Cancer du sein;97305 - Macouria;0,00
+;;;2020;Cardiopathies ischémiques;97305 - Macouria;284,48
+;;;2020;Chap 10 : Maladies de l'appareil respiratoire;97305 - Macouria;216,77
+;;;2020;Diabète;97305 - Macouria;50,79
+;;;2020;Maladie chronique du foie;97305 - Macouria;0,00
+;;;2020;Maladie de Parkinson;97305 - Macouria;0,00
+;;;2020;Maladie hypertensive;97305 - Macouria;295,96
+;;;2020;Maladies vasculaires cérébrales;97305 - Macouria;197,16
+;;;2020;Sida;97305 - Macouria;0,00
+;;;2020;Alzheimer;97306 - Mana;0,00
+;;;2020;Asthme;97306 - Mana;0,00
+;;;2020;Cancer de la prostate;97306 - Mana;57,03
+;;;2020;Cancer de la trachée, des bronches et du poumon;97306 - Mana;130,77
+;;;2020;Cancer du côlon-rectum;97306 - Mana;0,00
+;;;2020;Cancer du sein;97306 - Mana;0,00
+;;;2020;Cardiopathies ischémiques;97306 - Mana;182,03
+;;;2020;Chap 10 : Maladies de l'appareil respiratoire;97306 - Mana;0,00
+;;;2020;Diabète;97306 - Mana;182,03
+;;;2020;Maladie chronique du foie;97306 - Mana;0,00
+;;;2020;Maladie de Parkinson;97306 - Mana;0,00
+;;;2020;Maladie hypertensive;97306 - Mana;284,14
+;;;2020;Maladies vasculaires cérébrales;97306 - Mana;59,76
+;;;2020;Sida;97306 - Mana;28,66
+;;;2020;Alzheimer;97307 - Matoury;35,42
+;;;2020;Asthme;97307 - Matoury;0,00
+;;;2020;Cancer de la prostate;97307 - Matoury;73,80
+;;;2020;Cancer de la trachée, des bronches et du poumon;97307 - Matoury;46,57
+;;;2020;Cancer du côlon-rectum;97307 - Matoury;62,52
+;;;2020;Cancer du sein;97307 - Matoury;11,26
+;;;2020;Cardiopathies ischémiques;97307 - Matoury;206,60
+;;;2020;Chap 10 : Maladies de l'appareil respiratoire;97307 - Matoury;88,62
+;;;2020;Diabète;97307 - Matoury;267,73
+;;;2020;Maladie chronique du foie;97307 - Matoury;15,84
+;;;2020;Maladie de Parkinson;97307 - Matoury;51,02
+;;;2020;Maladie hypertensive;97307 - Matoury;413,46
+;;;2020;Maladies vasculaires cérébrales;97307 - Matoury;106,95
+;;;2020;Sida;97307 - Matoury;11,39
+;;;2020;Alzheimer;97308 - Saint-Georges;0,00
+;;;2020;Asthme;97308 - Saint-Georges;0,00
+;;;2020;Cancer de la prostate;97308 - Saint-Georges;0,00
+;;;2020;Cancer de la trachée, des bronches et du poumon;97308 - Saint-Georges;0,00
+;;;2020;Cancer du côlon-rectum;97308 - Saint-Georges;0,00
+;;;2020;Cancer du sein;97308 - Saint-Georges;0,00
+;;;2020;Cardiopathies ischémiques;97308 - Saint-Georges;0,00
+;;;2020;Chap 10 : Maladies de l'appareil respiratoire;97308 - Saint-Georges;0,00
+;;;2020;Diabète;97308 - Saint-Georges;493,76
+;;;2020;Maladie chronique du foie;97308 - Saint-Georges;0,00
+;;;2020;Maladie de Parkinson;97308 - Saint-Georges;0,00
+;;;2020;Maladie hypertensive;97308 - Saint-Georges;161,40
+;;;2020;Maladies vasculaires cérébrales;97308 - Saint-Georges;493,76
+;;;2020;Sida;97308 - Saint-Georges;0,00
+;;;2020;Alzheimer;97309 - Remire-Montjoly;27,94
+;;;2020;Asthme;97309 - Remire-Montjoly;13,79
+;;;2020;Cancer de la prostate;97309 - Remire-Montjoly;37,75
+;;;2020;Cancer de la trachée, des bronches et du poumon;97309 - Remire-Montjoly;0,00
+;;;2020;Cancer du côlon-rectum;97309 - Remire-Montjoly;170,98
+;;;2020;Cancer du sein;97309 - Remire-Montjoly;9,62
+;;;2020;Cardiopathies ischémiques;97309 - Remire-Montjoly;123,41
+;;;2020;Chap 10 : Maladies de l'appareil respiratoire;97309 - Remire-Montjoly;89,29
+;;;2020;Diabète;97309 - Remire-Montjoly;118,65
+;;;2020;Maladie chronique du foie;97309 - Remire-Montjoly;10,11
+;;;2020;Maladie de Parkinson;97309 - Remire-Montjoly;0,00
+;;;2020;Maladie hypertensive;97309 - Remire-Montjoly;209,86
+;;;2020;Maladies vasculaires cérébrales;97309 - Remire-Montjoly;133,30
+;;;2020;Sida;97309 - Remire-Montjoly;37,75
+;;;2020;Alzheimer;97310 - Roura;0,00
+;;;2020;Asthme;97310 - Roura;0,00
+;;;2020;Cancer de la prostate;97310 - Roura;349,64
+;;;2020;Cancer de la trachée, des bronches et du poumon;97310 - Roura;0,00
+;;;2020;Cancer du côlon-rectum;97310 - Roura;0,00
+;;;2020;Cancer du sein;97310 - Roura;0,00
+;;;2020;Cardiopathies ischémiques;97310 - Roura;0,00
+;;;2020;Chap 10 : Maladies de l'appareil respiratoire;97310 - Roura;0,00
+;;;2020;Diabète;97310 - Roura;0,00
+;;;2020;Maladie chronique du foie;97310 - Roura;61,76
+;;;2020;Maladie de Parkinson;97310 - Roura;0,00
+;;;2020;Maladie hypertensive;97310 - Roura;86,47
+;;;2020;Maladies vasculaires cérébrales;97310 - Roura;86,47
+;;;2020;Sida;97310 - Roura;0,00
+;;;2020;Alzheimer;97311 - Saint-Laurent-du-Maroni;0,00
+;;;2020;Asthme;97311 - Saint-Laurent-du-Maroni;7,84
+;;;2020;Cancer de la prostate;97311 - Saint-Laurent-du-Maroni;164,95
+;;;2020;Cancer de la trachée, des bronches et du poumon;97311 - Saint-Laurent-du-Maroni;198,45
+;;;2020;Cancer du côlon-rectum;97311 - Saint-Laurent-du-Maroni;23,54
+;;;2020;Cancer du sein;97311 - Saint-Laurent-du-Maroni;0,00
+;;;2020;Cardiopathies ischémiques;97311 - Saint-Laurent-du-Maroni;24,21
+;;;2020;Chap 10 : Maladies de l'appareil respiratoire;97311 - Saint-Laurent-du-Maroni;312,05
+;;;2020;Diabète;97311 - Saint-Laurent-du-Maroni;282,99
+;;;2020;Maladie chronique du foie;97311 - Saint-Laurent-du-Maroni;62,88
+;;;2020;Maladie de Parkinson;97311 - Saint-Laurent-du-Maroni;0,00
+;;;2020;Maladie hypertensive;97311 - Saint-Laurent-du-Maroni;378,50
+;;;2020;Maladies vasculaires cérébrales;97311 - Saint-Laurent-du-Maroni;434,93
+;;;2020;Sida;97311 - Saint-Laurent-du-Maroni;17,03
+;;;2020;Alzheimer;97312 - Sinnamary;0,00
+;;;2020;Asthme;97312 - Sinnamary;0,00
+;;;2020;Cancer de la prostate;97312 - Sinnamary;0,00
+;;;2020;Cancer de la trachée, des bronches et du poumon;97312 - Sinnamary;0,00
+;;;2020;Cancer du côlon-rectum;97312 - Sinnamary;95,10
+;;;2020;Cancer du sein;97312 - Sinnamary;0,00
+;;;2020;Cardiopathies ischémiques;97312 - Sinnamary;0,00
+;;;2020;Chap 10 : Maladies de l'appareil respiratoire;97312 - Sinnamary;190,20
+;;;2020;Diabète;97312 - Sinnamary;36,76
+;;;2020;Maladie chronique du foie;97312 - Sinnamary;0,00
+;;;2020;Maladie de Parkinson;97312 - Sinnamary;0,00
+;;;2020;Maladie hypertensive;97312 - Sinnamary;0,00
+;;;2020;Maladies vasculaires cérébrales;97312 - Sinnamary;0,00
+;;;2020;Sida;97312 - Sinnamary;0,00
+;;;2020;Alzheimer;97313 - Montsinéry-Tonnegrande;0,00
+;;;2020;Asthme;97313 - Montsinéry-Tonnegrande;0,00
+;;;2020;Cancer de la prostate;97313 - Montsinéry-Tonnegrande;0,00
+;;;2020;Cancer de la trachée, des bronches et du poumon;97313 - Montsinéry-Tonnegrande;0,00
+;;;2020;Cancer du côlon-rectum;97313 - Montsinéry-Tonnegrande;0,00
+;;;2020;Cancer du sein;97313 - Montsinéry-Tonnegrande;0,00
+;;;2020;Cardiopathies ischémiques;97313 - Montsinéry-Tonnegrande;88,76
+;;;2020;Chap 10 : Maladies de l'appareil respiratoire;97313 - Montsinéry-Tonnegrande;177,53
+;;;2020;Diabète;97313 - Montsinéry-Tonnegrande;0,00
+;;;2020;Maladie chronique du foie;97313 - Montsinéry-Tonnegrande;0,00
+;;;2020;Maladie de Parkinson;97313 - Montsinéry-Tonnegrande;0,00
+;;;2020;Maladie hypertensive;97313 - Montsinéry-Tonnegrande;0,00
+;;;2020;Maladies vasculaires cérébrales;97313 - Montsinéry-Tonnegrande;118,13
+;;;2020;Sida;97313 - Montsinéry-Tonnegrande;0,00
+;;;2020;Alzheimer;97314 - Ouanary;0,00
+;;;2020;Asthme;97314 - Ouanary;0,00
+;;;2020;Cancer de la prostate;97314 - Ouanary;0,00
+;;;2020;Cancer de la trachée, des bronches et du poumon;97314 - Ouanary;0,00
+;;;2020;Cancer du côlon-rectum;97314 - Ouanary;0,00
+;;;2020;Cancer du sein;97314 - Ouanary;0,00
+;;;2020;Cardiopathies ischémiques;97314 - Ouanary;0,00
+;;;2020;Chap 10 : Maladies de l'appareil respiratoire;97314 - Ouanary;0,00
+;;;2020;Diabète;97314 - Ouanary;0,00
+;;;2020;Maladie chronique du foie;97314 - Ouanary;0,00
+;;;2020;Maladie de Parkinson;97314 - Ouanary;0,00
+;;;2020;Maladie hypertensive;97314 - Ouanary;0,00
+;;;2020;Maladies vasculaires cérébrales;97314 - Ouanary;0,00
+;;;2020;Sida;97314 - Ouanary;0,00
+;;;2020;Alzheimer;97352 - Saül;0,00
+;;;2020;Asthme;97352 - Saül;0,00
+;;;2020;Cancer de la prostate;97352 - Saül;0,00
+;;;2020;Cancer de la trachée, des bronches et du poumon;97352 - Saül;0,00
+;;;2020;Cancer du côlon-rectum;97352 - Saül;0,00
+;;;2020;Cancer du sein;97352 - Saül;0,00
+;;;2020;Cardiopathies ischémiques;97352 - Saül;0,00
+;;;2020;Chap 10 : Maladies de l'appareil respiratoire;97352 - Saül;0,00
+;;;2020;Diabète;97352 - Saül;0,00
+;;;2020;Maladie chronique du foie;97352 - Saül;0,00
+;;;2020;Maladie de Parkinson;97352 - Saül;0,00
+;;;2020;Maladie hypertensive;97352 - Saül;0,00
+;;;2020;Maladies vasculaires cérébrales;97352 - Saül;0,00
+;;;2020;Sida;97352 - Saül;0,00
+;;;2020;Alzheimer;97353 - Maripasoula;0,00
+;;;2020;Asthme;97353 - Maripasoula;0,00
+;;;2020;Cancer de la prostate;97353 - Maripasoula;0,00
+;;;2020;Cancer de la trachée, des bronches et du poumon;97353 - Maripasoula;0,00
+;;;2020;Cancer du côlon-rectum;97353 - Maripasoula;0,00
+;;;2020;Cancer du sein;97353 - Maripasoula;0,00
+;;;2020;Cardiopathies ischémiques;97353 - Maripasoula;0,00
+;;;2020;Chap 10 : Maladies de l'appareil respiratoire;97353 - Maripasoula;242,36
+;;;2020;Diabète;97353 - Maripasoula;0,00
+;;;2020;Maladie chronique du foie;97353 - Maripasoula;98,25
+;;;2020;Maladie de Parkinson;97353 - Maripasoula;0,00
+;;;2020;Maladie hypertensive;97353 - Maripasoula;0,00
+;;;2020;Maladies vasculaires cérébrales;97353 - Maripasoula;0,00
+;;;2020;Sida;97353 - Maripasoula;0,00
+;;;2020;Alzheimer;97357 - Grand-Santi;0,00
+;;;2020;Asthme;97357 - Grand-Santi;0,00
+;;;2020;Cancer de la prostate;97357 - Grand-Santi;0,00
+;;;2020;Cancer de la trachée, des bronches et du poumon;97357 - Grand-Santi;0,00
+;;;2020;Cancer du côlon-rectum;97357 - Grand-Santi;0,00
+;;;2020;Cancer du sein;97357 - Grand-Santi;0,00
+;;;2020;Cardiopathies ischémiques;97357 - Grand-Santi;0,00
+;;;2020;Chap 10 : Maladies de l'appareil respiratoire;97357 - Grand-Santi;0,00
+;;;2020;Diabète;97357 - Grand-Santi;92,50
+;;;2020;Maladie chronique du foie;97357 - Grand-Santi;0,00
+;;;2020;Maladie de Parkinson;97357 - Grand-Santi;0,00
+;;;2020;Maladie hypertensive;97357 - Grand-Santi;92,50
+;;;2020;Maladies vasculaires cérébrales;97357 - Grand-Santi;126,19
+;;;2020;Sida;97357 - Grand-Santi;0,00
+;;;2020;Alzheimer;97358 - Saint-Élie;0,00
+;;;2020;Asthme;97358 - Saint-Élie;0,00
+;;;2020;Cancer de la prostate;97358 - Saint-Élie;0,00
+;;;2020;Cancer de la trachée, des bronches et du poumon;97358 - Saint-Élie;0,00
+;;;2020;Cancer du côlon-rectum;97358 - Saint-Élie;0,00
+;;;2020;Cancer du sein;97358 - Saint-Élie;0,00
+;;;2020;Cardiopathies ischémiques;97358 - Saint-Élie;0,00
+;;;2020;Chap 10 : Maladies de l'appareil respiratoire;97358 - Saint-Élie;0,00
+;;;2020;Diabète;97358 - Saint-Élie;0,00
+;;;2020;Maladie chronique du foie;97358 - Saint-Élie;0,00
+;;;2020;Maladie de Parkinson;97358 - Saint-Élie;0,00
+;;;2020;Maladie hypertensive;97358 - Saint-Élie;0,00
+;;;2020;Maladies vasculaires cérébrales;97358 - Saint-Élie;0,00
+;;;2020;Sida;97358 - Saint-Élie;0,00
+;;;2020;Alzheimer;97360 - Apatou;0,00
+;;;2020;Asthme;97360 - Apatou;0,00
+;;;2020;Cancer de la prostate;97360 - Apatou;0,00
+;;;2020;Cancer de la trachée, des bronches et du poumon;97360 - Apatou;0,00
+;;;2020;Cancer du côlon-rectum;97360 - Apatou;0,00
+;;;2020;Cancer du sein;97360 - Apatou;0,00
+;;;2020;Cardiopathies ischémiques;97360 - Apatou;35,17
+;;;2020;Chap 10 : Maladies de l'appareil respiratoire;97360 - Apatou;0,00
+;;;2020;Diabète;97360 - Apatou;0,00
+;;;2020;Maladie chronique du foie;97360 - Apatou;0,00
+;;;2020;Maladie de Parkinson;97360 - Apatou;0,00
+;;;2020;Maladie hypertensive;97360 - Apatou;17,17
+;;;2020;Maladies vasculaires cérébrales;97360 - Apatou;17,17
+;;;2020;Sida;97360 - Apatou;17,17
+;;;2020;Alzheimer;Auvergne-Rhône-Alpes;142,00
+;;;2020;Asthme;Auvergne-Rhône-Alpes;2,62
+;;;2020;Cancer de la prostate;Auvergne-Rhône-Alpes;45,50
+;;;2020;Cancer de la trachée, des bronches et du poumon;Auvergne-Rhône-Alpes;131,88
+;;;2020;Cancer du côlon-rectum;Auvergne-Rhône-Alpes;71,67
+;;;2020;Cancer du sein;Auvergne-Rhône-Alpes;52,92
+;;;2020;Cardiopathies ischémiques;Auvergne-Rhône-Alpes;126,53
+;;;2020;Chap 10 : Maladies de l'appareil respiratoire;Auvergne-Rhône-Alpes;162,93
+;;;2020;Diabète;Auvergne-Rhône-Alpes;207,47
+;;;2020;Maladie chronique du foie;Auvergne-Rhône-Alpes;49,41
+;;;2020;Maladie de Parkinson;Auvergne-Rhône-Alpes;65,68
+;;;2020;Maladie hypertensive;Auvergne-Rhône-Alpes;301,39
+;;;2020;Maladies vasculaires cérébrales;Auvergne-Rhône-Alpes;123,41
+;;;2020;Sida;Auvergne-Rhône-Alpes;0,45
+;;;2020;Alzheimer;Bourgogne-Franche-Comté;126,51
+;;;2020;Asthme;Bourgogne-Franche-Comté;2,63
+;;;2020;Cancer de la prostate;Bourgogne-Franche-Comté;42,11
+;;;2020;Cancer de la trachée, des bronches et du poumon;Bourgogne-Franche-Comté;145,85
+;;;2020;Cancer du côlon-rectum;Bourgogne-Franche-Comté;75,85
+;;;2020;Cancer du sein;Bourgogne-Franche-Comté;52,22
+;;;2020;Cardiopathies ischémiques;Bourgogne-Franche-Comté;152,92
+;;;2020;Chap 10 : Maladies de l'appareil respiratoire;Bourgogne-Franche-Comté;163,35
+;;;2020;Diabète;Bourgogne-Franche-Comté;242,13
+;;;2020;Maladie chronique du foie;Bourgogne-Franche-Comté;59,49
+;;;2020;Maladie de Parkinson;Bourgogne-Franche-Comté;69,76
+;;;2020;Maladie hypertensive;Bourgogne-Franche-Comté;373,45
+;;;2020;Maladies vasculaires cérébrales;Bourgogne-Franche-Comté;139,55
+;;;2020;Sida;Bourgogne-Franche-Comté;0,43
+;;;2020;Alzheimer;Bretagne;106,64
+;;;2020;Asthme;Bretagne;3,42
+;;;2020;Cancer de la prostate;Bretagne;49,85
+;;;2020;Cancer de la trachée, des bronches et du poumon;Bretagne;142,80
+;;;2020;Cancer du côlon-rectum;Bretagne;78,22
+;;;2020;Cancer du sein;Bretagne;50,89
+;;;2020;Cardiopathies ischémiques;Bretagne;158,90
+;;;2020;Chap 10 : Maladies de l'appareil respiratoire;Bretagne;192,62
+;;;2020;Diabète;Bretagne;136,96
+;;;2020;Maladie chronique du foie;Bretagne;70,85
+;;;2020;Maladie de Parkinson;Bretagne;45,61
+;;;2020;Maladie hypertensive;Bretagne;236,22
+;;;2020;Maladies vasculaires cérébrales;Bretagne;154,80
+;;;2020;Sida;Bretagne;0,73
+;;;2020;Alzheimer;Centre-Val de Loire;135,20
+;;;2020;Asthme;Centre-Val de Loire;3,25
+;;;2020;Cancer de la prostate;Centre-Val de Loire;52,10
+;;;2020;Cancer de la trachée, des bronches et du poumon;Centre-Val de Loire;147,90
+;;;2020;Cancer du côlon-rectum;Centre-Val de Loire;80,34
+;;;2020;Cancer du sein;Centre-Val de Loire;55,12
+;;;2020;Cardiopathies ischémiques;Centre-Val de Loire;162,62
+;;;2020;Chap 10 : Maladies de l'appareil respiratoire;Centre-Val de Loire;162,00
+;;;2020;Diabète;Centre-Val de Loire;209,68
+;;;2020;Maladie chronique du foie;Centre-Val de Loire;55,63
+;;;2020;Maladie de Parkinson;Centre-Val de Loire;46,11
+;;;2020;Maladie hypertensive;Centre-Val de Loire;279,66
+;;;2020;Maladies vasculaires cérébrales;Centre-Val de Loire;139,64
+;;;2020;Sida;Centre-Val de Loire;0,36
+;;;2020;Alzheimer;Corse;96,02
+;;;2020;Asthme;Corse;3,09
+;;;2020;Cancer de la prostate;Corse;39,69
+;;;2020;Cancer de la trachée, des bronches et du poumon;Corse;163,92
+;;;2020;Cancer du côlon-rectum;Corse;54,66
+;;;2020;Cancer du sein;Corse;42,84
+;;;2020;Cardiopathies ischémiques;Corse;158,87
+;;;2020;Chap 10 : Maladies de l'appareil respiratoire;Corse;135,30
+;;;2020;Diabète;Corse;130,67
+;;;2020;Maladie chronique du foie;Corse;26,70
+;;;2020;Maladie de Parkinson;Corse;35,00
+;;;2020;Maladie hypertensive;Corse;174,75
+;;;2020;Maladies vasculaires cérébrales;Corse;99,03
+;;;2020;Sida;Corse;2,34
+;;;2020;Alzheimer;Departements d'outre mer;109,20
+;;;2020;Asthme;Departements d'outre mer;7,40
+;;;2020;Cancer de la prostate;Departements d'outre mer;71,78
+;;;2020;Cancer de la trachée, des bronches et du poumon;Departements d'outre mer;71,78
+;;;2020;Cancer du côlon-rectum;Departements d'outre mer;74,94
+;;;2020;Cancer du sein;Departements d'outre mer;42,77
+;;;2020;Cardiopathies ischémiques;Departements d'outre mer;116,37
+;;;2020;Chap 10 : Maladies de l'appareil respiratoire;Departements d'outre mer;160,03
+;;;2020;Diabète;Departements d'outre mer;364,80
+;;;2020;Maladie chronique du foie;Departements d'outre mer;43,84
+;;;2020;Maladie de Parkinson;Departements d'outre mer;52,50
+;;;2020;Maladie hypertensive;Departements d'outre mer;417,88
+;;;2020;Maladies vasculaires cérébrales;Departements d'outre mer;187,87
+;;;2020;Sida;Departements d'outre mer;2,92
+;;;2020;Alzheimer;France (y compris Mayotte);123,05
+;;;2020;Asthme;France (y compris Mayotte);3,07
+;;;2020;Cancer de la prostate;France (y compris Mayotte);45,83
+;;;2020;Cancer de la trachée, des bronches et du poumon;France (y compris Mayotte);139,37
+;;;2020;Cancer du côlon-rectum;France (y compris Mayotte);76,23
+;;;2020;Cancer du sein;France (y compris Mayotte);52,63
+;;;2020;Cardiopathies ischémiques;France (y compris Mayotte);140,27
+;;;2020;Chap 10 : Maladies de l'appareil respiratoire;France (y compris Mayotte);172,36
+;;;2020;Diabète;France (y compris Mayotte);202,36
+;;;2020;Maladie chronique du foie;France (y compris Mayotte);55,42
+;;;2020;Maladie de Parkinson;France (y compris Mayotte);56,91
+;;;2020;Maladie hypertensive;France (y compris Mayotte);291,97
+;;;2020;Maladies vasculaires cérébrales;France (y compris Mayotte);134,62
+;;;2020;Sida;France (y compris Mayotte);0,93
+;;;2020;Alzheimer;France métropolitaine;123,26
+;;;2020;Asthme;France métropolitaine;2,95
+;;;2020;Cancer de la prostate;France métropolitaine;45,20
+;;;2020;Cancer de la trachée, des bronches et du poumon;France métropolitaine;140,65
+;;;2020;Cancer du côlon-rectum;France métropolitaine;76,06
+;;;2020;Cancer du sein;France métropolitaine;52,67
+;;;2020;Cardiopathies ischémiques;France métropolitaine;140,21
+;;;2020;Chap 10 : Maladies de l'appareil respiratoire;France métropolitaine;172,32
+;;;2020;Diabète;France métropolitaine;198,51
+;;;2020;Maladie chronique du foie;France métropolitaine;55,53
+;;;2020;Maladie de Parkinson;France métropolitaine;56,95
+;;;2020;Maladie hypertensive;France métropolitaine;288,76
+;;;2020;Maladies vasculaires cérébrales;France métropolitaine;133,03
+;;;2020;Sida;France métropolitaine;0,86
+;;;2020;Alzheimer;Grand Est;131,88
+;;;2020;Asthme;Grand Est;2,59
+;;;2020;Cancer de la prostate;Grand Est;45,72
+;;;2020;Cancer de la trachée, des bronches et du poumon;Grand Est;153,68
+;;;2020;Cancer du côlon-rectum;Grand Est;76,46
+;;;2020;Cancer du sein;Grand Est;52,08
+;;;2020;Cardiopathies ischémiques;Grand Est;148,50
+;;;2020;Chap 10 : Maladies de l'appareil respiratoire;Grand Est;196,38
+;;;2020;Diabète;Grand Est;280,21
+;;;2020;Maladie chronique du foie;Grand Est;59,41
+;;;2020;Maladie de Parkinson;Grand Est;59,96
+;;;2020;Maladie hypertensive;Grand Est;418,83
+;;;2020;Maladies vasculaires cérébrales;Grand Est;139,95
+;;;2020;Sida;Grand Est;0,64
+;;;2020;Alzheimer;Guadeloupe;111,25
+;;;2020;Asthme;Guadeloupe;7,08
+;;;2020;Cancer de la prostate;Guadeloupe;85,41
+;;;2020;Cancer de la trachée, des bronches et du poumon;Guadeloupe;47,58
+;;;2020;Cancer du côlon-rectum;Guadeloupe;66,06
+;;;2020;Cancer du sein;Guadeloupe;52,32
+;;;2020;Cardiopathies ischémiques;Guadeloupe;79,57
+;;;2020;Chap 10 : Maladies de l'appareil respiratoire;Guadeloupe;146,26
+;;;2020;Diabète;Guadeloupe;342,82
+;;;2020;Maladie chronique du foie;Guadeloupe;45,62
+;;;2020;Maladie de Parkinson;Guadeloupe;63,42
+;;;2020;Maladie hypertensive;Guadeloupe;415,16
+;;;2020;Maladies vasculaires cérébrales;Guadeloupe;193,03
+;;;2020;Sida;Guadeloupe;3,81
+;;;2020;Alzheimer;Guyane;65,62
+;;;2020;Asthme;Guyane;2,85
+;;;2020;Cancer de la prostate;Guyane;65,35
+;;;2020;Cancer de la trachée, des bronches et du poumon;Guyane;50,57
+;;;2020;Cancer du côlon-rectum;Guyane;75,09
+;;;2020;Cancer du sein;Guyane;29,58
+;;;2020;Cardiopathies ischémiques;Guyane;99,89
+;;;2020;Chap 10 : Maladies de l'appareil respiratoire;Guyane;134,78
+;;;2020;Diabète;Guyane;226,18
+;;;2020;Maladie chronique du foie;Guyane;23,07
+;;;2020;Maladie de Parkinson;Guyane;56,17
+;;;2020;Maladie hypertensive;Guyane;355,84
+;;;2020;Maladies vasculaires cérébrales;Guyane;170,40
+;;;2020;Sida;Guyane;13,69
+;;;2020;Alzheimer;Hauts-de-France;138,64
+;;;2020;Asthme;Hauts-de-France;4,16
+;;;2020;Cancer de la prostate;Hauts-de-France;48,45
+;;;2020;Cancer de la trachée, des bronches et du poumon;Hauts-de-France;155,11
+;;;2020;Cancer du côlon-rectum;Hauts-de-France;90,48
+;;;2020;Cancer du sein;Hauts-de-France;63,15
+;;;2020;Cardiopathies ischémiques;Hauts-de-France;161,03
+;;;2020;Chap 10 : Maladies de l'appareil respiratoire;Hauts-de-France;221,10
+;;;2020;Diabète;Hauts-de-France;250,81
+;;;2020;Maladie chronique du foie;Hauts-de-France;94,83
+;;;2020;Maladie de Parkinson;Hauts-de-France;65,65
+;;;2020;Maladie hypertensive;Hauts-de-France;343,67
+;;;2020;Maladies vasculaires cérébrales;Hauts-de-France;146,88
+;;;2020;Sida;Hauts-de-France;0,56
+;;;2020;Alzheimer;Martinique;136,32
+;;;2020;Asthme;Martinique;4,75
+;;;2020;Cancer de la prostate;Martinique;87,50
+;;;2020;Cancer de la trachée, des bronches et du poumon;Martinique;60,16
+;;;2020;Cancer du côlon-rectum;Martinique;88,26
+;;;2020;Cancer du sein;Martinique;42,36
+;;;2020;Cardiopathies ischémiques;Martinique;70,70
+;;;2020;Chap 10 : Maladies de l'appareil respiratoire;Martinique;143,05
+;;;2020;Diabète;Martinique;360,92
+;;;2020;Maladie chronique du foie;Martinique;18,97
+;;;2020;Maladie de Parkinson;Martinique;53,49
+;;;2020;Maladie hypertensive;Martinique;431,14
+;;;2020;Maladies vasculaires cérébrales;Martinique;198,30
+;;;2020;Sida;Martinique;1,43
+;;;2020;Alzheimer;Normandie;125,49
+;;;2020;Asthme;Normandie;3,83
+;;;2020;Cancer de la prostate;Normandie;50,19
+;;;2020;Cancer de la trachée, des bronches et du poumon;Normandie;148,98
+;;;2020;Cancer du côlon-rectum;Normandie;84,30
+;;;2020;Cancer du sein;Normandie;57,70
+;;;2020;Cardiopathies ischémiques;Normandie;161,96
+;;;2020;Chap 10 : Maladies de l'appareil respiratoire;Normandie;184,21
+;;;2020;Diabète;Normandie;194,29
+;;;2020;Maladie chronique du foie;Normandie;71,15
+;;;2020;Maladie de Parkinson;Normandie;50,87
+;;;2020;Maladie hypertensive;Normandie;291,77
+;;;2020;Maladies vasculaires cérébrales;Normandie;148,77
+;;;2020;Sida;Normandie;0,45
+;;;2020;Alzheimer;Nouvelle-Aquitaine;100,60
+;;;2020;Asthme;Nouvelle-Aquitaine;2,52
+;;;2020;Cancer de la prostate;Nouvelle-Aquitaine;43,59
+;;;2020;Cancer de la trachée, des bronches et du poumon;Nouvelle-Aquitaine;147,90
+;;;2020;Cancer du côlon-rectum;Nouvelle-Aquitaine;81,02
+;;;2020;Cancer du sein;Nouvelle-Aquitaine;51,28
+;;;2020;Cardiopathies ischémiques;Nouvelle-Aquitaine;135,15
+;;;2020;Chap 10 : Maladies de l'appareil respiratoire;Nouvelle-Aquitaine;162,69
+;;;2020;Diabète;Nouvelle-Aquitaine;167,42
+;;;2020;Maladie chronique du foie;Nouvelle-Aquitaine;46,80
+;;;2020;Maladie de Parkinson;Nouvelle-Aquitaine;53,37
+;;;2020;Maladie hypertensive;Nouvelle-Aquitaine;228,35
+;;;2020;Maladies vasculaires cérébrales;Nouvelle-Aquitaine;137,90
+;;;2020;Sida;Nouvelle-Aquitaine;0,60
+;;;2020;Alzheimer;Occitanie;140,07
+;;;2020;Asthme;Occitanie;2,44
+;;;2020;Cancer de la prostate;Occitanie;44,14
+;;;2020;Cancer de la trachée, des bronches et du poumon;Occitanie;145,18
+;;;2020;Cancer du côlon-rectum;Occitanie;78,54
+;;;2020;Cancer du sein;Occitanie;50,36
+;;;2020;Cardiopathies ischémiques;Occitanie;144,70
+;;;2020;Chap 10 : Maladies de l'appareil respiratoire;Occitanie;163,27
+;;;2020;Diabète;Occitanie;178,10
+;;;2020;Maladie chronique du foie;Occitanie;42,29
+;;;2020;Maladie de Parkinson;Occitanie;53,79
+;;;2020;Maladie hypertensive;Occitanie;227,23
+;;;2020;Maladies vasculaires cérébrales;Occitanie;129,94
+;;;2020;Sida;Occitanie;0,89
+;;;2020;Alzheimer;Pays de la Loire;106,04
+;;;2020;Asthme;Pays de la Loire;3,36
+;;;2020;Cancer de la prostate;Pays de la Loire;48,87
+;;;2020;Cancer de la trachée, des bronches et du poumon;Pays de la Loire;130,87
+;;;2020;Cancer du côlon-rectum;Pays de la Loire;78,30
+;;;2020;Cancer du sein;Pays de la Loire;54,67
+;;;2020;Cardiopathies ischémiques;Pays de la Loire;141,77
+;;;2020;Chap 10 : Maladies de l'appareil respiratoire;Pays de la Loire;164,04
+;;;2020;Diabète;Pays de la Loire;155,26
+;;;2020;Maladie chronique du foie;Pays de la Loire;65,37
+;;;2020;Maladie de Parkinson;Pays de la Loire;55,65
+;;;2020;Maladie hypertensive;Pays de la Loire;236,41
+;;;2020;Maladies vasculaires cérébrales;Pays de la Loire;144,09
+;;;2020;Sida;Pays de la Loire;0,47
+;;;2020;Alzheimer;Provence-Alpes-Côte d'Azur;114,83
+;;;2020;Asthme;Provence-Alpes-Côte d'Azur;1,91
+;;;2020;Cancer de la prostate;Provence-Alpes-Côte d'Azur;38,46
+;;;2020;Cancer de la trachée, des bronches et du poumon;Provence-Alpes-Côte d'Azur;141,22
+;;;2020;Cancer du côlon-rectum;Provence-Alpes-Côte d'Azur;64,61
+;;;2020;Cancer du sein;Provence-Alpes-Côte d'Azur;47,80
+;;;2020;Cardiopathies ischémiques;Provence-Alpes-Côte d'Azur;126,77
+;;;2020;Chap 10 : Maladies de l'appareil respiratoire;Provence-Alpes-Côte d'Azur;171,77
+;;;2020;Diabète;Provence-Alpes-Côte d'Azur;171,54
+;;;2020;Maladie chronique du foie;Provence-Alpes-Côte d'Azur;44,95
+;;;2020;Maladie de Parkinson;Provence-Alpes-Côte d'Azur;60,79
+;;;2020;Maladie hypertensive;Provence-Alpes-Côte d'Azur;241,98
+;;;2020;Maladies vasculaires cérébrales;Provence-Alpes-Côte d'Azur;126,48
+;;;2020;Sida;Provence-Alpes-Côte d'Azur;1,35
+;;;2020;Alzheimer;Réunion;92,21
+;;;2020;Asthme;Réunion;9,99
+;;;2020;Cancer de la prostate;Réunion;50,05
+;;;2020;Cancer de la trachée, des bronches et du poumon;Réunion;99,25
+;;;2020;Cancer du côlon-rectum;Réunion;73,28
+;;;2020;Cancer du sein;Réunion;41,49
+;;;2020;Cardiopathies ischémiques;Réunion;178,83
+;;;2020;Chap 10 : Maladies de l'appareil respiratoire;Réunion;187,01
+;;;2020;Diabète;Réunion;405,69
+;;;2020;Maladie chronique du foie;Réunion;60,52
+;;;2020;Maladie de Parkinson;Réunion;43,72
+;;;2020;Maladie hypertensive;Réunion;420,24
+;;;2020;Maladies vasculaires cérébrales;Réunion;177,33
+;;;2020;Sida;Réunion;0,83
+;;;2020;Alzheimer;Île-de-France;113,41
+;;;2020;Asthme;Île-de-France;3,51
+;;;2020;Cancer de la prostate;Île-de-France;43,11
+;;;2020;Cancer de la trachée, des bronches et du poumon;Île-de-France;121,58
+;;;2020;Cancer du côlon-rectum;Île-de-France;67,85
+;;;2020;Cancer du sein;Île-de-France;50,46
+;;;2020;Cardiopathies ischémiques;Île-de-France;114,75
+;;;2020;Chap 10 : Maladies de l'appareil respiratoire;Île-de-France;151,33
+;;;2020;Diabète;Île-de-France;195,97
+;;;2020;Maladie chronique du foie;Île-de-France;42,37
+;;;2020;Maladie de Parkinson;Île-de-France;52,46
+;;;2020;Maladie hypertensive;Île-de-France;311,10
+;;;2020;Maladies vasculaires cérébrales;Île-de-France;108,05
+;;;2020;Sida;Île-de-France;1,82
+;;;2021;Alzheimer;97301 - Régina;0,00
+;;;2021;Asthme;97301 - Régina;0,00
+;;;2021;Cancer de la prostate;97301 - Régina;0,00
+;;;2021;Cancer de la trachée, des bronches et du poumon;97301 - Régina;0,00
+;;;2021;Cancer du côlon-rectum;97301 - Régina;0,00
+;;;2021;Cancer du sein;97301 - Régina;0,00
+;;;2021;Cardiopathies ischémiques;97301 - Régina;0,00
+;;;2021;Chap 10 : Maladies de l'appareil respiratoire;97301 - Régina;0,00
+;;;2021;Diabète;97301 - Régina;202,17
+;;;2021;Maladie chronique du foie;97301 - Régina;94,82
+;;;2021;Maladie de Parkinson;97301 - Régina;0,00
+;;;2021;Maladie hypertensive;97301 - Régina;202,17
+;;;2021;Maladies vasculaires cérébrales;97301 - Régina;0,00
+;;;2021;Sida;97301 - Régina;0,00
+;;;2021;Alzheimer;97302 - Cayenne;72,30
+;;;2021;Asthme;97302 - Cayenne;0,00
+;;;2021;Cancer de la prostate;97302 - Cayenne;111,34
+;;;2021;Cancer de la trachée, des bronches et du poumon;97302 - Cayenne;39,30
+;;;2021;Cancer du côlon-rectum;97302 - Cayenne;62,49
+;;;2021;Cancer du sein;97302 - Cayenne;37,69
+;;;2021;Cardiopathies ischémiques;97302 - Cayenne;86,48
+;;;2021;Chap 10 : Maladies de l'appareil respiratoire;97302 - Cayenne;161,26
+;;;2021;Diabète;97302 - Cayenne;511,53
+;;;2021;Maladie chronique du foie;97302 - Cayenne;28,13
+;;;2021;Maladie de Parkinson;97302 - Cayenne;43,76
+;;;2021;Maladie hypertensive;97302 - Cayenne;819,54
+;;;2021;Maladies vasculaires cérébrales;97302 - Cayenne;255,54
+;;;2021;Sida;97302 - Cayenne;50,53
+;;;2021;Alzheimer;97303 - Iracoubo;0,00
+;;;2021;Asthme;97303 - Iracoubo;0,00
+;;;2021;Cancer de la prostate;97303 - Iracoubo;0,00
+;;;2021;Cancer de la trachée, des bronches et du poumon;97303 - Iracoubo;0,00
+;;;2021;Cancer du côlon-rectum;97303 - Iracoubo;0,00
+;;;2021;Cancer du sein;97303 - Iracoubo;0,00
+;;;2021;Cardiopathies ischémiques;97303 - Iracoubo;102,04
+;;;2021;Chap 10 : Maladies de l'appareil respiratoire;97303 - Iracoubo;181,42
+;;;2021;Diabète;97303 - Iracoubo;244,96
+;;;2021;Maladie chronique du foie;97303 - Iracoubo;127,07
+;;;2021;Maladie de Parkinson;97303 - Iracoubo;0,00
+;;;2021;Maladie hypertensive;97303 - Iracoubo;528,43
+;;;2021;Maladies vasculaires cérébrales;97303 - Iracoubo;0,00
+;;;2021;Sida;97303 - Iracoubo;0,00
+;;;2021;Alzheimer;97304 - Kourou;0,00
+;;;2021;Asthme;97304 - Kourou;0,00
+;;;2021;Cancer de la prostate;97304 - Kourou;0,00
+;;;2021;Cancer de la trachée, des bronches et du poumon;97304 - Kourou;44,17
+;;;2021;Cancer du côlon-rectum;97304 - Kourou;75,80
+;;;2021;Cancer du sein;97304 - Kourou;0,00
+;;;2021;Cardiopathies ischémiques;97304 - Kourou;119,08
+;;;2021;Chap 10 : Maladies de l'appareil respiratoire;97304 - Kourou;200,26
+;;;2021;Diabète;97304 - Kourou;364,06
+;;;2021;Maladie chronique du foie;97304 - Kourou;16,48
+;;;2021;Maladie de Parkinson;97304 - Kourou;63,70
+;;;2021;Maladie hypertensive;97304 - Kourou;370,10
+;;;2021;Maladies vasculaires cérébrales;97304 - Kourou;178,07
+;;;2021;Sida;97304 - Kourou;13,13
+;;;2021;Alzheimer;97305 - Macouria;0,00
+;;;2021;Asthme;97305 - Macouria;0,00
+;;;2021;Cancer de la prostate;97305 - Macouria;96,75
+;;;2021;Cancer de la trachée, des bronches et du poumon;97305 - Macouria;43,14
+;;;2021;Cancer du côlon-rectum;97305 - Macouria;0,00
+;;;2021;Cancer du sein;97305 - Macouria;69,97
+;;;2021;Cardiopathies ischémiques;97305 - Macouria;0,00
+;;;2021;Chap 10 : Maladies de l'appareil respiratoire;97305 - Macouria;119,96
+;;;2021;Diabète;97305 - Macouria;529,69
+;;;2021;Maladie chronique du foie;97305 - Macouria;0,00
+;;;2021;Maladie de Parkinson;97305 - Macouria;0,00
+;;;2021;Maladie hypertensive;97305 - Macouria;693,97
+;;;2021;Maladies vasculaires cérébrales;97305 - Macouria;231,62
+;;;2021;Sida;97305 - Macouria;0,00
+;;;2021;Alzheimer;97306 - Mana;0,00
+;;;2021;Asthme;97306 - Mana;0,00
+;;;2021;Cancer de la prostate;97306 - Mana;0,00
+;;;2021;Cancer de la trachée, des bronches et du poumon;97306 - Mana;0,00
+;;;2021;Cancer du côlon-rectum;97306 - Mana;0,00
+;;;2021;Cancer du sein;97306 - Mana;168,22
+;;;2021;Cardiopathies ischémiques;97306 - Mana;0,00
+;;;2021;Chap 10 : Maladies de l'appareil respiratoire;97306 - Mana;197,47
+;;;2021;Diabète;97306 - Mana;272,44
+;;;2021;Maladie chronique du foie;97306 - Mana;0,00
+;;;2021;Maladie de Parkinson;97306 - Mana;0,00
+;;;2021;Maladie hypertensive;97306 - Mana;492,55
+;;;2021;Maladies vasculaires cérébrales;97306 - Mana;162,72
+;;;2021;Sida;97306 - Mana;0,00
+;;;2021;Alzheimer;97307 - Matoury;0,00
+;;;2021;Asthme;97307 - Matoury;0,00
+;;;2021;Cancer de la prostate;97307 - Matoury;84,61
+;;;2021;Cancer de la trachée, des bronches et du poumon;97307 - Matoury;75,44
+;;;2021;Cancer du côlon-rectum;97307 - Matoury;41,63
+;;;2021;Cancer du sein;97307 - Matoury;33,51
+;;;2021;Cardiopathies ischémiques;97307 - Matoury;103,93
+;;;2021;Chap 10 : Maladies de l'appareil respiratoire;97307 - Matoury;211,81
+;;;2021;Diabète;97307 - Matoury;218,86
+;;;2021;Maladie chronique du foie;97307 - Matoury;70,01
+;;;2021;Maladie de Parkinson;97307 - Matoury;0,00
+;;;2021;Maladie hypertensive;97307 - Matoury;436,55
+;;;2021;Maladies vasculaires cérébrales;97307 - Matoury;382,04
+;;;2021;Sida;97307 - Matoury;19,19
+;;;2021;Alzheimer;97308 - Saint-Georges;0,00
+;;;2021;Asthme;97308 - Saint-Georges;0,00
+;;;2021;Cancer de la prostate;97308 - Saint-Georges;116,05
+;;;2021;Cancer de la trachée, des bronches et du poumon;97308 - Saint-Georges;116,05
+;;;2021;Cancer du côlon-rectum;97308 - Saint-Georges;0,00
+;;;2021;Cancer du sein;97308 - Saint-Georges;0,00
+;;;2021;Cardiopathies ischémiques;97308 - Saint-Georges;116,05
+;;;2021;Chap 10 : Maladies de l'appareil respiratoire;97308 - Saint-Georges;0,00
+;;;2021;Diabète;97308 - Saint-Georges;180,17
+;;;2021;Maladie chronique du foie;97308 - Saint-Georges;0,00
+;;;2021;Maladie de Parkinson;97308 - Saint-Georges;0,00
+;;;2021;Maladie hypertensive;97308 - Saint-Georges;180,17
+;;;2021;Maladies vasculaires cérébrales;97308 - Saint-Georges;0,00
+;;;2021;Sida;97308 - Saint-Georges;0,00
+;;;2021;Alzheimer;97309 - Remire-Montjoly;0,00
+;;;2021;Asthme;97309 - Remire-Montjoly;0,00
+;;;2021;Cancer de la prostate;97309 - Remire-Montjoly;93,55
+;;;2021;Cancer de la trachée, des bronches et du poumon;97309 - Remire-Montjoly;13,87
+;;;2021;Cancer du côlon-rectum;97309 - Remire-Montjoly;85,68
+;;;2021;Cancer du sein;97309 - Remire-Montjoly;36,25
+;;;2021;Cardiopathies ischémiques;97309 - Remire-Montjoly;0,00
+;;;2021;Chap 10 : Maladies de l'appareil respiratoire;97309 - Remire-Montjoly;79,97
+;;;2021;Diabète;97309 - Remire-Montjoly;456,49
+;;;2021;Maladie chronique du foie;97309 - Remire-Montjoly;0,00
+;;;2021;Maladie de Parkinson;97309 - Remire-Montjoly;73,97
+;;;2021;Maladie hypertensive;97309 - Remire-Montjoly;600,17
+;;;2021;Maladies vasculaires cérébrales;97309 - Remire-Montjoly;93,47
+;;;2021;Sida;97309 - Remire-Montjoly;10,03
+;;;2021;Alzheimer;97310 - Roura;0,00
+;;;2021;Asthme;97310 - Roura;0,00
+;;;2021;Cancer de la prostate;97310 - Roura;0,00
+;;;2021;Cancer de la trachée, des bronches et du poumon;97310 - Roura;0,00
+;;;2021;Cancer du côlon-rectum;97310 - Roura;0,00
+;;;2021;Cancer du sein;97310 - Roura;117,63
+;;;2021;Cardiopathies ischémiques;97310 - Roura;0,00
+;;;2021;Chap 10 : Maladies de l'appareil respiratoire;97310 - Roura;0,00
+;;;2021;Diabète;97310 - Roura;0,00
+;;;2021;Maladie chronique du foie;97310 - Roura;0,00
+;;;2021;Maladie de Parkinson;97310 - Roura;0,00
+;;;2021;Maladie hypertensive;97310 - Roura;0,00
+;;;2021;Maladies vasculaires cérébrales;97310 - Roura;343,56
+;;;2021;Sida;97310 - Roura;0,00
+;;;2021;Alzheimer;97311 - Saint-Laurent-du-Maroni;61,47
+;;;2021;Asthme;97311 - Saint-Laurent-du-Maroni;76,91
+;;;2021;Cancer de la prostate;97311 - Saint-Laurent-du-Maroni;55,59
+;;;2021;Cancer de la trachée, des bronches et du poumon;97311 - Saint-Laurent-du-Maroni;27,80
+;;;2021;Cancer du côlon-rectum;97311 - Saint-Laurent-du-Maroni;95,90
+;;;2021;Cancer du sein;97311 - Saint-Laurent-du-Maroni;7,60
+;;;2021;Cardiopathies ischémiques;97311 - Saint-Laurent-du-Maroni;29,98
+;;;2021;Chap 10 : Maladies de l'appareil respiratoire;97311 - Saint-Laurent-du-Maroni;183,59
+;;;2021;Diabète;97311 - Saint-Laurent-du-Maroni;442,21
+;;;2021;Maladie chronique du foie;97311 - Saint-Laurent-du-Maroni;63,86
+;;;2021;Maladie de Parkinson;97311 - Saint-Laurent-du-Maroni;61,47
+;;;2021;Maladie hypertensive;97311 - Saint-Laurent-du-Maroni;383,71
+;;;2021;Maladies vasculaires cérébrales;97311 - Saint-Laurent-du-Maroni;553,13
+;;;2021;Sida;97311 - Saint-Laurent-du-Maroni;39,18
+;;;2021;Alzheimer;97312 - Sinnamary;0,00
+;;;2021;Asthme;97312 - Sinnamary;0,00
+;;;2021;Cancer de la prostate;97312 - Sinnamary;0,00
+;;;2021;Cancer de la trachée, des bronches et du poumon;97312 - Sinnamary;123,60
+;;;2021;Cancer du côlon-rectum;97312 - Sinnamary;0,00
+;;;2021;Cancer du sein;97312 - Sinnamary;85,61
+;;;2021;Cardiopathies ischémiques;97312 - Sinnamary;0,00
+;;;2021;Chap 10 : Maladies de l'appareil respiratoire;97312 - Sinnamary;271,83
+;;;2021;Diabète;97312 - Sinnamary;714,88
+;;;2021;Maladie chronique du foie;97312 - Sinnamary;0,00
+;;;2021;Maladie de Parkinson;97312 - Sinnamary;0,00
+;;;2021;Maladie hypertensive;97312 - Sinnamary;901,11
+;;;2021;Maladies vasculaires cérébrales;97312 - Sinnamary;296,23
+;;;2021;Sida;97312 - Sinnamary;0,00
+;;;2021;Alzheimer;97313 - Montsinéry-Tonnegrande;85,59
+;;;2021;Asthme;97313 - Montsinéry-Tonnegrande;0,00
+;;;2021;Cancer de la prostate;97313 - Montsinéry-Tonnegrande;0,00
+;;;2021;Cancer de la trachée, des bronches et du poumon;97313 - Montsinéry-Tonnegrande;0,00
+;;;2021;Cancer du côlon-rectum;97313 - Montsinéry-Tonnegrande;85,59
+;;;2021;Cancer du sein;97313 - Montsinéry-Tonnegrande;0,00
+;;;2021;Cardiopathies ischémiques;97313 - Montsinéry-Tonnegrande;0,00
+;;;2021;Chap 10 : Maladies de l'appareil respiratoire;97313 - Montsinéry-Tonnegrande;0,00
+;;;2021;Diabète;97313 - Montsinéry-Tonnegrande;0,00
+;;;2021;Maladie chronique du foie;97313 - Montsinéry-Tonnegrande;0,00
+;;;2021;Maladie de Parkinson;97313 - Montsinéry-Tonnegrande;0,00
+;;;2021;Maladie hypertensive;97313 - Montsinéry-Tonnegrande;0,00
+;;;2021;Maladies vasculaires cérébrales;97313 - Montsinéry-Tonnegrande;0,00
+;;;2021;Sida;97313 - Montsinéry-Tonnegrande;0,00
+;;;2021;Alzheimer;97314 - Ouanary;0,00
+;;;2021;Asthme;97314 - Ouanary;0,00
+;;;2021;Cancer de la prostate;97314 - Ouanary;0,00
+;;;2021;Cancer de la trachée, des bronches et du poumon;97314 - Ouanary;0,00
+;;;2021;Cancer du côlon-rectum;97314 - Ouanary;0,00
+;;;2021;Cancer du sein;97314 - Ouanary;0,00
+;;;2021;Cardiopathies ischémiques;97314 - Ouanary;0,00
+;;;2021;Chap 10 : Maladies de l'appareil respiratoire;97314 - Ouanary;0,00
+;;;2021;Diabète;97314 - Ouanary;0,00
+;;;2021;Maladie chronique du foie;97314 - Ouanary;0,00
+;;;2021;Maladie de Parkinson;97314 - Ouanary;0,00
+;;;2021;Maladie hypertensive;97314 - Ouanary;0,00
+;;;2021;Maladies vasculaires cérébrales;97314 - Ouanary;0,00
+;;;2021;Sida;97314 - Ouanary;0,00
+;;;2021;Alzheimer;97352 - Saül;0,00
+;;;2021;Asthme;97352 - Saül;0,00
+;;;2021;Cancer de la prostate;97352 - Saül;0,00
+;;;2021;Cancer de la trachée, des bronches et du poumon;97352 - Saül;0,00
+;;;2021;Cancer du côlon-rectum;97352 - Saül;0,00
+;;;2021;Cancer du sein;97352 - Saül;0,00
+;;;2021;Cardiopathies ischémiques;97352 - Saül;0,00
+;;;2021;Chap 10 : Maladies de l'appareil respiratoire;97352 - Saül;0,00
+;;;2021;Diabète;97352 - Saül;0,00
+;;;2021;Maladie chronique du foie;97352 - Saül;0,00
+;;;2021;Maladie de Parkinson;97352 - Saül;0,00
+;;;2021;Maladie hypertensive;97352 - Saül;0,00
+;;;2021;Maladies vasculaires cérébrales;97352 - Saül;0,00
+;;;2021;Sida;97352 - Saül;0,00
+;;;2021;Alzheimer;97353 - Maripasoula;0,00
+;;;2021;Asthme;97353 - Maripasoula;0,00
+;;;2021;Cancer de la prostate;97353 - Maripasoula;0,00
+;;;2021;Cancer de la trachée, des bronches et du poumon;97353 - Maripasoula;0,00
+;;;2021;Cancer du côlon-rectum;97353 - Maripasoula;0,00
+;;;2021;Cancer du sein;97353 - Maripasoula;0,00
+;;;2021;Cardiopathies ischémiques;97353 - Maripasoula;0,00
+;;;2021;Chap 10 : Maladies de l'appareil respiratoire;97353 - Maripasoula;6,83
+;;;2021;Diabète;97353 - Maripasoula;0,00
+;;;2021;Maladie chronique du foie;97353 - Maripasoula;0,00
+;;;2021;Maladie de Parkinson;97353 - Maripasoula;696,21
+;;;2021;Maladie hypertensive;97353 - Maripasoula;45,38
+;;;2021;Maladies vasculaires cérébrales;97353 - Maripasoula;45,38
+;;;2021;Sida;97353 - Maripasoula;0,00
+;;;2021;Alzheimer;97357 - Grand-Santi;0,00
+;;;2021;Asthme;97357 - Grand-Santi;0,00
+;;;2021;Cancer de la prostate;97357 - Grand-Santi;0,00
+;;;2021;Cancer de la trachée, des bronches et du poumon;97357 - Grand-Santi;94,90
+;;;2021;Cancer du côlon-rectum;97357 - Grand-Santi;0,00
+;;;2021;Cancer du sein;97357 - Grand-Santi;0,00
+;;;2021;Cardiopathies ischémiques;97357 - Grand-Santi;0,00
+;;;2021;Chap 10 : Maladies de l'appareil respiratoire;97357 - Grand-Santi;94,90
+;;;2021;Diabète;97357 - Grand-Santi;0,00
+;;;2021;Maladie chronique du foie;97357 - Grand-Santi;0,00
+;;;2021;Maladie de Parkinson;97357 - Grand-Santi;0,00
+;;;2021;Maladie hypertensive;97357 - Grand-Santi;47,43
+;;;2021;Maladies vasculaires cérébrales;97357 - Grand-Santi;266,37
+;;;2021;Sida;97357 - Grand-Santi;0,00
+;;;2021;Alzheimer;97358 - Saint-Élie;0,00
+;;;2021;Asthme;97358 - Saint-Élie;0,00
+;;;2021;Cancer de la prostate;97358 - Saint-Élie;0,00
+;;;2021;Cancer de la trachée, des bronches et du poumon;97358 - Saint-Élie;0,00
+;;;2021;Cancer du côlon-rectum;97358 - Saint-Élie;0,00
+;;;2021;Cancer du sein;97358 - Saint-Élie;0,00
+;;;2021;Cardiopathies ischémiques;97358 - Saint-Élie;0,00
+;;;2021;Chap 10 : Maladies de l'appareil respiratoire;97358 - Saint-Élie;0,00
+;;;2021;Diabète;97358 - Saint-Élie;0,00
+;;;2021;Maladie chronique du foie;97358 - Saint-Élie;0,00
+;;;2021;Maladie de Parkinson;97358 - Saint-Élie;0,00
+;;;2021;Maladie hypertensive;97358 - Saint-Élie;0,00
+;;;2021;Maladies vasculaires cérébrales;97358 - Saint-Élie;0,00
+;;;2021;Sida;97358 - Saint-Élie;0,00
+;;;2021;Alzheimer;97360 - Apatou;0,00
+;;;2021;Asthme;97360 - Apatou;0,00
+;;;2021;Cancer de la prostate;97360 - Apatou;0,00
+;;;2021;Cancer de la trachée, des bronches et du poumon;97360 - Apatou;0,00
+;;;2021;Cancer du côlon-rectum;97360 - Apatou;0,00
+;;;2021;Cancer du sein;97360 - Apatou;0,00
+;;;2021;Cardiopathies ischémiques;97360 - Apatou;0,00
+;;;2021;Chap 10 : Maladies de l'appareil respiratoire;97360 - Apatou;0,00
+;;;2021;Diabète;97360 - Apatou;0,00
+;;;2021;Maladie chronique du foie;97360 - Apatou;0,00
+;;;2021;Maladie de Parkinson;97360 - Apatou;0,00
+;;;2021;Maladie hypertensive;97360 - Apatou;0,00
+;;;2021;Maladies vasculaires cérébrales;97360 - Apatou;69,99
+;;;2021;Sida;97360 - Apatou;0,00
+;;;2021;Alzheimer;97361 - Awala-Yalimapo;0,00
+;;;2021;Asthme;97361 - Awala-Yalimapo;0,00
+;;;2021;Cancer de la prostate;97361 - Awala-Yalimapo;0,00
+;;;2021;Cancer de la trachée, des bronches et du poumon;97361 - Awala-Yalimapo;114,87
+;;;2021;Cancer du côlon-rectum;97361 - Awala-Yalimapo;0,00
+;;;2021;Cancer du sein;97361 - Awala-Yalimapo;0,00
+;;;2021;Cardiopathies ischémiques;97361 - Awala-Yalimapo;0,00
+;;;2021;Chap 10 : Maladies de l'appareil respiratoire;97361 - Awala-Yalimapo;0,00
+;;;2021;Diabète;97361 - Awala-Yalimapo;161,74
+;;;2021;Maladie chronique du foie;97361 - Awala-Yalimapo;0,00
+;;;2021;Maladie de Parkinson;97361 - Awala-Yalimapo;0,00
+;;;2021;Maladie hypertensive;97361 - Awala-Yalimapo;0,00
+;;;2021;Maladies vasculaires cérébrales;97361 - Awala-Yalimapo;0,00
+;;;2021;Sida;97361 - Awala-Yalimapo;0,00
+;;;2021;Alzheimer;Auvergne-Rhône-Alpes;108,88
+;;;2021;Asthme;Auvergne-Rhône-Alpes;2,37
+;;;2021;Cancer de la prostate;Auvergne-Rhône-Alpes;42,96
+;;;2021;Cancer de la trachée, des bronches et du poumon;Auvergne-Rhône-Alpes;123,93
+;;;2021;Cancer du côlon-rectum;Auvergne-Rhône-Alpes;67,83
+;;;2021;Cancer du sein;Auvergne-Rhône-Alpes;50,27
+;;;2021;Cardiopathies ischémiques;Auvergne-Rhône-Alpes;124,74
+;;;2021;Chap 10 : Maladies de l'appareil respiratoire;Auvergne-Rhône-Alpes;139,34
+;;;2021;Diabète;Auvergne-Rhône-Alpes;184,64
+;;;2021;Maladie chronique du foie;Auvergne-Rhône-Alpes;46,03
+;;;2021;Maladie de Parkinson;Auvergne-Rhône-Alpes;53,39
+;;;2021;Maladie hypertensive;Auvergne-Rhône-Alpes;267,00
+;;;2021;Maladies vasculaires cérébrales;Auvergne-Rhône-Alpes;118,13
+;;;2021;Sida;Auvergne-Rhône-Alpes;0,52
+;;;2021;Alzheimer;Bourgogne-Franche-Comté;102,24
+;;;2021;Asthme;Bourgogne-Franche-Comté;2,79
+;;;2021;Cancer de la prostate;Bourgogne-Franche-Comté;44,45
+;;;2021;Cancer de la trachée, des bronches et du poumon;Bourgogne-Franche-Comté;134,74
+;;;2021;Cancer du côlon-rectum;Bourgogne-Franche-Comté;73,24
+;;;2021;Cancer du sein;Bourgogne-Franche-Comté;49,29
+;;;2021;Cardiopathies ischémiques;Bourgogne-Franche-Comté;144,20
+;;;2021;Chap 10 : Maladies de l'appareil respiratoire;Bourgogne-Franche-Comté;147,61
+;;;2021;Diabète;Bourgogne-Franche-Comté;221,66
+;;;2021;Maladie chronique du foie;Bourgogne-Franche-Comté;61,50
+;;;2021;Maladie de Parkinson;Bourgogne-Franche-Comté;62,76
+;;;2021;Maladie hypertensive;Bourgogne-Franche-Comté;336,90
+;;;2021;Maladies vasculaires cérébrales;Bourgogne-Franche-Comté;135,34
+;;;2021;Sida;Bourgogne-Franche-Comté;0,62
+;;;2021;Alzheimer;Bretagne;102,26
+;;;2021;Asthme;Bretagne;2,81
+;;;2021;Cancer de la prostate;Bretagne;51,60
+;;;2021;Cancer de la trachée, des bronches et du poumon;Bretagne;138,57
+;;;2021;Cancer du côlon-rectum;Bretagne;80,02
+;;;2021;Cancer du sein;Bretagne;47,19
+;;;2021;Cardiopathies ischémiques;Bretagne;159,91
+;;;2021;Chap 10 : Maladies de l'appareil respiratoire;Bretagne;173,42
+;;;2021;Diabète;Bretagne;133,60
+;;;2021;Maladie chronique du foie;Bretagne;75,76
+;;;2021;Maladie de Parkinson;Bretagne;45,22
+;;;2021;Maladie hypertensive;Bretagne;228,19
+;;;2021;Maladies vasculaires cérébrales;Bretagne;150,26
+;;;2021;Sida;Bretagne;0,43
+;;;2021;Alzheimer;Centre-Val de Loire;108,20
+;;;2021;Asthme;Centre-Val de Loire;2,35
+;;;2021;Cancer de la prostate;Centre-Val de Loire;52,53
+;;;2021;Cancer de la trachée, des bronches et du poumon;Centre-Val de Loire;138,43
+;;;2021;Cancer du côlon-rectum;Centre-Val de Loire;76,88
+;;;2021;Cancer du sein;Centre-Val de Loire;55,12
+;;;2021;Cardiopathies ischémiques;Centre-Val de Loire;156,18
+;;;2021;Chap 10 : Maladies de l'appareil respiratoire;Centre-Val de Loire;154,66
+;;;2021;Diabète;Centre-Val de Loire;214,51
+;;;2021;Maladie chronique du foie;Centre-Val de Loire;54,15
+;;;2021;Maladie de Parkinson;Centre-Val de Loire;49,51
+;;;2021;Maladie hypertensive;Centre-Val de Loire;293,95
+;;;2021;Maladies vasculaires cérébrales;Centre-Val de Loire;145,31
+;;;2021;Sida;Centre-Val de Loire;1,45
+;;;2021;Alzheimer;Corse;102,35
+;;;2021;Asthme;Corse;0,62
+;;;2021;Cancer de la prostate;Corse;41,60
+;;;2021;Cancer de la trachée, des bronches et du poumon;Corse;149,50
+;;;2021;Cancer du côlon-rectum;Corse;50,94
+;;;2021;Cancer du sein;Corse;43,33
+;;;2021;Cardiopathies ischémiques;Corse;142,36
+;;;2021;Chap 10 : Maladies de l'appareil respiratoire;Corse;130,17
+;;;2021;Diabète;Corse;143,31
+;;;2021;Maladie chronique du foie;Corse;27,98
+;;;2021;Maladie de Parkinson;Corse;42,43
+;;;2021;Maladie hypertensive;Corse;198,49
+;;;2021;Maladies vasculaires cérébrales;Corse;120,25
+;;;2021;Sida;Corse;1,63
+;;;2021;Alzheimer;Departements d'outre mer;124,10
+;;;2021;Asthme;Departements d'outre mer;8,10
+;;;2021;Cancer de la prostate;Departements d'outre mer;72,69
+;;;2021;Cancer de la trachée, des bronches et du poumon;Departements d'outre mer;72,57
+;;;2021;Cancer du côlon-rectum;Departements d'outre mer;67,84
+;;;2021;Cancer du sein;Departements d'outre mer;41,06
+;;;2021;Cardiopathies ischémiques;Departements d'outre mer;114,32
+;;;2021;Chap 10 : Maladies de l'appareil respiratoire;Departements d'outre mer;151,10
+;;;2021;Diabète;Departements d'outre mer;459,80
+;;;2021;Maladie chronique du foie;Departements d'outre mer;46,00
+;;;2021;Maladie de Parkinson;Departements d'outre mer;54,09
+;;;2021;Maladie hypertensive;Departements d'outre mer;556,99
+;;;2021;Maladies vasculaires cérébrales;Departements d'outre mer;193,35
+;;;2021;Sida;Departements d'outre mer;4,03
+;;;2021;Alzheimer;France (y compris Mayotte);103,53
+;;;2021;Asthme;France (y compris Mayotte);2,92
+;;;2021;Cancer de la prostate;France (y compris Mayotte);44,72
+;;;2021;Cancer de la trachée, des bronches et du poumon;France (y compris Mayotte);134,60
+;;;2021;Cancer du côlon-rectum;France (y compris Mayotte);73,36
+;;;2021;Cancer du sein;France (y compris Mayotte);51,01
+;;;2021;Cardiopathies ischémiques;France (y compris Mayotte);138,07
+;;;2021;Chap 10 : Maladies de l'appareil respiratoire;France (y compris Mayotte);158,34
+;;;2021;Diabète;France (y compris Mayotte);197,01
+;;;2021;Maladie chronique du foie;France (y compris Mayotte);55,71
+;;;2021;Maladie de Parkinson;France (y compris Mayotte);51,87
+;;;2021;Maladie hypertensive;France (y compris Mayotte);278,11
+;;;2021;Maladies vasculaires cérébrales;France (y compris Mayotte);131,94
+;;;2021;Sida;France (y compris Mayotte);0,95
+;;;2021;Alzheimer;France métropolitaine;103,04
+;;;2021;Asthme;France métropolitaine;2,80
+;;;2021;Cancer de la prostate;France métropolitaine;44,09
+;;;2021;Cancer de la trachée, des bronches et du poumon;France métropolitaine;135,83
+;;;2021;Cancer du côlon-rectum;France métropolitaine;73,32
+;;;2021;Cancer du sein;France métropolitaine;51,06
+;;;2021;Cardiopathies ischémiques;France métropolitaine;137,95
+;;;2021;Chap 10 : Maladies de l'appareil respiratoire;France métropolitaine;158,20
+;;;2021;Diabète;France métropolitaine;190,91
+;;;2021;Maladie chronique du foie;France métropolitaine;55,81
+;;;2021;Maladie de Parkinson;France métropolitaine;51,74
+;;;2021;Maladie hypertensive;France métropolitaine;271,50
+;;;2021;Maladies vasculaires cérébrales;France métropolitaine;130,24
+;;;2021;Sida;France métropolitaine;0,85
+;;;2021;Alzheimer;Grand Est;100,87
+;;;2021;Asthme;Grand Est;2,37
+;;;2021;Cancer de la prostate;Grand Est;41,33
+;;;2021;Cancer de la trachée, des bronches et du poumon;Grand Est;149,43
+;;;2021;Cancer du côlon-rectum;Grand Est;76,74
+;;;2021;Cancer du sein;Grand Est;52,03
+;;;2021;Cardiopathies ischémiques;Grand Est;143,93
+;;;2021;Chap 10 : Maladies de l'appareil respiratoire;Grand Est;176,19
+;;;2021;Diabète;Grand Est;256,25
+;;;2021;Maladie chronique du foie;Grand Est;62,12
+;;;2021;Maladie de Parkinson;Grand Est;50,69
+;;;2021;Maladie hypertensive;Grand Est;363,23
+;;;2021;Maladies vasculaires cérébrales;Grand Est;135,95
+;;;2021;Sida;Grand Est;0,44
+;;;2021;Alzheimer;Guadeloupe;112,18
+;;;2021;Asthme;Guadeloupe;6,47
+;;;2021;Cancer de la prostate;Guadeloupe;80,34
+;;;2021;Cancer de la trachée, des bronches et du poumon;Guadeloupe;61,14
+;;;2021;Cancer du côlon-rectum;Guadeloupe;62,15
+;;;2021;Cancer du sein;Guadeloupe;39,36
+;;;2021;Cardiopathies ischémiques;Guadeloupe;83,47
+;;;2021;Chap 10 : Maladies de l'appareil respiratoire;Guadeloupe;109,16
+;;;2021;Diabète;Guadeloupe;465,81
+;;;2021;Maladie chronique du foie;Guadeloupe;30,97
+;;;2021;Maladie de Parkinson;Guadeloupe;71,03
+;;;2021;Maladie hypertensive;Guadeloupe;604,98
+;;;2021;Maladies vasculaires cérébrales;Guadeloupe;185,54
+;;;2021;Sida;Guadeloupe;4,08
+;;;2021;Alzheimer;Guyane;34,92
+;;;2021;Asthme;Guyane;6,87
+;;;2021;Cancer de la prostate;Guyane;74,29
+;;;2021;Cancer de la trachée, des bronches et du poumon;Guyane;41,68
+;;;2021;Cancer du côlon-rectum;Guyane;57,74
+;;;2021;Cancer du sein;Guyane;41,52
+;;;2021;Cardiopathies ischémiques;Guyane;59,89
+;;;2021;Chap 10 : Maladies de l'appareil respiratoire;Guyane;149,39
+;;;2021;Diabète;Guyane;402,59
+;;;2021;Maladie chronique du foie;Guyane;31,50
+;;;2021;Maladie de Parkinson;Guyane;39,40
+;;;2021;Maladie hypertensive;Guyane;585,96
+;;;2021;Maladies vasculaires cérébrales;Guyane;249,90
+;;;2021;Sida;Guyane;24,89
+;;;2021;Alzheimer;Hauts-de-France;113,64
+;;;2021;Asthme;Hauts-de-France;3,76
+;;;2021;Cancer de la prostate;Hauts-de-France;48,52
+;;;2021;Cancer de la trachée, des bronches et du poumon;Hauts-de-France;149,67
+;;;2021;Cancer du côlon-rectum;Hauts-de-France;87,20
+;;;2021;Cancer du sein;Hauts-de-France;61,84
+;;;2021;Cardiopathies ischémiques;Hauts-de-France;150,32
+;;;2021;Chap 10 : Maladies de l'appareil respiratoire;Hauts-de-France;194,53
+;;;2021;Diabète;Hauts-de-France;246,34
+;;;2021;Maladie chronique du foie;Hauts-de-France;93,34
+;;;2021;Maladie de Parkinson;Hauts-de-France;57,28
+;;;2021;Maladie hypertensive;Hauts-de-France;333,75
+;;;2021;Maladies vasculaires cérébrales;Hauts-de-France;137,02
+;;;2021;Sida;Hauts-de-France;0,21
+;;;2021;Alzheimer;Martinique;162,59
+;;;2021;Asthme;Martinique;7,63
+;;;2021;Cancer de la prostate;Martinique;97,12
+;;;2021;Cancer de la trachée, des bronches et du poumon;Martinique;60,90
+;;;2021;Cancer du côlon-rectum;Martinique;78,38
+;;;2021;Cancer du sein;Martinique;53,42
+;;;2021;Cardiopathies ischémiques;Martinique;72,57
+;;;2021;Chap 10 : Maladies de l'appareil respiratoire;Martinique;134,77
+;;;2021;Diabète;Martinique;453,98
+;;;2021;Maladie chronique du foie;Martinique;23,25
+;;;2021;Maladie de Parkinson;Martinique;55,61
+;;;2021;Maladie hypertensive;Martinique;576,32
+;;;2021;Maladies vasculaires cérébrales;Martinique;212,25
+;;;2021;Sida;Martinique;3,05
+;;;2021;Alzheimer;Normandie;107,82
+;;;2021;Asthme;Normandie;3,11
+;;;2021;Cancer de la prostate;Normandie;48,40
+;;;2021;Cancer de la trachée, des bronches et du poumon;Normandie;144,08
+;;;2021;Cancer du côlon-rectum;Normandie;83,12
+;;;2021;Cancer du sein;Normandie;57,42
+;;;2021;Cardiopathies ischémiques;Normandie;171,21
+;;;2021;Chap 10 : Maladies de l'appareil respiratoire;Normandie;165,33
+;;;2021;Diabète;Normandie;195,20
+;;;2021;Maladie chronique du foie;Normandie;77,38
+;;;2021;Maladie de Parkinson;Normandie;44,37
+;;;2021;Maladie hypertensive;Normandie;286,69
+;;;2021;Maladies vasculaires cérébrales;Normandie;140,50
+;;;2021;Sida;Normandie;0,58
+;;;2021;Alzheimer;Nouvelle-Aquitaine;91,84
+;;;2021;Asthme;Nouvelle-Aquitaine;2,89
+;;;2021;Cancer de la prostate;Nouvelle-Aquitaine;44,54
+;;;2021;Cancer de la trachée, des bronches et du poumon;Nouvelle-Aquitaine;146,49
+;;;2021;Cancer du côlon-rectum;Nouvelle-Aquitaine;78,26
+;;;2021;Cancer du sein;Nouvelle-Aquitaine;50,34
+;;;2021;Cardiopathies ischémiques;Nouvelle-Aquitaine;136,90
+;;;2021;Chap 10 : Maladies de l'appareil respiratoire;Nouvelle-Aquitaine;158,02
+;;;2021;Diabète;Nouvelle-Aquitaine;169,73
+;;;2021;Maladie chronique du foie;Nouvelle-Aquitaine;44,95
+;;;2021;Maladie de Parkinson;Nouvelle-Aquitaine;53,71
+;;;2021;Maladie hypertensive;Nouvelle-Aquitaine;233,18
+;;;2021;Maladies vasculaires cérébrales;Nouvelle-Aquitaine;141,78
+;;;2021;Sida;Nouvelle-Aquitaine;0,73
+;;;2021;Alzheimer;Occitanie;124,96
+;;;2021;Asthme;Occitanie;1,76
+;;;2021;Cancer de la prostate;Occitanie;41,91
+;;;2021;Cancer de la trachée, des bronches et du poumon;Occitanie;144,62
+;;;2021;Cancer du côlon-rectum;Occitanie;71,62
+;;;2021;Cancer du sein;Occitanie;48,27
+;;;2021;Cardiopathies ischémiques;Occitanie;138,99
+;;;2021;Chap 10 : Maladies de l'appareil respiratoire;Occitanie;159,38
+;;;2021;Diabète;Occitanie;178,77
+;;;2021;Maladie chronique du foie;Occitanie;46,89
+;;;2021;Maladie de Parkinson;Occitanie;51,51
+;;;2021;Maladie hypertensive;Occitanie;226,84
+;;;2021;Maladies vasculaires cérébrales;Occitanie;127,42
+;;;2021;Sida;Occitanie;0,80
+;;;2021;Alzheimer;Pays de la Loire;101,63
+;;;2021;Asthme;Pays de la Loire;3,34
+;;;2021;Cancer de la prostate;Pays de la Loire;47,05
+;;;2021;Cancer de la trachée, des bronches et du poumon;Pays de la Loire;126,00
+;;;2021;Cancer du côlon-rectum;Pays de la Loire;75,60
+;;;2021;Cancer du sein;Pays de la Loire;52,78
+;;;2021;Cardiopathies ischémiques;Pays de la Loire;144,85
+;;;2021;Chap 10 : Maladies de l'appareil respiratoire;Pays de la Loire;148,68
+;;;2021;Diabète;Pays de la Loire;159,72
+;;;2021;Maladie chronique du foie;Pays de la Loire;65,02
+;;;2021;Maladie de Parkinson;Pays de la Loire;55,93
+;;;2021;Maladie hypertensive;Pays de la Loire;228,03
+;;;2021;Maladies vasculaires cérébrales;Pays de la Loire;140,87
+;;;2021;Sida;Pays de la Loire;0,25
+;;;2021;Alzheimer;Provence-Alpes-Côte d'Azur;102,03
+;;;2021;Asthme;Provence-Alpes-Côte d'Azur;3,18
+;;;2021;Cancer de la prostate;Provence-Alpes-Côte d'Azur;39,34
+;;;2021;Cancer de la trachée, des bronches et du poumon;Provence-Alpes-Côte d'Azur;142,01
+;;;2021;Cancer du côlon-rectum;Provence-Alpes-Côte d'Azur;64,89
+;;;2021;Cancer du sein;Provence-Alpes-Côte d'Azur;47,58
+;;;2021;Cardiopathies ischémiques;Provence-Alpes-Côte d'Azur;121,43
+;;;2021;Chap 10 : Maladies de l'appareil respiratoire;Provence-Alpes-Côte d'Azur;160,84
+;;;2021;Diabète;Provence-Alpes-Côte d'Azur;181,63
+;;;2021;Maladie chronique du foie;Provence-Alpes-Côte d'Azur;43,91
+;;;2021;Maladie de Parkinson;Provence-Alpes-Côte d'Azur;56,96
+;;;2021;Maladie hypertensive;Provence-Alpes-Côte d'Azur;239,92
+;;;2021;Maladies vasculaires cérébrales;Provence-Alpes-Côte d'Azur;122,12
+;;;2021;Sida;Provence-Alpes-Côte d'Azur;1,27
+;;;2021;Alzheimer;Réunion;115,24
+;;;2021;Asthme;Réunion;10,58
+;;;2021;Cancer de la prostate;Réunion;49,43
+;;;2021;Cancer de la trachée, des bronches et du poumon;Réunion;94,87
+;;;2021;Cancer du côlon-rectum;Réunion;68,09
+;;;2021;Cancer du sein;Réunion;37,27
+;;;2021;Cardiopathies ischémiques;Réunion;175,00
+;;;2021;Chap 10 : Maladies de l'appareil respiratoire;Réunion;191,44
+;;;2021;Diabète;Réunion;474,62
+;;;2021;Maladie chronique du foie;Réunion;70,33
+;;;2021;Maladie de Parkinson;Réunion;43,71
+;;;2021;Maladie hypertensive;Réunion;508,66
+;;;2021;Maladies vasculaires cérébrales;Réunion;173,32
+;;;2021;Sida;Réunion;0,67
+;;;2021;Alzheimer;Île-de-France;83,77
+;;;2021;Asthme;Île-de-France;3,19
+;;;2021;Cancer de la prostate;Île-de-France;39,82
+;;;2021;Cancer de la trachée, des bronches et du poumon;Île-de-France;113,47
+;;;2021;Cancer du côlon-rectum;Île-de-France;63,04
+;;;2021;Cancer du sein;Île-de-France;47,94
+;;;2021;Cardiopathies ischémiques;Île-de-France;116,39
+;;;2021;Chap 10 : Maladies de l'appareil respiratoire;Île-de-France;141,73
+;;;2021;Diabète;Île-de-France;173,99
+;;;2021;Maladie chronique du foie;Île-de-France;40,88
+;;;2021;Maladie de Parkinson;Île-de-France;43,64
+;;;2021;Maladie hypertensive;Île-de-France;271,09
+;;;2021;Maladies vasculaires cérébrales;Île-de-France;107,77
+;;;2021;Sida;Île-de-France;1,86
+;;;2022;Alzheimer;97302 - Cayenne;45,77
+;;;2022;Asthme;97302 - Cayenne;0,00
+;;;2022;Cancer de la prostate;97302 - Cayenne;181,88
+;;;2022;Cancer de la trachée, des bronches et du poumon;97302 - Cayenne;127,48
+;;;2022;Cancer du côlon-rectum;97302 - Cayenne;87,33
+;;;2022;Cancer du sein;97302 - Cayenne;44,22
+;;;2022;Cardiopathies ischémiques;97302 - Cayenne;118,40
+;;;2022;Chap 10 : Maladies de l'appareil respiratoire;97302 - Cayenne;215,91
+;;;2022;Diabète;97302 - Cayenne;446,40
+;;;2022;Maladie chronique du foie;97302 - Cayenne;24,27
+;;;2022;Maladie de Parkinson;97302 - Cayenne;94,06
+;;;2022;Maladie hypertensive;97302 - Cayenne;577,28
+;;;2022;Maladies vasculaires cérébrales;97302 - Cayenne;242,24
+;;;2022;Sida;97302 - Cayenne;4,62
+;;;2022;Alzheimer;97304 - Kourou;0,00
+;;;2022;Asthme;97304 - Kourou;0,00
+;;;2022;Cancer de la prostate;97304 - Kourou;0,00
+;;;2022;Cancer de la trachée, des bronches et du poumon;97304 - Kourou;0,00
+;;;2022;Cancer du côlon-rectum;97304 - Kourou;0,00
+;;;2022;Cancer du sein;97304 - Kourou;33,03
+;;;2022;Cardiopathies ischémiques;97304 - Kourou;58,81
+;;;2022;Chap 10 : Maladies de l'appareil respiratoire;97304 - Kourou;143,03
+;;;2022;Diabète;97304 - Kourou;325,76
+;;;2022;Maladie chronique du foie;97304 - Kourou;123,64
+;;;2022;Maladie de Parkinson;97304 - Kourou;0,00
+;;;2022;Maladie hypertensive;97304 - Kourou;323,78
+;;;2022;Maladies vasculaires cérébrales;97304 - Kourou;99,73
+;;;2022;Sida;97304 - Kourou;53,77
+;;;2022;Alzheimer;97305 - Macouria;96,33
+;;;2022;Asthme;97305 - Macouria;0,00
+;;;2022;Cancer de la prostate;97305 - Macouria;40,73
+;;;2022;Cancer de la trachée, des bronches et du poumon;97305 - Macouria;0,00
+;;;2022;Cancer du côlon-rectum;97305 - Macouria;17,85
+;;;2022;Cancer du sein;97305 - Macouria;165,34
+;;;2022;Cardiopathies ischémiques;97305 - Macouria;237,98
+;;;2022;Chap 10 : Maladies de l'appareil respiratoire;97305 - Macouria;40,73
+;;;2022;Diabète;97305 - Macouria;163,44
+;;;2022;Maladie chronique du foie;97305 - Macouria;0,00
+;;;2022;Maladie de Parkinson;97305 - Macouria;0,00
+;;;2022;Maladie hypertensive;97305 - Macouria;125,75
+;;;2022;Maladies vasculaires cérébrales;97305 - Macouria;192,65
+;;;2022;Sida;97305 - Macouria;0,00
+;;;2022;Alzheimer;97306 - Mana;0,00
+;;;2022;Asthme;97306 - Mana;0,00
+;;;2022;Cancer de la prostate;97306 - Mana;0,00
+;;;2022;Cancer de la trachée, des bronches et du poumon;97306 - Mana;0,00
+;;;2022;Cancer du côlon-rectum;97306 - Mana;0,00
+;;;2022;Cancer du sein;97306 - Mana;0,00
+;;;2022;Cardiopathies ischémiques;97306 - Mana;34,63
+;;;2022;Chap 10 : Maladies de l'appareil respiratoire;97306 - Mana;482,46
+;;;2022;Diabète;97306 - Mana;171,20
+;;;2022;Maladie chronique du foie;97306 - Mana;0,00
+;;;2022;Maladie de Parkinson;97306 - Mana;0,00
+;;;2022;Maladie hypertensive;97306 - Mana;251,81
+;;;2022;Maladies vasculaires cérébrales;97306 - Mana;483,76
+;;;2022;Sida;97306 - Mana;0,00
+;;;2022;Alzheimer;97307 - Matoury;36,59
+;;;2022;Asthme;97307 - Matoury;0,00
+;;;2022;Cancer de la prostate;97307 - Matoury;34,74
+;;;2022;Cancer de la trachée, des bronches et du poumon;97307 - Matoury;110,10
+;;;2022;Cancer du côlon-rectum;97307 - Matoury;33,49
+;;;2022;Cancer du sein;97307 - Matoury;0,00
+;;;2022;Cardiopathies ischémiques;97307 - Matoury;82,17
+;;;2022;Chap 10 : Maladies de l'appareil respiratoire;97307 - Matoury;179,50
+;;;2022;Diabète;97307 - Matoury;265,28
+;;;2022;Maladie chronique du foie;97307 - Matoury;10,84
+;;;2022;Maladie de Parkinson;97307 - Matoury;80,05
+;;;2022;Maladie hypertensive;97307 - Matoury;378,22
+;;;2022;Maladies vasculaires cérébrales;97307 - Matoury;278,32
+;;;2022;Sida;97307 - Matoury;14,98
+;;;2022;Alzheimer;97308 - Saint-Georges;0,00
+;;;2022;Asthme;97308 - Saint-Georges;0,00
+;;;2022;Cancer de la prostate;97308 - Saint-Georges;0,00
+;;;2022;Cancer de la trachée, des bronches et du poumon;97308 - Saint-Georges;0,00
+;;;2022;Cancer du côlon-rectum;97308 - Saint-Georges;63,35
+;;;2022;Cancer du sein;97308 - Saint-Georges;0,00
+;;;2022;Cardiopathies ischémiques;97308 - Saint-Georges;0,00
+;;;2022;Chap 10 : Maladies de l'appareil respiratoire;97308 - Saint-Georges;122,17
+;;;2022;Diabète;97308 - Saint-Georges;427,13
+;;;2022;Maladie chronique du foie;97308 - Saint-Georges;0,00
+;;;2022;Maladie de Parkinson;97308 - Saint-Georges;0,00
+;;;2022;Maladie hypertensive;97308 - Saint-Georges;427,13
+;;;2022;Maladies vasculaires cérébrales;97308 - Saint-Georges;427,13
+;;;2022;Sida;97308 - Saint-Georges;113,30
+;;;2022;Alzheimer;97309 - Remire-Montjoly;26,46
+;;;2022;Asthme;97309 - Remire-Montjoly;0,00
+;;;2022;Cancer de la prostate;97309 - Remire-Montjoly;147,25
+;;;2022;Cancer de la trachée, des bronches et du poumon;97309 - Remire-Montjoly;89,72
+;;;2022;Cancer du côlon-rectum;97309 - Remire-Montjoly;13,37
+;;;2022;Cancer du sein;97309 - Remire-Montjoly;26,46
+;;;2022;Cardiopathies ischémiques;97309 - Remire-Montjoly;36,81
+;;;2022;Chap 10 : Maladies de l'appareil respiratoire;97309 - Remire-Montjoly;171,43
+;;;2022;Diabète;97309 - Remire-Montjoly;353,17
+;;;2022;Maladie chronique du foie;97309 - Remire-Montjoly;55,45
+;;;2022;Maladie de Parkinson;97309 - Remire-Montjoly;36,81
+;;;2022;Maladie hypertensive;97309 - Remire-Montjoly;316,58
+;;;2022;Maladies vasculaires cérébrales;97309 - Remire-Montjoly;253,59
+;;;2022;Sida;97309 - Remire-Montjoly;0,00
+;;;2022;Alzheimer;97310 - Roura;45,98
+;;;2022;Asthme;97310 - Roura;0,00
+;;;2022;Cancer de la prostate;97310 - Roura;0,00
+;;;2022;Cancer de la trachée, des bronches et du poumon;97310 - Roura;129,76
+;;;2022;Cancer du côlon-rectum;97310 - Roura;0,00
+;;;2022;Cancer du sein;97310 - Roura;0,00
+;;;2022;Cardiopathies ischémiques;97310 - Roura;0,00
+;;;2022;Chap 10 : Maladies de l'appareil respiratoire;97310 - Roura;0,00
+;;;2022;Diabète;97310 - Roura;0,00
+;;;2022;Maladie chronique du foie;97310 - Roura;83,93
+;;;2022;Maladie de Parkinson;97310 - Roura;0,00
+;;;2022;Maladie hypertensive;97310 - Roura;457,25
+;;;2022;Maladies vasculaires cérébrales;97310 - Roura;340,51
+;;;2022;Sida;97310 - Roura;0,00
+;;;2022;Alzheimer;97311 - Saint-Laurent-du-Maroni;14,88
+;;;2022;Asthme;97311 - Saint-Laurent-du-Maroni;0,00
+;;;2022;Cancer de la prostate;97311 - Saint-Laurent-du-Maroni;75,15
+;;;2022;Cancer de la trachée, des bronches et du poumon;97311 - Saint-Laurent-du-Maroni;79,73
+;;;2022;Cancer du côlon-rectum;97311 - Saint-Laurent-du-Maroni;33,07
+;;;2022;Cancer du sein;97311 - Saint-Laurent-du-Maroni;22,34
+;;;2022;Cardiopathies ischémiques;97311 - Saint-Laurent-du-Maroni;19,57
+;;;2022;Chap 10 : Maladies de l'appareil respiratoire;97311 - Saint-Laurent-du-Maroni;421,79
+;;;2022;Diabète;97311 - Saint-Laurent-du-Maroni;550,07
+;;;2022;Maladie chronique du foie;97311 - Saint-Laurent-du-Maroni;22,28
+;;;2022;Maladie de Parkinson;97311 - Saint-Laurent-du-Maroni;25,85
+;;;2022;Maladie hypertensive;97311 - Saint-Laurent-du-Maroni;511,87
+;;;2022;Maladies vasculaires cérébrales;97311 - Saint-Laurent-du-Maroni;201,56
+;;;2022;Sida;97311 - Saint-Laurent-du-Maroni;20,58
+;;;2022;Alzheimer;97312 - Sinnamary;0,00
+;;;2022;Asthme;97312 - Sinnamary;0,00
+;;;2022;Cancer de la prostate;97312 - Sinnamary;0,00
+;;;2022;Cancer de la trachée, des bronches et du poumon;97312 - Sinnamary;0,00
+;;;2022;Cancer du côlon-rectum;97312 - Sinnamary;0,00
+;;;2022;Cancer du sein;97312 - Sinnamary;0,00
+;;;2022;Cardiopathies ischémiques;97312 - Sinnamary;0,00
+;;;2022;Chap 10 : Maladies de l'appareil respiratoire;97312 - Sinnamary;0,00
+;;;2022;Diabète;97312 - Sinnamary;156,48
+;;;2022;Maladie chronique du foie;97312 - Sinnamary;0,00
+;;;2022;Maladie de Parkinson;97312 - Sinnamary;0,00
+;;;2022;Maladie hypertensive;97312 - Sinnamary;78,24
+;;;2022;Maladies vasculaires cérébrales;97312 - Sinnamary;156,48
+;;;2022;Sida;97312 - Sinnamary;0,00
+;;;2022;Alzheimer;97313 - Montsinéry-Tonnegrande;0,00
+;;;2022;Asthme;97313 - Montsinéry-Tonnegrande;0,00
+;;;2022;Cancer de la prostate;97313 - Montsinéry-Tonnegrande;0,00
+;;;2022;Cancer de la trachée, des bronches et du poumon;97313 - Montsinéry-Tonnegrande;0,00
+;;;2022;Cancer du côlon-rectum;97313 - Montsinéry-Tonnegrande;0,00
+;;;2022;Cancer du sein;97313 - Montsinéry-Tonnegrande;0,00
+;;;2022;Cardiopathies ischémiques;97313 - Montsinéry-Tonnegrande;0,00
+;;;2022;Chap 10 : Maladies de l'appareil respiratoire;97313 - Montsinéry-Tonnegrande;0,00
+;;;2022;Diabète;97313 - Montsinéry-Tonnegrande;244,61
+;;;2022;Maladie chronique du foie;97313 - Montsinéry-Tonnegrande;244,61
+;;;2022;Maladie de Parkinson;97313 - Montsinéry-Tonnegrande;0,00
+;;;2022;Maladie hypertensive;97313 - Montsinéry-Tonnegrande;244,61
+;;;2022;Maladies vasculaires cérébrales;97313 - Montsinéry-Tonnegrande;82,86
+;;;2022;Sida;97313 - Montsinéry-Tonnegrande;0,00
+;;;2022;Alzheimer;97314 - Ouanary;0,00
+;;;2022;Asthme;97314 - Ouanary;0,00
+;;;2022;Cancer de la prostate;97314 - Ouanary;0,00
+;;;2022;Cancer de la trachée, des bronches et du poumon;97314 - Ouanary;0,00
+;;;2022;Cancer du côlon-rectum;97314 - Ouanary;0,00
+;;;2022;Cancer du sein;97314 - Ouanary;0,00
+;;;2022;Cardiopathies ischémiques;97314 - Ouanary;0,00
+;;;2022;Chap 10 : Maladies de l'appareil respiratoire;97314 - Ouanary;0,00
+;;;2022;Diabète;97314 - Ouanary;0,00
+;;;2022;Maladie chronique du foie;97314 - Ouanary;0,00
+;;;2022;Maladie de Parkinson;97314 - Ouanary;0,00
+;;;2022;Maladie hypertensive;97314 - Ouanary;0,00
+;;;2022;Maladies vasculaires cérébrales;97314 - Ouanary;0,00
+;;;2022;Sida;97314 - Ouanary;0,00
+;;;2022;Alzheimer;97352 - Saül;0,00
+;;;2022;Asthme;97352 - Saül;0,00
+;;;2022;Cancer de la prostate;97352 - Saül;0,00
+;;;2022;Cancer de la trachée, des bronches et du poumon;97352 - Saül;0,00
+;;;2022;Cancer du côlon-rectum;97352 - Saül;0,00
+;;;2022;Cancer du sein;97352 - Saül;0,00
+;;;2022;Cardiopathies ischémiques;97352 - Saül;0,00
+;;;2022;Chap 10 : Maladies de l'appareil respiratoire;97352 - Saül;0,00
+;;;2022;Diabète;97352 - Saül;0,00
+;;;2022;Maladie chronique du foie;97352 - Saül;0,00
+;;;2022;Maladie de Parkinson;97352 - Saül;0,00
+;;;2022;Maladie hypertensive;97352 - Saül;0,00
+;;;2022;Maladies vasculaires cérébrales;97352 - Saül;0,00
+;;;2022;Sida;97352 - Saül;0,00
+;;;2022;Alzheimer;97353 - Maripasoula;0,00
+;;;2022;Asthme;97353 - Maripasoula;0,00
+;;;2022;Cancer de la prostate;97353 - Maripasoula;89,20
+;;;2022;Cancer de la trachée, des bronches et du poumon;97353 - Maripasoula;0,00
+;;;2022;Cancer du côlon-rectum;97353 - Maripasoula;0,00
+;;;2022;Cancer du sein;97353 - Maripasoula;0,00
+;;;2022;Cardiopathies ischémiques;97353 - Maripasoula;0,00
+;;;2022;Chap 10 : Maladies de l'appareil respiratoire;97353 - Maripasoula;543,38
+;;;2022;Diabète;97353 - Maripasoula;72,00
+;;;2022;Maladie chronique du foie;97353 - Maripasoula;0,00
+;;;2022;Maladie de Parkinson;97353 - Maripasoula;0,00
+;;;2022;Maladie hypertensive;97353 - Maripasoula;72,00
+;;;2022;Maladies vasculaires cérébrales;97353 - Maripasoula;327,22
+;;;2022;Sida;97353 - Maripasoula;23,31
+;;;2022;Alzheimer;97357 - Grand-Santi;0,00
+;;;2022;Asthme;97357 - Grand-Santi;0,00
+;;;2022;Cancer de la prostate;97357 - Grand-Santi;0,00
+;;;2022;Cancer de la trachée, des bronches et du poumon;97357 - Grand-Santi;0,00
+;;;2022;Cancer du côlon-rectum;97357 - Grand-Santi;0,00
+;;;2022;Cancer du sein;97357 - Grand-Santi;0,00
+;;;2022;Cardiopathies ischémiques;97357 - Grand-Santi;0,00
+;;;2022;Chap 10 : Maladies de l'appareil respiratoire;97357 - Grand-Santi;0,00
+;;;2022;Diabète;97357 - Grand-Santi;0,00
+;;;2022;Maladie chronique du foie;97357 - Grand-Santi;0,00
+;;;2022;Maladie de Parkinson;97357 - Grand-Santi;0,00
+;;;2022;Maladie hypertensive;97357 - Grand-Santi;93,85
+;;;2022;Maladies vasculaires cérébrales;97357 - Grand-Santi;215,07
+;;;2022;Sida;97357 - Grand-Santi;0,00
+;;;2022;Alzheimer;97358 - Saint-Élie;0,00
+;;;2022;Asthme;97358 - Saint-Élie;0,00
+;;;2022;Cancer de la prostate;97358 - Saint-Élie;0,00
+;;;2022;Cancer de la trachée, des bronches et du poumon;97358 - Saint-Élie;0,00
+;;;2022;Cancer du côlon-rectum;97358 - Saint-Élie;0,00
+;;;2022;Cancer du sein;97358 - Saint-Élie;0,00
+;;;2022;Cardiopathies ischémiques;97358 - Saint-Élie;0,00
+;;;2022;Chap 10 : Maladies de l'appareil respiratoire;97358 - Saint-Élie;0,00
+;;;2022;Diabète;97358 - Saint-Élie;0,00
+;;;2022;Maladie chronique du foie;97358 - Saint-Élie;0,00
+;;;2022;Maladie de Parkinson;97358 - Saint-Élie;0,00
+;;;2022;Maladie hypertensive;97358 - Saint-Élie;0,00
+;;;2022;Maladies vasculaires cérébrales;97358 - Saint-Élie;0,00
+;;;2022;Sida;97358 - Saint-Élie;0,00
+;;;2022;Alzheimer;Auvergne-Rhône-Alpes;105,11
+;;;2022;Asthme;Auvergne-Rhône-Alpes;2,14
+;;;2022;Cancer de la prostate;Auvergne-Rhône-Alpes;45,11
+;;;2022;Cancer de la trachée, des bronches et du poumon;Auvergne-Rhône-Alpes;122,71
+;;;2022;Cancer du côlon-rectum;Auvergne-Rhône-Alpes;66,67
+;;;2022;Cancer du sein;Auvergne-Rhône-Alpes;47,51
+;;;2022;Cardiopathies ischémiques;Auvergne-Rhône-Alpes;121,73
+;;;2022;Chap 10 : Maladies de l'appareil respiratoire;Auvergne-Rhône-Alpes;168,68
+;;;2022;Diabète;Auvergne-Rhône-Alpes;177,65
+;;;2022;Maladie chronique du foie;Auvergne-Rhône-Alpes;48,56
+;;;2022;Maladie de Parkinson;Auvergne-Rhône-Alpes;57,96
+;;;2022;Maladie hypertensive;Auvergne-Rhône-Alpes;253,97
+;;;2022;Maladies vasculaires cérébrales;Auvergne-Rhône-Alpes;123,37
+;;;2022;Sida;Auvergne-Rhône-Alpes;0,52
+;;;2022;Alzheimer;Bourgogne-Franche-Comté;96,62
+;;;2022;Asthme;Bourgogne-Franche-Comté;2,56
+;;;2022;Cancer de la prostate;Bourgogne-Franche-Comté;39,93
+;;;2022;Cancer de la trachée, des bronches et du poumon;Bourgogne-Franche-Comté;142,11
+;;;2022;Cancer du côlon-rectum;Bourgogne-Franche-Comté;69,26
+;;;2022;Cancer du sein;Bourgogne-Franche-Comté;49,23
+;;;2022;Cardiopathies ischémiques;Bourgogne-Franche-Comté;139,28
+;;;2022;Chap 10 : Maladies de l'appareil respiratoire;Bourgogne-Franche-Comté;183,55
+;;;2022;Diabète;Bourgogne-Franche-Comté;210,18
+;;;2022;Maladie chronique du foie;Bourgogne-Franche-Comté;56,68
+;;;2022;Maladie de Parkinson;Bourgogne-Franche-Comté;58,93
+;;;2022;Maladie hypertensive;Bourgogne-Franche-Comté;313,31
+;;;2022;Maladies vasculaires cérébrales;Bourgogne-Franche-Comté;128,81
+;;;2022;Sida;Bourgogne-Franche-Comté;0,52
+;;;2022;Alzheimer;Bretagne;100,40
+;;;2022;Asthme;Bretagne;4,30
+;;;2022;Cancer de la prostate;Bretagne;44,92
+;;;2022;Cancer de la trachée, des bronches et du poumon;Bretagne;144,61
+;;;2022;Cancer du côlon-rectum;Bretagne;79,14
+;;;2022;Cancer du sein;Bretagne;48,85
+;;;2022;Cardiopathies ischémiques;Bretagne;156,24
+;;;2022;Chap 10 : Maladies de l'appareil respiratoire;Bretagne;213,29
+;;;2022;Diabète;Bretagne;137,84
+;;;2022;Maladie chronique du foie;Bretagne;74,89
+;;;2022;Maladie de Parkinson;Bretagne;52,28
+;;;2022;Maladie hypertensive;Bretagne;231,09
+;;;2022;Maladies vasculaires cérébrales;Bretagne;146,13
+;;;2022;Sida;Bretagne;0,16
+;;;2022;Alzheimer;Centre-Val de Loire;107,50
+;;;2022;Asthme;Centre-Val de Loire;2,76
+;;;2022;Cancer de la prostate;Centre-Val de Loire;51,10
+;;;2022;Cancer de la trachée, des bronches et du poumon;Centre-Val de Loire;137,27
+;;;2022;Cancer du côlon-rectum;Centre-Val de Loire;80,45
+;;;2022;Cancer du sein;Centre-Val de Loire;56,02
+;;;2022;Cardiopathies ischémiques;Centre-Val de Loire;156,92
+;;;2022;Chap 10 : Maladies de l'appareil respiratoire;Centre-Val de Loire;180,16
+;;;2022;Diabète;Centre-Val de Loire;204,80
+;;;2022;Maladie chronique du foie;Centre-Val de Loire;56,53
+;;;2022;Maladie de Parkinson;Centre-Val de Loire;51,25
+;;;2022;Maladie hypertensive;Centre-Val de Loire;276,91
+;;;2022;Maladies vasculaires cérébrales;Centre-Val de Loire;135,82
+;;;2022;Sida;Centre-Val de Loire;0,56
+;;;2022;Alzheimer;Corse;89,59
+;;;2022;Asthme;Corse;4,90
+;;;2022;Cancer de la prostate;Corse;32,08
+;;;2022;Cancer de la trachée, des bronches et du poumon;Corse;154,49
+;;;2022;Cancer du côlon-rectum;Corse;52,47
+;;;2022;Cancer du sein;Corse;55,23
+;;;2022;Cardiopathies ischémiques;Corse;126,26
+;;;2022;Chap 10 : Maladies de l'appareil respiratoire;Corse;173,46
+;;;2022;Diabète;Corse;135,95
+;;;2022;Maladie chronique du foie;Corse;38,49
+;;;2022;Maladie de Parkinson;Corse;43,69
+;;;2022;Maladie hypertensive;Corse;172,85
+;;;2022;Maladies vasculaires cérébrales;Corse;116,27
+;;;2022;Sida;Corse;0,00
+;;;2022;Alzheimer;Departements d'outre mer;123,44
+;;;2022;Asthme;Departements d'outre mer;4,29
+;;;2022;Cancer de la prostate;Departements d'outre mer;71,09
+;;;2022;Cancer de la trachée, des bronches et du poumon;Departements d'outre mer;68,33
+;;;2022;Cancer du côlon-rectum;Departements d'outre mer;72,32
+;;;2022;Cancer du sein;Departements d'outre mer;36,78
+;;;2022;Cardiopathies ischémiques;Departements d'outre mer;114,68
+;;;2022;Chap 10 : Maladies de l'appareil respiratoire;Departements d'outre mer;170,94
+;;;2022;Diabète;Departements d'outre mer;358,00
+;;;2022;Maladie chronique du foie;Departements d'outre mer;43,93
+;;;2022;Maladie de Parkinson;Departements d'outre mer;59,17
+;;;2022;Maladie hypertensive;Departements d'outre mer;440,89
+;;;2022;Maladies vasculaires cérébrales;Departements d'outre mer;185,06
+;;;2022;Sida;Departements d'outre mer;3,99
+;;;2022;Alzheimer;France (y compris Mayotte);102,14
+;;;2022;Asthme;France (y compris Mayotte);3,14
+;;;2022;Cancer de la prostate;France (y compris Mayotte);44,24
+;;;2022;Cancer de la trachée, des bronches et du poumon;France (y compris Mayotte);135,10
+;;;2022;Cancer du côlon-rectum;France (y compris Mayotte);72,81
+;;;2022;Cancer du sein;France (y compris Mayotte);51,17
+;;;2022;Cardiopathies ischémiques;France (y compris Mayotte);136,67
+;;;2022;Chap 10 : Maladies de l'appareil respiratoire;France (y compris Mayotte);193,00
+;;;2022;Diabète;France (y compris Mayotte);184,36
+;;;2022;Maladie chronique du foie;France (y compris Mayotte);55,96
+;;;2022;Maladie de Parkinson;France (y compris Mayotte);54,33
+;;;2022;Maladie hypertensive;France (y compris Mayotte);262,30
+;;;2022;Maladies vasculaires cérébrales;France (y compris Mayotte);132,33
+;;;2022;Sida;France (y compris Mayotte);0,95
+;;;2022;Alzheimer;France métropolitaine;101,65
+;;;2022;Asthme;France métropolitaine;3,09
+;;;2022;Cancer de la prostate;France métropolitaine;43,60
+;;;2022;Cancer de la trachée, des bronches et du poumon;France métropolitaine;136,51
+;;;2022;Cancer du côlon-rectum;France métropolitaine;72,60
+;;;2022;Cancer du sein;France métropolitaine;51,30
+;;;2022;Cardiopathies ischémiques;France métropolitaine;136,14
+;;;2022;Chap 10 : Maladies de l'appareil respiratoire;France métropolitaine;193,10
+;;;2022;Diabète;France métropolitaine;180,29
+;;;2022;Maladie chronique du foie;France métropolitaine;56,03
+;;;2022;Maladie de Parkinson;France métropolitaine;54,16
+;;;2022;Maladie hypertensive;France métropolitaine;257,87
+;;;2022;Maladies vasculaires cérébrales;France métropolitaine;130,67
+;;;2022;Sida;France métropolitaine;0,84
+;;;2022;Alzheimer;Grand Est;103,30
+;;;2022;Asthme;Grand Est;2,68
+;;;2022;Cancer de la prostate;Grand Est;43,49
+;;;2022;Cancer de la trachée, des bronches et du poumon;Grand Est;149,60
+;;;2022;Cancer du côlon-rectum;Grand Est;73,89
+;;;2022;Cancer du sein;Grand Est;53,38
+;;;2022;Cardiopathies ischémiques;Grand Est;147,54
+;;;2022;Chap 10 : Maladies de l'appareil respiratoire;Grand Est;219,40
+;;;2022;Diabète;Grand Est;234,10
+;;;2022;Maladie chronique du foie;Grand Est;57,40
+;;;2022;Maladie de Parkinson;Grand Est;53,80
+;;;2022;Maladie hypertensive;Grand Est;346,34
+;;;2022;Maladies vasculaires cérébrales;Grand Est;135,04
+;;;2022;Sida;Grand Est;0,94
+;;;2022;Alzheimer;Guadeloupe;134,42
+;;;2022;Asthme;Guadeloupe;3,62
+;;;2022;Cancer de la prostate;Guadeloupe;91,57
+;;;2022;Cancer de la trachée, des bronches et du poumon;Guadeloupe;50,73
+;;;2022;Cancer du côlon-rectum;Guadeloupe;79,91
+;;;2022;Cancer du sein;Guadeloupe;47,80
+;;;2022;Cardiopathies ischémiques;Guadeloupe;75,74
+;;;2022;Chap 10 : Maladies de l'appareil respiratoire;Guadeloupe;118,09
+;;;2022;Diabète;Guadeloupe;352,32
+;;;2022;Maladie chronique du foie;Guadeloupe;38,37
+;;;2022;Maladie de Parkinson;Guadeloupe;75,84
+;;;2022;Maladie hypertensive;Guadeloupe;448,91
+;;;2022;Maladies vasculaires cérébrales;Guadeloupe;182,95
+;;;2022;Sida;Guadeloupe;7,86
+;;;2022;Alzheimer;Guyane;34,68
+;;;2022;Asthme;Guyane;0,00
+;;;2022;Cancer de la prostate;Guyane;94,19
+;;;2022;Cancer de la trachée, des bronches et du poumon;Guyane;79,85
+;;;2022;Cancer du côlon-rectum;Guyane;43,70
+;;;2022;Cancer du sein;Guyane;31,73
+;;;2022;Cardiopathies ischémiques;Guyane;77,80
+;;;2022;Chap 10 : Maladies de l'appareil respiratoire;Guyane;206,77
+;;;2022;Diabète;Guyane;353,00
+;;;2022;Maladie chronique du foie;Guyane;35,29
+;;;2022;Maladie de Parkinson;Guyane;56,95
+;;;2022;Maladie hypertensive;Guyane;406,85
+;;;2022;Maladies vasculaires cérébrales;Guyane;236,58
+;;;2022;Sida;Guyane;14,31
+;;;2022;Alzheimer;Hauts-de-France;110,92
+;;;2022;Asthme;Hauts-de-France;4,16
+;;;2022;Cancer de la prostate;Hauts-de-France;47,45
+;;;2022;Cancer de la trachée, des bronches et du poumon;Hauts-de-France;149,14
+;;;2022;Cancer du côlon-rectum;Hauts-de-France;87,71
+;;;2022;Cancer du sein;Hauts-de-France;61,39
+;;;2022;Cardiopathies ischémiques;Hauts-de-France;155,58
+;;;2022;Chap 10 : Maladies de l'appareil respiratoire;Hauts-de-France;250,12
+;;;2022;Diabète;Hauts-de-France;237,49
+;;;2022;Maladie chronique du foie;Hauts-de-France;92,45
+;;;2022;Maladie de Parkinson;Hauts-de-France;60,49
+;;;2022;Maladie hypertensive;Hauts-de-France;317,02
+;;;2022;Maladies vasculaires cérébrales;Hauts-de-France;143,90
+;;;2022;Sida;Hauts-de-France;0,82
+;;;2022;Alzheimer;Martinique;150,72
+;;;2022;Asthme;Martinique;2,97
+;;;2022;Cancer de la prostate;Martinique;89,46
+;;;2022;Cancer de la trachée, des bronches et du poumon;Martinique;56,28
+;;;2022;Cancer du côlon-rectum;Martinique;71,91
+;;;2022;Cancer du sein;Martinique;36,52
+;;;2022;Cardiopathies ischémiques;Martinique;75,47
+;;;2022;Chap 10 : Maladies de l'appareil respiratoire;Martinique;138,46
+;;;2022;Diabète;Martinique;338,85
+;;;2022;Maladie chronique du foie;Martinique;22,99
+;;;2022;Maladie de Parkinson;Martinique;52,45
+;;;2022;Maladie hypertensive;Martinique;468,69
+;;;2022;Maladies vasculaires cérébrales;Martinique;174,51
+;;;2022;Sida;Martinique;2,41
+;;;2022;Alzheimer;Normandie;113,59
+;;;2022;Asthme;Normandie;3,15
+;;;2022;Cancer de la prostate;Normandie;49,54
+;;;2022;Cancer de la trachée, des bronches et du poumon;Normandie;145,17
+;;;2022;Cancer du côlon-rectum;Normandie;80,37
+;;;2022;Cancer du sein;Normandie;62,34
+;;;2022;Cardiopathies ischémiques;Normandie;167,86
+;;;2022;Chap 10 : Maladies de l'appareil respiratoire;Normandie;206,23
+;;;2022;Diabète;Normandie;187,10
+;;;2022;Maladie chronique du foie;Normandie;74,34
+;;;2022;Maladie de Parkinson;Normandie;50,63
+;;;2022;Maladie hypertensive;Normandie;284,30
+;;;2022;Maladies vasculaires cérébrales;Normandie;143,79
+;;;2022;Sida;Normandie;0,77
+;;;2022;Alzheimer;Nouvelle-Aquitaine;93,22
+;;;2022;Asthme;Nouvelle-Aquitaine;2,87
+;;;2022;Cancer de la prostate;Nouvelle-Aquitaine;43,96
+;;;2022;Cancer de la trachée, des bronches et du poumon;Nouvelle-Aquitaine;143,79
+;;;2022;Cancer du côlon-rectum;Nouvelle-Aquitaine;73,97
+;;;2022;Cancer du sein;Nouvelle-Aquitaine;50,20
+;;;2022;Cardiopathies ischémiques;Nouvelle-Aquitaine;135,92
+;;;2022;Chap 10 : Maladies de l'appareil respiratoire;Nouvelle-Aquitaine;185,81
+;;;2022;Diabète;Nouvelle-Aquitaine;164,68
+;;;2022;Maladie chronique du foie;Nouvelle-Aquitaine;49,61
+;;;2022;Maladie de Parkinson;Nouvelle-Aquitaine;55,23
+;;;2022;Maladie hypertensive;Nouvelle-Aquitaine;227,84
+;;;2022;Maladies vasculaires cérébrales;Nouvelle-Aquitaine;137,80
+;;;2022;Sida;Nouvelle-Aquitaine;1,37
+;;;2022;Alzheimer;Occitanie;124,48
+;;;2022;Asthme;Occitanie;2,08
+;;;2022;Cancer de la prostate;Occitanie;41,02
+;;;2022;Cancer de la trachée, des bronches et du poumon;Occitanie;145,27
+;;;2022;Cancer du côlon-rectum;Occitanie;75,73
+;;;2022;Cancer du sein;Occitanie;48,05
+;;;2022;Cardiopathies ischémiques;Occitanie;139,12
+;;;2022;Chap 10 : Maladies de l'appareil respiratoire;Occitanie;180,24
+;;;2022;Diabète;Occitanie;170,33
+;;;2022;Maladie chronique du foie;Occitanie;46,59
+;;;2022;Maladie de Parkinson;Occitanie;52,80
+;;;2022;Maladie hypertensive;Occitanie;221,68
+;;;2022;Maladies vasculaires cérébrales;Occitanie;130,17
+;;;2022;Sida;Occitanie;0,38
+;;;2022;Alzheimer;Pays de la Loire;91,99
+;;;2022;Asthme;Pays de la Loire;3,21
+;;;2022;Cancer de la prostate;Pays de la Loire;46,65
+;;;2022;Cancer de la trachée, des bronches et du poumon;Pays de la Loire;129,76
+;;;2022;Cancer du côlon-rectum;Pays de la Loire;73,81
+;;;2022;Cancer du sein;Pays de la Loire;51,48
+;;;2022;Cardiopathies ischémiques;Pays de la Loire;134,05
+;;;2022;Chap 10 : Maladies de l'appareil respiratoire;Pays de la Loire;185,68
+;;;2022;Diabète;Pays de la Loire;148,26
+;;;2022;Maladie chronique du foie;Pays de la Loire;63,26
+;;;2022;Maladie de Parkinson;Pays de la Loire;57,15
+;;;2022;Maladie hypertensive;Pays de la Loire;217,52
+;;;2022;Maladies vasculaires cérébrales;Pays de la Loire;143,38
+;;;2022;Sida;Pays de la Loire;0,52
+;;;2022;Alzheimer;Provence-Alpes-Côte d'Azur;93,48
+;;;2022;Asthme;Provence-Alpes-Côte d'Azur;2,59
+;;;2022;Cancer de la prostate;Provence-Alpes-Côte d'Azur;38,37
+;;;2022;Cancer de la trachée, des bronches et du poumon;Provence-Alpes-Côte d'Azur;137,41
+;;;2022;Cancer du côlon-rectum;Provence-Alpes-Côte d'Azur;62,37
+;;;2022;Cancer du sein;Provence-Alpes-Côte d'Azur;44,91
+;;;2022;Cardiopathies ischémiques;Provence-Alpes-Côte d'Azur;117,66
+;;;2022;Chap 10 : Maladies de l'appareil respiratoire;Provence-Alpes-Côte d'Azur;190,42
+;;;2022;Diabète;Provence-Alpes-Côte d'Azur;159,47
+;;;2022;Maladie chronique du foie;Provence-Alpes-Côte d'Azur;45,67
+;;;2022;Maladie de Parkinson;Provence-Alpes-Côte d'Azur;54,77
+;;;2022;Maladie hypertensive;Provence-Alpes-Côte d'Azur;218,86
+;;;2022;Maladies vasculaires cérébrales;Provence-Alpes-Côte d'Azur;122,65
+;;;2022;Sida;Provence-Alpes-Côte d'Azur;1,00
+;;;2022;Alzheimer;Réunion;106,37
+;;;2022;Asthme;Réunion;6,30
+;;;2022;Cancer de la prostate;Réunion;39,78
+;;;2022;Cancer de la trachée, des bronches et du poumon;Réunion;87,45
+;;;2022;Cancer du côlon-rectum;Réunion;71,57
+;;;2022;Cancer du sein;Réunion;33,42
+;;;2022;Cardiopathies ischémiques;Réunion;175,37
+;;;2022;Chap 10 : Maladies de l'appareil respiratoire;Réunion;227,96
+;;;2022;Diabète;Réunion;374,55
+;;;2022;Maladie chronique du foie;Réunion;59,19
+;;;2022;Maladie de Parkinson;Réunion;52,03
+;;;2022;Maladie hypertensive;Réunion;415,19
+;;;2022;Maladies vasculaires cérébrales;Réunion;185,32
+;;;2022;Sida;Réunion;0,00
+;;;2022;Alzheimer;Île-de-France;87,71
+;;;2022;Asthme;Île-de-France;4,35
+;;;2022;Cancer de la prostate;Île-de-France;40,66
+;;;2022;Cancer de la trachée, des bronches et du poumon;Île-de-France;117,14
+;;;2022;Cancer du côlon-rectum;Île-de-France;64,77
+;;;2022;Cancer du sein;Île-de-France;50,48
+;;;2022;Cardiopathies ischémiques;Île-de-France;113,93
+;;;2022;Chap 10 : Maladies de l'appareil respiratoire;Île-de-France;181,38
+;;;2022;Diabète;Île-de-France;162,02
+;;;2022;Maladie chronique du foie;Île-de-France;41,84
+;;;2022;Maladie de Parkinson;Île-de-France;47,62
+;;;2022;Maladie hypertensive;Île-de-France;246,32
+;;;2022;Maladies vasculaires cérébrales;Île-de-France;108,81
+;;;2022;Sida;Île-de-France;1,44
+;;;2023;Alzheimer;97301 - Régina;0,00
+;;;2023;Asthme;97301 - Régina;0,00
+;;;2023;Cancer de la prostate;97301 - Régina;0,00
+;;;2023;Cancer de la trachée, des bronches et du poumon;97301 - Régina;0,00
+;;;2023;Cancer du côlon-rectum;97301 - Régina;0,00
+;;;2023;Cancer du sein;97301 - Régina;0,00
+;;;2023;Cardiopathies ischémiques;97301 - Régina;0,00
+;;;2023;Chap 10 : Maladies de l'appareil respiratoire;97301 - Régina;0,00
+;;;2023;Diabète;97301 - Régina;0,00
+;;;2023;Maladie chronique du foie;97301 - Régina;0,00
+;;;2023;Maladie de Parkinson;97301 - Régina;0,00
+;;;2023;Maladie hypertensive;97301 - Régina;0,00
+;;;2023;Maladies vasculaires cérébrales;97301 - Régina;0,00
+;;;2023;Sida;97301 - Régina;0,00
+;;;2023;Alzheimer;97302 - Cayenne;88,25
+;;;2023;Asthme;97302 - Cayenne;0,00
+;;;2023;Cancer de la prostate;97302 - Cayenne;89,60
+;;;2023;Cancer de la trachée, des bronches et du poumon;97302 - Cayenne;57,26
+;;;2023;Cancer du côlon-rectum;97302 - Cayenne;22,85
+;;;2023;Cancer du sein;97302 - Cayenne;45,75
+;;;2023;Cardiopathies ischémiques;97302 - Cayenne;101,86
+;;;2023;Chap 10 : Maladies de l'appareil respiratoire;97302 - Cayenne;227,97
+;;;2023;Diabète;97302 - Cayenne;369,96
+;;;2023;Maladie chronique du foie;97302 - Cayenne;60,74
+;;;2023;Maladie de Parkinson;97302 - Cayenne;54,36
+;;;2023;Maladie hypertensive;97302 - Cayenne;556,13
+;;;2023;Maladies vasculaires cérébrales;97302 - Cayenne;282,14
+;;;2023;Sida;97302 - Cayenne;18,80
+;;;2023;Alzheimer;97303 - Iracoubo;0,00
+;;;2023;Asthme;97303 - Iracoubo;0,00
+;;;2023;Cancer de la prostate;97303 - Iracoubo;0,00
+;;;2023;Cancer de la trachée, des bronches et du poumon;97303 - Iracoubo;0,00
+;;;2023;Cancer du côlon-rectum;97303 - Iracoubo;0,00
+;;;2023;Cancer du sein;97303 - Iracoubo;0,00
+;;;2023;Cardiopathies ischémiques;97303 - Iracoubo;179,08
+;;;2023;Chap 10 : Maladies de l'appareil respiratoire;97303 - Iracoubo;179,08
+;;;2023;Diabète;97303 - Iracoubo;0,00
+;;;2023;Maladie chronique du foie;97303 - Iracoubo;0,00
+;;;2023;Maladie de Parkinson;97303 - Iracoubo;0,00
+;;;2023;Maladie hypertensive;97303 - Iracoubo;0,00
+;;;2023;Maladies vasculaires cérébrales;97303 - Iracoubo;0,00
+;;;2023;Sida;97303 - Iracoubo;0,00
+;;;2023;Alzheimer;97304 - Kourou;0,00
+;;;2023;Asthme;97304 - Kourou;12,17
+;;;2023;Cancer de la prostate;97304 - Kourou;117,01
+;;;2023;Cancer de la trachée, des bronches et du poumon;97304 - Kourou;26,40
+;;;2023;Cancer du côlon-rectum;97304 - Kourou;12,17
+;;;2023;Cancer du sein;97304 - Kourou;0,00
+;;;2023;Cardiopathies ischémiques;97304 - Kourou;0,00
+;;;2023;Chap 10 : Maladies de l'appareil respiratoire;97304 - Kourou;38,56
+;;;2023;Diabète;97304 - Kourou;147,98
+;;;2023;Maladie chronique du foie;97304 - Kourou;59,42
+;;;2023;Maladie de Parkinson;97304 - Kourou;74,31
+;;;2023;Maladie hypertensive;97304 - Kourou;330,66
+;;;2023;Maladies vasculaires cérébrales;97304 - Kourou;279,30
+;;;2023;Sida;97304 - Kourou;23,32
+;;;2023;Alzheimer;97305 - Macouria;96,33
+;;;2023;Asthme;97305 - Macouria;0,00
+;;;2023;Cancer de la prostate;97305 - Macouria;0,00
+;;;2023;Cancer de la trachée, des bronches et du poumon;97305 - Macouria;163,44
+;;;2023;Cancer du côlon-rectum;97305 - Macouria;96,33
+;;;2023;Cancer du sein;97305 - Macouria;0,00
+;;;2023;Cardiopathies ischémiques;97305 - Macouria;37,70
+;;;2023;Chap 10 : Maladies de l'appareil respiratoire;97305 - Macouria;140,96
+;;;2023;Diabète;97305 - Macouria;163,44
+;;;2023;Maladie chronique du foie;97305 - Macouria;0,00
+;;;2023;Maladie de Parkinson;97305 - Macouria;0,00
+;;;2023;Maladie hypertensive;97305 - Macouria;151,87
+;;;2023;Maladies vasculaires cérébrales;97305 - Macouria;143,59
+;;;2023;Sida;97305 - Macouria;26,57
+;;;2023;Alzheimer;97306 - Mana;165,60
+;;;2023;Asthme;97306 - Mana;0,00
+;;;2023;Cancer de la prostate;97306 - Mana;160,82
+;;;2023;Cancer de la trachée, des bronches et du poumon;97306 - Mana;0,00
+;;;2023;Cancer du côlon-rectum;97306 - Mana;0,00
+;;;2023;Cancer du sein;97306 - Mana;59,35
+;;;2023;Cardiopathies ischémiques;97306 - Mana;56,36
+;;;2023;Chap 10 : Maladies de l'appareil respiratoire;97306 - Mana;29,94
+;;;2023;Diabète;97306 - Mana;220,82
+;;;2023;Maladie chronique du foie;97306 - Mana;138,21
+;;;2023;Maladie de Parkinson;97306 - Mana;160,82
+;;;2023;Maladie hypertensive;97306 - Mana;354,75
+;;;2023;Maladies vasculaires cérébrales;97306 - Mana;185,12
+;;;2023;Sida;97306 - Mana;0,00
+;;;2023;Alzheimer;97307 - Matoury;51,58
+;;;2023;Asthme;97307 - Matoury;51,58
+;;;2023;Cancer de la prostate;97307 - Matoury;30,41
+;;;2023;Cancer de la trachée, des bronches et du poumon;97307 - Matoury;30,19
+;;;2023;Cancer du côlon-rectum;97307 - Matoury;77,80
+;;;2023;Cancer du sein;97307 - Matoury;66,05
+;;;2023;Cardiopathies ischémiques;97307 - Matoury;0,00
+;;;2023;Chap 10 : Maladies de l'appareil respiratoire;97307 - Matoury;341,13
+;;;2023;Diabète;97307 - Matoury;278,89
+;;;2023;Maladie chronique du foie;97307 - Matoury;53,02
+;;;2023;Maladie de Parkinson;97307 - Matoury;73,19
+;;;2023;Maladie hypertensive;97307 - Matoury;468,03
+;;;2023;Maladies vasculaires cérébrales;97307 - Matoury;441,14
+;;;2023;Sida;97307 - Matoury;15,20
+;;;2023;Alzheimer;97308 - Saint-Georges;0,00
+;;;2023;Asthme;97308 - Saint-Georges;0,00
+;;;2023;Cancer de la prostate;97308 - Saint-Georges;0,00
+;;;2023;Cancer de la trachée, des bronches et du poumon;97308 - Saint-Georges;0,00
+;;;2023;Cancer du côlon-rectum;97308 - Saint-Georges;25,47
+;;;2023;Cancer du sein;97308 - Saint-Georges;0,00
+;;;2023;Cardiopathies ischémiques;97308 - Saint-Georges;0,00
+;;;2023;Chap 10 : Maladies de l'appareil respiratoire;97308 - Saint-Georges;0,00
+;;;2023;Diabète;97308 - Saint-Georges;0,00
+;;;2023;Maladie chronique du foie;97308 - Saint-Georges;0,00
+;;;2023;Maladie de Parkinson;97308 - Saint-Georges;0,00
+;;;2023;Maladie hypertensive;97308 - Saint-Georges;427,13
+;;;2023;Maladies vasculaires cérébrales;97308 - Saint-Georges;427,13
+;;;2023;Sida;97308 - Saint-Georges;106,64
+;;;2023;Alzheimer;97309 - Remire-Montjoly;56,37
+;;;2023;Asthme;97309 - Remire-Montjoly;26,46
+;;;2023;Cancer de la prostate;97309 - Remire-Montjoly;36,81
+;;;2023;Cancer de la trachée, des bronches et du poumon;97309 - Remire-Montjoly;0,00
+;;;2023;Cancer du côlon-rectum;97309 - Remire-Montjoly;46,05
+;;;2023;Cancer du sein;97309 - Remire-Montjoly;32,23
+;;;2023;Cardiopathies ischémiques;97309 - Remire-Montjoly;75,23
+;;;2023;Chap 10 : Maladies de l'appareil respiratoire;97309 - Remire-Montjoly;199,71
+;;;2023;Diabète;97309 - Remire-Montjoly;186,37
+;;;2023;Maladie chronique du foie;97309 - Remire-Montjoly;10,16
+;;;2023;Maladie de Parkinson;97309 - Remire-Montjoly;26,46
+;;;2023;Maladie hypertensive;97309 - Remire-Montjoly;323,01
+;;;2023;Maladies vasculaires cérébrales;97309 - Remire-Montjoly;78,95
+;;;2023;Sida;97309 - Remire-Montjoly;0,00
+;;;2023;Alzheimer;97310 - Roura;0,00
+;;;2023;Asthme;97310 - Roura;0,00
+;;;2023;Cancer de la prostate;97310 - Roura;0,00
+;;;2023;Cancer de la trachée, des bronches et du poumon;97310 - Roura;45,98
+;;;2023;Cancer du côlon-rectum;97310 - Roura;0,00
+;;;2023;Cancer du sein;97310 - Roura;0,00
+;;;2023;Cardiopathies ischémiques;97310 - Roura;0,00
+;;;2023;Chap 10 : Maladies de l'appareil respiratoire;97310 - Roura;116,73
+;;;2023;Diabète;97310 - Roura;116,73
+;;;2023;Maladie chronique du foie;97310 - Roura;0,00
+;;;2023;Maladie de Parkinson;97310 - Roura;0,00
+;;;2023;Maladie hypertensive;97310 - Roura;116,73
+;;;2023;Maladies vasculaires cérébrales;97310 - Roura;0,00
+;;;2023;Sida;97310 - Roura;0,00
+;;;2023;Alzheimer;97311 - Saint-Laurent-du-Maroni;0,00
+;;;2023;Asthme;97311 - Saint-Laurent-du-Maroni;0,00
+;;;2023;Cancer de la prostate;97311 - Saint-Laurent-du-Maroni;119,08
+;;;2023;Cancer de la trachée, des bronches et du poumon;97311 - Saint-Laurent-du-Maroni;30,47
+;;;2023;Cancer du côlon-rectum;97311 - Saint-Laurent-du-Maroni;0,00
+;;;2023;Cancer du sein;97311 - Saint-Laurent-du-Maroni;22,34
+;;;2023;Cardiopathies ischémiques;97311 - Saint-Laurent-du-Maroni;31,02
+;;;2023;Chap 10 : Maladies de l'appareil respiratoire;97311 - Saint-Laurent-du-Maroni;139,34
+;;;2023;Diabète;97311 - Saint-Laurent-du-Maroni;262,54
+;;;2023;Maladie chronique du foie;97311 - Saint-Laurent-du-Maroni;59,36
+;;;2023;Maladie de Parkinson;97311 - Saint-Laurent-du-Maroni;0,00
+;;;2023;Maladie hypertensive;97311 - Saint-Laurent-du-Maroni;412,74
+;;;2023;Maladies vasculaires cérébrales;97311 - Saint-Laurent-du-Maroni;253,46
+;;;2023;Sida;97311 - Saint-Laurent-du-Maroni;22,89
+;;;2023;Alzheimer;97312 - Sinnamary;218,20
+;;;2023;Asthme;97312 - Sinnamary;0,00
+;;;2023;Cancer de la prostate;97312 - Sinnamary;0,00
+;;;2023;Cancer de la trachée, des bronches et du poumon;97312 - Sinnamary;0,00
+;;;2023;Cancer du côlon-rectum;97312 - Sinnamary;0,00
+;;;2023;Cancer du sein;97312 - Sinnamary;152,70
+;;;2023;Cardiopathies ischémiques;97312 - Sinnamary;0,00
+;;;2023;Chap 10 : Maladies de l'appareil respiratoire;97312 - Sinnamary;157,84
+;;;2023;Diabète;97312 - Sinnamary;255,65
+;;;2023;Maladie chronique du foie;97312 - Sinnamary;0,00
+;;;2023;Maladie de Parkinson;97312 - Sinnamary;0,00
+;;;2023;Maladie hypertensive;97312 - Sinnamary;719,54
+;;;2023;Maladies vasculaires cérébrales;97312 - Sinnamary;279,29
+;;;2023;Sida;97312 - Sinnamary;0,00
+;;;2023;Alzheimer;97313 - Montsinéry-Tonnegrande;0,00
+;;;2023;Asthme;97313 - Montsinéry-Tonnegrande;84,05
+;;;2023;Cancer de la prostate;97313 - Montsinéry-Tonnegrande;244,61
+;;;2023;Cancer de la trachée, des bronches et du poumon;97313 - Montsinéry-Tonnegrande;0,00
+;;;2023;Cancer du côlon-rectum;97313 - Montsinéry-Tonnegrande;0,00
+;;;2023;Cancer du sein;97313 - Montsinéry-Tonnegrande;29,44
+;;;2023;Cardiopathies ischémiques;97313 - Montsinéry-Tonnegrande;0,00
+;;;2023;Chap 10 : Maladies de l'appareil respiratoire;97313 - Montsinéry-Tonnegrande;84,05
+;;;2023;Diabète;97313 - Montsinéry-Tonnegrande;0,00
+;;;2023;Maladie chronique du foie;97313 - Montsinéry-Tonnegrande;0,00
+;;;2023;Maladie de Parkinson;97313 - Montsinéry-Tonnegrande;0,00
+;;;2023;Maladie hypertensive;97313 - Montsinéry-Tonnegrande;0,00
+;;;2023;Maladies vasculaires cérébrales;97313 - Montsinéry-Tonnegrande;283,41
+;;;2023;Sida;97313 - Montsinéry-Tonnegrande;0,00
+;;;2023;Alzheimer;97314 - Ouanary;0,00
+;;;2023;Asthme;97314 - Ouanary;0,00
+;;;2023;Cancer de la prostate;97314 - Ouanary;0,00
+;;;2023;Cancer de la trachée, des bronches et du poumon;97314 - Ouanary;0,00
+;;;2023;Cancer du côlon-rectum;97314 - Ouanary;0,00
+;;;2023;Cancer du sein;97314 - Ouanary;0,00
+;;;2023;Cardiopathies ischémiques;97314 - Ouanary;0,00
+;;;2023;Chap 10 : Maladies de l'appareil respiratoire;97314 - Ouanary;0,00
+;;;2023;Diabète;97314 - Ouanary;0,00
+;;;2023;Maladie chronique du foie;97314 - Ouanary;0,00
+;;;2023;Maladie de Parkinson;97314 - Ouanary;0,00
+;;;2023;Maladie hypertensive;97314 - Ouanary;0,00
+;;;2023;Maladies vasculaires cérébrales;97314 - Ouanary;0,00
+;;;2023;Sida;97314 - Ouanary;0,00
+;;;2023;Alzheimer;97352 - Saül;0,00
+;;;2023;Asthme;97352 - Saül;0,00
+;;;2023;Cancer de la prostate;97352 - Saül;0,00
+;;;2023;Cancer de la trachée, des bronches et du poumon;97352 - Saül;0,00
+;;;2023;Cancer du côlon-rectum;97352 - Saül;0,00
+;;;2023;Cancer du sein;97352 - Saül;0,00
+;;;2023;Cardiopathies ischémiques;97352 - Saül;0,00
+;;;2023;Chap 10 : Maladies de l'appareil respiratoire;97352 - Saül;0,00
+;;;2023;Diabète;97352 - Saül;0,00
+;;;2023;Maladie chronique du foie;97352 - Saül;0,00
+;;;2023;Maladie de Parkinson;97352 - Saül;0,00
+;;;2023;Maladie hypertensive;97352 - Saül;0,00
+;;;2023;Maladies vasculaires cérébrales;97352 - Saül;0,00
+;;;2023;Sida;97352 - Saül;0,00
+;;;2023;Alzheimer;97353 - Maripasoula;0,00
+;;;2023;Asthme;97353 - Maripasoula;0,00
+;;;2023;Cancer de la prostate;97353 - Maripasoula;0,00
+;;;2023;Cancer de la trachée, des bronches et du poumon;97353 - Maripasoula;397,79
+;;;2023;Cancer du côlon-rectum;97353 - Maripasoula;0,00
+;;;2023;Cancer du sein;97353 - Maripasoula;0,00
+;;;2023;Cardiopathies ischémiques;97353 - Maripasoula;89,20
+;;;2023;Chap 10 : Maladies de l'appareil respiratoire;97353 - Maripasoula;0,00
+;;;2023;Diabète;97353 - Maripasoula;0,00
+;;;2023;Maladie chronique du foie;97353 - Maripasoula;0,00
+;;;2023;Maladie de Parkinson;97353 - Maripasoula;0,00
+;;;2023;Maladie hypertensive;97353 - Maripasoula;23,17
+;;;2023;Maladies vasculaires cérébrales;97353 - Maripasoula;69,50
+;;;2023;Sida;97353 - Maripasoula;0,00
+;;;2023;Alzheimer;97357 - Grand-Santi;0,00
+;;;2023;Asthme;97357 - Grand-Santi;0,00
+;;;2023;Cancer de la prostate;97357 - Grand-Santi;0,00
+;;;2023;Cancer de la trachée, des bronches et du poumon;97357 - Grand-Santi;0,00
+;;;2023;Cancer du côlon-rectum;97357 - Grand-Santi;0,00
+;;;2023;Cancer du sein;97357 - Grand-Santi;0,00
+;;;2023;Cardiopathies ischémiques;97357 - Grand-Santi;0,00
+;;;2023;Chap 10 : Maladies de l'appareil respiratoire;97357 - Grand-Santi;0,00
+;;;2023;Diabète;97357 - Grand-Santi;0,00
+;;;2023;Maladie chronique du foie;97357 - Grand-Santi;0,00
+;;;2023;Maladie de Parkinson;97357 - Grand-Santi;0,00
+;;;2023;Maladie hypertensive;97357 - Grand-Santi;32,54
+;;;2023;Maladies vasculaires cérébrales;97357 - Grand-Santi;32,54
+;;;2023;Sida;97357 - Grand-Santi;0,00
+;;;2023;Alzheimer;97358 - Saint-Élie;0,00
+;;;2023;Asthme;97358 - Saint-Élie;0,00
+;;;2023;Cancer de la prostate;97358 - Saint-Élie;0,00
+;;;2023;Cancer de la trachée, des bronches et du poumon;97358 - Saint-Élie;0,00
+;;;2023;Cancer du côlon-rectum;97358 - Saint-Élie;0,00
+;;;2023;Cancer du sein;97358 - Saint-Élie;0,00
+;;;2023;Cardiopathies ischémiques;97358 - Saint-Élie;0,00
+;;;2023;Chap 10 : Maladies de l'appareil respiratoire;97358 - Saint-Élie;0,00
+;;;2023;Diabète;97358 - Saint-Élie;0,00
+;;;2023;Maladie chronique du foie;97358 - Saint-Élie;0,00
+;;;2023;Maladie de Parkinson;97358 - Saint-Élie;0,00
+;;;2023;Maladie hypertensive;97358 - Saint-Élie;0,00
+;;;2023;Maladies vasculaires cérébrales;97358 - Saint-Élie;0,00
+;;;2023;Sida;97358 - Saint-Élie;0,00
+;;;2023;Alzheimer;97360 - Apatou;0,00
+;;;2023;Asthme;97360 - Apatou;0,00
+;;;2023;Cancer de la prostate;97360 - Apatou;0,00
+;;;2023;Cancer de la trachée, des bronches et du poumon;97360 - Apatou;0,00
+;;;2023;Cancer du côlon-rectum;97360 - Apatou;0,00
+;;;2023;Cancer du sein;97360 - Apatou;0,00
+;;;2023;Cardiopathies ischémiques;97360 - Apatou;0,00
+;;;2023;Chap 10 : Maladies de l'appareil respiratoire;97360 - Apatou;23,45
+;;;2023;Diabète;97360 - Apatou;0,00
+;;;2023;Maladie chronique du foie;97360 - Apatou;0,00
+;;;2023;Maladie de Parkinson;97360 - Apatou;0,00
+;;;2023;Maladie hypertensive;97360 - Apatou;0,00
+;;;2023;Maladies vasculaires cérébrales;97360 - Apatou;34,88
+;;;2023;Sida;97360 - Apatou;0,00
+;;;2023;Alzheimer;97361 - Awala-Yalimapo;0,00
+;;;2023;Asthme;97361 - Awala-Yalimapo;0,00
+;;;2023;Cancer de la prostate;97361 - Awala-Yalimapo;0,00
+;;;2023;Cancer de la trachée, des bronches et du poumon;97361 - Awala-Yalimapo;0,00
+;;;2023;Cancer du côlon-rectum;97361 - Awala-Yalimapo;0,00
+;;;2023;Cancer du sein;97361 - Awala-Yalimapo;114,13
+;;;2023;Cardiopathies ischémiques;97361 - Awala-Yalimapo;160,42
+;;;2023;Chap 10 : Maladies de l'appareil respiratoire;97361 - Awala-Yalimapo;291,01
+;;;2023;Diabète;97361 - Awala-Yalimapo;160,42
+;;;2023;Maladie chronique du foie;97361 - Awala-Yalimapo;291,01
+;;;2023;Maladie de Parkinson;97361 - Awala-Yalimapo;0,00
+;;;2023;Maladie hypertensive;97361 - Awala-Yalimapo;274,55
+;;;2023;Maladies vasculaires cérébrales;97361 - Awala-Yalimapo;0,00
+;;;2023;Sida;97361 - Awala-Yalimapo;0,00
+;;;2023;Alzheimer;Auvergne-Rhône-Alpes;96,13
+;;;2023;Asthme;Auvergne-Rhône-Alpes;2,18
+;;;2023;Cancer de la prostate;Auvergne-Rhône-Alpes;39,65
+;;;2023;Cancer de la trachée, des bronches et du poumon;Auvergne-Rhône-Alpes;128,32
+;;;2023;Cancer du côlon-rectum;Auvergne-Rhône-Alpes;65,65
+;;;2023;Cancer du sein;Auvergne-Rhône-Alpes;46,78
+;;;2023;Cardiopathies ischémiques;Auvergne-Rhône-Alpes;118,34
+;;;2023;Chap 10 : Maladies de l'appareil respiratoire;Auvergne-Rhône-Alpes;186,89
+;;;2023;Diabète;Auvergne-Rhône-Alpes;160,04
+;;;2023;Maladie chronique du foie;Auvergne-Rhône-Alpes;47,12
+;;;2023;Maladie de Parkinson;Auvergne-Rhône-Alpes;52,22
+;;;2023;Maladie hypertensive;Auvergne-Rhône-Alpes;220,25
+;;;2023;Maladies vasculaires cérébrales;Auvergne-Rhône-Alpes;112,61
+;;;2023;Sida;Auvergne-Rhône-Alpes;0,55
+;;;2023;Alzheimer;Bourgogne-Franche-Comté;94,26
+;;;2023;Asthme;Bourgogne-Franche-Comté;3,05
+;;;2023;Cancer de la prostate;Bourgogne-Franche-Comté;43,66
+;;;2023;Cancer de la trachée, des bronches et du poumon;Bourgogne-Franche-Comté;147,76
+;;;2023;Cancer du côlon-rectum;Bourgogne-Franche-Comté;72,52
+;;;2023;Cancer du sein;Bourgogne-Franche-Comté;51,06
+;;;2023;Cardiopathies ischémiques;Bourgogne-Franche-Comté;139,94
+;;;2023;Chap 10 : Maladies de l'appareil respiratoire;Bourgogne-Franche-Comté;203,57
+;;;2023;Diabète;Bourgogne-Franche-Comté;194,69
+;;;2023;Maladie chronique du foie;Bourgogne-Franche-Comté;55,27
+;;;2023;Maladie de Parkinson;Bourgogne-Franche-Comté;59,55
+;;;2023;Maladie hypertensive;Bourgogne-Franche-Comté;307,61
+;;;2023;Maladies vasculaires cérébrales;Bourgogne-Franche-Comté;127,93
+;;;2023;Sida;Bourgogne-Franche-Comté;0,76
+;;;2023;Alzheimer;Bretagne;92,33
+;;;2023;Asthme;Bretagne;3,86
+;;;2023;Cancer de la prostate;Bretagne;48,10
+;;;2023;Cancer de la trachée, des bronches et du poumon;Bretagne;141,60
+;;;2023;Cancer du côlon-rectum;Bretagne;74,95
+;;;2023;Cancer du sein;Bretagne;49,59
+;;;2023;Cardiopathies ischémiques;Bretagne;148,53
+;;;2023;Chap 10 : Maladies de l'appareil respiratoire;Bretagne;211,65
+;;;2023;Diabète;Bretagne;128,24
+;;;2023;Maladie chronique du foie;Bretagne;68,91
+;;;2023;Maladie de Parkinson;Bretagne;45,12
+;;;2023;Maladie hypertensive;Bretagne;208,36
+;;;2023;Maladies vasculaires cérébrales;Bretagne;145,00
+;;;2023;Sida;Bretagne;0,76
+;;;2023;Alzheimer;Centre-Val de Loire;94,14
+;;;2023;Asthme;Centre-Val de Loire;2,87
+;;;2023;Cancer de la prostate;Centre-Val de Loire;46,04
+;;;2023;Cancer de la trachée, des bronches et du poumon;Centre-Val de Loire;133,27
+;;;2023;Cancer du côlon-rectum;Centre-Val de Loire;80,21
+;;;2023;Cancer du sein;Centre-Val de Loire;53,45
+;;;2023;Cardiopathies ischémiques;Centre-Val de Loire;139,98
+;;;2023;Chap 10 : Maladies de l'appareil respiratoire;Centre-Val de Loire;188,65
+;;;2023;Diabète;Centre-Val de Loire;183,44
+;;;2023;Maladie chronique du foie;Centre-Val de Loire;51,84
+;;;2023;Maladie de Parkinson;Centre-Val de Loire;53,03
+;;;2023;Maladie hypertensive;Centre-Val de Loire;254,47
+;;;2023;Maladies vasculaires cérébrales;Centre-Val de Loire;135,07
+;;;2023;Sida;Centre-Val de Loire;0,45
+;;;2023;Alzheimer;Corse;88,33
+;;;2023;Asthme;Corse;1,27
+;;;2023;Cancer de la prostate;Corse;31,27
+;;;2023;Cancer de la trachée, des bronches et du poumon;Corse;167,85
+;;;2023;Cancer du côlon-rectum;Corse;57,33
+;;;2023;Cancer du sein;Corse;49,08
+;;;2023;Cardiopathies ischémiques;Corse;137,30
+;;;2023;Chap 10 : Maladies de l'appareil respiratoire;Corse;159,97
+;;;2023;Diabète;Corse;118,94
+;;;2023;Maladie chronique du foie;Corse;39,45
+;;;2023;Maladie de Parkinson;Corse;40,30
+;;;2023;Maladie hypertensive;Corse;174,00
+;;;2023;Maladies vasculaires cérébrales;Corse;111,86
+;;;2023;Sida;Corse;0,00
+;;;2023;Alzheimer;Departements d'outre mer;114,03
+;;;2023;Asthme;Departements d'outre mer;8,54
+;;;2023;Cancer de la prostate;Departements d'outre mer;71,07
+;;;2023;Cancer de la trachée, des bronches et du poumon;Departements d'outre mer;68,77
+;;;2023;Cancer du côlon-rectum;Departements d'outre mer;76,34
+;;;2023;Cancer du sein;Departements d'outre mer;43,18
+;;;2023;Cardiopathies ischémiques;Departements d'outre mer;94,72
+;;;2023;Chap 10 : Maladies de l'appareil respiratoire;Departements d'outre mer;176,73
+;;;2023;Diabète;Departements d'outre mer;318,08
+;;;2023;Maladie chronique du foie;Departements d'outre mer;41,40
+;;;2023;Maladie de Parkinson;Departements d'outre mer;58,72
+;;;2023;Maladie hypertensive;Departements d'outre mer;386,57
+;;;2023;Maladies vasculaires cérébrales;Departements d'outre mer;187,56
+;;;2023;Sida;Departements d'outre mer;2,72
+;;;2023;Alzheimer;France (y compris Mayotte);92,65
+;;;2023;Asthme;France (y compris Mayotte);3,14
+;;;2023;Cancer de la prostate;France (y compris Mayotte);43,19
+;;;2023;Cancer de la trachée, des bronches et du poumon;France (y compris Mayotte);136,34
+;;;2023;Cancer du côlon-rectum;France (y compris Mayotte);72,68
+;;;2023;Cancer du sein;France (y compris Mayotte);51,26
+;;;2023;Cardiopathies ischémiques;France (y compris Mayotte);131,69
+;;;2023;Chap 10 : Maladies de l'appareil respiratoire;France (y compris Mayotte);200,95
+;;;2023;Diabète;France (y compris Mayotte);166,93
+;;;2023;Maladie chronique du foie;France (y compris Mayotte);53,10
+;;;2023;Maladie de Parkinson;France (y compris Mayotte);50,11
+;;;2023;Maladie hypertensive;France (y compris Mayotte);236,62
+;;;2023;Maladies vasculaires cérébrales;France (y compris Mayotte);128,68
+;;;2023;Sida;France (y compris Mayotte);1,01
+;;;2023;Alzheimer;France métropolitaine;92,17
+;;;2023;Asthme;France métropolitaine;3,01
+;;;2023;Cancer de la prostate;France métropolitaine;42,53
+;;;2023;Cancer de la trachée, des bronches et du poumon;France métropolitaine;137,57
+;;;2023;Cancer du côlon-rectum;France métropolitaine;72,33
+;;;2023;Cancer du sein;France métropolitaine;51,15
+;;;2023;Cardiopathies ischémiques;France métropolitaine;131,55
+;;;2023;Chap 10 : Maladies de l'appareil respiratoire;France métropolitaine;201,12
+;;;2023;Diabète;France métropolitaine;163,30
+;;;2023;Maladie chronique du foie;France métropolitaine;53,13
+;;;2023;Maladie de Parkinson;France métropolitaine;49,88
+;;;2023;Maladie hypertensive;France métropolitaine;232,85
+;;;2023;Maladies vasculaires cérébrales;France métropolitaine;126,83
+;;;2023;Sida;France métropolitaine;0,96
+;;;2023;Alzheimer;Grand Est;89,26
+;;;2023;Asthme;Grand Est;2,69
+;;;2023;Cancer de la prostate;Grand Est;42,21
+;;;2023;Cancer de la trachée, des bronches et du poumon;Grand Est;152,89
+;;;2023;Cancer du côlon-rectum;Grand Est;74,19
+;;;2023;Cancer du sein;Grand Est;49,60
+;;;2023;Cardiopathies ischémiques;Grand Est;142,85
+;;;2023;Chap 10 : Maladies de l'appareil respiratoire;Grand Est;231,03
+;;;2023;Diabète;Grand Est;215,51
+;;;2023;Maladie chronique du foie;Grand Est;56,25
+;;;2023;Maladie de Parkinson;Grand Est;52,01
+;;;2023;Maladie hypertensive;Grand Est;312,40
+;;;2023;Maladies vasculaires cérébrales;Grand Est;133,93
+;;;2023;Sida;Grand Est;0,42
+;;;2023;Alzheimer;Guadeloupe;104,64
+;;;2023;Asthme;Guadeloupe;6,74
+;;;2023;Cancer de la prostate;Guadeloupe;85,21
+;;;2023;Cancer de la trachée, des bronches et du poumon;Guadeloupe;49,90
+;;;2023;Cancer du côlon-rectum;Guadeloupe;84,23
+;;;2023;Cancer du sein;Guadeloupe;55,12
+;;;2023;Cardiopathies ischémiques;Guadeloupe;64,76
+;;;2023;Chap 10 : Maladies de l'appareil respiratoire;Guadeloupe;148,61
+;;;2023;Diabète;Guadeloupe;301,04
+;;;2023;Maladie chronique du foie;Guadeloupe;45,85
+;;;2023;Maladie de Parkinson;Guadeloupe;81,43
+;;;2023;Maladie hypertensive;Guadeloupe;428,14
+;;;2023;Maladies vasculaires cérébrales;Guadeloupe;190,21
+;;;2023;Sida;Guadeloupe;2,02
+;;;2023;Alzheimer;Guyane;58,80
+;;;2023;Asthme;Guyane;15,87
+;;;2023;Cancer de la prostate;Guyane;70,89
+;;;2023;Cancer de la trachée, des bronches et du poumon;Guyane;44,01
+;;;2023;Cancer du côlon-rectum;Guyane;30,39
+;;;2023;Cancer du sein;Guyane;38,91
+;;;2023;Cardiopathies ischémiques;Guyane;59,81
+;;;2023;Chap 10 : Maladies de l'appareil respiratoire;Guyane;199,20
+;;;2023;Diabète;Guyane;252,26
+;;;2023;Maladie chronique du foie;Guyane;45,49
+;;;2023;Maladie de Parkinson;Guyane;42,22
+;;;2023;Maladie hypertensive;Guyane;407,52
+;;;2023;Maladies vasculaires cérébrales;Guyane;245,47
+;;;2023;Sida;Guyane;15,89
+;;;2023;Alzheimer;Hauts-de-France;102,12
+;;;2023;Asthme;Hauts-de-France;3,50
+;;;2023;Cancer de la prostate;Hauts-de-France;43,47
+;;;2023;Cancer de la trachée, des bronches et du poumon;Hauts-de-France;151,02
+;;;2023;Cancer du côlon-rectum;Hauts-de-France;88,22
+;;;2023;Cancer du sein;Hauts-de-France;67,18
+;;;2023;Cardiopathies ischémiques;Hauts-de-France;147,39
+;;;2023;Chap 10 : Maladies de l'appareil respiratoire;Hauts-de-France;252,11
+;;;2023;Diabète;Hauts-de-France;203,04
+;;;2023;Maladie chronique du foie;Hauts-de-France;83,38
+;;;2023;Maladie de Parkinson;Hauts-de-France;53,76
+;;;2023;Maladie hypertensive;Hauts-de-France;286,58
+;;;2023;Maladies vasculaires cérébrales;Hauts-de-France;137,53
+;;;2023;Sida;Hauts-de-France;0,65
+;;;2023;Alzheimer;Martinique;140,97
+;;;2023;Asthme;Martinique;12,21
+;;;2023;Cancer de la prostate;Martinique;84,83
+;;;2023;Cancer de la trachée, des bronches et du poumon;Martinique;60,69
+;;;2023;Cancer du côlon-rectum;Martinique;76,01
+;;;2023;Cancer du sein;Martinique;46,84
+;;;2023;Cardiopathies ischémiques;Martinique;52,84
+;;;2023;Chap 10 : Maladies de l'appareil respiratoire;Martinique;145,73
+;;;2023;Diabète;Martinique;308,98
+;;;2023;Maladie chronique du foie;Martinique;20,19
+;;;2023;Maladie de Parkinson;Martinique;51,65
+;;;2023;Maladie hypertensive;Martinique;372,33
+;;;2023;Maladies vasculaires cérébrales;Martinique;162,01
+;;;2023;Sida;Martinique;2,61
+;;;2023;Alzheimer;Normandie;100,33
+;;;2023;Asthme;Normandie;3,26
+;;;2023;Cancer de la prostate;Normandie;51,06
+;;;2023;Cancer de la trachée, des bronches et du poumon;Normandie;140,50
+;;;2023;Cancer du côlon-rectum;Normandie;79,76
+;;;2023;Cancer du sein;Normandie;56,31
+;;;2023;Cardiopathies ischémiques;Normandie;161,57
+;;;2023;Chap 10 : Maladies de l'appareil respiratoire;Normandie;205,62
+;;;2023;Diabète;Normandie;162,66
+;;;2023;Maladie chronique du foie;Normandie;68,06
+;;;2023;Maladie de Parkinson;Normandie;47,71
+;;;2023;Maladie hypertensive;Normandie;252,50
+;;;2023;Maladies vasculaires cérébrales;Normandie;142,42
+;;;2023;Sida;Normandie;1,12
+;;;2023;Alzheimer;Nouvelle-Aquitaine;84,34
+;;;2023;Asthme;Nouvelle-Aquitaine;2,73
+;;;2023;Cancer de la prostate;Nouvelle-Aquitaine;43,53
+;;;2023;Cancer de la trachée, des bronches et du poumon;Nouvelle-Aquitaine;144,62
+;;;2023;Cancer du côlon-rectum;Nouvelle-Aquitaine;72,84
+;;;2023;Cancer du sein;Nouvelle-Aquitaine;51,77
+;;;2023;Cardiopathies ischémiques;Nouvelle-Aquitaine;132,19
+;;;2023;Chap 10 : Maladies de l'appareil respiratoire;Nouvelle-Aquitaine;192,05
+;;;2023;Diabète;Nouvelle-Aquitaine;154,54
+;;;2023;Maladie chronique du foie;Nouvelle-Aquitaine;47,91
+;;;2023;Maladie de Parkinson;Nouvelle-Aquitaine;48,95
+;;;2023;Maladie hypertensive;Nouvelle-Aquitaine;202,36
+;;;2023;Maladies vasculaires cérébrales;Nouvelle-Aquitaine;135,54
+;;;2023;Sida;Nouvelle-Aquitaine;0,67
+;;;2023;Alzheimer;Occitanie;112,60
+;;;2023;Asthme;Occitanie;3,03
+;;;2023;Cancer de la prostate;Occitanie;41,05
+;;;2023;Cancer de la trachée, des bronches et du poumon;Occitanie;146,07
+;;;2023;Cancer du côlon-rectum;Occitanie;75,83
+;;;2023;Cancer du sein;Occitanie;48,73
+;;;2023;Cardiopathies ischémiques;Occitanie;133,47
+;;;2023;Chap 10 : Maladies de l'appareil respiratoire;Occitanie;200,02
+;;;2023;Diabète;Occitanie;154,45
+;;;2023;Maladie chronique du foie;Occitanie;46,56
+;;;2023;Maladie de Parkinson;Occitanie;48,23
+;;;2023;Maladie hypertensive;Occitanie;196,49
+;;;2023;Maladies vasculaires cérébrales;Occitanie;123,74
+;;;2023;Sida;Occitanie;1,00
+;;;2023;Alzheimer;Pays de la Loire;83,45
+;;;2023;Asthme;Pays de la Loire;3,03
+;;;2023;Cancer de la prostate;Pays de la Loire;44,44
+;;;2023;Cancer de la trachée, des bronches et du poumon;Pays de la Loire;130,31
+;;;2023;Cancer du côlon-rectum;Pays de la Loire;73,85
+;;;2023;Cancer du sein;Pays de la Loire;49,70
+;;;2023;Cardiopathies ischémiques;Pays de la Loire;134,50
+;;;2023;Chap 10 : Maladies de l'appareil respiratoire;Pays de la Loire;180,96
+;;;2023;Diabète;Pays de la Loire;136,88
+;;;2023;Maladie chronique du foie;Pays de la Loire;60,43
+;;;2023;Maladie de Parkinson;Pays de la Loire;51,95
+;;;2023;Maladie hypertensive;Pays de la Loire;201,53
+;;;2023;Maladies vasculaires cérébrales;Pays de la Loire;137,21
+;;;2023;Sida;Pays de la Loire;0,99
+;;;2023;Alzheimer;Provence-Alpes-Côte d'Azur;88,91
+;;;2023;Asthme;Provence-Alpes-Côte d'Azur;2,29
+;;;2023;Cancer de la prostate;Provence-Alpes-Côte d'Azur;38,20
+;;;2023;Cancer de la trachée, des bronches et du poumon;Provence-Alpes-Côte d'Azur;138,13
+;;;2023;Cancer du côlon-rectum;Provence-Alpes-Côte d'Azur;62,72
+;;;2023;Cancer du sein;Provence-Alpes-Côte d'Azur;43,94
+;;;2023;Cardiopathies ischémiques;Provence-Alpes-Côte d'Azur;118,04
+;;;2023;Chap 10 : Maladies de l'appareil respiratoire;Provence-Alpes-Côte d'Azur;193,87
+;;;2023;Diabète;Provence-Alpes-Côte d'Azur;142,39
+;;;2023;Maladie chronique du foie;Provence-Alpes-Côte d'Azur;44,59
+;;;2023;Maladie de Parkinson;Provence-Alpes-Côte d'Azur;51,61
+;;;2023;Maladie hypertensive;Provence-Alpes-Côte d'Azur;194,50
+;;;2023;Maladies vasculaires cérébrales;Provence-Alpes-Côte d'Azur;116,98
+;;;2023;Sida;Provence-Alpes-Côte d'Azur;0,90
+;;;2023;Alzheimer;Réunion;107,22
+;;;2023;Asthme;Réunion;7,14
+;;;2023;Cancer de la prostate;Réunion;50,26
+;;;2023;Cancer de la trachée, des bronches et du poumon;Réunion;93,16
+;;;2023;Cancer du côlon-rectum;Réunion;79,49
+;;;2023;Cancer du sein;Réunion;35,19
+;;;2023;Cardiopathies ischémiques;Réunion;149,01
+;;;2023;Chap 10 : Maladies de l'appareil respiratoire;Réunion;216,07
+;;;2023;Diabète;Réunion;344,16
+;;;2023;Maladie chronique du foie;Réunion;52,78
+;;;2023;Maladie de Parkinson;Réunion;49,95
+;;;2023;Maladie hypertensive;Réunion;360,29
+;;;2023;Maladies vasculaires cérébrales;Réunion;196,75
+;;;2023;Sida;Réunion;0,00
+;;;2023;Alzheimer;Île-de-France;76,84
+;;;2023;Asthme;Île-de-France;3,82
+;;;2023;Cancer de la prostate;Île-de-France;40,45
+;;;2023;Cancer de la trachée, des bronches et du poumon;Île-de-France;116,25
+;;;2023;Cancer du côlon-rectum;Île-de-France;64,51
+;;;2023;Cancer du sein;Île-de-France;50,48
+;;;2023;Cardiopathies ischémiques;Île-de-France;108,36
+;;;2023;Chap 10 : Maladies de l'appareil respiratoire;Île-de-France;187,21
+;;;2023;Diabète;Île-de-France;148,21
+;;;2023;Maladie chronique du foie;Île-de-France;38,57
+;;;2023;Maladie de Parkinson;Île-de-France;43,00
+;;;2023;Maladie hypertensive;Île-de-France;226,46
+;;;2023;Maladies vasculaires cérébrales;Île-de-France;109,55
+;;;2023;Sida;Île-de-France;2,15

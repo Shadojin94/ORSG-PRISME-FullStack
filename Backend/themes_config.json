@@ -109,6 +109,27 @@
           ]
         }
       ]
+    },
+    {
+      "id": "pathologies",
+      "title": "Pathologies",
+      "icon": "Activity",
+      "color": "red",
+      "subThemes": [
+        {
+          "id": "mortalite_par_patho",
+          "title": "Mortalité par pathologie",
+          "datasets": [
+            "mortalite_cardio",
+            "mortalite_respi",
+            "mortalite_neuro",
+            "mortalite_digestif",
+            "mortalite_diabete",
+            "mortalite_vih",
+            "mortalite_tumeurs"
+          ]
+        }
+      ]
     }
   ],
   "datasets": {
@@ -1173,6 +1194,118 @@
           "parser": "external",
           "source": "CépiDc"
         }
+      ]
+    },
+    "mortalite_cardio": {
+      "name": "Mortalité cardiovasculaire",
+      "folderPath": "Pathologies/Mortalité par pathologie/Cardiovasculaire",
+      "fileName": "mortalite_cardio",
+      "sheets": ["com", "reg", "dom", "fh", "fra"],
+      "columns": [
+        {"id": "geo", "type": "geo_id"},
+        {"id": "annee", "type": "year"},
+        {"id": "m_hta", "type": "variable", "label": "Décès par maladie hypertensive",
+         "csvPattern": "Mortalite_Patho_GF", "parser": "moca_filter",
+         "filterColumn": 4, "filterValue": "Maladie hypertensive"},
+        {"id": "m_avc", "type": "variable", "label": "Décès par AVC (maladies vasculaires cérébrales)",
+         "csvPattern": "Mortalite_Patho_GF", "parser": "moca_filter",
+         "filterColumn": 4, "filterValue": "Maladies vasculaires"},
+        {"id": "M_Cardiopath_isch", "type": "variable", "label": "Décès par cardiopathies ischémiques",
+         "csvPattern": "Mortalite_Patho_GF", "parser": "moca_filter",
+         "filterColumn": 4, "filterValue": "Cardiopathies isch"}
+      ]
+    },
+    "mortalite_respi": {
+      "name": "Mortalité respiratoire",
+      "folderPath": "Pathologies/Mortalité par pathologie/Respiratoire",
+      "fileName": "mortalite_respi",
+      "sheets": ["com", "reg", "dom", "fh", "fra"],
+      "columns": [
+        {"id": "geo", "type": "geo_id"},
+        {"id": "annee", "type": "year"},
+        {"id": "M_Maladies_Respi", "type": "variable", "label": "Décès - maladies de l'appareil respiratoire",
+         "csvPattern": "Mortalite_Patho_GF", "parser": "moca_filter",
+         "filterColumn": 4, "filterValue": "Maladies de l'appareil respiratoire"},
+        {"id": "m_asthme", "type": "variable", "label": "Décès par asthme",
+         "csvPattern": "Mortalite_Patho_GF", "parser": "moca_filter",
+         "filterColumn": 4, "filterValue": "Asthme"}
+      ]
+    },
+    "mortalite_neuro": {
+      "name": "Mortalité neurologique",
+      "folderPath": "Pathologies/Mortalité par pathologie/Neurologique",
+      "fileName": "mortalite_neuro",
+      "sheets": ["com", "reg", "dom", "fh", "fra"],
+      "columns": [
+        {"id": "geo", "type": "geo_id"},
+        {"id": "annee", "type": "year"},
+        {"id": "m_alzheimer", "type": "variable", "label": "Décès par maladie d'Alzheimer",
+         "csvPattern": "Mortalite_Patho_GF", "parser": "moca_filter",
+         "filterColumn": 4, "filterValue": "Alzheimer"},
+        {"id": "m_parkinson", "type": "variable", "label": "Décès par maladie de Parkinson",
+         "csvPattern": "Mortalite_Patho_GF", "parser": "moca_filter",
+         "filterColumn": 4, "filterValue": "Parkinson"}
+      ]
+    },
+    "mortalite_digestif": {
+      "name": "Mortalité digestive",
+      "folderPath": "Pathologies/Mortalité par pathologie/Digestif",
+      "fileName": "mortalite_digestif",
+      "sheets": ["com", "reg", "dom", "fh", "fra"],
+      "columns": [
+        {"id": "geo", "type": "geo_id"},
+        {"id": "annee", "type": "year"},
+        {"id": "m_foie", "type": "variable", "label": "Décès par maladie chronique du foie",
+         "csvPattern": "Mortalite_Patho_GF", "parser": "moca_filter",
+         "filterColumn": 4, "filterValue": "Maladie chronique du foie"}
+      ]
+    },
+    "mortalite_diabete": {
+      "name": "Mortalité par diabète",
+      "folderPath": "Pathologies/Mortalité par pathologie/Diabète",
+      "fileName": "mortalite_diabete",
+      "sheets": ["com", "reg", "dom", "fh", "fra"],
+      "columns": [
+        {"id": "geo", "type": "geo_id"},
+        {"id": "annee", "type": "year"},
+        {"id": "m_diabete", "type": "variable", "label": "Décès par diabète",
+         "csvPattern": "Mortalite_Patho_GF", "parser": "moca_filter",
+         "filterColumn": 4, "filterValue": "Diab"}
+      ]
+    },
+    "mortalite_vih": {
+      "name": "Mortalité VIH / Sida",
+      "folderPath": "Pathologies/Mortalité par pathologie/VIH",
+      "fileName": "mortalite_vih",
+      "sheets": ["com", "reg", "dom", "fh", "fra"],
+      "columns": [
+        {"id": "geo", "type": "geo_id"},
+        {"id": "annee", "type": "year"},
+        {"id": "m_sida", "type": "variable", "label": "Décès par Sida",
+         "csvPattern": "Mortalite_Patho_GF", "parser": "moca_filter",
+         "filterColumn": 4, "filterValue": "Sida"}
+      ]
+    },
+    "mortalite_tumeurs": {
+      "name": "Mortalité par tumeurs",
+      "folderPath": "Pathologies/Mortalité par pathologie/Tumeurs",
+      "fileName": "mortalite_tumeurs",
+      "sheets": ["com", "reg", "dom", "fh", "fra"],
+      "columns": [
+        {"id": "geo", "type": "geo_id"},
+        {"id": "annee", "type": "year"},
+        {"id": "m_kc_poumon", "type": "variable", "label": "Décès par cancer trachée/bronches/poumon",
+         "csvPattern": "Mortalite_Patho_GF", "parser": "moca_filter",
+         "filterColumn": 4, "filterValue": "Cancer de la trach"},
+        {"id": "m_kc_sein", "type": "variable", "label": "Décès par cancer du sein",
+         "csvPattern": "Mortalite_Patho_GF", "parser": "moca_filter",
+         "filterColumn": 4, "filterValue": "Cancer du sein"},
+        {"id": "m_kc_colon", "type": "variable", "label": "Décès par cancer côlon-rectum",
+         "csvPattern": "Mortalite_Patho_GF", "parser": "moca_filter",
+         "filterColumn": 4, "filterValue": "Cancer du c"},
+        {"id": "m_kc_prostate", "type": "variable", "label": "Décès par cancer de la prostate",
+         "csvPattern": "Mortalite_Patho_GF", "parser": "moca_filter",
+         "filterColumn": 4, "filterValue": "Cancer de la prostate"}
       ]
     }
   },
