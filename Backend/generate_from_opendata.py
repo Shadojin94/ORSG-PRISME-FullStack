@@ -113,6 +113,9 @@ THEME_CONFIGS = {
     "revenu": {"excel_name": "revenu", "variables": ["nb_foyers_non_impo", "nb_foyers_imposes"], "source_type": "ircom"},
     "densite": {"excel_name": "densite", "variables": ["rp", "superficie"], "source_type": "pop_legales"},
     "route": {"excel_name": "route", "variables": ["nb_acci", "nb_blesses", "nb_morts"], "source_type": "baac"},
+    "accidents_route": {"excel_name": "accidents_route", "variables": ["nb_acci"], "source_type": "baac"},
+    "blesses_route": {"excel_name": "blesses_route", "variables": ["nb_blesses"], "source_type": "baac"},
+    "deces_route": {"excel_name": "deces_route", "variables": ["nb_morts"], "source_type": "baac"},
     "mortalite_gen": {
         "excel_name": "mortalite_gen",
         "variables": ["nb_deces_toutes_causes", "tx_mortalite_toutes_causes"],
@@ -635,9 +638,15 @@ def _build_densite_levels(year: int):
 # ---------------------------------------------------------------------------
 
 def _build_route_levels(year: int):
-    baac_dir = INPUTS_DIR / "baac"
-    caract_path = baac_dir / f"caract_{year}.csv"
-    usagers_path = baac_dir / f"usagers_{year}.csv"
+    # Cherche d'abord le dataset complet (baac/), sinon le filtre Guyane commité (baac_guyane/)
+    for sub in ("baac", "baac_guyane"):
+        baac_dir = INPUTS_DIR / sub / f"annees_{year}"
+        if not baac_dir.exists():
+            baac_dir = INPUTS_DIR / sub
+        caract_path = baac_dir / f"caract_{year}.csv"
+        usagers_path = baac_dir / f"usagers_{year}.csv"
+        if caract_path.exists() and usagers_path.exists():
+            break
     if not caract_path.exists():
         raise FileNotFoundError(f"Source BAAC manquante: {caract_path}")
     if not usagers_path.exists():

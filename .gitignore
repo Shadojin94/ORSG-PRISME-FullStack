@@ -22,7 +22,12 @@ Backend/inputs/*
 !Backend/inputs/opendata/
 Backend/inputs/opendata/*
 !Backend/inputs/opendata/cepidc/
+!Backend/inputs/opendata/cepidc/**
 !Backend/inputs/opendata/superficie_communes.json
+!Backend/inputs/opendata/baac_guyane/
+!Backend/inputs/opendata/baac_guyane/**
+!Backend/inputs/opendata/spf_noyades/
+!Backend/inputs/opendata/spf_noyades/**
 
 # CSV sources - INCLUS dans le repo (nécessaires pour Docker build, 649 KB)
 # Backend/csv_sources/
