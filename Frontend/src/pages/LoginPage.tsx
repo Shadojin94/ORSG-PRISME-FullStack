@@ -313,7 +313,7 @@ export function LoginPage() {
                                 <h3 className="text-xl font-bold text-white">Code envoyé !</h3>
                                 <p className="text-sm text-gray-300 mt-2">
                                     {isDevCode ? (
-                                        <>Code pré-rempli automatiquement<br /><span className="text-xs text-amber-400">(mode dev — SMTP non configuré)</span></>
+                                        <>Code pré-rempli automatiquement<br /><span className="text-xs text-sky-400">Cliquez sur "Se connecter" pour continuer</span></>
                                     ) : (
                                         <>Un code à 6 chiffres a été envoyé à <br /><span className="font-semibold text-sky-400">{email}</span></>
                                     )}
