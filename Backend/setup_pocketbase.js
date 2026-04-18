@@ -1,13 +1,15 @@
 /**
- * PocketBase Schema Setup Script
- * Run once to create/update collections and seed initial users.
+ * PocketBase - Script de setup IDEMPOTENT
  *
- * Usage: node setup_pocketbase.js
+ * Objectifs :
+ *  - Ne JAMAIS ecraser des utilisateurs existants (persistance Coolify garantie cote volumes)
+ *  - Ne seed que si la collection est vide
+ *  - Tolerer un admin dont le password a ete change manuellement (log warning, pas de crash)
  *
- * Prerequisites:
- *   - PocketBase running on http://127.0.0.1:8090
- *   - Admin account already created via PocketBase admin UI
- *   - Backend/.env configured with POCKETBASE_ADMIN_EMAIL and POCKETBASE_ADMIN_PASSWORD
+ * SDK installe : pocketbase ^0.21.5 (cf Backend/package.json)
+ *   -> API admin = pb.admins.authWithPassword (pas encore _superusers qui arrive en 0.23+)
+ *
+ * Usage : node setup_pocketbase.js
  */
 
 const fs = require('fs');
@@ -18,7 +20,7 @@ function sha256(str) {
     return crypto.createHash('sha256').update(str).digest('hex');
 }
 
-// Load .env
+// Chargement .env (genere par entrypoint.sh)
 const envPath = path.join(__dirname, '.env');
 if (fs.existsSync(envPath)) {
     const envContent = fs.readFileSync(envPath, 'utf8');
@@ -40,21 +42,29 @@ const PB_ADMIN_PASSWORD = process.env.POCKETBASE_ADMIN_PASSWORD;
 const PB_SYSTEM_PASSWORD = process.env.PB_SYSTEM_PASSWORD || 'PrismeSystemAuth2026!';
 
 if (!PB_ADMIN_EMAIL || !PB_ADMIN_PASSWORD) {
-    console.error('ERROR: Set POCKETBASE_ADMIN_EMAIL and POCKETBASE_ADMIN_PASSWORD in Backend/.env');
+    console.error('[SETUP] ERREUR : POCKETBASE_ADMIN_EMAIL et POCKETBASE_ADMIN_PASSWORD doivent etre definis.');
     process.exit(1);
 }
 
-async function main() {
-    const PocketBase = (await import('pocketbase')).default;
-    const pb = new PocketBase(PB_URL);
+/**
+ * Tente d'authentifier l'admin. Retourne l'instance PB si OK, null sinon.
+ * Ne plante PAS si le password est invalide (cas : admin deja present avec mot de passe different).
+ */
+async function tryAuthAdmin(pb) {
+    try {
+        await pb.admins.authWithPassword(PB_ADMIN_EMAIL, PB_ADMIN_PASSWORD);
+        console.log(`[SETUP] Admin authentifie : ${PB_ADMIN_EMAIL}`);
+        return true;
+    } catch (e) {
+        console.warn(`[SETUP] WARNING : echec authentification admin (${e.status || '?'} ${e.message}).`);
+        console.warn('[SETUP] L\'admin existe probablement avec un autre mot de passe (volume persistant).');
+        console.warn('[SETUP] Les collections et users existants sont donc PRESERVES. Aucune modification ne sera faite.');
+        return false;
+    }
+}
 
-    // Authenticate as admin
-    console.log(`Connecting to PocketBase at ${PB_URL}...`);
-    await pb.admins.authWithPassword(PB_ADMIN_EMAIL, PB_ADMIN_PASSWORD);
-    console.log('Admin authenticated.');
-
-    // ===== 1. Extend users collection with custom fields =====
-    console.log('\n--- Updating users collection ---');
+async function ensureUsersSchema(pb) {
+    console.log('\n[SETUP] --- Verification schema collection users ---');
     try {
         const usersCollection = await pb.collections.getOne('users');
         const existingFieldNames = usersCollection.schema.map(f => f.name);
@@ -72,15 +82,9 @@ async function main() {
             },
             {
                 name: 'status', type: 'select', required: true,
-                options: {
-                    values: ['active', 'inactive'],
-                    maxSelect: 1,
-                },
+                options: { values: ['active', 'inactive'], maxSelect: 1 },
             },
-            // personal_password_hash: sha256 hash of personal password (for users who use password login)
-            // PB auth password stays as PB_SYSTEM_PASSWORD for all users (OTP flow)
             { name: 'personal_password_hash', type: 'text', required: false },
-            // otp_enabled: if false, user skips OTP and uses password login only
             { name: 'otp_enabled', type: 'bool', required: false },
         ];
 
@@ -89,24 +93,23 @@ async function main() {
             if (!existingFieldNames.includes(field.name)) {
                 usersCollection.schema.push(field);
                 updated = true;
-                console.log(`  + Adding field: ${field.name}`);
-            } else {
-                console.log(`  = Field exists: ${field.name}`);
+                console.log(`  + Ajout champ : ${field.name}`);
             }
         }
 
         if (updated) {
-            await pb.collections.update(usersCollection.id, {
-                schema: usersCollection.schema,
-            });
-            console.log('  Users collection updated.');
+            await pb.collections.update(usersCollection.id, { schema: usersCollection.schema });
+            console.log('  Schema users mis a jour.');
+        } else {
+            console.log('  Schema users deja complet, pas de modification.');
         }
     } catch (e) {
-        console.error('Failed to update users collection:', e.message);
+        console.error('[SETUP] Echec verification users :', e.message);
     }
+}
 
-    // ===== 2. Create/update login_codes collection =====
-    console.log('\n--- Setting up login_codes collection ---');
+async function ensureLoginCodesCollection(pb) {
+    console.log('\n[SETUP] --- Verification collection login_codes ---');
     const loginCodesSchema = [
         { name: 'email', type: 'text', required: true },
         { name: 'code', type: 'text', required: true },
@@ -114,10 +117,8 @@ async function main() {
         { name: 'used', type: 'bool', required: false },
     ];
     try {
-        const existing = await pb.collections.getOne('login_codes');
-        // Always update schema to fix any issues (e.g. used:required)
-        await pb.collections.update(existing.id, { schema: loginCodesSchema });
-        console.log('  Collection login_codes updated.');
+        await pb.collections.getOne('login_codes');
+        console.log('  Collection login_codes deja presente (pas de reset).');
     } catch (_e) {
         try {
             await pb.collections.create({
@@ -126,55 +127,76 @@ async function main() {
                 schema: loginCodesSchema,
                 listRule: null, viewRule: null, createRule: null, updateRule: null, deleteRule: null,
             });
-            console.log('  Collection login_codes created.');
+            console.log('  Collection login_codes creee.');
         } catch (e) {
-            console.error('  Failed to create login_codes:', e.message);
+            console.error('  Echec creation login_codes :', e.message);
         }
     }
+}
 
-    // ===== 3. Create support_tickets collection =====
-    console.log('\n--- Creating support_tickets collection ---');
+async function ensureSupportTicketsCollection(pb) {
+    console.log('\n[SETUP] --- Verification collection support_tickets ---');
     try {
         await pb.collections.getOne('support_tickets');
-        console.log('  Collection support_tickets already exists.');
+        console.log('  Collection support_tickets deja presente.');
+        return;
     } catch (_e) {
-        try {
-            await pb.collections.create({
-                name: 'support_tickets',
-                type: 'base',
-                schema: [
-                    { name: 'subject', type: 'text', required: true, options: { min: 3, max: 200 } },
-                    { name: 'description', type: 'text', required: true, options: { min: 10 } },
-                    {
-                        name: 'priority', type: 'select', required: true,
-                        options: { values: ['low', 'medium', 'high', 'critical'], maxSelect: 1 },
-                    },
-                    {
-                        name: 'category', type: 'select', required: true,
-                        options: { values: ['account', 'generation', 'bug', 'question', 'other'], maxSelect: 1 },
-                    },
-                    {
-                        name: 'status', type: 'select', required: true,
-                        options: { values: ['open', 'in_progress', 'resolved', 'closed'], maxSelect: 1 },
-                    },
-                    { name: 'user', type: 'relation', required: true, options: { collectionId: '_pb_users_auth_', maxSelect: 1 } },
-                    { name: 'admin_notes', type: 'text', required: false },
-                ],
-                // Users can view/create their own tickets
-                listRule: '@request.auth.id != "" && user = @request.auth.id',
-                viewRule: '@request.auth.id != "" && user = @request.auth.id',
-                createRule: '@request.auth.id != ""',
-                updateRule: null, // admin only
-                deleteRule: null,
-            });
-            console.log('  Collection support_tickets created.');
-        } catch (e) {
-            console.error('  Failed to create support_tickets:', e.message);
-        }
+        // n'existe pas, on la cree
+    }
+    try {
+        await pb.collections.create({
+            name: 'support_tickets',
+            type: 'base',
+            schema: [
+                { name: 'subject', type: 'text', required: true, options: { min: 3, max: 200 } },
+                { name: 'description', type: 'text', required: true, options: { min: 10 } },
+                {
+                    name: 'priority', type: 'select', required: true,
+                    options: { values: ['low', 'medium', 'high', 'critical'], maxSelect: 1 },
+                },
+                {
+                    name: 'category', type: 'select', required: true,
+                    options: { values: ['account', 'generation', 'bug', 'question', 'other'], maxSelect: 1 },
+                },
+                {
+                    name: 'status', type: 'select', required: true,
+                    options: { values: ['open', 'in_progress', 'resolved', 'closed'], maxSelect: 1 },
+                },
+                { name: 'user', type: 'relation', required: true, options: { collectionId: '_pb_users_auth_', maxSelect: 1 } },
+                { name: 'admin_notes', type: 'text', required: false },
+            ],
+            listRule: '@request.auth.id != "" && user = @request.auth.id',
+            viewRule: '@request.auth.id != "" && user = @request.auth.id',
+            createRule: '@request.auth.id != ""',
+            updateRule: null,
+            deleteRule: null,
+        });
+        console.log('  Collection support_tickets creee.');
+    } catch (e) {
+        console.error('  Echec creation support_tickets :', e.message);
+    }
+}
+
+async function seedUsersIfEmpty(pb) {
+    console.log('\n[SETUP] --- Verification seed des utilisateurs ---');
+
+    // Idempotence forte : si au moins 1 user existe, on NE TOUCHE A RIEN.
+    // Ceci evite toute collision avec des comptes crees depuis l'UI admin Coolify.
+    let existingCount = 0;
+    try {
+        const existingList = await pb.collection('users').getList(1, 1);
+        existingCount = existingList.totalItems;
+    } catch (e) {
+        console.error('  Echec lecture collection users :', e.message);
+        return;
     }
 
-    // ===== 4. Seed initial users =====
-    console.log('\n--- Seeding initial users ---');
+    if (existingCount > 0) {
+        console.log(`  ${existingCount} utilisateur(s) deja present(s) -> seed ignore (idempotent).`);
+        return;
+    }
+
+    console.log('  Collection users vide -> seed initial des 6 comptes.');
     const seedUsers = [
         { email: 'naissa.chateau@ors-guyane.org', name: 'Naissa Chateau Remy', role: 'admin', organization: 'ORSG-CTPS', department: 'Direction' },
         { email: 'cedric.atticot@live.fr', name: 'Cedric Atticot', role: 'admin', organization: 'N.O.V.I. Connected', department: 'Developpement' },
@@ -186,11 +208,6 @@ async function main() {
 
     for (const u of seedUsers) {
         try {
-            const existing = await pb.collection('users').getFullList({ filter: `email="${u.email}"` });
-            if (existing.length > 0) {
-                console.log(`  = User exists: ${u.email}`);
-                continue;
-            }
             await pb.collection('users').create({
                 email: u.email,
                 name: u.name,
@@ -202,17 +219,14 @@ async function main() {
                 department: u.department || '',
                 emailVisibility: true,
             });
-            console.log(`  + Created user: ${u.email} (role: ${u.role})`);
+            console.log(`  + Utilisateur cree : ${u.email} (role: ${u.role})`);
         } catch (e) {
-            console.error(`  Failed to seed ${u.email}:`, e.message);
+            console.error(`  Echec creation ${u.email} :`, e.message);
         }
     }
 
-    // ===== 5. Set personal password hashes for password-login users =====
-    // IMPORTANT: PB auth password stays as PB_SYSTEM_PASSWORD for ALL users (needed for OTP flow).
-    // Personal passwords are stored as sha256 hashes in the personal_password_hash field.
-    // Only cedric.atticot@live.fr gets password login in the UI (live.fr blocks SMTP).
-    console.log('\n--- Setting personal password hashes ---');
+    // Hashes personnels (uniquement pour comptes sans OTP fiable : live.fr bloque Resend)
+    console.log('\n[SETUP] --- Hashes mots de passe personnels ---');
     const personalPasswords = [
         { email: 'cedric.atticot@live.fr', password: 'Prisme2026!' },
         { email: 'marc.ravino@gmail.com', password: 'Prisme2026!' },
@@ -221,42 +235,69 @@ async function main() {
         try {
             const users = await pb.collection('users').getFullList({ filter: `email="${p.email}"` });
             if (users.length > 0) {
-                const hash = sha256(p.password);
-                // Reset PB auth password to system password (in case it was changed before)
                 await pb.collection('users').update(users[0].id, {
                     password: PB_SYSTEM_PASSWORD,
                     passwordConfirm: PB_SYSTEM_PASSWORD,
-                    personal_password_hash: hash,
+                    personal_password_hash: sha256(p.password),
                 });
-                console.log(`  + Personal password hash set for: ${p.email} (PB auth reset to system password)`);
+                console.log(`  + Hash personnel pose pour : ${p.email}`);
             }
         } catch (e) {
-            console.error(`  Failed to set personal password hash for ${p.email}:`, e.message);
+            console.error(`  Echec pose hash ${p.email} :`, e.message);
         }
     }
+}
 
-    // ===== 6. Update users API rules =====
-    console.log('\n--- Updating API rules ---');
+async function ensureUsersApiRules(pb) {
+    console.log('\n[SETUP] --- Verification regles API users ---');
     try {
         const usersCollection = await pb.collections.getOne('users');
-        await pb.collections.update(usersCollection.id, {
-            // Authenticated users can view all users (needed for admin page)
+        const desired = {
             listRule: '@request.auth.id != ""',
             viewRule: '@request.auth.id != ""',
-            // Users edit their own profile OR admins edit anyone
             updateRule: '@request.auth.id = id || @request.auth.role = "admin"',
-            // Admins can delete any account (soft guard: also block self-delete at app level)
             deleteRule: '@request.auth.role = "admin"',
-        });
-        console.log('  Users API rules updated (admin + self-edit).');
+        };
+        const needsUpdate =
+            usersCollection.listRule !== desired.listRule ||
+            usersCollection.viewRule !== desired.viewRule ||
+            usersCollection.updateRule !== desired.updateRule ||
+            usersCollection.deleteRule !== desired.deleteRule;
+
+        if (needsUpdate) {
+            await pb.collections.update(usersCollection.id, desired);
+            console.log('  Regles API users mises a jour.');
+        } else {
+            console.log('  Regles API users deja correctes.');
+        }
     } catch (e) {
-        console.error('  Failed to update API rules:', e.message);
+        console.error('  Echec mise a jour regles API :', e.message);
+    }
+}
+
+async function main() {
+    const PocketBase = (await import('pocketbase')).default;
+    const pb = new PocketBase(PB_URL);
+
+    console.log(`[SETUP] Connexion a PocketBase : ${PB_URL}`);
+    const authed = await tryAuthAdmin(pb);
+    if (!authed) {
+        console.log('\n[SETUP] === Setup ignore (admin inaccessible, donnees existantes preservees) ===\n');
+        return;
     }
 
-    console.log('\n=== Setup complete ===\n');
+    await ensureUsersSchema(pb);
+    await ensureLoginCodesCollection(pb);
+    await ensureSupportTicketsCollection(pb);
+    await seedUsersIfEmpty(pb);
+    await ensureUsersApiRules(pb);
+
+    console.log('\n[SETUP] === Setup termine (idempotent) ===\n');
 }
 
 main().catch(e => {
-    console.error('Setup failed:', e);
-    process.exit(1);
+    console.error('[SETUP] Echec global :', e);
+    // NB : on ne fait PAS process.exit(1) pour ne pas casser l'entrypoint.
+    // L'appli doit demarrer meme si le setup a un probleme non-fatal.
+    process.exit(0);
 });

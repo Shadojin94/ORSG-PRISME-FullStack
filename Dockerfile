@@ -61,8 +61,9 @@ ENV PYTHON_EXE=python3
 ENV PORT=8000
 ENV POCKETBASE_URL=http://127.0.0.1:8090
 
-# Persistent data volumes
-VOLUME ["/app/Backend/inputs/opendata", "/app/pb_data"]
+# Volumes persistants : Open Data (~928 Mo), base PocketBase (users/sessions),
+# et rapports Excel generes par les utilisateurs (doivent survivre aux redeploys).
+VOLUME ["/app/Backend/inputs/opendata", "/app/pb_data", "/app/Backend/output"]
 
 # Match the port cercleonline expects
 EXPOSE 8000

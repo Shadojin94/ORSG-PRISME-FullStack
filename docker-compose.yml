@@ -1,0 +1,52 @@
+# PRISME / Data Visus - Docker Compose (persistance garantie Coolify)
+# ORSG-CTPS Guyane - Cercle Online
+#
+# Objectif : forcer les volumes nommes persistants pour que :
+#   - les utilisateurs PocketBase (admin + experts) survivent aux redeploys
+#   - les rapports generes (Backend/output) soient conserves
+#   - les Open Data telecharges (~928 Mo) ne soient pas retelecharges a chaque build
+#
+# Coolify lit docker-compose.yml en priorite devant le Dockerfile.
+
+services:
+  prisme:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: prisme_app
+    restart: unless-stopped
+    ports:
+      - "8000:8000"
+    environment:
+      # Ces variables sont surchargees par Coolify si definies cote plateforme.
+      PORT: "8000"
+      POCKETBASE_URL: "http://127.0.0.1:8090"
+      POCKETBASE_ADMIN_EMAIL: "${POCKETBASE_ADMIN_EMAIL:-cedric.atticot@live.fr}"
+      POCKETBASE_ADMIN_PASSWORD: "${POCKETBASE_ADMIN_PASSWORD:-PrismeAdmin2026!}"
+      PB_SYSTEM_PASSWORD: "${PB_SYSTEM_PASSWORD:-PrismeSystemAuth2026!}"
+      SMTP_HOST: "${SMTP_HOST:-smtp.resend.com}"
+      SMTP_PORT: "${SMTP_PORT:-465}"
+      SMTP_USER: "${SMTP_USER:-resend}"
+      SMTP_PASS: "${SMTP_PASS:-}"
+      SMTP_FROM: "${SMTP_FROM:-Data Visus <noreply@live.cercleonline.com>}"
+    volumes:
+      # Base PocketBase (utilisateurs, sessions, collections) - CRITIQUE
+      - prisme_pb_data:/app/pb_data
+      # Open Data (INSEE, CAF, CepiDc, BAAC...) - evite un retelechargement complet
+      - prisme_opendata:/app/Backend/inputs/opendata
+      # Rapports Excel generes par les utilisateurs - CRITIQUE
+      - prisme_output:/app/Backend/output
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://127.0.0.1:8000/api/health"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 60s
+
+volumes:
+  prisme_pb_data:
+    name: prisme_pb_data
+  prisme_opendata:
+    name: prisme_opendata
+  prisme_output:
+    name: prisme_output

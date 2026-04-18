@@ -8,13 +8,25 @@ if [ -f /app/pocketbase/pocketbase ]; then
     PB_ADMIN_EMAIL="${POCKETBASE_ADMIN_EMAIL:-cedric.atticot@live.fr}"
     PB_ADMIN_PASS="${POCKETBASE_ADMIN_PASSWORD:-PrismeAdmin2026!}"
 
-    # Create or update admin password (works on DB file directly, no server needed)
-    echo "[INIT] Ensuring PocketBase admin account..."
-    /app/pocketbase/pocketbase admin create "$PB_ADMIN_EMAIL" "$PB_ADMIN_PASS" --dir=/app/pb_data 2>/dev/null && \
-        echo "[INIT] Admin $PB_ADMIN_EMAIL created" || \
-        { /app/pocketbase/pocketbase admin update "$PB_ADMIN_EMAIL" "$PB_ADMIN_PASS" --dir=/app/pb_data 2>/dev/null && \
-            echo "[INIT] Admin $PB_ADMIN_EMAIL password updated" || \
-            echo "[WARN] Could not create/update admin"; }
+    # Creation / mise a jour admin (travaille directement sur le fichier DB, sans serveur).
+    # Comportement idempotent :
+    #   1. tentative de creation -> OK si admin absent
+    #   2. si "already exists" -> tentative d'update password
+    #   3. si update echoue -> WARNING uniquement (un admin existe deja avec
+    #      un mot de passe different, volume persistant -> on preserve l'existant)
+    echo "[INIT] Verification compte admin PocketBase..."
+    PB_ADMIN_CREATE_OUT=$(/app/pocketbase/pocketbase admin create "$PB_ADMIN_EMAIL" "$PB_ADMIN_PASS" --dir=/app/pb_data 2>&1) && {
+        echo "[INIT] Admin $PB_ADMIN_EMAIL cree"
+    } || {
+        if echo "$PB_ADMIN_CREATE_OUT" | grep -qiE "exists|unique|duplicat"; then
+            echo "[INIT] Admin $PB_ADMIN_EMAIL deja existant, tentative de mise a jour du mot de passe..."
+            /app/pocketbase/pocketbase admin update "$PB_ADMIN_EMAIL" "$PB_ADMIN_PASS" --dir=/app/pb_data 2>/dev/null && \
+                echo "[INIT] Mot de passe admin mis a jour" || \
+                echo "[WARN] Impossible d'actualiser le mot de passe admin (compte preserve tel quel)"
+        else
+            echo "[WARN] Creation admin impossible : $PB_ADMIN_CREATE_OUT"
+        fi
+    }
 
     # Generate .env for Node scripts (always regenerate to match env vars)
     cat > /app/Backend/.env <<ENVEOF
