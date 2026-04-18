@@ -17,6 +17,35 @@ import tempfile
 
 warnings.filterwarnings('ignore')
 
+
+# ============================================================================
+# ENCODAGE AUTO-DETECTION
+# ============================================================================
+
+def _read_lines_autoenc(filepath):
+    """Lit un fichier texte en détectant automatiquement l'encodage.
+
+    Essaie dans l'ordre : utf-8-sig (BOM), utf-8, cp1252, latin-1.
+    Retourne (lines, encoding_utilisé).
+    """
+    for enc in ('utf-8-sig', 'utf-8', 'cp1252', 'latin-1'):
+        try:
+            with open(filepath, 'r', encoding=enc, errors='strict') as f:
+                lines = f.readlines()
+            # Heuristique : si on trouve des caractères français courants bien décodés,
+            # on considère l'encodage correct.
+            sample = ''.join(lines[:20])
+            # Rejeter si on voit des séquences manifestement corrompues (cp1252 mal interprété)
+            if '\ufffd' in sample:
+                continue
+            return lines, enc
+        except (UnicodeDecodeError, UnicodeError):
+            continue
+    # Dernier recours : latin-1 avec remplacement (jamais d'erreur)
+    with open(filepath, 'r', encoding='latin-1', errors='replace') as f:
+        lines = f.readlines()
+    return lines, 'latin-1 (fallback)'
+
 # ============================================================================
 # CONFIGURATION & PATHS
 # ============================================================================
@@ -165,12 +194,13 @@ GEO_ID_COLS = {
 def parse_moca_legacy_csv(filepath):
     """Parse un fichier CSV au format MOCA-O classique (matrice).
     Auto-détecte: year=col0, geo=pattern matching, value=dernière col numérique.
+    Détecte automatiquement l'encodage (utf-8-sig, utf-8, cp1252, latin-1).
     """
     result = {'com': [], 'reg': [], 'dom': [], 'fh': [], 'fra': []}
-    
+
     try:
-        with open(filepath, 'r', encoding='cp1252', errors='replace') as f:
-            lines = f.readlines()
+        lines, enc = _read_lines_autoenc(filepath)
+        print(f"  [ENC] {Path(filepath).name} -> {enc}")
     except Exception as e:
         print(f"Erreur lecture {filepath}: {e}")
         return {k: pd.DataFrame(columns=['annee', 'codgeo', 'valeur']) for k in result}
@@ -241,12 +271,14 @@ def parse_moca_legacy_csv(filepath):
 # ============================================================================
 
 def parse_long_format_csv(filepath):
-    """Parse un fichier CSV au format Long (une ligne = une entité)."""
+    """Parse un fichier CSV au format Long (une ligne = une entité).
+    Détecte automatiquement l'encodage (utf-8-sig, utf-8, cp1252, latin-1).
+    """
     result = {'com': [], 'reg': [], 'dom': [], 'fh': [], 'fra': []}
-    
+
     try:
-        with open(filepath, 'r', encoding='latin-1', errors='replace') as f:
-            lines = f.readlines()
+        lines, enc = _read_lines_autoenc(filepath)
+        print(f"  [ENC] {Path(filepath).name} -> {enc}")
     except Exception as e:
         print(f"Erreur lecture {filepath}: {e}")
         return {k: pd.DataFrame(columns=['annee', 'codgeo', 'valeur']) for k in result}
@@ -313,12 +345,14 @@ def parse_long_format_csv(filepath):
 # ============================================================================
 
 def parse_tabular_csv(filepath, value_column=2, year_column=0, geo_column=1, dimension_column=None):
-    """Parse un fichier CSV au format tabulaire (OpenData)."""
+    """Parse un fichier CSV au format tabulaire (OpenData).
+    Détecte automatiquement l'encodage (utf-8-sig, utf-8, cp1252, latin-1).
+    """
     result = {'com': [], 'reg': [], 'dom': [], 'fh': [], 'fra': []}
 
     try:
-        with open(filepath, 'r', encoding='cp1252', errors='replace') as f:
-            lines = f.readlines()
+        lines, enc = _read_lines_autoenc(filepath)
+        print(f"  [ENC] {Path(filepath).name} -> {enc}")
     except Exception as e:
         print(f"Erreur lecture {filepath}: {e}")
         return {k: pd.DataFrame(columns=['annee', 'codgeo', 'valeur']) for k in result}
@@ -413,12 +447,14 @@ def parse_tabular_csv(filepath, value_column=2, year_column=0, geo_column=1, dim
 # ============================================================================
 
 def parse_moca_csv(filepath, year_column=3, geo_column=5, value_column=6, dimension_column=None):
-    """Parse un fichier format MOCA standard."""
+    """Parse un fichier format MOCA standard.
+    Détecte automatiquement l'encodage (utf-8-sig, utf-8, cp1252, latin-1).
+    """
     result = {'com': [], 'reg': [], 'dom': [], 'fh': [], 'fra': []}
 
     try:
-        with open(filepath, 'r', encoding='cp1252', errors='replace') as f:
-            lines = f.readlines()
+        lines, enc = _read_lines_autoenc(filepath)
+        print(f"  [ENC] {Path(filepath).name} -> {enc}")
     except Exception as e:
         print(f"Erreur lecture {filepath}: {e}")
         return {k: pd.DataFrame(columns=['annee', 'codgeo', 'valeur']) for k in result}
@@ -527,12 +563,14 @@ def parse_moca_csv(filepath, year_column=3, geo_column=5, value_column=6, dimens
 # ============================================================================
 
 def parse_moca_filter_csv(filepath, filter_column, filter_value, year_column=3, geo_column=5, value_column=6, dimension_column=None):
-    """Parse un fichier MOCA avec filtre sur une colonne spécifique."""
+    """Parse un fichier MOCA avec filtre sur une colonne spécifique.
+    Détecte automatiquement l'encodage (utf-8-sig, utf-8, cp1252, latin-1).
+    """
     result = {'com': [], 'reg': [], 'dom': [], 'fh': [], 'fra': []}
 
     try:
-        with open(filepath, 'r', encoding='cp1252', errors='replace') as f:
-            lines = f.readlines()
+        lines, enc = _read_lines_autoenc(filepath)
+        print(f"  [ENC] {Path(filepath).name} -> {enc}")
     except Exception as e:
         print(f"Erreur lecture {filepath}: {e}")
         return {k: pd.DataFrame(columns=['annee', 'codgeo', 'valeur']) for k in result}
@@ -1020,6 +1058,20 @@ def generate_prisme_excel(dataset_id, year):
         if levels_with_data and levels_without_data:
             missing_labels = ', '.join(GEO_LABELS.get(l, l) for l in levels_without_data)
             print(f"  [WARN_DATA] {var_id} : données absentes au niveau {missing_labels} — les colonnes seront vides. Vérifiez le fichier CSV source.")
+
+    # ---- Vérifier la couverture partielle des communes ----
+    for var_id in vars_with_data:
+        parsed = csv_data.get(var_id, {})
+        com_df = parsed.get('com', pd.DataFrame())
+        if isinstance(com_df, pd.DataFrame) and not com_df.empty and 'annee' in com_df.columns:
+            com_year = com_df[com_df['annee'] == year]
+            if not com_year.empty:
+                com_with_data = set(com_year['codgeo'].unique())
+                com_expected = set(COMMUNES_GUYANE)
+                missing_com = com_expected - com_with_data
+                if missing_com:
+                    print(f"  [WARN_DATA] {var_id} : {len(com_with_data)}/{len(com_expected)} communes ont des données pour {year}. "
+                          f"Communes sans données (secret stat. ou absence) : {', '.join(str(c) for c in sorted(missing_com))}")
 
     # ---- Construire l'ordre des colonnes (headers) ----
     # Suit l'ordre exact du config : geo, time, dimensions, variables

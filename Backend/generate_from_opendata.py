@@ -638,7 +638,16 @@ def _build_densite_levels(year: int):
 # ---------------------------------------------------------------------------
 
 def _build_route_levels(year: int):
-    # Cherche d'abord le dataset complet (baac/), sinon le filtre Guyane commité (baac_guyane/)
+    """Construit les niveaux géographiques depuis les fichiers BAAC.
+
+    Cherche d'abord le dataset national complet (baac/), puis le dataset
+    Guyane-seulement (baac_guyane/). Retourne un tuple (all_levels, guyane_only)
+    où guyane_only=True signifie que seules des données Guyane sont disponibles
+    (les onglets FH/FRA seront à zéro, une note sera ajoutée dans l'Excel).
+    """
+    guyane_only = False
+    source_sub = None
+
     for sub in ("baac", "baac_guyane"):
         baac_dir = INPUTS_DIR / sub / f"annees_{year}"
         if not baac_dir.exists():
@@ -646,11 +655,17 @@ def _build_route_levels(year: int):
         caract_path = baac_dir / f"caract_{year}.csv"
         usagers_path = baac_dir / f"usagers_{year}.csv"
         if caract_path.exists() and usagers_path.exists():
+            source_sub = sub
             break
     if not caract_path.exists():
         raise FileNotFoundError(f"Source BAAC manquante: {caract_path}")
     if not usagers_path.exists():
         raise FileNotFoundError(f"Source BAAC manquante: {usagers_path}")
+
+    if source_sub == "baac_guyane":
+        guyane_only = True
+        print(f"  [WARN] BAAC {year}: seule la source Guyane (baac_guyane/) est disponible."
+              " Les niveaux FH/FRA ne contiendront que les données Guyane.")
 
     caract = _read_csv_auto(caract_path, dtype={"com": str, "dep": str})
     usagers = _read_csv_auto(usagers_path, dtype={"grav": str})
@@ -692,7 +707,7 @@ def _build_route_levels(year: int):
             "nb_blesses": _safe_numeric(df, ["nb_blesses"]).round(0).astype(int),
             "nb_morts": _safe_numeric(df, ["nb_morts"]).round(0).astype(int),
         })
-    return _add_year(result, year)
+    return _add_year(result, year), guyane_only
 
 
 # ---------------------------------------------------------------------------
@@ -1056,7 +1071,19 @@ def _build_spf_noyades_levels(year: int):
     return _add_year({"com": com, "reg": reg, "dom": dom, "fh": fh, "fra": fra}, year)
 
 
-def _generate_excel_and_zip(theme: str, year: int, all_levels):
+def _add_note_to_sheet(ws, df, note_text, note_color="FF0000"):
+    """Ajoute une note informative sous les données dans une feuille Excel."""
+    note_row = len(df) + 3
+    note_cell = ws.cell(row=note_row, column=1, value=note_text)
+    note_cell.font = Font(italic=True, color=note_color)
+
+
+def _generate_excel_and_zip(theme: str, year: int, all_levels, guyane_only: bool = False):
+    """Génère les fichiers Excel par niveau géo et crée le ZIP final.
+
+    guyane_only=True : la source BAAC ne contient que la Guyane.
+    Une note d'avertissement est ajoutée dans les onglets FH/FRA.
+    """
     cfg = THEME_CONFIGS[theme]
     all_variables = cfg["variables"]
     # Exclure les variables calculées (tx_*) — PRISME les recalcule côté client
@@ -1067,6 +1094,13 @@ def _generate_excel_and_zip(theme: str, year: int, all_levels):
         else:
             variables.append(v)
     excel_name = cfg["excel_name"]
+
+    # Note BAAC Guyane-only pour onglets FH et FRA
+    BAAC_GUYANE_NOTE = (
+        "ATTENTION : Les donnees BAAC disponibles pour cette annee ne couvrent que la Guyane (973). "
+        "Les chiffres de France Hexagonale et France Entiere sont incomplets. "
+        "Source : BAAC local Guyane (baac_guyane/) — le fichier national n'etait pas disponible lors de la generation."
+    )
 
     root_dir = OUTPUT_DIR / f"{theme}_opendata" / str(year)
     if root_dir.exists():
@@ -1105,11 +1139,13 @@ def _generate_excel_and_zip(theme: str, year: int, all_levels):
 
         # CepiDc commune annotation: data is regional-only
         if geo_key == "com" and cfg.get("source_type") == "cepidc":
-            note_row = len(df) + 3
-            note_cell = ws.cell(row=note_row, column=1,
-                value="NOTE: La source CepiDc ne fournit pas de donnees communales. "
-                      "Les effectifs sont vides. Les taux correspondent au taux regional Guyane (proxy).")
-            note_cell.font = Font(italic=True, color="FF0000")
+            _add_note_to_sheet(ws, df,
+                "NOTE: La source CepiDc ne fournit pas de donnees communales. "
+                "Les effectifs sont vides. Les taux correspondent au taux regional Guyane (proxy).")
+
+        # BAAC Guyane-only annotation in FH and FRA sheets
+        if guyane_only and geo_key in ("fh", "fra"):
+            _add_note_to_sheet(ws, df, BAAC_GUYANE_NOTE)
 
         wb.save(folder / f"{excel_name}.xlsx")
 
@@ -1139,11 +1175,13 @@ def _generate_excel_and_zip(theme: str, year: int, all_levels):
 
         # CepiDc commune annotation in consolidated
         if geo_key == "com" and cfg.get("source_type") == "cepidc":
-            note_row = len(df) + 3
-            note_cell = ws.cell(row=note_row, column=1,
-                value="NOTE: La source CepiDc ne fournit pas de donnees communales. "
-                      "Les effectifs sont vides. Les taux correspondent au taux regional Guyane (proxy).")
-            note_cell.font = Font(italic=True, color="FF0000")
+            _add_note_to_sheet(ws, df,
+                "NOTE: La source CepiDc ne fournit pas de donnees communales. "
+                "Les effectifs sont vides. Les taux correspondent au taux regional Guyane (proxy).")
+
+        # BAAC Guyane-only annotation in FH and FRA sheets of consolidated
+        if guyane_only and geo_key in ("fh", "fra"):
+            _add_note_to_sheet(ws, df, BAAC_GUYANE_NOTE)
 
     wb_cons.save(root_dir / f"{excel_name}_consolidated_{year}.xlsx")
     zip_path = shutil.make_archive(str(OUTPUT_DIR / f"{theme}_opendata_{year}"), "zip", str(OUTPUT_DIR / f"{theme}_opendata"), str(year))
@@ -1152,6 +1190,8 @@ def _generate_excel_and_zip(theme: str, year: int, all_levels):
 
 def generate_theme(theme: str, year: int):
     source_type = THEME_CONFIGS[theme]["source_type"]
+    guyane_only = False  # Positionné à True uniquement pour BAAC Guyane-seulement
+
     if source_type == "educ":
         all_levels = _build_educ_levels(year)
     elif source_type == "couples":
@@ -1163,7 +1203,7 @@ def generate_theme(theme: str, year: int):
     elif source_type == "pop_legales":
         all_levels = _build_densite_levels(year)
     elif source_type == "baac":
-        all_levels = _build_route_levels(year)
+        all_levels, guyane_only = _build_route_levels(year)
     elif source_type == "cepidc":
         all_levels = _build_cepidc_levels(theme, year)
     elif source_type == "odisse_suicide":
@@ -1177,7 +1217,7 @@ def generate_theme(theme: str, year: int):
     else:
         raise ValueError(f"Source type inconnu: {source_type}")
 
-    root_dir, zip_path = _generate_excel_and_zip(theme, year, all_levels)
+    root_dir, zip_path = _generate_excel_and_zip(theme, year, all_levels, guyane_only=guyane_only)
     print(f"[OK] {theme} {year}: {zip_path}")
     print("     dossiers:", ", ".join(GEO_FOLDER_MAPPING.values()))
     return root_dir
