@@ -8,24 +8,18 @@ if [ -f /app/pocketbase/pocketbase ]; then
     PB_ADMIN_EMAIL="${POCKETBASE_ADMIN_EMAIL:-cedric.atticot@live.fr}"
     PB_ADMIN_PASS="${POCKETBASE_ADMIN_PASSWORD:-PrismeAdmin2026!}"
 
-    # Creation / mise a jour admin (travaille directement sur le fichier DB, sans serveur).
-    # Comportement idempotent :
-    #   1. tentative de creation -> OK si admin absent
-    #   2. si "already exists" -> tentative d'update password
-    #   3. si update echoue -> WARNING uniquement (un admin existe deja avec
-    #      un mot de passe different, volume persistant -> on preserve l'existant)
-    echo "[INIT] Verification compte admin PocketBase..."
-    PB_ADMIN_CREATE_OUT=$(/app/pocketbase/pocketbase admin create "$PB_ADMIN_EMAIL" "$PB_ADMIN_PASS" --dir=/app/pb_data 2>&1) && {
-        echo "[INIT] Admin $PB_ADMIN_EMAIL cree"
+    # Admin upsert strict (priorite a UPDATE pour forcer le password env).
+    # 1. update -> si admin existe et password reinitialise
+    # 2. create -> si admin absent
+    # 3. logs TOUJOURS visibles (plus de /dev/null silencieux)
+    echo "[INIT] Setup admin PocketBase (upsert) pour $PB_ADMIN_EMAIL ..."
+    PB_UPDATE_OUT=$(/app/pocketbase/pocketbase admin update "$PB_ADMIN_EMAIL" "$PB_ADMIN_PASS" --dir=/app/pb_data 2>&1) && {
+        echo "[INIT] Admin password mis a jour (update): $PB_UPDATE_OUT"
     } || {
-        if echo "$PB_ADMIN_CREATE_OUT" | grep -qiE "exists|unique|duplicat"; then
-            echo "[INIT] Admin $PB_ADMIN_EMAIL deja existant, tentative de mise a jour du mot de passe..."
-            /app/pocketbase/pocketbase admin update "$PB_ADMIN_EMAIL" "$PB_ADMIN_PASS" --dir=/app/pb_data 2>/dev/null && \
-                echo "[INIT] Mot de passe admin mis a jour" || \
-                echo "[WARN] Impossible d'actualiser le mot de passe admin (compte preserve tel quel)"
-        else
-            echo "[WARN] Creation admin impossible : $PB_ADMIN_CREATE_OUT"
-        fi
+        echo "[INIT] Update impossible ($PB_UPDATE_OUT), tentative create..."
+        PB_CREATE_OUT=$(/app/pocketbase/pocketbase admin create "$PB_ADMIN_EMAIL" "$PB_ADMIN_PASS" --dir=/app/pb_data 2>&1) && \
+            echo "[INIT] Admin cree: $PB_CREATE_OUT" || \
+            echo "[ERROR] Admin setup failed: $PB_CREATE_OUT"
     }
 
     # Generate .env for Node scripts (always regenerate to match env vars)

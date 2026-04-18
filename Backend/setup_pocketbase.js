@@ -193,6 +193,8 @@ async function seedUsersIfEmpty(pb) {
 
     if (existingCount > 0) {
         console.log(`  ${existingCount} utilisateur(s) deja present(s) -> seed ignore (idempotent).`);
+        // NB : on continue quand meme dans main() pour reposer les hashes personnels
+        // (voir ensurePersonalPasswordsAlways ci-dessous, appele hors seedUsersIfEmpty)
         return;
     }
 
@@ -248,6 +250,44 @@ async function seedUsersIfEmpty(pb) {
     }
 }
 
+/**
+ * Pose/met a jour le personal_password_hash sur les comptes cles A CHAQUE boot.
+ * Idempotent : si le hash est deja correct, aucune action.
+ * Evite la regression "can_use_password: false" apres un redeploy.
+ */
+async function ensurePersonalPasswordsAlways(pb) {
+    console.log('\n[SETUP] --- Mise a jour hashes mots de passe personnels (always) ---');
+    const personalPasswords = [
+        { email: 'cedric.atticot@live.fr', password: 'Prisme2026!' },
+        { email: 'marc.ravino@gmail.com', password: 'Prisme2026!' },
+        { email: 'naissa.chateau@ors-guyane.org', password: 'Prisme2026!' },
+        { email: 'm-j.castor@ors-guyane.org', password: 'Prisme2026!' },
+        { email: 'jessy.pajot@ors-guyane.org', password: 'Prisme2026!' },
+        { email: 'm.imounga-desroziers@ors-guyane.org', password: 'Prisme2026!' },
+    ];
+    for (const p of personalPasswords) {
+        try {
+            const users = await pb.collection('users').getFullList({ filter: `email="${p.email}"` });
+            if (users.length === 0) {
+                console.log(`  ~ User absent, skip : ${p.email}`);
+                continue;
+            }
+            const user = users[0];
+            const desiredHash = sha256(p.password);
+            if (user.personal_password_hash === desiredHash) {
+                console.log(`  = Hash deja correct : ${p.email}`);
+                continue;
+            }
+            await pb.collection('users').update(user.id, {
+                personal_password_hash: desiredHash,
+            });
+            console.log(`  + Hash pose/mis a jour : ${p.email}`);
+        } catch (e) {
+            console.error(`  Echec pose hash ${p.email} :`, e.message);
+        }
+    }
+}
+
 async function ensureUsersApiRules(pb) {
     console.log('\n[SETUP] --- Verification regles API users ---');
     try {
@@ -290,6 +330,7 @@ async function main() {
     await ensureLoginCodesCollection(pb);
     await ensureSupportTicketsCollection(pb);
     await seedUsersIfEmpty(pb);
+    await ensurePersonalPasswordsAlways(pb);
     await ensureUsersApiRules(pb);
 
     console.log('\n[SETUP] === Setup termine (idempotent) ===\n');
