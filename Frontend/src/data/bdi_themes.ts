@@ -572,21 +572,21 @@ export const BDI_THEMES = [
                 id: "addictions_alcool",
                 title: "Alcool",
                 datasets: [
-                    { id: "comp_mortalite", label: "Mortalité liée à l'alcool", variable: "m_alcool", source: "INSERM-CépiDc, INSEE", tool: "MOCA-O" },
+                    { id: "comp_mortalite", label: "Mortalité liée à l'alcool", variable: "m_alcool", source: "INSERM-CépiDc, INSEE", tool: "MOCA-O", demoReady: true },
                 ]
             },
             {
                 id: "addictions_tabac",
                 title: "Tabac",
                 datasets: [
-                    { id: "comp_mortalite", label: "Mortalité liée au tabac", variable: "m_tabac", source: "INSERM-CépiDc, INSEE", tool: "MOCA-O" },
+                    { id: "comp_mortalite", label: "Mortalité liée au tabac", variable: "m_tabac", source: "INSERM-CépiDc, INSEE", tool: "MOCA-O", demoReady: true },
                 ]
             },
             {
                 id: "suicide",
                 title: "Suicide",
                 datasets: [
-                    { id: "comp_mortalite", label: "Mortalité par suicide", variable: "m_suicide", source: "INSERM-CépiDc, INSEE", tool: "MOCA-O" },
+                    { id: "comp_mortalite", label: "Mortalité par suicide", variable: "m_suicide", source: "INSERM-CépiDc, INSEE", tool: "MOCA-O", demoReady: true },
                 ]
             }
         ],
@@ -630,9 +630,9 @@ export const BDI_THEMES = [
                 id: "noyades",
                 title: "Noyades (accidents de la vie courante)",
                 datasets: [
-                    { id: "noyades", label: "Nombre de noyades", variable: "nb_noyades", source: "DREES, INSEE", tool: "Enquête Noyades, SPF - GEODES" },
+                    { id: "noyades", label: "Nombre de noyades", variable: "nb_noyades", source: "DREES, INSEE", tool: "Enquête Noyades, SPF - GEODES", demoReady: true },
                     { id: "noyades", label: "Taux d'incidence des noyades (pour 1 000 000 hab.)", variable: "tx_noyades", source: "DREES, INSEE", tool: "Calcul" },
-                    { id: "noyades", label: "Nombre de noyades suivies de décès", variable: "nb_noyades_deces", source: "DREES, INSEE", tool: "Enquête Noyades, SPF - GEODES" },
+                    { id: "noyades", label: "Nombre de noyades suivies de décès", variable: "nb_noyades_deces", source: "DREES, INSEE", tool: "Enquête Noyades, SPF - GEODES", demoReady: true },
                     { id: "noyades", label: "Taux d'incidence des noyades suivies de décès", variable: "tx_noyades_deces", source: "DREES, INSEE", tool: "Calcul" },
                 ]
             }

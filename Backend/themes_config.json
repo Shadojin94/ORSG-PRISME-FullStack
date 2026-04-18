@@ -1174,24 +1174,30 @@
           "id": "m_alcool",
           "type": "variable",
           "label": "Mortalité liée à l'alcool",
-          "csvPattern": "m_alcool",
-          "parser": "external",
+          "csvPattern": "Comportement_MOCAO",
+          "parser": "moca_filter",
+          "filterColumn": 4,
+          "filterValue": "Alcool",
           "source": "CépiDc"
         },
         {
           "id": "m_tabac",
           "type": "variable",
           "label": "Mortalité liée au tabac",
-          "csvPattern": "m_tabac",
-          "parser": "external",
+          "csvPattern": "Comportement_MOCAO",
+          "parser": "moca_filter",
+          "filterColumn": 4,
+          "filterValue": "Tabac",
           "source": "CépiDc"
         },
         {
           "id": "m_suicide",
           "type": "variable",
           "label": "Mortalité par suicide",
-          "csvPattern": "m_suicide",
-          "parser": "external",
+          "csvPattern": "Comportement_MOCAO",
+          "parser": "moca_filter",
+          "filterColumn": 4,
+          "filterValue": "Suicide",
           "source": "CépiDc"
         }
       ]

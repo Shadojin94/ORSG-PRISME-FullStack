@@ -1,0 +1,5 @@
+source;annee;dep;nom;nb_acci;nb_morts;nb_blesses_hospi;nb_blesses_legers;nb_blesses_total;dont_mortels;dont_graves
+bilan_client;2023;973;Guyane;600;34;191;620;811;29;173
+csv_existant;2023;973;Guyane;600;34;191;620;811;;
+bilan_client;2024;973;Guyane;631;34;125;720;845;31;124
+csv_existant;2024;973;Guyane;631;34;125;720;845;;

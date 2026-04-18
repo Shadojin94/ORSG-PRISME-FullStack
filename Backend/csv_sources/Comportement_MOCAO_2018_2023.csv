@@ -1,0 +1,758 @@
+;;;Date_deces_Cim10#Annee;Cause_deces#Causes_de_deces_alphabetique;Lieu_domicile#commune;Nb_deces_standardises
+;;;;;;
+;;;2018;Alcool;97301 - Régina;
+;;;2018;Tabac;97301 - Régina;
+;;;2018;Suicide;97301 - Régina;
+;;;2018;Alcool;97302 - Cayenne;34,75
+;;;2018;Tabac;97302 - Cayenne;95,06
+;;;2018;Suicide;97302 - Cayenne;3,39
+;;;2018;Alcool;97303 - Iracoubo;
+;;;2018;Tabac;97303 - Iracoubo;
+;;;2018;Suicide;97303 - Iracoubo;
+;;;2018;Alcool;97304 - Kourou;29,17
+;;;2018;Tabac;97304 - Kourou;148,82
+;;;2018;Suicide;97304 - Kourou;0,00
+;;;2018;Alcool;97305 - Macouria;0,00
+;;;2018;Tabac;97305 - Macouria;0,00
+;;;2018;Suicide;97305 - Macouria;21,14
+;;;2018;Alcool;97306 - Mana;33,44
+;;;2018;Tabac;97306 - Mana;142,68
+;;;2018;Suicide;97306 - Mana;0,00
+;;;2018;Alcool;97307 - Matoury;34,02
+;;;2018;Tabac;97307 - Matoury;78,24
+;;;2018;Suicide;97307 - Matoury;7,96
+;;;2018;Alcool;97308 - Saint-Georges;0,00
+;;;2018;Tabac;97308 - Saint-Georges;248,10
+;;;2018;Suicide;97308 - Saint-Georges;0,00
+;;;2018;Alcool;97309 - Remire-Montjoly;38,94
+;;;2018;Tabac;97309 - Remire-Montjoly;98,87
+;;;2018;Suicide;97309 - Remire-Montjoly;22,01
+;;;2018;Alcool;97310 - Roura;0,00
+;;;2018;Tabac;97310 - Roura;0,00
+;;;2018;Suicide;97310 - Roura;0,00
+;;;2018;Alcool;97311 - Saint-Laurent-du-Maroni;21,22
+;;;2018;Tabac;97311 - Saint-Laurent-du-Maroni;338,41
+;;;2018;Suicide;97311 - Saint-Laurent-du-Maroni;0,00
+;;;2018;Alcool;97312 - Sinnamary;65,30
+;;;2018;Tabac;97312 - Sinnamary;0,00
+;;;2018;Suicide;97312 - Sinnamary;0,00
+;;;2018;Alcool;97313 - Montsinéry-Tonnegrande;
+;;;2018;Tabac;97313 - Montsinéry-Tonnegrande;
+;;;2018;Suicide;97313 - Montsinéry-Tonnegrande;
+;;;2018;Alcool;97314 - Ouanary;0,00
+;;;2018;Tabac;97314 - Ouanary;0,00
+;;;2018;Suicide;97314 - Ouanary;0,00
+;;;2018;Alcool;97352 - Saül;
+;;;2018;Tabac;97352 - Saül;
+;;;2018;Suicide;97352 - Saül;
+;;;2018;Alcool;97353 - Maripasoula;0,00
+;;;2018;Tabac;97353 - Maripasoula;0,00
+;;;2018;Suicide;97353 - Maripasoula;27,98
+;;;2018;Alcool;97356 - Camopi;
+;;;2018;Tabac;97356 - Camopi;
+;;;2018;Suicide;97356 - Camopi;
+;;;2018;Alcool;97357 - Grand-Santi;0,00
+;;;2018;Tabac;97357 - Grand-Santi;0,00
+;;;2018;Suicide;97357 - Grand-Santi;0,00
+;;;2018;Alcool;97358 - Saint-Élie;
+;;;2018;Tabac;97358 - Saint-Élie;
+;;;2018;Suicide;97358 - Saint-Élie;
+;;;2018;Alcool;97360 - Apatou;0,00
+;;;2018;Tabac;97360 - Apatou;0,00
+;;;2018;Suicide;97360 - Apatou;17,59
+;;;2018;Alcool;97361 - Awala-Yalimapo;
+;;;2018;Tabac;97361 - Awala-Yalimapo;
+;;;2018;Suicide;97361 - Awala-Yalimapo;
+;;;2018;Alcool;97362 - Papaichton;0,00
+;;;2018;Tabac;97362 - Papaichton;0,00
+;;;2018;Suicide;97362 - Papaichton;0,00
+;;;2019;Alcool;97301 - Régina;
+;;;2019;Tabac;97301 - Régina;
+;;;2019;Suicide;97301 - Régina;
+;;;2019;Alcool;97302 - Cayenne;50,73
+;;;2019;Tabac;97302 - Cayenne;152,30
+;;;2019;Suicide;97302 - Cayenne;10,09
+;;;2019;Alcool;97303 - Iracoubo;756,09
+;;;2019;Tabac;97303 - Iracoubo;339,91
+;;;2019;Suicide;97303 - Iracoubo;82,08
+;;;2019;Alcool;97304 - Kourou;76,56
+;;;2019;Tabac;97304 - Kourou;122,80
+;;;2019;Suicide;97304 - Kourou;6,21
+;;;2019;Alcool;97305 - Macouria;32,60
+;;;2019;Tabac;97305 - Macouria;149,62
+;;;2019;Suicide;97305 - Macouria;5,69
+;;;2019;Alcool;97306 - Mana;65,89
+;;;2019;Tabac;97306 - Mana;211,32
+;;;2019;Suicide;97306 - Mana;10,48
+;;;2019;Alcool;97307 - Matoury;32,13
+;;;2019;Tabac;97307 - Matoury;53,47
+;;;2019;Suicide;97307 - Matoury;2,46
+;;;2019;Alcool;97308 - Saint-Georges;92,85
+;;;2019;Tabac;97308 - Saint-Georges;112,50
+;;;2019;Suicide;97308 - Saint-Georges;0,00
+;;;2019;Alcool;97309 - Remire-Montjoly;76,06
+;;;2019;Tabac;97309 - Remire-Montjoly;185,78
+;;;2019;Suicide;97309 - Remire-Montjoly;6,84
+;;;2019;Alcool;97310 - Roura;0,00
+;;;2019;Tabac;97310 - Roura;646,57
+;;;2019;Suicide;97310 - Roura;0,00
+;;;2019;Alcool;97311 - Saint-Laurent-du-Maroni;70,70
+;;;2019;Tabac;97311 - Saint-Laurent-du-Maroni;283,38
+;;;2019;Suicide;97311 - Saint-Laurent-du-Maroni;4,73
+;;;2019;Alcool;97312 - Sinnamary;0,00
+;;;2019;Tabac;97312 - Sinnamary;0,00
+;;;2019;Suicide;97312 - Sinnamary;0,00
+;;;2019;Alcool;97313 - Montsinéry-Tonnegrande;
+;;;2019;Tabac;97313 - Montsinéry-Tonnegrande;
+;;;2019;Suicide;97313 - Montsinéry-Tonnegrande;
+;;;2019;Alcool;97314 - Ouanary;0,00
+;;;2019;Tabac;97314 - Ouanary;0,00
+;;;2019;Suicide;97314 - Ouanary;0,00
+;;;2019;Alcool;97352 - Saül;
+;;;2019;Tabac;97352 - Saül;
+;;;2019;Suicide;97352 - Saül;
+;;;2019;Alcool;97353 - Maripasoula;154,22
+;;;2019;Tabac;97353 - Maripasoula;16,47
+;;;2019;Suicide;97353 - Maripasoula;37,54
+;;;2019;Alcool;97356 - Camopi;
+;;;2019;Tabac;97356 - Camopi;
+;;;2019;Suicide;97356 - Camopi;
+;;;2019;Alcool;97357 - Grand-Santi;0,00
+;;;2019;Tabac;97357 - Grand-Santi;0,00
+;;;2019;Suicide;97357 - Grand-Santi;0,00
+;;;2019;Alcool;97358 - Saint-Élie;0,00
+;;;2019;Tabac;97358 - Saint-Élie;0,00
+;;;2019;Suicide;97358 - Saint-Élie;0,00
+;;;2019;Alcool;97360 - Apatou;
+;;;2019;Tabac;97360 - Apatou;
+;;;2019;Suicide;97360 - Apatou;
+;;;2019;Alcool;97361 - Awala-Yalimapo;
+;;;2019;Tabac;97361 - Awala-Yalimapo;
+;;;2019;Suicide;97361 - Awala-Yalimapo;
+;;;2019;Alcool;97362 - Papaichton;
+;;;2019;Tabac;97362 - Papaichton;
+;;;2019;Suicide;97362 - Papaichton;
+;;;2020;Alcool;97301 - Régina;
+;;;2020;Tabac;97301 - Régina;
+;;;2020;Suicide;97301 - Régina;
+;;;2020;Alcool;97302 - Cayenne;30,16
+;;;2020;Tabac;97302 - Cayenne;94,38
+;;;2020;Suicide;97302 - Cayenne;5,41
+;;;2020;Alcool;97303 - Iracoubo;726,08
+;;;2020;Tabac;97303 - Iracoubo;0,00
+;;;2020;Suicide;97303 - Iracoubo;0,00
+;;;2020;Alcool;97304 - Kourou;60,89
+;;;2020;Tabac;97304 - Kourou;16,54
+;;;2020;Suicide;97304 - Kourou;4,13
+;;;2020;Alcool;97305 - Macouria;0,00
+;;;2020;Tabac;97305 - Macouria;276,06
+;;;2020;Suicide;97305 - Macouria;0,00
+;;;2020;Alcool;97306 - Mana;0,00
+;;;2020;Tabac;97306 - Mana;242,82
+;;;2020;Suicide;97306 - Mana;0,00
+;;;2020;Alcool;97307 - Matoury;5,30
+;;;2020;Tabac;97307 - Matoury;191,91
+;;;2020;Suicide;97307 - Matoury;5,51
+;;;2020;Alcool;97308 - Saint-Georges;0,00
+;;;2020;Tabac;97308 - Saint-Georges;0,00
+;;;2020;Suicide;97308 - Saint-Georges;0,00
+;;;2020;Alcool;97309 - Remire-Montjoly;0,00
+;;;2020;Tabac;97309 - Remire-Montjoly;77,09
+;;;2020;Suicide;97309 - Remire-Montjoly;3,29
+;;;2020;Alcool;97310 - Roura;71,26
+;;;2020;Tabac;97310 - Roura;0,00
+;;;2020;Suicide;97310 - Roura;0,00
+;;;2020;Alcool;97311 - Saint-Laurent-du-Maroni;89,01
+;;;2020;Tabac;97311 - Saint-Laurent-du-Maroni;236,37
+;;;2020;Suicide;97311 - Saint-Laurent-du-Maroni;6,31
+;;;2020;Alcool;97312 - Sinnamary;36,76
+;;;2020;Tabac;97312 - Sinnamary;190,20
+;;;2020;Suicide;97312 - Sinnamary;0,00
+;;;2020;Alcool;97313 - Montsinéry-Tonnegrande;0,00
+;;;2020;Tabac;97313 - Montsinéry-Tonnegrande;177,53
+;;;2020;Suicide;97313 - Montsinéry-Tonnegrande;29,37
+;;;2020;Alcool;97314 - Ouanary;0,00
+;;;2020;Tabac;97314 - Ouanary;0,00
+;;;2020;Suicide;97314 - Ouanary;0,00
+;;;2020;Alcool;97352 - Saül;0,00
+;;;2020;Tabac;97352 - Saül;0,00
+;;;2020;Suicide;97352 - Saül;0,00
+;;;2020;Alcool;97353 - Maripasoula;83,77
+;;;2020;Tabac;97353 - Maripasoula;167,53
+;;;2020;Suicide;97353 - Maripasoula;9,03
+;;;2020;Alcool;97356 - Camopi;
+;;;2020;Tabac;97356 - Camopi;
+;;;2020;Suicide;97356 - Camopi;
+;;;2020;Alcool;97357 - Grand-Santi;0,00
+;;;2020;Tabac;97357 - Grand-Santi;0,00
+;;;2020;Suicide;97357 - Grand-Santi;0,00
+;;;2020;Alcool;97358 - Saint-Élie;0,00
+;;;2020;Tabac;97358 - Saint-Élie;0,00
+;;;2020;Suicide;97358 - Saint-Élie;0,00
+;;;2020;Alcool;97360 - Apatou;7,02
+;;;2020;Tabac;97360 - Apatou;70,34
+;;;2020;Suicide;97360 - Apatou;0,00
+;;;2020;Alcool;97361 - Awala-Yalimapo;
+;;;2020;Tabac;97361 - Awala-Yalimapo;
+;;;2020;Suicide;97361 - Awala-Yalimapo;
+;;;2020;Alcool;97362 - Papaichton;
+;;;2020;Tabac;97362 - Papaichton;
+;;;2020;Suicide;97362 - Papaichton;
+;;;2021;Alcool;97301 - Régina;661,36
+;;;2021;Tabac;97301 - Régina;0,00
+;;;2021;Suicide;97301 - Régina;0,00
+;;;2021;Alcool;97302 - Cayenne;22,97
+;;;2021;Tabac;97302 - Cayenne;121,15
+;;;2021;Suicide;97302 - Cayenne;9,72
+;;;2021;Alcool;97303 - Iracoubo;562,65
+;;;2021;Tabac;97303 - Iracoubo;566,94
+;;;2021;Suicide;97303 - Iracoubo;0,00
+;;;2021;Alcool;97304 - Kourou;69,35
+;;;2021;Tabac;97304 - Kourou;116,43
+;;;2021;Suicide;97304 - Kourou;4,19
+;;;2021;Alcool;97305 - Macouria;36,42
+;;;2021;Tabac;97305 - Macouria;27,60
+;;;2021;Suicide;97305 - Macouria;4,49
+;;;2021;Alcool;97306 - Mana;0,00
+;;;2021;Tabac;97306 - Mana;69,75
+;;;2021;Suicide;97306 - Mana;0,00
+;;;2021;Alcool;97307 - Matoury;101,65
+;;;2021;Tabac;97307 - Matoury;152,51
+;;;2021;Suicide;97307 - Matoury;12,10
+;;;2021;Alcool;97308 - Saint-Georges;0,00
+;;;2021;Tabac;97308 - Saint-Georges;163,17
+;;;2021;Suicide;97308 - Saint-Georges;0,00
+;;;2021;Alcool;97309 - Remire-Montjoly;13,49
+;;;2021;Tabac;97309 - Remire-Montjoly;38,66
+;;;2021;Suicide;97309 - Remire-Montjoly;19,89
+;;;2021;Alcool;97310 - Roura;0,00
+;;;2021;Tabac;97310 - Roura;0,00
+;;;2021;Suicide;97310 - Roura;62,34
+;;;2021;Alcool;97311 - Saint-Laurent-du-Maroni;49,56
+;;;2021;Tabac;97311 - Saint-Laurent-du-Maroni;57,42
+;;;2021;Suicide;97311 - Saint-Laurent-du-Maroni;4,14
+;;;2021;Alcool;97312 - Sinnamary;0,00
+;;;2021;Tabac;97312 - Sinnamary;256,89
+;;;2021;Suicide;97312 - Sinnamary;0,00
+;;;2021;Alcool;97313 - Montsinéry-Tonnegrande;36,11
+;;;2021;Tabac;97313 - Montsinéry-Tonnegrande;0,00
+;;;2021;Suicide;97313 - Montsinéry-Tonnegrande;58,50
+;;;2021;Alcool;97314 - Ouanary;0,00
+;;;2021;Tabac;97314 - Ouanary;0,00
+;;;2021;Suicide;97314 - Ouanary;0,00
+;;;2021;Alcool;97352 - Saül;0,00
+;;;2021;Tabac;97352 - Saül;0,00
+;;;2021;Suicide;97352 - Saül;0,00
+;;;2021;Alcool;97353 - Maripasoula;0,00
+;;;2021;Tabac;97353 - Maripasoula;0,00
+;;;2021;Suicide;97353 - Maripasoula;0,00
+;;;2021;Alcool;97356 - Camopi;
+;;;2021;Tabac;97356 - Camopi;
+;;;2021;Suicide;97356 - Camopi;
+;;;2021;Alcool;97357 - Grand-Santi;0,00
+;;;2021;Tabac;97357 - Grand-Santi;65,83
+;;;2021;Suicide;97357 - Grand-Santi;0,00
+;;;2021;Alcool;97358 - Saint-Élie;0,00
+;;;2021;Tabac;97358 - Saint-Élie;0,00
+;;;2021;Suicide;97358 - Saint-Élie;0,00
+;;;2021;Alcool;97360 - Apatou;0,00
+;;;2021;Tabac;97360 - Apatou;0,00
+;;;2021;Suicide;97360 - Apatou;6,84
+;;;2021;Alcool;97361 - Awala-Yalimapo;0,00
+;;;2021;Tabac;97361 - Awala-Yalimapo;229,74
+;;;2021;Suicide;97361 - Awala-Yalimapo;0,00
+;;;2021;Alcool;97362 - Papaichton;
+;;;2021;Tabac;97362 - Papaichton;
+;;;2021;Suicide;97362 - Papaichton;
+;;;2022;Alcool;97301 - Régina;
+;;;2022;Tabac;97301 - Régina;
+;;;2022;Suicide;97301 - Régina;
+;;;2022;Alcool;97302 - Cayenne;23,43
+;;;2022;Tabac;97302 - Cayenne;99,31
+;;;2022;Suicide;97302 - Cayenne;12,47
+;;;2022;Alcool;97303 - Iracoubo;
+;;;2022;Tabac;97303 - Iracoubo;
+;;;2022;Suicide;97303 - Iracoubo;
+;;;2022;Alcool;97304 - Kourou;121,96
+;;;2022;Tabac;97304 - Kourou;40,85
+;;;2022;Suicide;97304 - Kourou;0,00
+;;;2022;Alcool;97305 - Macouria;5,43
+;;;2022;Tabac;97305 - Macouria;85,44
+;;;2022;Suicide;97305 - Macouria;44,99
+;;;2022;Alcool;97306 - Mana;31,12
+;;;2022;Tabac;97306 - Mana;89,02
+;;;2022;Suicide;97306 - Mana;6,81
+;;;2022;Alcool;97307 - Matoury;29,71
+;;;2022;Tabac;97307 - Matoury;86,29
+;;;2022;Suicide;97307 - Matoury;17,25
+;;;2022;Alcool;97308 - Saint-Georges;0,00
+;;;2022;Tabac;97308 - Saint-Georges;122,17
+;;;2022;Suicide;97308 - Saint-Georges;0,00
+;;;2022;Alcool;97309 - Remire-Montjoly;27,38
+;;;2022;Tabac;97309 - Remire-Montjoly;56,37
+;;;2022;Suicide;97309 - Remire-Montjoly;13,35
+;;;2022;Alcool;97310 - Roura;209,38
+;;;2022;Tabac;97310 - Roura;45,98
+;;;2022;Suicide;97310 - Roura;0,00
+;;;2022;Alcool;97311 - Saint-Laurent-du-Maroni;73,85
+;;;2022;Tabac;97311 - Saint-Laurent-du-Maroni;56,12
+;;;2022;Suicide;97311 - Saint-Laurent-du-Maroni;6,54
+;;;2022;Alcool;97312 - Sinnamary;0,00
+;;;2022;Tabac;97312 - Sinnamary;0,00
+;;;2022;Suicide;97312 - Sinnamary;0,00
+;;;2022;Alcool;97313 - Montsinéry-Tonnegrande;0,00
+;;;2022;Tabac;97313 - Montsinéry-Tonnegrande;0,00
+;;;2022;Suicide;97313 - Montsinéry-Tonnegrande;54,82
+;;;2022;Alcool;97314 - Ouanary;0,00
+;;;2022;Tabac;97314 - Ouanary;0,00
+;;;2022;Suicide;97314 - Ouanary;0,00
+;;;2022;Alcool;97352 - Saül;0,00
+;;;2022;Tabac;97352 - Saül;0,00
+;;;2022;Suicide;97352 - Saül;0,00
+;;;2022;Alcool;97353 - Maripasoula;0,00
+;;;2022;Tabac;97353 - Maripasoula;163,61
+;;;2022;Suicide;97353 - Maripasoula;27,42
+;;;2022;Alcool;97356 - Camopi;
+;;;2022;Tabac;97356 - Camopi;
+;;;2022;Suicide;97356 - Camopi;
+;;;2022;Alcool;97357 - Grand-Santi;0,00
+;;;2022;Tabac;97357 - Grand-Santi;0,00
+;;;2022;Suicide;97357 - Grand-Santi;7,58
+;;;2022;Alcool;97358 - Saint-Élie;
+;;;2022;Tabac;97358 - Saint-Élie;
+;;;2022;Suicide;97358 - Saint-Élie;
+;;;2022;Alcool;97360 - Apatou;
+;;;2022;Tabac;97360 - Apatou;
+;;;2022;Suicide;97360 - Apatou;
+;;;2022;Alcool;97361 - Awala-Yalimapo;
+;;;2022;Tabac;97361 - Awala-Yalimapo;
+;;;2022;Suicide;97361 - Awala-Yalimapo;
+;;;2022;Alcool;97362 - Papaichton;
+;;;2022;Tabac;97362 - Papaichton;
+;;;2022;Suicide;97362 - Papaichton;
+;;;2023;Alcool;97301 - Régina;
+;;;2023;Tabac;97301 - Régina;
+;;;2023;Suicide;97301 - Régina;
+;;;2023;Alcool;97302 - Cayenne;67,12
+;;;2023;Tabac;97302 - Cayenne;58,61
+;;;2023;Suicide;97302 - Cayenne;8,55
+;;;2023;Alcool;97303 - Iracoubo;0,00
+;;;2023;Tabac;97303 - Iracoubo;179,08
+;;;2023;Suicide;97303 - Iracoubo;0,00
+;;;2023;Alcool;97304 - Kourou;48,60
+;;;2023;Tabac;97304 - Kourou;9,72
+;;;2023;Suicide;97304 - Kourou;12,06
+;;;2023;Alcool;97305 - Macouria;0,00
+;;;2023;Tabac;97305 - Macouria;62,13
+;;;2023;Suicide;97305 - Macouria;0,00
+;;;2023;Alcool;97306 - Mana;50,39
+;;;2023;Tabac;97306 - Mana;19,27
+;;;2023;Suicide;97306 - Mana;50,39
+;;;2023;Alcool;97307 - Matoury;32,38
+;;;2023;Tabac;97307 - Matoury;67,72
+;;;2023;Suicide;97307 - Matoury;15,52
+;;;2023;Alcool;97308 - Saint-Georges;0,00
+;;;2023;Tabac;97308 - Saint-Georges;0,00
+;;;2023;Suicide;97308 - Saint-Georges;0,00
+;;;2023;Alcool;97309 - Remire-Montjoly;9,66
+;;;2023;Tabac;97309 - Remire-Montjoly;52,31
+;;;2023;Suicide;97309 - Remire-Montjoly;13,15
+;;;2023;Alcool;97310 - Roura;0,00
+;;;2023;Tabac;97310 - Roura;45,98
+;;;2023;Suicide;97310 - Roura;23,63
+;;;2023;Alcool;97311 - Saint-Laurent-du-Maroni;119,74
+;;;2023;Tabac;97311 - Saint-Laurent-du-Maroni;66,72
+;;;2023;Suicide;97311 - Saint-Laurent-du-Maroni;6,54
+;;;2023;Alcool;97312 - Sinnamary;0,00
+;;;2023;Tabac;97312 - Sinnamary;0,00
+;;;2023;Suicide;97312 - Sinnamary;0,00
+;;;2023;Alcool;97313 - Montsinéry-Tonnegrande;0,00
+;;;2023;Tabac;97313 - Montsinéry-Tonnegrande;0,00
+;;;2023;Suicide;97313 - Montsinéry-Tonnegrande;58,89
+;;;2023;Alcool;97314 - Ouanary;0,00
+;;;2023;Tabac;97314 - Ouanary;0,00
+;;;2023;Suicide;97314 - Ouanary;0,00
+;;;2023;Alcool;97352 - Saül;
+;;;2023;Tabac;97352 - Saül;
+;;;2023;Suicide;97352 - Saül;
+;;;2023;Alcool;97353 - Maripasoula;71,30
+;;;2023;Tabac;97353 - Maripasoula;199,26
+;;;2023;Suicide;97353 - Maripasoula;18,55
+;;;2023;Alcool;97356 - Camopi;
+;;;2023;Tabac;97356 - Camopi;
+;;;2023;Suicide;97356 - Camopi;
+;;;2023;Alcool;97357 - Grand-Santi;0,00
+;;;2023;Tabac;97357 - Grand-Santi;0,00
+;;;2023;Suicide;97357 - Grand-Santi;0,00
+;;;2023;Alcool;97358 - Saint-Élie;0,00
+;;;2023;Tabac;97358 - Saint-Élie;0,00
+;;;2023;Suicide;97358 - Saint-Élie;0,00
+;;;2023;Alcool;97360 - Apatou;0,00
+;;;2023;Tabac;97360 - Apatou;0,00
+;;;2023;Suicide;97360 - Apatou;0,00
+;;;2023;Alcool;97361 - Awala-Yalimapo;873,02
+;;;2023;Tabac;97361 - Awala-Yalimapo;160,42
+;;;2023;Suicide;97361 - Awala-Yalimapo;0,00
+;;;2023;Alcool;97362 - Papaichton;
+;;;2023;Tabac;97362 - Papaichton;
+;;;2023;Suicide;97362 - Papaichton;
+;;;2018;Alcool;Departements d'outre mer;63,28
+;;;2018;Tabac;Departements d'outre mer;156,66
+;;;2018;Suicide;Departements d'outre mer;9,01
+;;;2019;Alcool;Departements d'outre mer;59,55
+;;;2019;Tabac;Departements d'outre mer;172,68
+;;;2019;Suicide;Departements d'outre mer;10,15
+;;;2020;Alcool;Departements d'outre mer;57,72
+;;;2020;Tabac;Departements d'outre mer;157,57
+;;;2020;Suicide;Departements d'outre mer;9,58
+;;;2021;Alcool;Departements d'outre mer;57,99
+;;;2021;Tabac;Departements d'outre mer;162,61
+;;;2021;Suicide;Departements d'outre mer;8,56
+;;;2022;Alcool;Departements d'outre mer;51,63
+;;;2022;Tabac;Departements d'outre mer;77,19
+;;;2022;Suicide;Departements d'outre mer;8,23
+;;;2023;Alcool;Departements d'outre mer;52,81
+;;;2023;Tabac;Departements d'outre mer;67,77
+;;;2023;Suicide;Departements d'outre mer;9,05
+;;;2018;Alcool;France (y compris Mayotte);53,96
+;;;2018;Tabac;France (y compris Mayotte);247,41
+;;;2018;Suicide;France (y compris Mayotte);13,28
+;;;2019;Alcool;France (y compris Mayotte);52,99
+;;;2019;Tabac;France (y compris Mayotte);241,27
+;;;2019;Suicide;France (y compris Mayotte);13,13
+;;;2020;Alcool;France (y compris Mayotte);51,62
+;;;2020;Tabac;France (y compris Mayotte);239,48
+;;;2020;Suicide;France (y compris Mayotte);13,26
+;;;2021;Alcool;France (y compris Mayotte);52,36
+;;;2021;Tabac;France (y compris Mayotte);234,06
+;;;2021;Suicide;France (y compris Mayotte);13,08
+;;;2022;Alcool;France (y compris Mayotte);54,24
+;;;2022;Tabac;France (y compris Mayotte);115,67
+;;;2022;Suicide;France (y compris Mayotte);13,39
+;;;2023;Alcool;France (y compris Mayotte);51,03
+;;;2023;Tabac;France (y compris Mayotte);112,61
+;;;2023;Suicide;France (y compris Mayotte);12,90
+;;;2018;Alcool;France métropolitaine;53,62
+;;;2018;Tabac;France métropolitaine;248,52
+;;;2018;Suicide;France métropolitaine;13,31
+;;;2019;Alcool;France métropolitaine;52,65
+;;;2019;Tabac;France métropolitaine;241,75
+;;;2019;Suicide;France métropolitaine;13,15
+;;;2020;Alcool;France métropolitaine;51,36
+;;;2020;Tabac;France métropolitaine;240,69
+;;;2020;Suicide;France métropolitaine;13,29
+;;;2021;Alcool;France métropolitaine;52,15
+;;;2021;Tabac;France métropolitaine;235,04
+;;;2021;Suicide;France métropolitaine;13,14
+;;;2022;Alcool;France métropolitaine;54,17
+;;;2022;Tabac;France métropolitaine;116,12
+;;;2022;Suicide;France métropolitaine;13,48
+;;;2023;Alcool;France métropolitaine;50,79
+;;;2023;Tabac;France métropolitaine;113,18
+;;;2023;Suicide;France métropolitaine;12,94
+;;;2018;Alcool;Guadeloupe;63,54
+;;;2018;Tabac;Guadeloupe;103,92
+;;;2018;Suicide;Guadeloupe;8,14
+;;;2018;Alcool;Martinique;43,15
+;;;2018;Tabac;Martinique;87,92
+;;;2018;Suicide;Martinique;6,67
+;;;2018;Alcool;Guyane;30,81
+;;;2018;Tabac;Guyane;106,73
+;;;2018;Suicide;Guyane;8,14
+;;;2018;Alcool;Réunion;82,57
+;;;2018;Tabac;Réunion;255,10
+;;;2018;Suicide;Réunion;11,37
+;;;2018;Alcool;Île-de-France;40,73
+;;;2018;Tabac;Île-de-France;214,87
+;;;2018;Suicide;Île-de-France;8,62
+;;;2018;Alcool;Centre-Val de Loire;57,65
+;;;2018;Tabac;Centre-Val de Loire;249,37
+;;;2018;Suicide;Centre-Val de Loire;14,21
+;;;2018;Alcool;Bourgogne-Franche-Comté;55,06
+;;;2018;Tabac;Bourgogne-Franche-Comté;254,15
+;;;2018;Suicide;Bourgogne-Franche-Comté;16,02
+;;;2018;Alcool;Normandie;71,06
+;;;2018;Tabac;Normandie;265,47
+;;;2018;Suicide;Normandie;16,32
+;;;2018;Alcool;Hauts-de-France;85,70
+;;;2018;Tabac;Hauts-de-France;283,10
+;;;2018;Suicide;Hauts-de-France;15,82
+;;;2018;Alcool;Grand Est;57,44
+;;;2018;Tabac;Grand Est;290,09
+;;;2018;Suicide;Grand Est;13,32
+;;;2018;Alcool;Pays de la Loire;64,15
+;;;2018;Tabac;Pays de la Loire;232,91
+;;;2018;Suicide;Pays de la Loire;18,46
+;;;2018;Alcool;Bretagne;75,89
+;;;2018;Tabac;Bretagne;274,02
+;;;2018;Suicide;Bretagne;19,22
+;;;2018;Alcool;Nouvelle-Aquitaine;47,13
+;;;2018;Tabac;Nouvelle-Aquitaine;250,14
+;;;2018;Suicide;Nouvelle-Aquitaine;14,79
+;;;2018;Alcool;Occitanie;41,57
+;;;2018;Tabac;Occitanie;250,83
+;;;2018;Suicide;Occitanie;12,84
+;;;2018;Alcool;Auvergne-Rhône-Alpes;44,00
+;;;2018;Tabac;Auvergne-Rhône-Alpes;232,48
+;;;2018;Suicide;Auvergne-Rhône-Alpes;10,66
+;;;2018;Alcool;Provence-Alpes-Côte d'Azur;43,05
+;;;2018;Tabac;Provence-Alpes-Côte d'Azur;231,02
+;;;2018;Suicide;Provence-Alpes-Côte d'Azur;12,74
+;;;2018;Alcool;Corse;38,79
+;;;2018;Tabac;Corse;256,26
+;;;2018;Suicide;Corse;8,11
+;;;2019;Alcool;Guadeloupe;49,37
+;;;2019;Tabac;Guadeloupe;114,15
+;;;2019;Suicide;Guadeloupe;8,99
+;;;2019;Alcool;Martinique;40,71
+;;;2019;Tabac;Martinique;117,11
+;;;2019;Suicide;Martinique;7,18
+;;;2019;Alcool;Guyane;58,75
+;;;2019;Tabac;Guyane;157,85
+;;;2019;Suicide;Guyane;9,87
+;;;2019;Alcool;Réunion;76,68
+;;;2019;Tabac;Réunion;260,44
+;;;2019;Suicide;Réunion;12,40
+;;;2019;Alcool;Île-de-France;36,41
+;;;2019;Tabac;Île-de-France;206,44
+;;;2019;Suicide;Île-de-France;8,76
+;;;2019;Alcool;Centre-Val de Loire;61,27
+;;;2019;Tabac;Centre-Val de Loire;247,12
+;;;2019;Suicide;Centre-Val de Loire;15,25
+;;;2019;Alcool;Bourgogne-Franche-Comté;54,53
+;;;2019;Tabac;Bourgogne-Franche-Comté;252,87
+;;;2019;Suicide;Bourgogne-Franche-Comté;15,00
+;;;2019;Alcool;Normandie;69,38
+;;;2019;Tabac;Normandie;260,12
+;;;2019;Suicide;Normandie;17,51
+;;;2019;Alcool;Hauts-de-France;84,56
+;;;2019;Tabac;Hauts-de-France;273,39
+;;;2019;Suicide;Hauts-de-France;14,70
+;;;2019;Alcool;Grand Est;58,13
+;;;2019;Tabac;Grand Est;279,05
+;;;2019;Suicide;Grand Est;13,40
+;;;2019;Alcool;Pays de la Loire;63,25
+;;;2019;Tabac;Pays de la Loire;225,12
+;;;2019;Suicide;Pays de la Loire;16,02
+;;;2019;Alcool;Bretagne;70,12
+;;;2019;Tabac;Bretagne;262,95
+;;;2019;Suicide;Bretagne;20,88
+;;;2019;Alcool;Nouvelle-Aquitaine;48,09
+;;;2019;Tabac;Nouvelle-Aquitaine;245,18
+;;;2019;Suicide;Nouvelle-Aquitaine;14,64
+;;;2019;Alcool;Occitanie;42,62
+;;;2019;Tabac;Occitanie;242,25
+;;;2019;Suicide;Occitanie;11,87
+;;;2019;Alcool;Auvergne-Rhône-Alpes;43,64
+;;;2019;Tabac;Auvergne-Rhône-Alpes;227,45
+;;;2019;Suicide;Auvergne-Rhône-Alpes;10,69
+;;;2019;Alcool;Provence-Alpes-Côte d'Azur;42,43
+;;;2019;Tabac;Provence-Alpes-Côte d'Azur;228,67
+;;;2019;Suicide;Provence-Alpes-Côte d'Azur;12,33
+;;;2019;Alcool;Corse;39,91
+;;;2019;Tabac;Corse;250,22
+;;;2019;Suicide;Corse;7,81
+;;;2020;Alcool;Guadeloupe;51,05
+;;;2020;Tabac;Guadeloupe;96,91
+;;;2020;Suicide;Guadeloupe;10,11
+;;;2020;Alcool;Martinique;33,44
+;;;2020;Tabac;Martinique;97,94
+;;;2020;Suicide;Martinique;7,15
+;;;2020;Alcool;Guyane;33,78
+;;;2020;Tabac;Guyane;121,38
+;;;2020;Suicide;Guyane;4,59
+;;;2020;Alcool;Réunion;78,20
+;;;2020;Tabac;Réunion;250,61
+;;;2020;Suicide;Réunion;11,16
+;;;2020;Alcool;Île-de-France;36,50
+;;;2020;Tabac;Île-de-France;206,18
+;;;2020;Suicide;Île-de-France;8,87
+;;;2020;Alcool;Centre-Val de Loire;55,03
+;;;2020;Tabac;Centre-Val de Loire;255,99
+;;;2020;Suicide;Centre-Val de Loire;15,18
+;;;2020;Alcool;Bourgogne-Franche-Comté;56,43
+;;;2020;Tabac;Bourgogne-Franche-Comté;259,97
+;;;2020;Suicide;Bourgogne-Franche-Comté;14,73
+;;;2020;Alcool;Normandie;70,06
+;;;2020;Tabac;Normandie;255,48
+;;;2020;Suicide;Normandie;18,66
+;;;2020;Alcool;Hauts-de-France;83,51
+;;;2020;Tabac;Hauts-de-France;275,80
+;;;2020;Suicide;Hauts-de-France;15,93
+;;;2020;Alcool;Grand Est;53,13
+;;;2020;Tabac;Grand Est;282,12
+;;;2020;Suicide;Grand Est;13,70
+;;;2020;Alcool;Pays de la Loire;59,92
+;;;2020;Tabac;Pays de la Loire;223,75
+;;;2020;Suicide;Pays de la Loire;16,00
+;;;2020;Alcool;Bretagne;71,05
+;;;2020;Tabac;Bretagne;250,91
+;;;2020;Suicide;Bretagne;19,39
+;;;2020;Alcool;Nouvelle-Aquitaine;49,27
+;;;2020;Tabac;Nouvelle-Aquitaine;231,68
+;;;2020;Suicide;Nouvelle-Aquitaine;14,27
+;;;2020;Alcool;Occitanie;42,27
+;;;2020;Tabac;Occitanie;243,89
+;;;2020;Suicide;Occitanie;11,63
+;;;2020;Alcool;Auvergne-Rhône-Alpes;41,06
+;;;2020;Tabac;Auvergne-Rhône-Alpes;228,52
+;;;2020;Suicide;Auvergne-Rhône-Alpes;11,87
+;;;2020;Alcool;Provence-Alpes-Côte d'Azur;40,35
+;;;2020;Tabac;Provence-Alpes-Côte d'Azur;227,40
+;;;2020;Suicide;Provence-Alpes-Côte d'Azur;11,41
+;;;2020;Alcool;Corse;26,71
+;;;2020;Tabac;Corse;264,33
+;;;2020;Suicide;Corse;11,07
+;;;2021;Alcool;Guadeloupe;54,66
+;;;2021;Tabac;Guadeloupe;111,86
+;;;2021;Suicide;Guadeloupe;10,49
+;;;2021;Alcool;Martinique;33,19
+;;;2021;Tabac;Martinique;110,45
+;;;2021;Suicide;Martinique;5,66
+;;;2021;Alcool;Guyane;45,82
+;;;2021;Tabac;Guyane;98,65
+;;;2021;Suicide;Guyane;10,32
+;;;2021;Alcool;Réunion;75,71
+;;;2021;Tabac;Réunion;248,31
+;;;2021;Suicide;Réunion;8,62
+;;;2021;Alcool;Île-de-France;36,97
+;;;2021;Tabac;Île-de-France;199,13
+;;;2021;Suicide;Île-de-France;8,21
+;;;2021;Alcool;Centre-Val de Loire;53,73
+;;;2021;Tabac;Centre-Val de Loire;243,26
+;;;2021;Suicide;Centre-Val de Loire;14,29
+;;;2021;Alcool;Bourgogne-Franche-Comté;56,51
+;;;2021;Tabac;Bourgogne-Franche-Comté;241,13
+;;;2021;Suicide;Bourgogne-Franche-Comté;14,90
+;;;2021;Alcool;Normandie;74,73
+;;;2021;Tabac;Normandie;258,05
+;;;2021;Suicide;Normandie;17,37
+;;;2021;Alcool;Hauts-de-France;81,85
+;;;2021;Tabac;Hauts-de-France;264,22
+;;;2021;Suicide;Hauts-de-France;15,09
+;;;2021;Alcool;Grand Est;57,13
+;;;2021;Tabac;Grand Est;269,32
+;;;2021;Suicide;Grand Est;13,54
+;;;2021;Alcool;Pays de la Loire;62,18
+;;;2021;Tabac;Pays de la Loire;221,19
+;;;2021;Suicide;Pays de la Loire;15,81
+;;;2021;Alcool;Bretagne;77,51
+;;;2021;Tabac;Bretagne;254,90
+;;;2021;Suicide;Bretagne;20,38
+;;;2021;Alcool;Nouvelle-Aquitaine;44,31
+;;;2021;Tabac;Nouvelle-Aquitaine;235,90
+;;;2021;Suicide;Nouvelle-Aquitaine;15,10
+;;;2021;Alcool;Occitanie;44,37
+;;;2021;Tabac;Occitanie;242,24
+;;;2021;Suicide;Occitanie;11,85
+;;;2021;Alcool;Auvergne-Rhône-Alpes;41,09
+;;;2021;Tabac;Auvergne-Rhône-Alpes;213,50
+;;;2021;Suicide;Auvergne-Rhône-Alpes;11,59
+;;;2021;Alcool;Provence-Alpes-Côte d'Azur;40,99
+;;;2021;Tabac;Provence-Alpes-Côte d'Azur;229,82
+;;;2021;Suicide;Provence-Alpes-Côte d'Azur;12,04
+;;;2021;Alcool;Corse;34,19
+;;;2021;Tabac;Corse;250,60
+;;;2021;Suicide;Corse;10,87
+;;;2022;Alcool;Guadeloupe;39,30
+;;;2022;Tabac;Guadeloupe;50,43
+;;;2022;Suicide;Guadeloupe;8,97
+;;;2022;Alcool;Martinique;33,92
+;;;2022;Tabac;Martinique;49,01
+;;;2022;Suicide;Martinique;6,93
+;;;2022;Alcool;Guyane;35,65
+;;;2022;Tabac;Guyane;73,91
+;;;2022;Suicide;Guyane;12,80
+;;;2022;Alcool;Réunion;71,43
+;;;2022;Tabac;Réunion;117,53
+;;;2022;Suicide;Réunion;7,59
+;;;2022;Alcool;Île-de-France;38,60
+;;;2022;Tabac;Île-de-France;98,88
+;;;2022;Suicide;Île-de-France;8,11
+;;;2022;Alcool;Centre-Val de Loire;56,76
+;;;2022;Tabac;Centre-Val de Loire;121,50
+;;;2022;Suicide;Centre-Val de Loire;15,23
+;;;2022;Alcool;Bourgogne-Franche-Comté;57,45
+;;;2022;Tabac;Bourgogne-Franche-Comté;119,84
+;;;2022;Suicide;Bourgogne-Franche-Comté;15,89
+;;;2022;Alcool;Normandie;73,95
+;;;2022;Tabac;Normandie;128,70
+;;;2022;Suicide;Normandie;17,20
+;;;2022;Alcool;Hauts-de-France;85,46
+;;;2022;Tabac;Hauts-de-France;133,02
+;;;2022;Suicide;Hauts-de-France;15,73
+;;;2022;Alcool;Grand Est;56,91
+;;;2022;Tabac;Grand Est;133,36
+;;;2022;Suicide;Grand Est;13,04
+;;;2022;Alcool;Pays de la Loire;66,34
+;;;2022;Tabac;Pays de la Loire;108,80
+;;;2022;Suicide;Pays de la Loire;17,11
+;;;2022;Alcool;Bretagne;73,74
+;;;2022;Tabac;Bretagne;126,52
+;;;2022;Suicide;Bretagne;19,89
+;;;2022;Alcool;Nouvelle-Aquitaine;51,03
+;;;2022;Tabac;Nouvelle-Aquitaine;117,37
+;;;2022;Suicide;Nouvelle-Aquitaine;13,98
+;;;2022;Alcool;Occitanie;46,42
+;;;2022;Tabac;Occitanie;118,50
+;;;2022;Suicide;Occitanie;13,23
+;;;2022;Alcool;Auvergne-Rhône-Alpes;43,33
+;;;2022;Tabac;Auvergne-Rhône-Alpes;104,66
+;;;2022;Suicide;Auvergne-Rhône-Alpes;12,92
+;;;2022;Alcool;Provence-Alpes-Côte d'Azur;43,23
+;;;2022;Tabac;Provence-Alpes-Côte d'Azur;110,36
+;;;2022;Suicide;Provence-Alpes-Côte d'Azur;12,40
+;;;2022;Alcool;Corse;30,11
+;;;2022;Tabac;Corse;119,63
+;;;2022;Suicide;Corse;11,71
+;;;2023;Alcool;Guadeloupe;57,05
+;;;2023;Tabac;Guadeloupe;44,22
+;;;2023;Suicide;Guadeloupe;7,83
+;;;2023;Alcool;Martinique;30,08
+;;;2023;Tabac;Martinique;42,63
+;;;2023;Suicide;Martinique;8,22
+;;;2023;Alcool;Guyane;48,21
+;;;2023;Tabac;Guyane;52,15
+;;;2023;Suicide;Guyane;11,41
+;;;2023;Alcool;Réunion;65,52
+;;;2023;Tabac;Réunion;104,71
+;;;2023;Suicide;Réunion;9,42
+;;;2023;Alcool;Île-de-France;36,41
+;;;2023;Tabac;Île-de-France;95,46
+;;;2023;Suicide;Île-de-France;7,97
+;;;2023;Alcool;Centre-Val de Loire;57,06
+;;;2023;Tabac;Centre-Val de Loire;112,34
+;;;2023;Suicide;Centre-Val de Loire;14,25
+;;;2023;Alcool;Bourgogne-Franche-Comté;54,87
+;;;2023;Tabac;Bourgogne-Franche-Comté;122,30
+;;;2023;Suicide;Bourgogne-Franche-Comté;15,33
+;;;2023;Alcool;Normandie;66,91
+;;;2023;Tabac;Normandie;121,49
+;;;2023;Suicide;Normandie;15,07
+;;;2023;Alcool;Hauts-de-France;76,29
+;;;2023;Tabac;Hauts-de-France;128,05
+;;;2023;Suicide;Hauts-de-France;15,00
+;;;2023;Alcool;Grand Est;54,11
+;;;2023;Tabac;Grand Est;129,63
+;;;2023;Suicide;Grand Est;12,95
+;;;2023;Alcool;Pays de la Loire;58,09
+;;;2023;Tabac;Pays de la Loire;106,31
+;;;2023;Suicide;Pays de la Loire;16,03
+;;;2023;Alcool;Bretagne;68,36
+;;;2023;Tabac;Bretagne;121,87
+;;;2023;Suicide;Bretagne;20,40
+;;;2023;Alcool;Nouvelle-Aquitaine;49,32
+;;;2023;Tabac;Nouvelle-Aquitaine;114,04
+;;;2023;Suicide;Nouvelle-Aquitaine;14,86
+;;;2023;Alcool;Occitanie;45,13
+;;;2023;Tabac;Occitanie;118,45
+;;;2023;Suicide;Occitanie;13,23
+;;;2023;Alcool;Auvergne-Rhône-Alpes;40,97
+;;;2023;Tabac;Auvergne-Rhône-Alpes;103,45
+;;;2023;Suicide;Auvergne-Rhône-Alpes;11,09
+;;;2023;Alcool;Provence-Alpes-Côte d'Azur;41,47
+;;;2023;Tabac;Provence-Alpes-Côte d'Azur;108,19
+;;;2023;Suicide;Provence-Alpes-Côte d'Azur;11,59
+;;;2023;Alcool;Corse;31,59
+;;;2023;Tabac;Corse;124,96
+;;;2023;Suicide;Corse;9,81

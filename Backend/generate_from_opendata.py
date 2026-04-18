@@ -1003,10 +1003,24 @@ def _build_odisse_consommation_levels(year: int, kind: str):
 
 
 def _build_spf_noyades_levels(year: int):
-    path = INPUTS_DIR / "spf_noyades" / "noyades_departement_2003_2021.csv"
-    if not path.exists():
-        raise FileNotFoundError(f"Source noyades manquante: {path}")
-    df = pd.read_csv(path, sep=";", encoding="utf-8-sig")
+    # Priorité : fichier fusionné 2003-2024 (inclut 2023-2024 SPF/Snosan extrait des PDF).
+    # Fallback : ancien CSV 2003-2021 seul, puis concaténation de tous les
+    # noyades_departement_*.csv présents dans le dossier.
+    noyades_dir = INPUTS_DIR / "spf_noyades"
+    full_path = noyades_dir / "noyades_departement_2003_2024.csv"
+    legacy_path = noyades_dir / "noyades_departement_2003_2021.csv"
+    if full_path.exists():
+        df = pd.read_csv(full_path, sep=";", encoding="utf-8-sig")
+    elif legacy_path.exists():
+        # Agrège tous les CSV du dossier (legacy + extensions éventuelles).
+        frames = []
+        for p in sorted(noyades_dir.glob("noyades_departement_*.csv")):
+            frames.append(pd.read_csv(p, sep=";", encoding="utf-8-sig"))
+        if not frames:
+            raise FileNotFoundError(f"Source noyades manquante dans {noyades_dir}")
+        df = pd.concat(frames, ignore_index=True)
+    else:
+        raise FileNotFoundError(f"Source noyades manquante: {full_path} ou {legacy_path}")
     yr_col = _find_col(df, "nn")  # Année
     dep_col = _find_col(df, "partement", "code")
     reg_col = _find_col(df, "gion", "code")
