@@ -94,7 +94,7 @@ export function ProfilePage() {
         const newOtp = !currentOtp
         // Warn if disabling OTP without a password set
         if (!newOtp && !user.personal_password_hash) {
-            alert("Vous devez d'abord definir un mot de passe avant de desactiver l'OTP. Contactez un administrateur.")
+            alert("Vous devez d'abord définir un mot de passe avant de désactiver l'OTP. Contactez un administrateur.")
             return
         }
         setTogglingOtp(true)
@@ -155,7 +155,7 @@ export function ProfilePage() {
                                 activeTab === 'security' ? "bg-white shadow-sm text-orsg-blue border border-gray-200" : "text-gray-600 hover:bg-gray-100"
                             )}
                         >
-                            <Shield className="w-4 h-4" /> Securite
+                            <Shield className="w-4 h-4" /> Sécurité
                         </button>
                     </div>
 
@@ -183,7 +183,7 @@ export function ProfilePage() {
                                             className="w-full px-4 py-2 rounded-lg border border-gray-300 bg-gray-50 text-gray-500"
                                             readOnly
                                         />
-                                        <p className="text-xs text-gray-400 mt-1">L'email ne peut pas etre modifie. Contactez un administrateur.</p>
+                                        <p className="text-xs text-gray-400 mt-1">L'email ne peut pas être modifié. Contactez un administrateur.</p>
                                     </div>
                                     <div>
                                         <label className="block text-sm font-medium text-slate-700 mb-1">Telephone</label>
@@ -220,7 +220,7 @@ export function ProfilePage() {
                                     <div className="pt-4 flex justify-end items-center gap-3">
                                         {saved && (
                                             <span className="text-sm text-green-600 flex items-center gap-1">
-                                                <CheckCircle2 className="w-4 h-4" /> Enregistre
+                                                <CheckCircle2 className="w-4 h-4" /> Enregistré
                                             </span>
                                         )}
                                         <button
@@ -238,7 +238,7 @@ export function ProfilePage() {
 
                         {activeTab === 'security' && (
                             <div className="space-y-6 animate-in fade-in duration-300">
-                                <h2 className="text-xl font-bold text-gray-800 border-b border-gray-100 pb-4">Securite & Connexion</h2>
+                                <h2 className="text-xl font-bold text-gray-800 border-b border-gray-100 pb-4">Sécurité & Connexion</h2>
 
                                 {/* OTP Toggle */}
                                 <div className={cn(
@@ -261,8 +261,8 @@ export function ProfilePage() {
                                             <p className="font-semibold text-gray-900">Authentification par code email (OTP)</p>
                                             <p className={cn("text-xs", user?.otp_enabled !== false ? "text-sky-700" : "text-gray-500")}>
                                                 {user?.otp_enabled !== false
-                                                    ? "Un code a 6 chiffres vous est envoye a chaque connexion."
-                                                    : "Desactive — connexion par mot de passe uniquement."
+                                                    ? "Un code à 6 chiffres vous est envoyé à chaque connexion."
+                                                    : "Désactivé — connexion par mot de passe uniquement."
                                                 }
                                             </p>
                                         </div>
@@ -366,7 +366,7 @@ export function ProfilePage() {
                                             <Mail className="w-5 h-5" />
                                         </div>
                                         <div>
-                                            <p className="font-semibold text-gray-900">Email associe</p>
+                                            <p className="font-semibold text-gray-900">Email associé</p>
                                             <p className="text-sm text-gray-600">{user?.email || '-'}</p>
                                         </div>
                                     </div>
@@ -378,7 +378,7 @@ export function ProfilePage() {
                                             <Clock className="w-5 h-5" />
                                         </div>
                                         <div>
-                                            <p className="font-semibold text-gray-900">Compte cree le</p>
+                                            <p className="font-semibold text-gray-900">Compte créé le</p>
                                             <p className="text-sm text-gray-600">
                                                 {user?.created ? new Date(user.created).toLocaleDateString('fr-FR', {
                                                     day: 'numeric', month: 'long', year: 'numeric'

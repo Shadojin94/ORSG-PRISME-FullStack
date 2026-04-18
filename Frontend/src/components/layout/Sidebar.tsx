@@ -26,9 +26,9 @@ export function Sidebar({ isOpen = false, onClose }: SidebarProps) {
 
     const menuItems = [
         { icon: Home, label: "Accueil", path: "/dashboard" },
-        { icon: Layers, label: "Thematiques", path: "/generate" },
+        { icon: Layers, label: "Thématiques", path: "/generate" },
         { icon: History, label: "Historique", path: "/history" },
-        { icon: BookOpen, label: "Referentiel BDI", path: "/docs" },
+        { icon: BookOpen, label: "Référentiel BDI", path: "/docs" },
         ...(isAdmin ? [{ icon: Users, label: "Gestion Utilisateurs", path: "/admin" }] : []),
         { icon: LifeBuoy, label: "Aide & Support", path: "/support" },
     ]
@@ -132,7 +132,7 @@ export function Sidebar({ isOpen = false, onClose }: SidebarProps) {
                     onClick={handleLogout}
                     className="flex items-center justify-center gap-2 mt-3 p-2 w-full text-xs font-medium text-white/60 hover:text-white hover:bg-red-500/20 rounded-lg transition-all border border-transparent hover:border-red-500/30 cursor-pointer"
                 >
-                    <LogOut className="w-3 h-3" /> Deconnexion
+                    <LogOut className="w-3 h-3" /> Déconnexion
                 </button>
             </div>
         </div>

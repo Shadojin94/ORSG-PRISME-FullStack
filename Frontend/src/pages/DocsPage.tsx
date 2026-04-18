@@ -175,7 +175,7 @@ export function DocsPage() {
             </div>
 
             {/* Stats */}
-            <div className="grid grid-cols-4 gap-4 mb-6">
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
                 <div className="bg-white rounded-xl p-4 border border-gray-200 shadow-sm">
                     <div className="text-2xl font-bold text-[#1a4b8c]">{BDI_THEMES.length}</div>
                     <div className="text-xs text-gray-500">Thématiques</div>

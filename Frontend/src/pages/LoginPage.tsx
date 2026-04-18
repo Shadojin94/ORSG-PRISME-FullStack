@@ -8,7 +8,7 @@ type Step = 'email' | 'choose' | 'code' | 'password' | 'forgot'
 
 export function LoginPage() {
     const navigate = useNavigate()
-    const { sendCode, verifyCode, loginWithPassword, forgotPassword, isAuthenticated } = useAuth()
+    const { checkEmail, sendCode, verifyCode, loginWithPassword, forgotPassword, isAuthenticated } = useAuth()
     const videoRef = useRef<HTMLVideoElement>(null)
     const [loading, setLoading] = useState(false)
     const [step, setStep] = useState<Step>('email')
@@ -43,27 +43,14 @@ export function LoginPage() {
         setLoading(true)
 
         // Ask server which login method(s) are available for this email
-        let otp = true
-        let canPwd = false
-        try {
-            const res = await fetch('/api/auth/check-email', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ email: trimmed }),
-            })
-            const data = await res.json()
-            if (!res.ok || !data.success) {
-                setError(data.error || "Adresse email non reconnue.")
-                setLoading(false)
-                return
-            }
-            otp = data.otp_enabled !== false
-            canPwd = !!data.can_use_password
-        } catch {
-            setError("Impossible de contacter le serveur.")
+        const result = await checkEmail(trimmed)
+        if (!result.success) {
+            setError(result.error || "Adresse email non reconnue.")
             setLoading(false)
             return
         }
+        const otp = result.otp_enabled !== false
+        const canPwd = !!result.can_use_password
 
         setOtpEnabled(otp)
         setCanUsePassword(canPwd)
@@ -114,7 +101,7 @@ export function LoginPage() {
         if (result.success) {
             navigate("/dashboard", { replace: true })
         } else {
-            setError(result.error || "Code incorrect. Veuillez reessayer.")
+            setError(result.error || "Code incorrect. Veuillez réessayer.")
             setLoading(false)
         }
     }
@@ -141,9 +128,9 @@ export function LoginPage() {
         const result = await forgotPassword(email.trim())
         setLoading(false)
         if (result.success) {
-            setSuccess(result.message || "Un mot de passe temporaire a ete envoye a votre adresse email.")
+            setSuccess(result.message || "Un mot de passe temporaire a été envoyé à votre adresse email.")
         } else {
-            setError(result.error || "Erreur lors de la reinitialisation.")
+            setError(result.error || "Erreur lors de la réinitialisation.")
         }
     }
 
@@ -226,7 +213,7 @@ export function LoginPage() {
                     {step === 'email' && (
                         <form onSubmit={handleEmailSubmit} className="space-y-6">
                             <div className="text-center mb-4">
-                                <h3 className="text-xl font-bold text-white">Connexion Securisee</h3>
+                                <h3 className="text-xl font-bold text-white">Connexion sécurisée</h3>
                                 <p className="text-sm text-gray-300 mt-2">
                                     Entrez votre email pour vous connecter
                                 </p>
@@ -269,7 +256,7 @@ export function LoginPage() {
                     {step === 'choose' && (
                         <div className="space-y-5">
                             <div className="text-center mb-4">
-                                <h3 className="text-xl font-bold text-white">Methode de connexion</h3>
+                                <h3 className="text-xl font-bold text-white">Méthode de connexion</h3>
                                 <p className="text-sm text-gray-300 mt-2">
                                     <span className="font-semibold text-sky-400">{email}</span>
                                 </p>
@@ -288,7 +275,7 @@ export function LoginPage() {
                                 </div>
                                 <div className="text-left">
                                     <div className="font-bold text-sm">Code par email</div>
-                                    <div className="text-xs text-gray-400">Recevoir un code a 6 chiffres</div>
+                                    <div className="text-xs text-gray-400">Recevoir un code à 6 chiffres</div>
                                 </div>
                                 <ArrowRight className="w-4 h-4 ml-auto text-gray-400" />
                             </button>
@@ -323,12 +310,12 @@ export function LoginPage() {
                                 <div className="w-12 h-12 bg-ors-green/20 rounded-full flex items-center justify-center mx-auto mb-3 shadow-lg shadow-ors-green/20">
                                     <ShieldCheck className="w-6 h-6 text-ors-green" />
                                 </div>
-                                <h3 className="text-xl font-bold text-white">Code envoye !</h3>
+                                <h3 className="text-xl font-bold text-white">Code envoyé !</h3>
                                 <p className="text-sm text-gray-300 mt-2">
                                     {isDevCode ? (
-                                        <>Code pre-rempli automatiquement<br /><span className="text-xs text-amber-400">(mode dev — SMTP non configure)</span></>
+                                        <>Code pré-rempli automatiquement<br /><span className="text-xs text-amber-400">(mode dev — SMTP non configuré)</span></>
                                     ) : (
-                                        <>Un code a 6 chiffres a ete envoye a <br /><span className="font-semibold text-sky-400">{email}</span></>
+                                        <>Un code à 6 chiffres a été envoyé à <br /><span className="font-semibold text-sky-400">{email}</span></>
                                     )}
                                 </p>
                             </div>
@@ -411,7 +398,7 @@ export function LoginPage() {
                             <div className="flex flex-col gap-2">
                                 <button type="button" onClick={() => { setStep('forgot'); setError(''); setSuccess(''); }}
                                     className="w-full text-sm text-amber-400/80 hover:text-amber-300 py-1 transition-colors">
-                                    Mot de passe oublie ?
+                                    Mot de passe oublié ?
                                 </button>
                                 <button type="button" onClick={goBack}
                                     className="w-full text-sm text-gray-400 hover:text-white py-1 transition-colors flex items-center justify-center gap-1">
@@ -428,9 +415,9 @@ export function LoginPage() {
                                 <div className="w-12 h-12 bg-amber-500/20 rounded-full flex items-center justify-center mx-auto mb-3 shadow-lg shadow-amber-500/20">
                                     <Mail className="w-6 h-6 text-amber-400" />
                                 </div>
-                                <h3 className="text-xl font-bold text-white">Reinitialiser le mot de passe</h3>
+                                <h3 className="text-xl font-bold text-white">Réinitialiser le mot de passe</h3>
                                 <p className="text-sm text-gray-300 mt-2">
-                                    Un mot de passe temporaire sera envoye a<br />
+                                    Un mot de passe temporaire sera envoyé à<br />
                                     <span className="font-semibold text-sky-400">{email}</span>
                                 </p>
                             </div>
@@ -471,7 +458,7 @@ export function LoginPage() {
                 </div>
 
                 <p className="mt-8 text-center text-xs text-gray-500">
-                    &copy; 2026 ORSG-CTPS. Systeme securise.
+                    &copy; 2026 ORSG-CTPS. Système sécurisé.
                 </p>
             </div>
         </div>

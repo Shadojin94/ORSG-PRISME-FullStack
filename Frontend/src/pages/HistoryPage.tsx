@@ -128,7 +128,7 @@ export function HistoryPage() {
                         <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
                         <input
                             type="text"
-                            placeholder="Rechercher par nom, theme, date..."
+                            placeholder="Rechercher par nom, thème, source..."
                             value={searchTerm}
                             onChange={(e) => setSearchTerm(e.target.value)}
                             className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-gray-200 text-sm focus:ring-4 focus:ring-[#3bb3a9]/10 focus:border-[#3bb3a9] outline-none transition-all shadow-sm"

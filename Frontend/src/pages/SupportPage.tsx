@@ -7,9 +7,9 @@ import type { SupportTicket } from "@/lib/pocketbase"
 
 const CATEGORIES = [
     { value: 'account', label: 'Mon compte' },
-    { value: 'generation', label: 'Generation de fichiers' },
+    { value: 'generation', label: 'Génération de fichiers' },
     { value: 'bug', label: 'Bug / Erreur' },
-    { value: 'question', label: 'Question generale' },
+    { value: 'question', label: 'Question générale' },
     { value: 'other', label: 'Autre' },
 ]
 
@@ -23,8 +23,8 @@ const PRIORITIES = [
 const STATUS_LABELS: Record<string, { label: string; color: string }> = {
     open: { label: 'Ouvert', color: 'bg-blue-100 text-blue-700' },
     in_progress: { label: 'En cours', color: 'bg-yellow-100 text-yellow-700' },
-    resolved: { label: 'Resolu', color: 'bg-green-100 text-green-700' },
-    closed: { label: 'Ferme', color: 'bg-gray-100 text-gray-600' },
+    resolved: { label: 'Résolu', color: 'bg-green-100 text-green-700' },
+    closed: { label: 'Fermé', color: 'bg-gray-100 text-gray-600' },
 }
 
 export function SupportPage() {
@@ -63,11 +63,11 @@ export function SupportPage() {
         e.preventDefault()
         if (!user) return
         if (form.subject.trim().length < 3) {
-            setError("Le sujet doit contenir au moins 3 caracteres.")
+            setError("Le sujet doit contenir au moins 3 caractères.")
             return
         }
         if (form.description.trim().length < 10) {
-            setError("La description doit contenir au moins 10 caracteres.")
+            setError("La description doit contenir au moins 10 caractères.")
             return
         }
 
@@ -88,7 +88,7 @@ export function SupportPage() {
             loadTickets()
         } catch (err) {
             console.error('Failed to create ticket:', err)
-            setError("Erreur lors de la creation du ticket.")
+            setError("Erreur lors de la création du ticket.")
         }
         setSubmitting(false)
     }
@@ -113,7 +113,7 @@ export function SupportPage() {
                 {submitted && (
                     <div className="mb-4 p-3 bg-green-50 border border-green-200 rounded-xl flex items-center gap-2 text-green-700 text-sm">
                         <CheckCircle2 className="w-5 h-5" />
-                        Ticket cree avec succes ! Nous reviendrons vers vous rapidement.
+                        Ticket créé avec succès ! Nous reviendrons vers vous rapidement.
                     </div>
                 )}
 
@@ -125,14 +125,14 @@ export function SupportPage() {
                             value={form.subject}
                             onChange={(e) => setForm({ ...form, subject: e.target.value })}
                             className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-orsg-blue/20 outline-none"
-                            placeholder="Decrivez brievement votre probleme..."
+                            placeholder="Décrivez brièvement votre problème..."
                             maxLength={200}
                         />
                     </div>
 
                     <div className="grid grid-cols-2 gap-4">
                         <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-1">Categorie</label>
+                            <label className="block text-sm font-medium text-gray-700 mb-1">Catégorie</label>
                             <select
                                 value={form.category}
                                 onChange={(e) => setForm({ ...form, category: e.target.value })}
@@ -144,7 +144,7 @@ export function SupportPage() {
                             </select>
                         </div>
                         <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-1">Priorite</label>
+                            <label className="block text-sm font-medium text-gray-700 mb-1">Priorité</label>
                             <select
                                 value={form.priority}
                                 onChange={(e) => setForm({ ...form, priority: e.target.value })}
@@ -164,7 +164,7 @@ export function SupportPage() {
                             onChange={(e) => setForm({ ...form, description: e.target.value })}
                             rows={4}
                             className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-orsg-blue/20 outline-none resize-none"
-                            placeholder="Decrivez votre probleme en detail (etapes pour reproduire, messages d'erreur, etc.)..."
+                            placeholder="Décrivez votre problème en détail (étapes pour reproduire, messages d'erreur, etc.)..."
                         />
                     </div>
 
@@ -233,7 +233,7 @@ export function SupportPage() {
                                     </div>
                                     {ticket.admin_notes && (
                                         <div className="mt-3 p-2 bg-blue-50 rounded-lg text-xs text-blue-800">
-                                            <strong>Reponse admin :</strong> {ticket.admin_notes}
+                                            <strong>Réponse admin :</strong> {ticket.admin_notes}
                                         </div>
                                     )}
                                 </div>
@@ -264,7 +264,7 @@ export function SupportPage() {
                         <MessageSquare className="w-6 h-6" />
                     </div>
                     <h3 className="font-bold text-gray-900 mb-1">Documentation</h3>
-                    <p className="text-gray-500 text-sm">Referentiel BDI & guide d'utilisation</p>
+                    <p className="text-gray-500 text-sm">Référentiel BDI & guide d'utilisation</p>
                 </a>
             </div>
 

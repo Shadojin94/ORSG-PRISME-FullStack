@@ -3,11 +3,19 @@ import type { ReactNode } from 'react';
 import { pb, currentUser, isAdmin as checkAdmin } from '@/lib/pocketbase';
 import type { PrismeUser } from '@/lib/pocketbase';
 
+interface CheckEmailResult {
+    success: boolean;
+    error?: string;
+    otp_enabled?: boolean;
+    can_use_password?: boolean;
+}
+
 interface AuthContextType {
     user: PrismeUser | null;
     isAuthenticated: boolean;
     isAdmin: boolean;
     loading: boolean;
+    checkEmail: (email: string) => Promise<CheckEmailResult>;
     sendCode: (email: string) => Promise<{ success: boolean; error?: string; dev_code?: string }>;
     verifyCode: (email: string, code: string) => Promise<{ success: boolean; error?: string }>;
     loginWithPassword: (email: string, password: string) => Promise<{ success: boolean; error?: string }>;
@@ -58,6 +66,23 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         });
         return () => { unsub(); };
     }, [syncUser]);
+
+    const checkEmail = useCallback(async (email: string): Promise<CheckEmailResult> => {
+        try {
+            const res = await fetch('/api/auth/check-email', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ email }),
+            });
+            const data = await res.json();
+            if (!res.ok || !data.success) {
+                return { success: false, error: data.error || 'Adresse email non reconnue' };
+            }
+            return { success: true, otp_enabled: data.otp_enabled, can_use_password: data.can_use_password };
+        } catch {
+            return { success: false, error: 'Impossible de contacter le serveur' };
+        }
+    }, []);
 
     const sendCode = useCallback(async (email: string) => {
         try {
@@ -158,6 +183,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         isAuthenticated: !!user && pb.authStore.isValid,
         isAdmin: checkAdmin(),
         loading,
+        checkEmail,
         sendCode,
         verifyCode,
         loginWithPassword,

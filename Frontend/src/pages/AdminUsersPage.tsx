@@ -67,7 +67,7 @@ export function AdminUsersPage() {
             setUsers(prev => prev.map(u => u.id === userId ? { ...u, role: newRole as PrismeUser['role'] } : u))
         } catch (err) {
             console.error("Error updating role:", err)
-            alert("Erreur lors du changement de role.")
+            alert("Erreur lors du changement de rôle.")
         }
     }
 
@@ -150,7 +150,7 @@ export function AdminUsersPage() {
                 <div>
                     <h1 className="text-3xl font-bold text-[#1a4b8c] mb-2">Gestion des Utilisateurs</h1>
                     <p className="text-gray-600">
-                        Administration des acces et des roles de la plateforme.
+                        Administration des accès et des rôles de la plateforme.
                     </p>
                 </div>
                 <button
@@ -162,7 +162,7 @@ export function AdminUsersPage() {
             </div>
 
             {/* Stats */}
-            <div className="grid grid-cols-4 gap-4 mb-6">
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
                 <div className="bg-white rounded-xl p-4 border border-gray-200 shadow-sm">
                     <div className="text-2xl font-bold text-[#1a4b8c]">{users.length}</div>
                     <div className="text-xs text-gray-500">Utilisateurs total</div>
@@ -213,7 +213,7 @@ export function AdminUsersPage() {
                         </div>
                         <h3 className="font-bold text-gray-700 mb-2">Aucun utilisateur</h3>
                         <p className="text-gray-500 text-sm max-w-md mx-auto">
-                            Aucun utilisateur ne correspond a votre recherche.
+                            Aucun utilisateur ne correspond à votre recherche.
                         </p>
                     </div>
                 ) : (
@@ -248,7 +248,7 @@ export function AdminUsersPage() {
                                         </div>
                                         <div className="flex items-center gap-1 text-xs text-gray-400 mt-1">
                                             <Calendar className="w-3 h-3" />
-                                            Cree le: {new Date(user.created).toLocaleDateString('fr-FR')}
+                                            Créé le : {new Date(user.created).toLocaleDateString('fr-FR')}
                                         </div>
                                     </div>
                                 </div>
@@ -264,7 +264,7 @@ export function AdminUsersPage() {
                                     {/* OTP toggle */}
                                     <button
                                         onClick={() => toggleOtp(user)}
-                                        title={user.otp_enabled !== false ? "OTP actif — cliquer pour desactiver" : "OTP inactif — cliquer pour activer"}
+                                        title={user.otp_enabled !== false ? "OTP actif — cliquer pour désactiver" : "OTP inactif — cliquer pour activer"}
                                         className={cn(
                                             "flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-bold transition-colors",
                                             user.otp_enabled !== false
@@ -488,7 +488,7 @@ function CreateUserModal({ onClose, onCreated }: { onClose: () => void; onCreate
             })
             const data = await res.json()
             if (!res.ok || !data.success) {
-                setError(data.error || "Erreur lors de la creation de l'utilisateur.")
+                setError(data.error || "Erreur lors de la création de l'utilisateur.")
                 setCreating(false)
                 return
             }
@@ -517,7 +517,7 @@ function CreateUserModal({ onClose, onCreated }: { onClose: () => void; onCreate
                             value={form.name}
                             onChange={(e) => setForm({ ...form, name: e.target.value })}
                             className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-orsg-blue/20 outline-none"
-                            placeholder="Prenom Nom"
+                            placeholder="Prénom Nom"
                         />
                     </div>
                     <div>
@@ -532,7 +532,7 @@ function CreateUserModal({ onClose, onCreated }: { onClose: () => void; onCreate
                     </div>
                     <div className="grid grid-cols-2 gap-4">
                         <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-1">Role</label>
+                            <label className="block text-sm font-medium text-gray-700 mb-1">Rôle</label>
                             <select
                                 value={form.role}
                                 onChange={(e) => setForm({ ...form, role: e.target.value })}
@@ -544,7 +544,7 @@ function CreateUserModal({ onClose, onCreated }: { onClose: () => void; onCreate
                             </select>
                         </div>
                         <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-1">Departement</label>
+                            <label className="block text-sm font-medium text-gray-700 mb-1">Département</label>
                             <input
                                 type="text"
                                 value={form.department}
@@ -572,7 +572,7 @@ function CreateUserModal({ onClose, onCreated }: { onClose: () => void; onCreate
                             className="flex-1 px-4 py-2 bg-[#3bb3a9] text-white rounded-lg font-bold hover:bg-[#2f9a91] disabled:opacity-60 flex items-center justify-center gap-2"
                         >
                             {creating ? <Loader2 className="w-4 h-4 animate-spin" /> : <UserPlus className="w-4 h-4" />}
-                            Creer
+                            Créer
                         </button>
                     </div>
                 </div>
