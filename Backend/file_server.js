@@ -982,8 +982,10 @@ except Exception as e:
                 return;
             }
 
-            // Dev bypass: code 000000 accepted when SMTP not configured
-            if (code === '000000' && !SMTP_HOST) {
+            // Dev bypass: code 000000 accepted when SMTP is unusable OR PB admin unavailable
+            // Coherent avec /auth/send-code qui renvoie dev_code dans ces memes cas.
+            const smtpUnusable = !SMTP_HOST || !SMTP_USER || !SMTP_PASS;
+            if (code === '000000' && (smtpUnusable || !pbAdminReady)) {
                 console.warn(`[AUTH-DEV] Dev bypass login for ${email}`);
                 // Try real PB auth first for a proper token
                 if (pbAdminReady) {
