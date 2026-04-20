@@ -1,4 +1,4 @@
-import { CheckCircle2, Calendar, AlertTriangle, Database, ArrowLeft, Loader2, Globe, HardDrive, Info, ListChecks } from "lucide-react";
+import { CheckCircle2, Calendar, AlertTriangle, Database, ArrowLeft, Loader2, Globe, HardDrive, Info, ListChecks, Play } from "lucide-react";
 import { Acronym } from "@/components/ui/Acronym";
 import { cn } from "@/lib/utils";
 import { MocaUpload } from "./MocaUpload";
@@ -25,6 +25,12 @@ interface Step2Props {
 
     primaryDatasetId: string | null;
     onUploadComplete: () => void;
+
+    onGenerate: () => void;
+    isProcessing: boolean;
+    progress: { current: number; total: number; label: string } | null;
+    canGenerate: boolean;
+    fileCount: number;
 }
 
 const CEPIDC_THEMES = [
@@ -48,7 +54,12 @@ export function Step2_Config({
     themeLabel,
     indicators,
     primaryDatasetId,
-    onUploadComplete
+    onUploadComplete,
+    onGenerate,
+    isProcessing,
+    progress,
+    canGenerate,
+    fileCount
 }: Step2Props) {
 
     const sortedYears = [...availableYears].sort((a, b) => parseInt(b) - parseInt(a));
@@ -277,6 +288,51 @@ export function Step2_Config({
                     <p className="text-sm text-red-600 mt-1">{error}</p>
                 </div>
             )}
+
+            {/* Inline CTA: Générer */}
+            <div className="bg-white p-5 rounded-xl border border-gray-200 shadow-sm sticky bottom-4">
+                {isProcessing && progress && (
+                    <div className="mb-3 text-xs text-gray-600">
+                        <div className="flex justify-between mb-1">
+                            <span className="font-semibold">Génération {progress.current}/{progress.total}</span>
+                            <span className="truncate ml-2 max-w-[220px]" title={progress.label}>{progress.label}</span>
+                        </div>
+                        <div className="h-1.5 bg-gray-200 rounded-full overflow-hidden">
+                            <div
+                                className="h-full bg-[#3bb3a9] transition-all duration-300"
+                                style={{ width: `${(progress.current / progress.total) * 100}%` }}
+                            />
+                        </div>
+                    </div>
+                )}
+                <button
+                    onClick={onGenerate}
+                    disabled={!canGenerate || isProcessing}
+                    className={cn(
+                        "w-full py-3 px-4 rounded-xl font-bold flex items-center justify-center gap-2 transition-all shadow-md",
+                        canGenerate && !isProcessing
+                            ? "bg-[#3bb3a9] text-white hover:bg-[#2f9a91] hover:shadow-lg hover:-translate-y-0.5"
+                            : "bg-gray-200 text-gray-400 cursor-not-allowed"
+                    )}
+                >
+                    {isProcessing ? (
+                        <>
+                            <Loader2 className="w-5 h-5 animate-spin" />
+                            Génération en cours...
+                        </>
+                    ) : (
+                        <>
+                            <Play className="w-5 h-5 fill-current" />
+                            {fileCount > 1 ? `Générer ce sujet (${fileCount} fichiers)` : 'Générer ce sujet'}
+                        </>
+                    )}
+                </button>
+                {!canGenerate && !isProcessing && (
+                    <p className="text-[11px] text-gray-500 text-center mt-2">
+                        Sélectionnez une année disponible pour lancer la génération.
+                    </p>
+                )}
+            </div>
         </div>
     );
 }

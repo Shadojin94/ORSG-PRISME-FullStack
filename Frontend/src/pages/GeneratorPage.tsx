@@ -292,9 +292,15 @@ export function GeneratorPage() {
                 </div>
             </div>
 
-            <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start relative pb-20">
+            <div className={cn(
+                "grid grid-cols-1 gap-8 items-start relative pb-20",
+                step === 1 ? "lg:grid-cols-12" : ""
+            )}>
 
-                <div className="lg:col-span-8 space-y-8 min-h-[500px]">
+                <div className={cn(
+                    "space-y-8 min-h-[500px]",
+                    step === 1 ? "lg:col-span-8" : "max-w-4xl mx-auto w-full"
+                )}>
 
                     {step === 1 && (
                         <Step1_ThemeSelection
@@ -322,6 +328,11 @@ export function GeneratorPage() {
                             indicators={subjectIndicators}
                             primaryDatasetId={primaryDatasetId}
                             onUploadComplete={reloadYears}
+                            onGenerate={handleGenerate}
+                            isProcessing={isProcessing}
+                            progress={progress}
+                            canGenerate={subjectDatasets.length > 0 && !!year}
+                            fileCount={subjectDatasets.length}
                         />
                     )}
 
@@ -336,22 +347,24 @@ export function GeneratorPage() {
 
                 </div>
 
-                <div className="hidden lg:block lg:col-span-4">
-                    <SidebarSummary
-                        step={step}
-                        themeLabel={themeLabel}
-                        subjectLabel={subjectLabel}
-                        subjectDatasets={subjectDatasets}
-                        year={year}
-                        format={format}
-                        isProcessing={isProcessing}
-                        progress={progress}
-                        onGenerate={handleGenerate}
-                        onGoToStep={handleGoToStep}
-                        canGenerate={subjectDatasets.length > 0 && !!year}
-                        isOpenDataMode={sourceMode === 'opendata'}
-                    />
-                </div>
+                {step === 1 && (
+                    <div className="hidden lg:block lg:col-span-4">
+                        <SidebarSummary
+                            step={step}
+                            themeLabel={themeLabel}
+                            subjectLabel={subjectLabel}
+                            subjectDatasets={subjectDatasets}
+                            year={year}
+                            format={format}
+                            isProcessing={isProcessing}
+                            progress={progress}
+                            onGenerate={handleGenerate}
+                            onGoToStep={handleGoToStep}
+                            canGenerate={subjectDatasets.length > 0 && !!year}
+                            isOpenDataMode={sourceMode === 'opendata'}
+                        />
+                    </div>
+                )}
             </div>
 
         </div>

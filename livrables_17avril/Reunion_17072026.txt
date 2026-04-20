@@ -1,0 +1,1924 @@
+0:00
+Il y a où il y a les où il y a les données ?
+0:04
+Bah ça s'appelle comment ? Ah je entends plus.
+0:13
+Oui, c'est l'observateur régional des suicides dans du je crois que c'est ça.
+0:17
+Je vérifie l'observatoire.
+0:28
+D'accord. C'est pas le site de santé publique là.
+0:32
+Non non, je crois que ça s'appelle observatoire régional des des suicides.
+0:39
+Regarde, je crois que c'est ça. Oui,
+0:47
+d'accord. C'est vous êtes sur le site de l'hôpital.
+0:52
+OK. Il me semble que c'est le CRPS. C'est
+0:54
+exactement ça. D'accord. Ben, je vais me le mettre dans
+0:57
+mes euh dans mes sources pour que Hop.
+1:05
+OK. Et ça c'est l'observatoire
+1:11
+suiciable. D'accord.
+1:16
+OK. Euh dans les sources après, bah en fait
+1:20
+plus simple, c'est que on verra ça après au niveau de la ROMA. On va déjà
+1:24
+s'arrêter du coup avant la RAP. Je vais vous montrer ce qui a été mis à jour sur
+1:27
+la plateforme comme ça je pense qu'en fait sur la
+1:32
+plateforme il y aura plus de d'information au niveau des sources qui
+1:35
+ont été qui ont été récupéré sûr que c'est bien
+1:42
+c'est bien rafraché Donc
+1:53
+Ah, on a perdu de manier là. Hop.
+2:02
+Donc alors euh du coup la plateforme a été remis à zéro sur les fichiers qu'on
+2:05
+était régénérés mais on ess de régénérer pour avoir l'historique. Donc au niveau
+2:12
+euh de bah on va regarder au niveau de la BDI au niveau des thématiques.
+2:16
+Donc euh donc maintenant comme je disais euh
+2:22
+voilà au niveau de l'open data euh il y a des données normalement hop euh il
+2:27
+devrait les avoir voilà sur la population. Si je vais dessus
+2:33
+ça c'était des fichiers déjà m'aviez donnés.
+2:36
+Excusez-moi, j'ai été déconnecté, je sais pas pourquoi. Ou je disais que on
+2:41
+va on va regarder directement la plateforme pour pouvoir voir en fait au
+2:45
+niveau des des données où est-ce que où est-ce que
+2:49
+moi je récupère. Donc j'ai l'INCOP adresse et euh le MISR euh sur la
+2:56
+structure de la population par exemple euh sur la densité de la population,
+3:00
+j'ai de l'open data sur euh la répartition en fait vous
+3:05
+verrez que sur la la BDI euh sur la disponibilité il est indiqué en fait de
+3:10
+compte quand ça vient de l'open data, quand ça vient de de ou quand ça peut
+3:12
+venir de euh si je prends par exemple bah celui
+3:20
+ici là c'est de la population si j'y vais ici donc c'était structure
+3:25
+la population non c'était pas ça c'était où c'était
+3:31
+euh c'est bien là c'est bien structure de la
+3:37
+population pour la démographie je pense que je les ai directement
+3:46
+importé en Bon voilà. Bon, on va prendre les
+3:52
+enfants moins de 300 directement à partir de open data et en fait quand je
+3:57
+génère en fait un fichier normalement hop on va télécharger
+4:05
+2020 complet. Donc là, j'ai ma structure
+4:15
+celle qui s'ouvre. Hop. Et voilà. Et là, normalement, j'ai
+4:22
+mon fichier Excel qui vient avec de l'open data.
+4:26
+Donc euh avec les taux du coup qui ne sont plus
+4:31
+euh indiqués. J'ai pour les domes, pour la France
+4:36
+heale, la France entière. Si je reviens sur
+4:44
+la thématique, excusez-moi si je vais un peu trop vite.
+4:50
+Voilà, là c'est deux mots KO. Cette fois-ci les fichiers qui av été donné
+4:55
+si je génère normalement voilà mais j'avais pas des
+4:59
+données là pour 2022 alors que je avais sur l'open data.
+5:03
+En fait, dans les fichiers que qui avaient été donnés, j'avais pas celle de
+5:06
+2022. J'avais des j'avais des des données qui étaient pas celles de 2022.
+5:13
+En fait, l'open data va permettre de compléter normalement vous avez des
+5:16
+données mais ça peut permettre de compléter des données que que l'on n
+5:19
+pas. Au niveau de l'arborescent, ça vous va
+5:22
+toujours. Ouais.
+5:29
+Ouais. Effectivement là euh j'ai pas le ça c'était du fichier Mocao. J'avais pas
+5:35
+effectivement cette cette donnée là alors que là je l'avais. Euh
+5:43
+je reviens du coup sur du coup effectivement là on a généré des
+5:46
+fichiers et là maintenant j'ai le tableau de bord qui se met en place. En
+5:48
+fait, pour être en sport avec vous, c'est que j'ai fait encore une dernière
+5:50
+mise à jour là euh tout à l'heure avant de commencer la réunion, ce qui fait que
+5:54
+ça la plateforme a été rafraîchie avec euh avec des données euh en fait sans
+5:59
+données en fait des données toutes fraîches. Maintenant, c'est comme si
+6:01
+j'ai recommencé à zéro et là maintenant j'ai des euh j'ai des historiques qui
+6:05
+s'affichent. Euh
+6:10
+si je reviens vite fait à ce qu'on avait dit, c'était ça.
+6:16
+Donc euh libéré celuici dans le fil d'Arial.
+6:24
+Ça c'était ici suicide. C'était bien ça hein.
+6:31
+Hm hm.
+6:36
+OK, donc le fil d'arriè a été corrigé. Euh
+6:40
+au niveau des céit Manuela qui avait dit au niveau des libélés, est-ce que c'est
+6:44
+bon pour vous ? J'ai pas revérifié mais oui, c'est bon.
+6:53
+Laisser en fait par rapport par rapport à ce que
+6:54
+vous voyez euh sur la plateforme. Oui, il a c'était blessé les décès. Oui,
+7:00
+c'est bon. OK, super. Ça c'est bon.
+7:06
+Ensuite le taux calculé. Je reviens ici vite fait plus simple.
+7:13
+Euh le taux euh les taux calculés retirés des outils de génération.
+7:17
+Euh si je prends un exemple un que j'aimais bien c'était éducation.
+7:23
+Donc là voilà il se chargent par rapport à l'open data. Sinon je les avais aussi
+7:26
+à partir de mo je vais les prendre à partir de l'open data. Ça fera un bon
+7:30
+test. Si je prends celle de 2020 par exemple,
+7:34
+je génère le fichier été généré, ça va assez vite
+7:38
+pour la génération. Hop, donc là, j'ai le fichier qui est
+7:42
+généré pour l'éducation. Donc 2020, ça va au niveau de l'écran ? C'est pas trop
+7:47
+petit ? J'ouvre, je prends directement celui qui
+7:54
+consolidé parce que en fait comme ça, il y a tous les tous les onglets dessus.
+8:00
+Hop ! Et euh et là du coup au niveau de l'open data euh au niveau du taux, je
+8:06
+n'ai plus le taux. Je sais pas s'il y avait le taux dessus.
+8:16
+Vous avez pu retirer le taux de toutes les thématiques. C'est bon.
+8:19
+Ouais. Si je prends l'exemple,
+8:27
+est-ce que vous est-ce que vous connaissez une enfin est-ce que vous
+8:30
+rappelez d'une thématique avec un taux dessus ?
+8:34
+Euh après je peux voir la BDI hein.
+8:39
+Pathologie non pathologie.
+8:43
+D'accord. en pathologie euh tiens, on a mortalité par maladie vasculaire et
+8:49
+cérébrale. Donc on va aller ça aura été peut-être intéressant que quand on va
+8:53
+dans la BDI en fait qu'on atterrit directement sur la thématique pour aller
+8:58
+télécharger. Enfin, je sais pas, c'est une c'est une supposition comme ça.
+9:02
+Donc on a euh pathologie et on a dit euh
+9:07
+maladie c'était euh c'est ça ? Ouais.
+9:13
+Voilà. Donc là, c'est pris à partir de l'open data.
+9:16
+Euh si je prends euh 2021, ça a été généré.
+9:25
+Hop, quand on ouvre, ça arrive.
+9:36
+Alors, au niveau des taux. OK.
+9:41
+Donc là en fait j'ai au niveau régional, je dois pas avoir le niveau communal
+9:44
+dessus mais j'ai le niveau régional
+9:49
+France entière de France entière
+9:57
+c'est normal que je n'ai pas la par commune parce que il me semble qu'en
+10:00
+fait quand on prend partie de l'open data, je n'ai pas les communes
+10:04
+et ça on avait dit que c'était à partir de Mokao. Ça au cas où lui il pouvait
+10:07
+avoir les communes. Hm hm.
+10:09
+C'est bien ça. OK. Mais sinon pour le reste des
+10:13
+données, je les ai à partir de open data avec des données fraîches. Je sais pas
+10:17
+si enfin est-ce pouvoir vous servirement de nombre de dessert ? Il y avait pas
+10:22
+une autre variable. Bon, je vais revenir sur les variables
+10:26
+euh la DDI. Euh
+10:32
+donc on a dit c'était pathologie, c'était euh
+10:35
+pathologie. On avait dit c'était ça.
+10:40
+Ah oui, la priv c'est un CDS. OK. Euh si je prends euh B je prends tout ça
+10:51
+les les cardiopathies hygiénique. Excusez-moi de on va regarder ça.
+10:58
+Une cardiopathie, une thématique pathologie
+11:03
+cardiopathie. Voilà. Et là, j'ai les j'ai d'open data
+11:07
+depuis jusque euh 2015.
+11:12
+On va faire un essai. On va prendre celui de 2015.
+11:15
+S'il ne fournit pas les données mortalité au niveau régional. Ouais.
+11:20
+J'ai une question pratique ou pratique. Hm
+11:22
+hm. Euh par exemple, vous voulez nous
+11:25
+montrer que dans pathologie, on peut pas avoir d'onné au niveau
+11:30
+communal. Ouais. Ça veut dire que euh quand on va
+11:34
+importer le fichier Mocao euh
+11:39
+comment on fait ? On importe seulement le niveau communal où est-ce qu'on peut
+11:43
+importer les l'ensemble et intégrer le niveau communel ? Je sais
+11:49
+pas si j'étais clair. Je pense que c'est Oui, je
+11:57
+en fait si vous avez à partir de moto. Hm
+12:00
+hm. Normalement, vous avez toutes les données.
+12:03
+Hm hm. En fait, c'est l'idée c'est que si vous
+12:07
+prenez de MO de faire consolider les deux données. C'est ça si j'ai bien
+12:09
+compris. C'est ça. Oui. Ça voudra dire que
+12:14
+il faudra toujours que le niveau communal,
+12:19
+je sais pas si on peut faire ça. Ça veut dire qu'il faudra importer ça. Ça veut
+12:23
+dire que lors de l'importation d'emprise, il faudra importer
+12:27
+euh euh niveau géographique par niveau géographique. On peut pas importer tout
+12:30
+d'un coup. Hm.
+12:39
+Après, est-ce qu'il y a pas un calcul qui peut se faire ?
+12:43
+Je sais pas, je c'est une question comme ça.
+12:46
+Euh c'est est-ce qu'il y a pas une possibilité de euh
+12:54
+prendre effectivement les fichiers de moto, d'avoir effectivement les données
+12:57
+de niveau communal et après d'essayer de faire matcher avec un sorte de calcul au
+13:03
+niveau hexagonal pour pour être sûr que ça correspond bien.
+13:12
+Ouais. Parce que vous aujourd'hui par exemple
+13:20
+si on prend si on prend celui-ci par exemple et que vous avez des données au
+13:24
+niveau communal, vous les avez aussi au niveau euh France hexagonale et régional
+13:29
+dans mon caso, vous avez uniquement c uniquement celles qui sont communales.
+13:33
+On a tous les niveaux, on a tous les niveaux géographiques les
+13:36
+cinq. Donc après bah je sais pas est-ce que
+13:43
+euh est-ce que c'est nécessaire du coup de
+13:48
+les faire matcher ? Oui parce qu'en fait Jess il faut
+13:53
+simplement passer par la procédure alors que
+13:56
+Ouais. Donc ça voudrait dire qu'on importe niveau par niveau.
+14:02
+En fait, je pense que si si au niveau MO vous avez toutes les données au niveau
+14:07
+régional, autant les importer directement de Mocao, ça vous fait
+14:12
+si par contre effectivement euh au niveau de l'open data, il permet
+14:18
+déjà d'avoir d'avoir à toutes les régions, c'est pas nécessaire.
+14:23
+OK. Euh
+14:32
+si je euh alors est-ce qu'il y a quelque chose d'autre que je vais voir ? Si je
+14:35
+prends par exemple les traumatismes
+14:43
+traumatis data donc ça c'est bien. Euh en fait ce que je voulais vous
+14:47
+montrer c'était que avant il y avait des thématiques qui n'étaient pas
+14:51
+accessibles. Vous savez, c'était grisé. Maintenant, elles sont toutes elles sont
+14:55
+toutes accessibles maintenant. Et puis on a récupéré beaucoup de J'ai
+15:00
+récupéré pour le coup beaucoup de de données au niveau de l'open data.
+15:03
+Essayer de faire le plus possible. On est d'accord que l'op s'arrête au
+15:09
+niveau régional du coup. Oui.
+15:13
+Oui, malheureusement. Ouais. J'ai pas le j'ai pas le niveau j'ai pas le niveau
+15:18
+communal pour l'open data. Ma question c'est est-ce qu'il y a via
+15:24
+l'outil euh une façon de d'avoir un peu un récapitulatif de tous les indicateurs
+15:31
+pour lesquels le niveau communal n'est pas disponible en open data pour nous
+15:35
+permettre il faut à chaque fois cliquer sur chaque thématique
+15:39
+parce que nous ça nous permettra d'avoir un listing clair de si on doit prioriser
+15:43
+mo open data sin le taux de conf
+15:48
+c'est une bonne observation c'est quelque chose que je peux rajouter au
+15:50
+niveau de la BDI si vous voulez. OK. Oui. Oui, ce serait bien parce que
+15:56
+comme ça ce sera plus facile pour nous de savoir qu'est-ce qui reste à extraire
+15:59
+ou pas. Au niveau de la BDI le au niveau
+16:05
+euh régional disponible.
+16:12
+OK. Bah je peux le rajouter ça effectivement. C'est prend pas beaucoup
+16:16
+de temps à mettre en place. Euh
+16:25
+c'est encore configuré. Est-ce que je sais pas si ça si là
+16:30
+maintenant c'est possible, mais est-ce que c'est possible d'avoir euh un
+16:34
+fichier Mo ou euh ou un fichier MO KO pour que je puisse
+16:39
+l'importer pour tester ? Oui. Attendez. Euh pour quelle
+16:48
+thématique vous voulez tester ? Bah je sais pas, je peux prendre
+16:53
+bah par exemple ma petite enfance, je l'ai déjà.
+16:58
+Emploi, est-ce que je l'ai sur emploi ? J'ai pas euh j'ai pas
+17:02
+population depuis 15 ans. Euh revenu, je trouve
+17:11
+là euh condition de vie. C'est bon si je prends
+17:16
+peut-être état de état de santé. Donc vous n'avez pas emploi, c'est ça ?
+17:22
+Emploi, j'ai j'ai mais il me manquait population depuis de 15 ans.
+17:27
+Bah attendez, j'ai le fichier donc si vous voulez je le transfère par mail.
+17:31
+Ouais. Donc ça tester donc la population
+17:36
+supérieure à 15 ans. Ah si, je les ai en fait. Donc non,
+18:13
+c'est Ouais, je les ai.
+18:17
+Donc c'était en population population depuis de 15 ans. Bah si, il les a là.
+18:22
+Donc si je prends euh bien sûr au cas où je vais prendre les
+18:27
+202 si je génère je vais voir si non
+18:31
+effectivement je les données qui sont le centre
+18:37
+mais effectivement je veux bien voir avoir les sources si possible pour voir
+18:40
+si euh si ça génère bien.
+18:45
+Je vous je vous renvoie aussi le fichier actif et celui par rapport au cadre vous
+18:49
+voyez. Euh j'envoie sur live ou l'adresse Gmail
+18:54
+euh live de suite.
+19:03
+Non, je sais pas là. Je sais pas
+19:12
+je tester ça. Je fermer je fermer. Je vous ai envoyé.
+19:18
+Merci. Peut-être que ça arrive.
+19:48
+Ça parfait.
+19:52
+Alors euh donc sur la thématique
+19:59
+donc c'était on avait dit emploi c'est ça
+20:05
+donc on va tout on va les enlever donc population de 15 ans c'est ça on
+20:10
+supprime ça ensuite on avait cadroué on va l'enlever
+20:18
+et actif Ah mince euh
+20:27
+ouvrier population actif j'ai trois fichiers tac
+20:35
+c'est pas ce que je voulais faire ici là je le reprends directement depuis le
+20:40
+mail donc ça marche super bien mieux c'est bien en fait ce que je fais c'est
+20:45
+faut vous montrer hein c'est que je prends le fichier et je le glisse
+20:48
+directement dans la plate plateforme. D'accord.
+20:51
+Donc tac, hop, ça a été géré aussi mais apparemment il y a pas de France
+20:54
+entière. Bon, je vais voir.
+20:56
+Il y a pas de France entière dans le ficho.
+20:59
+Bah pardon. Peut-être c'est une erreur mais euh enfin ouvrier.
+21:06
+OK. OK. Donc il a tout pris. Ensuite si je fais euh c'est de quelle
+21:15
+année à quelle année ? C'est de 2020 2021.
+21:18
+On va faire 2021 comme ça à 2022.
+21:23
+OK. OK. On voir ce qu'il a généré. C'est surpris quand même que c'était
+21:37
+super rapide. Excusez-moi ce que je décour aussi.
+21:43
+OK. Par contre, j'ai l'impression que pour le régional, il les a pas.
+21:50
+Non, je pense que le régional c'est parce que c'est c'est codé différemment
+21:54
+en fait. D'accord. Je les ai bien pour la Guyane
+21:58
+au niveau communal. Pour le régional, je les ai pas. Pour
+22:02
+les DOM, bah je les ai. Pour la France entière, je l'ai. Mais et ça, je pense
+22:07
+que c'est non. Pour la France entière, je l'ai pas parce que j'ai pas le
+22:09
+régional. Si si, le régional il est présent.
+22:14
+il est présent mais il y a enfin que si dessus il y a bien régional mais
+22:22
+effectivement c'est juste que c'est présenté
+22:26
+c'est tourné mais il y a bien toutes les régions hexagonales
+22:29
+d'accord je reprends le fichier comme ça vous avez en dessous
+22:37
+là là
+22:39
+colonne B et et Fais il H
+22:45
+est-ce que c'est pas à cause de ça que ça sauté ? À cause de
+22:51
+à cause des caractères. OK.
+22:58
+Allez en sorte. Ouais. Les caractères bizarres. Je crois
+23:01
+que ça doit être les accents. Bah c'est pas grave. Je fais en sorte
+23:05
+qu'il il puisse les prendre en compte.
+23:09
+C'est à cause de ça. Euh donc on était sur emploi euh
+23:23
+dans les armes ça c'est une nouvelle data donc OK. Bon, je le noter
+23:27
+facilement. On a dit euh caractè spéciaux
+23:36
+parce que je crois qu'ils sont présents finalement sur tous les fichiers hein
+23:39
+d'y les caractères un peu caractères spéciaux, ça s'affiche
+23:45
+partout. à euh gérer
+23:49
+genre. OK. En fait, ça a bien marché sauf
+23:58
+effectivement pour le pour le régional en fait.
+24:02
+Donc bon, après voilà, ça va être des choses comme ça à revoir hein, mais euh
+24:08
+mais sinon après dans l'ensemble, ça génère bien. Euh
+24:11
+est-ce que vous pouvez tester pour pour J'ai vu vous avez mis accident de la
+24:17
+route. Est-ce que tout est tout est bon pour les causes externes ?
+24:22
+Vous voulez qu'on regarde quoi sur de la route par exemple
+24:24
+?c de la circulation.
+24:33
+202 erreur non
+24:40
+attendez je vais envoyer ça je essayer un autre je vais lancer une
+24:49
+correction Hop ! Euh, est-ce que ça le fait sur
+25:03
+tous ? Non. Donc là, ça a l'air de marcher. Ça c'est
+25:07
+plus pour les nombres de blessés par accident sur la circulation. Et j'ai vu
+25:10
+que j'avais un bug là sur celui-là avant.
+25:13
+Et là aussi, j'ai un bug. Bon, falloir que je regarde ça.
+25:18
+Effectivement, les les données en frquence sont peut-être différents.
+25:23
+Et est-ce que vous avez les données pour noyade ? Je sais pas si
+25:26
+pour noyable. Ouais. Non, j'ai pas les données pour noyables.
+25:31
+OK. Euh sur la BDI, je crois que c'était accessible en open data. C'est l'enquête
+25:37
+si des bêtises. accident de la route accident promatisme accident
+25:43
+même en terme de mortalité vous n'avez rien
+25:46
+non je les ai pas conf en fait elles sont pas configurées c'est pour ça
+25:49
+j'ai j'ai les open data mais elles sont pas configurées c'est pour ça
+25:53
+pour ça que j'avais le bug tester celui-ci la de morts par accident
+26:03
+de la circulation c'est décè
+26:08
+Hop. Ça m'a dit euh le traumatisme
+26:14
+et c'est euh j'ai un trou de mémoire, c'est nombre
+26:19
+d'accident. Ah, ça c'est sûr.
+26:25
+Non, ça marche pas. Moi, j'ai un bug dessus. Faut que je le corrige.
+26:46
+D'accord. J'ai lanc j'ai lancé une correction là en parallèle.
+26:51
+Est-ce que vous avez possibilité de lancer tout l'outil pour voir où il y a
+26:54
+des bugs sur toutes les thématiques, tous les indicateurs ou à chaque fois il
+26:58
+faut kicker ? C'està-dire que nous dans ce cas-là, on peut aussi tester pour
+27:02
+chaque ou il y a quelque chose ? Vous
+27:05
+vous pouvez vous pouvez essayer hein. L'idée c'est ça aussi hein. C'est après
+27:09
+ce que je vais faire c'est que ce qui serait idéal c'est que
+27:15
+c'est d'avoir un document commun avec vous et moi où on liste tous les les
+27:21
+retours que vous avez. Et moi en fait ça je me prépare une session en fa compte
+27:25
+de fixation des bugs comme celui-là qu'on vient de le voir et comme ça je
+27:28
+les corrige tous et ensuite bah je vous notifie pour dire voilà les
+27:32
+corrections été faites et puis après si vous pouvez vous regarder de votre côté
+27:35
+pour voir effectivement si c'est bien corrigé.
+27:39
+D'accord. Donc ce serait créé une sorte de tableau Excel partagé nous on
+27:44
+ou un tableau Excel ou plus simple. Je sais pas ce qui vous ce que vous
+27:47
+préférez vous, mais oui, un truc assez simple en fait pour euh
+27:53
+pour que vous puissiez effectivement ben rapporter euh bah les euh les bugs que
+27:58
+que vous voyez. En fait, j'avais déjà mis en place le ça là, c'était euh le le
+28:04
+système de ticket, moi je reçois par mail,
+28:08
+mais ça ça va être des tickets un par un. Mais ça je pense ça va être plus par
+28:10
+la suite. Mais là je pense que vu qu'on est pas encore en phase de déploiement
+28:15
+et qu'on va bientôt déployer pour puiss aussi avoir accès à la plateforme à
+28:19
+partir de vos de votre service, c'est que avant la libraison si on peut faire
+28:24
+une petite une recette de ce que vous voyez et comme ça moi je une grosse
+28:29
+dernière correction et puis et puis après comme ça quand il y a le
+28:33
+déploiement combien de temps pardon
+28:37
+vous pensez que ça prendra à peu près combien de temps ? Bah moi l'objectif
+28:40
+c'est que pour la semaine prochaine tout soit là.
+28:43
+OK ? Parce que vous vous l'aurez compris en fait notre préoccupation là de
+28:48
+l'urgence c'est vraiment de d'avoir les mise à jour pour les thématiques là
+28:54
+les trois indicateurs euh sur les accidents de la route enfin
+28:59
+les indicateurs sur les des accidents de la route noyade et et suicide afin qu'on
+29:04
+puisse réaliser ce travail d'atlas pour le mois de mai.
+29:08
+Le mois de mai. Ouais. Ouais. Et donc là, c'est vraiment
+29:13
+l'urgence vraiment absolue de corriger en fait les
+29:18
+erreurs sur ces fichiers ou au moins avoir une date, une dernière date où on
+29:24
+a des mises à jour qui sont effectifs. Est-ce que je peux faire Est-ce que vous
+29:33
+avez une minute ? Oui.
+29:37
+Allez 4 minutes si possible. Je vais voir si
+29:40
+je peux corriger ce ce bug-là rapidement.
+29:45
+Euh ce que je sais que c'était une priorité
+29:59
+pour vous que pour le mois de mai vous ayez ces données là et c'est pour ça que
+30:03
+j'ai fait en sorte de les récupérer depuis l'open data. Mais euh
+30:07
+puisquon a on doit assister à une manifestation à Paris sans expo et il
+30:12
+est prévu que ça soit déjà prêt pour qu'on puisse pouvoir
+30:18
+exposer ou bien voilà présenter. On sera à Paris. Vous sera à Paris
+30:22
+bientôt. Oui. À Cento le 20 19 et 21 mai.
+30:29
+D'accord. Tout est trois. Euh non juste moi et Marie- Thérèse
+30:34
+Daniel. D'accord. Et la présidente de la trouvé ça sympa
+30:38
+effectivement de vous rencontrer un peu en vrai. Enfin si vous voulez he pour le
+30:41
+coup mais si vous êtes au salon Santa Expro on y
+30:46
+sera la délégation de Buyan. H
+30:57
+d'accord. B je suis en train de reconstruire le bug là pour le coup.
+31:00
+Mais oui, effectivement, enfin moi, ça ferait plaisir effectivement de vous
+31:02
+voir aussi un peu en vrai parce que on s'est vu depuis là euh c'est quoi ?
+31:05
+Depuis novembre, c'est ça euh en visio et euh bah si on peut se voir si en
+31:11
+vrai, sera peut-être plus sympa. Et puis bah Jessie et Nissa, si vous
+31:18
+voulez que j'aille nous voir à Cayenne si ça vous enchante pas.
+31:27
+J'ai rien dessus justement.
+31:30
+Jessie est impassible. Vas-y, tu reviens au au truc. Bon, j'ai
+31:37
+lancer du coup la correction là en course en train de reconstruire pour le
+31:40
+coup. Est-ce qu'il y a quelque chose d'autre
+31:43
+que qu'on que vous voulez qu'on qu'on voit en attendant que je corrige les
+31:47
+accidents de la la circulation ? Je vois que comportement, il y a pas
+31:53
+d'indicateur. Euh
+32:00
+non, les fichiers au cas où ils existent en
+32:05
+fait. On les a Ouais,
+32:09
+j'ai pas de open data. Euh si je vais dans le BDI comportement,
+32:17
+j'ai ces indicateurs là pour comportement. Il y en a qu'un seul par
+32:20
+euh par thématique.
+32:26
+Est-ce que c'est normal ? Il y a que alcool ta il y en a beaucoup
+32:31
+plus. Je vérifie.
+32:34
+Est-ce que c'est pas le fait que j'ai supprimé les taux du coup qu'un qu' en a
+32:37
+qu'un seul et plus deux ? Je je vérifie.
+32:45
+Euh je
+32:56
+euh Ah oui ! Ah c'est parce que je confronte
+33:01
+pathologie. OK. Ouf !
+33:06
+Alcool ça va expliciter ça. Oui, il a plus fa
+33:14
+parce que il y a pathologie également. Qui est
+33:17
+pathologie ? Il y a des indicateurs qui manquent aussi.
+33:20
+Non non euh je pense pas. Mais on est d'accord que même si les
+33:33
+fichierso ne sont pas dispo pour tout, une fois que l'outil est livré, nous on
+33:37
+pourra toujours prendre Moa l'intégrer. Ça devrait normalement
+33:41
+OK, c'est ça.
+33:47
+Enfin, pour être sûr que ça s'intègre bien.
+33:51
+Euh après, je sais pas si de votre côté euh ça vous demande pas trop le charge
+33:54
+de travail, mais c'est que euh
+33:58
+est-ce que c'est possible pour les fichiers Mocao,
+34:02
+pas de toutes les dates, hein, mais euh d'avoir euh un exemple de fichier Mocao
+34:08
+euh par thématique. Alors, comportement, on a tout sauf
+34:14
+activité de soin. Je n'arrive pas à faire
+34:20
+comportement là. Vous avez un fichier mo déjà pour tout
+34:23
+excepter une. C'est ça.
+34:26
+Vous avez vous l'avez normalement un comportement dire qu'on déjà envoyé
+34:35
+normalement c'était via le lien transfert.
+34:38
+Oui, je vais essayer de le retrouver. Euh tac. Donc c'est pas ça.
+34:46
+Euh j'avais Mocao pathologie.
+34:59
+Je vais montrer mon écran. J'avais mortalité pathologie dans
+35:04
+OneDrive. Non ça c'est population condition de vie.
+35:10
+C'est jeu que qu'on m'avait envoyé dernièrement.
+35:15
+Euh, désolé hein, c'est vrai que j'ai pas
+35:21
+replongé sur les dernières données.
+35:28
+Mais on peut vous le renvoyer hein. Ouais, ben je veux bien.
+35:32
+C'est déjà extrait. Donc juste peut-être pour repartir que
+35:38
+vous ayez des bases claires, on vous renvoie un fichier KO pour chaque
+35:41
+thématique. Donc un seul exemple hein, n'importe quelle année pour n'importe
+35:45
+quelle indication. Oui, n'importe ou n'importe quelle
+35:47
+année. En fait, c'est même pas la peine de pardon, je dis des bêtises, c'est pas
+35:50
+la peine de tous les faire parce que normalement pour population et
+35:53
+conditions de vie, normalement je les avais tous. C'était dans les débuts, ça
+35:56
+c'est ce qu'on avait fait pour les cinq autres thématiques.
+35:59
+Ouais. Euh ouais. Alors après euh ou sinon ce que je peux faire c'est par
+36:05
+rapport à ce que moi j'ai déjà pour vous éviter c'est de vous dire quels sont les
+36:08
+fichiers MO dont j'ai besoin sur les thématiques.
+36:11
+C'est ça. C'est vrai plus simple
+36:16
+parce que population euh population et conditions de vie normalement je les ai
+36:19
+tous et c'est pour ça d'ailleurs que c'est ce qui fonctionne le mieux.
+36:27
+Ouais, je les ai tous. Traumatisme traumatisme, vous vous n'aurez pas du
+36:31
+coup de fichier mois que ce sont tous toutes des sources externes.
+36:36
+D'accord. Population de vie, c'est bon, je les ai
+36:39
+tous. État de santé. Voilà, j'aurais besoin effectivement de l'état de santé,
+36:44
+il sont pas encore configurés. J'ai l'open data. D'accord.
+36:48
+au cas. OK. Euh, il y a offre de soin voudra faire. C'est pas encore extrait.
+37:01
+OK. Bon, en fait, c'est ça. En fait, c'est fait, j'ai offre de soin, j'ai
+37:06
+état de santé. OK. Ensuite,
+37:13
+soin, on a dit pathologie. Regarde rapidement. J'en ai dans open
+37:18
+data. J'en ai en open data. J'ai pas tout en open data ici.
+37:24
+Oui, vous avez pas les prévalences. Oui,
+37:27
+c'est normal. Non.
+37:30
+Maladie, ça c'est j'ai l'open data mais j'ai pas les prévalences encore les
+37:34
+prévalences. Ouais, préval c'est normal. C'est des données
+37:36
+qui sont privées. C'est ça. OK.
+37:39
+Mais vous avez bien les fichiers m pour pathologie.
+37:43
+Pour pathologie. Euh
+37:50
+non. OK.
+37:56
+Non, je les ai pas pour enfin du moins là, je vois que j'en ai un là pour pour
+37:59
+mon KO, je je l'ai pas donc je dois pas les avoir.
+38:03
+J'ai de l'open data pour pathologie mais j'ai pas moto.
+38:11
+Vérifie vite fait. Hop. Ouais, j'ai que de l'open data pour pour
+38:17
+pathologie. Ensuite, il y a comportement.
+38:25
+Je aussi mon cho. Et après, on a dit traumatisme,
+38:31
+j'ai data, j'ai de l'open data partiel aussi.
+38:36
+J'ai de l'open data partiel aussi. Là, j'ai les taux alors qu'on avait dit
+38:41
+qu'on mettait pas les taux. Pour traumatisme, on enlève les taux
+38:46
+aussi. Oui.
+38:47
+Pour les accidents de circulation. Oui.
+38:50
+Oui. Ben, j'ai j'ai
+39:02
+lavation. OK.
+39:28
+Donc monsieur Atico juste pour récapituler donc pour population et
+39:32
+conditions de vie c'est bon donc il faut vous renvoyer un exemple de fion pour
+39:36
+état de santé structure activité de soin pathologie et comportement
+39:41
+ouais conditions de vis et traumatis nécessaire parce qu'il y a pas de f
+39:47
+OK comme ça on l'envoie plus après
+39:50
+et puis normalement c'est normalement pour traumatis ça devrait être bon parce
+39:54
+que les tour on les enlève mais j'ai data
+39:57
+OK et euh
+40:01
+juste je et aussi noter que pour noyade je sais
+40:05
+pas si vous avez vous êtes arrivé à accéder à l'enquête noyade dans Open
+40:10
+data non j'ai pas réussi à les avoir.
+40:13
+OK mais ça ça devrait être accessible aussi en open data.
+40:17
+D'accord. OK. Donc vous renvoie c'est quatre
+40:27
+exemples. OK. Et euh
+40:36
+moi ce que je peux faire là aujourd'hui déjà c'était m'avait dit que vous avez
+40:40
+besoin de quelque chose pour le mois de mai. Donc c'était les traumatismes.
+40:43
+C'est bien ça. Alors c'est traumatisme donc c'est
+40:46
+surtout suicide dans traumatisme et non dans comportement. C'est dans
+40:52
+comportement suicide. D'accord. Hm
+40:56
+hm. Et celui-ci
+40:57
+voilà celui-ci. Et ça c'est pas un fichier. Ça c'est pas ça c'était en open
+41:00
+data. C'était Mokao. C'est mo
+41:04
+il est possible d'avoir celui-ci pour Moka KO comme ça je vous le fais.
+41:07
+Oui le faire même dans la journée si euh Et du coup il y a la source de l'S du
+41:13
+coup dont on parlait tout à l'heure
+41:16
+observatoire du suicide en open data peut-être.
+41:19
+Oui oui oui oui oui je l'avais noté. Oui oui.
+41:23
+OK. Donc serait suicide et dans traum enfin et suicide et tous les traumas de
+41:28
+suicide. Super.
+41:31
+Et euh tout parce qu'en fait il faudrait qu'on puisse intégrer donc les fichiers
+41:35
+mis à jour dans Prisme pour pouvoir générer la place directement depuis
+41:41
+Prisme. D'accord. Il y a un format spécifique.
+41:46
+Alors, le format c'est c'est le format de prisme. Il faudrait voir est-ce que
+41:50
+euh ce format il est euh enfin il est euh adapté parce qu'on a vu qu'avec euh
+41:57
+avec votre solution, la plateforme, il est possible de générer aussi des
+42:02
+rapports. Donc, faudrait qu'on voit qu'est-ce qui
+42:07
+est enfin en tout cas c'est prévu dans la procédure qu'on parte de prise, ça
+42:11
+c'est sûr. D'accord.
+42:13
+Mais après peut-être qu'on pourrait adapter à l'avenir
+42:19
+hésitez pas à me donner à m'envoyer un mail pour vous aider là pour moi le mail
+42:23
+si vous voulez des des indications spécifiques pour le pour le rapport.
+42:28
+D'accord. Et puis euh puis comme ça ça pourra
+42:30
+servir de base pour pouvoir vous générer un un rapport dessus. L'idée ce serait
+42:35
+bien puisque bon, je pense que je me Naissa et Jessie seront en vacances dès
+42:40
+la semaine prochaine et moi je serai là. Euh ce serait éventuellement de voir de
+42:46
+pouvoir poursuivre ou alors est-ce que ce sera possible de
+42:50
+d'avoir au moins les mises à jour avant le 22 ?
+42:55
+Le 22 c'est mardi, c'est mercredi prochain.
+42:58
+OK. Bah si vous m'envoyez ça aujourd'hui, euh moi je peux m'en
+43:01
+occuper, je peux m'occuper de ça aujourd'hui. Euh j'envoie une notif puis
+43:05
+après on peut euh on peut peut-être se prendre un temps soit lundi ou mardi
+43:13
+pour juste voir effectivement si si ça vous convient.
+43:16
+D'accord. Oui. Et comme ça on pourrait intégrer dentisme et voir déjà ce que ça
+43:21
+donne en fait. OK. s'il y a pas d'erreur voilà au moins
+43:26
+de de parce que là ce qu'on peut faire c'est
+43:29
+que si vous pouvez m'envoyer ça aujourd'hui. Moi je fais en sorte que je
+43:33
+vous l'ayez pour pour lundi. D'accord.
+43:36
+Et puis comme ça vous checkiez ben lundi ou mardi pour me dire OK c'est bon.
+43:41
+Comme ça vous êtes sûr de l'avoir pour le 22.
+43:44
+D'accord. OK. Désolé un petit souci.
+43:53
+OK, donc ça c'est noté. Après c'était euh sur la gestion des utilisateurs ou
+43:59
+là désolé, j'ai mon écran qui saute dans tous les sens.
+44:05
+Ah ok, d'accord, j'ai compris. Euh ouais, en fait parce que j'ai eu une
+44:11
+mise à jour. Donc ben on va voir effectivement si ça ce que ça a donné.
+44:25
+Euh donc c'était la thématique, on avait dit
+44:29
+c'était traumatisme, c'est ça hein. H c'est euh Ouais.
+44:37
+Ah bah là ça marche. Donc un autre fichier. Alors je découvre
+44:46
+avec vous hein. Si l'effet démo il marche pas voulez pas.
+44:53
+OK donc c'est bon ça fonctionne. Donc je l'ai donné niveau communal
+45:00
+régional pas.
+45:04
+Je les ai au niveau du Dom, je les ai pas au niveau de la France hexagonale et
+45:08
+j'ai la France entière. Donc c'est dire qu'il doit manquer de
+45:13
+venir quelque part mais au niveau communal je les ai.
+45:18
+Ah c'est déjà pas mal. Je jeais pour niveau communal.
+45:28
+Mais c'est surprenant que vous ayez pas France hexagonale puisque c'est
+45:31
+nécessaire pour le front sanctuaire. J'ai la France entière. Ouais.
+45:37
+Et France hexagonale. Non, c'est pas hor Mayotte.
+45:41
+C'est horrome. Hordrome.
+45:48
+C'est exagon. Oui, c'est hors drome et hors corse aussi.
+45:52
+D'accord. Non. Et attendez, on peut voir qui est
+45:57
+sur région, c'est 03. C'est région. J'ai 03.
+46:03
+C'est la Guyan. C'est la Gan 03.
+46:06
+Oui oui. Bah ouais. Ben voilà.
+46:09
+En fait, j'ai que ce de la Guyane en fait. Mais attends, si je fais je peux
+46:12
+tester vit entière. Oui.
+46:17
+Ah, en fait, j'ai que ceux de la Guyane. OK.
+46:21
+C'est pour ça que France c'est une coquille.
+46:30
+En fait, j'ai que ce Guyan, c'est pour ça.
+46:32
+D'accord. Mais ça c'était via l'open data, on est
+46:38
+d'accord. C'est data.
+46:42
+Mais normalement vous avez une pardon
+46:51
+demander moto. Et dans Kitz pas eu de fichier.
+47:00
+Excusez-moi. Vous m'avez dit quelque chose ?
+47:03
+Je demandais parce que les résultats que vous avez montré c'était à partir de
+47:06
+l'open data. Oui. Et euh je voulais savoir savoir si les
+47:10
+fichiers mon chao n'ont pas apporté l'élément complémentaire.
+47:13
+Il y a pas tr MoO pour ça. Non. OK.
+47:20
+Euh j'ai pas de fichier Mocao pour Non mais il sont en open source, c'est
+47:25
+vraiment via le baromètre précis. Et par contre, attendez, je vérifie juste le
+47:30
+fichier source via justement de la route.
+47:33
+Ouais, parce qu'il me semble que normalement
+47:35
+vous avez tous les si vous avez France métropolitaine,
+47:39
+les régions hexagonales, les dromes. Après, il est assez lourd hein, le le
+47:45
+fichier donc peut-être que c'est le paramétrage.
+47:50
+Hm hm. Parce que si vous accédez à la source qui est sur la BDI, ça va vous
+47:54
+renvoyer directement au listing des données annuel pour pour chaque
+48:00
+année. Vous avez de 2010 à 2024 et vous avez bien France Métropolitaine,
+48:07
+département d'utre mer avec Mayotte sur Mayotte et les régions
+48:13
+OK super. C'est un c'est un que je vais corriger
+48:17
+du coup de mon côté. Alors je la question parce que Mokao on
+48:23
+doit avoir les fichiers Moao pour la mortalité
+48:26
+là c'est pour les Donc là c'était les blessés
+48:35
+non il y a bien le nombre de tuer aussi sur le nombre de morts sur le ficurance.
+48:41
+OK, il y a bien
+48:45
+accident, le nombre d'accidents, la proportion d'accident de circulation, le
+48:49
+nombre de morts, le nombre de WC. OK.
+48:52
+Donc normalement vous devriez tout C'est en aucune source avec le CPIDC du
+48:56
+coup je pense.
+48:59
+OK. Du coup, il y a pas besoin de KO. Non, normalement vous avez tout sur
+49:05
+les milieux annuels. Excuse juste. On était sur
+49:11
+traumatisme. Non, c'était pas traumatisme, c'était
+49:13
+Oui, oui, c'est là là là. D'accord. Et là vous là si vous cliquez sur le
+49:19
+lien là celui-là
+49:21
+oui vous aurez
+49:25
+à droite l'ensemble des données annuelles
+49:28
+si vous cliquez sur un pour avoir un peu une idée vous aurez un découpage par
+49:33
+feuille plein de niveaux avec différentes caractéristiques. OK, ben
+49:38
+dans ce cas-là, on veut parfait. Ah, du coup euh bah moi que je reprogramme
+49:42
+l'outil pour qu'il reprenne bien les données.
+49:45
+C'est bizarre qu'il m'a fait que la Guyan
+49:50
+mais OK. Ah, c'est ça. D'accord.
+49:56
+OK. Ouais, effectivement c'est un gros fichier. Ouais,
+49:59
+aussi. Oui. Voilà. Et là, c'est la même chose pour noyal. Si vous accédez via la
+50:04
+PTI au lien, vous aurez euh la base de données pour les enquêtes
+50:10
+aussi. D'accord.
+50:13
+OK. Donc c'est bon. C'est un PDF ça.
+50:41
+Pas dedans. Quelles sont les données. Non non, c'est pas ça.
+50:44
+Trompé là. Si c'est dans PDF. Attendez.
+50:56
+sence 2021 c'est pas il y a pas un fichier
+51:05
+plus récent 2024
+51:18
+si si vous avez bien les données 2025 Alors effectivement, c'est via bien des
+51:40
+bulletins euh
+51:44
+des bulletins épidémiologiques. Donc ils sont sous format PDF.
+51:48
+D'accord. C'est pour ça qu' OK et vous avez enfin il y a une seule
+51:54
+donnée à extraire c'est le taux de avec des enfin avec et sans dess
+52:05
+et c'est vrai qu'effectivement c'est pas des fichiers Excel et
+52:11
+oui parce que est-ce que l'outil peut lire des fichiers comme ça texte PDF ?
+52:15
+Oui, parce que c'est pas configuré pour du coup.
+52:18
+Non, c'est pas configuré pour. Mais en fait, je suis en train de me poser la
+52:20
+question. Jess, est-ce qu'on a via mon casyade ?
+52:26
+Je suis pas sûre. Non non, j'ai pas trouvé. C'est ce que
+52:29
+je disais qu'on avait regardé pour accident.
+52:32
+Je trouve bizarre que en fait dans Moca on trouve pas parce que en fait dans
+52:38
+Mokao les données du CPIDC et sur CPIDC on allait donner noyade au moins pour la
+52:44
+France hexagonale. De toute façon, faut que je contacte
+52:47
+aujourd'hui il faudrait vraiment contacter
+52:52
+pour la mortalité. Pour moi, sur MO, tu dois avoir au moins
+52:56
+suicide euh en fait dans le tableau du CPDC.
+53:01
+Après, je sais pas si euh oui, c'est sur le site en open source, open data.
+53:06
+Est-ce que vous pouvez accéder directement au site du CPIDC ? Parce que
+53:11
+en fait, ils mettent des tableaux sur ce site. Je sais pas est-ce que il peut
+53:15
+récupérer sur ces tableaux directement. Si si les tableaux sont visibles. Oui,
+53:21
+justement je me poser une question. Euh ça, je pense que ça peut peut-être
+53:25
+encore plus faciliter vos process.
+53:29
+Si aujourd'hui on voit par exemple par la plateforme euh quand vous allez
+53:35
+uploader vos fichiers, je prends un exemple bah traumatisme par exemple et
+53:39
+que je prends les accidents de la route euh
+53:44
+non pardon, je suis pas sur le traumatisme, on dire accent de la route.
+53:48
+Quand vous allez uploader vos fichiers, normalement vous allez le faire qu'une
+53:50
+seule fois. Vous allez pas le faire plusieurs fois.
+53:54
+D'accord. Ma question en fait c'était pour éviter
+54:00
+peut-être de revenir à chaque fois sur le le l'upload en fait compte des
+54:07
+fichiers, c'est est-ce que c'est possible euh d'extraire les données euh
+54:15
+je sais pas moi euh de tête de moto
+54:21
+de de l'année la plus ancienne à la donnée la plus récente ? l'obtenz une
+54:27
+seule fois et puis après comme ça vous avez accès à à toutes les données à
+54:30
+toutes les extractions via la via l'interface
+54:36
+au format que vous souhaitez. Est-ce que vous faites mention de toutes
+54:42
+les thématiques pour se d'une thématique spécifique ? Bah en fait, je dirais même
+54:46
+toutes les enfin toutes les thématiques dans le sens en fait ce que je pensais,
+54:49
+vous me dites si je suis trop technique en fait c'est que je me suis dit
+54:53
+autant euh euh en fait il y a une base de données avec l'application
+54:57
+aujourd'hui. Hm hm.
+55:00
+Est-ce que on créerait pas une Est-ce qu'on mettrait pas en place une base de
+55:05
+données interne avec l'outil où on fait compte toutes les données elles seraient
+55:09
+déjà dedans comme ça que ça vienne des de PDF ou deux fichiers Excel ou alors
+55:14
+de d'open data, il y a une base de données dédiée à l'outil et en fait
+55:18
+l'outil vous servirait uniquement en fa compte d'extraire les données sans avoir
+55:22
+à chaque fois à reloader ou à vérifier si ça vient de l'open data ou pas.
+55:27
+Oui, ça peut être intéressant. voulait dire se tenir euh uniquement à au
+55:33
+fichier quoi. Donc en fait c'est que
+55:39
+aujourd'hui en fait on a des données au niveau de Mocao, on a des données au
+55:42
+niveau de l'open data et puis l'open data, il y a pas que les fichiers Excel
+55:45
+mais aussi les fichiers PDF. Donc c'està dire qu'on est sur des formats
+55:48
+différents. Euh nous ce qu'on sait c'est que sur par
+55:52
+rapport à la BDI, on a juste besoin de données une bêtise he de 2015 par
+55:57
+exemple à 2025. OK. Euh vous ce qui vous intéresse c'est
+56:03
+aujourd'hui c'est juste d'extraire la donnée pour pouvoir la mettre dans
+56:05
+prisme. H oui mais aujourd'hui le process pour pouvoir
+56:09
+créer ces données, c'est que quand on n pas les fichiers par exemple sur l'open
+56:12
+data, c'est qu'il faut aller les chercher dans mot KO, les imploder,
+56:15
+enfin les uploader, enfin les télécharger dans l'outil pour qu'il
+56:18
+puisse vous générer en fait le le fichier que vous souhaitez.
+56:23
+Et l'idée c'était de squeezer la partie où il a à uploader à mettre les fichiers
+56:28
+effectivement dedans. C'est qu'on fait compte on rassemble toutes les données,
+56:31
+on les met dans une base de données et ensuite tout ce qu'il y a à faire en
+56:36
+fait c'est juste d'extraire les dates dont vous avez besoin sur les
+56:39
+indicateurs dont vous avez besoin. Oui mais il faudra toujours faire des
+56:42
+mises à jour au fil des années. Donc un autre pour télécharger les fichiers.
+56:47
+Mais les mises à jour, elles sont qu'une seule fois
+56:50
+ou quelques fois dans l'année. C'est pas elles ont elles ont pas besoin d'être
+56:53
+faites à chaque fois. OK.
+56:56
+Je sais pas ce que vous en pensez hein. C'est euh
+57:03
+mais en gros en gros ça change pas vraiment dans le sens où comme on doit
+57:07
+extraire le fichier pour l'intégrer dans l'outil. Là on le fait en avance pour
+57:11
+créer une sorte de cloud avec tout déjà avant quoi. C'est ça.
+57:14
+C'est ça. Euh
+57:21
+en fait ce sera même pas dans le cloud en fait. ce sera sur ce sera dans dans
+57:25
+vos infrastructures à vous parce que c'est ce sera sur le serveur qu'on vous
+57:28
+mettra à disposition avec votre prestat technique.
+57:32
+Mais dans ça, il y a deux tout. Il y a vos chaos, il y a les liens en open data
+57:35
+sur la BDI et puis il y a aussi des PDF é si j'ai bien compris.
+57:39
+C'est ça. Dans ce caslà, il faudrait fournir pour
+57:44
+tous les indicateurs s'assurer que vous az un fichier par
+57:51
+ligne si j'ai bien compris. au moins dans la BDI
+57:57
+le plus exhaust possible. Oui oui oui. Bah en fait en l'idée c'est euh
+58:05
+parce qu'aujourd'hui on l'a segémenté en fait par rapport aux thématiques et aux
+58:10
+indicateurs. Mais est-ce que on transformerait pas la
+58:14
+BDI en une base de données ? Et et en fait cette base de données, ben vu
+58:20
+qu'elle aurait les dates, ça vous permettrait tout simplement de
+58:22
+télécharger directement en fait compte les les fichiers au format que vous dont
+58:28
+vous avez besoin pour prem. Imaginons si on fait ça, mais simplement
+58:33
+pour pouvoir bénéficier de la mise à jour des fichiers déjà existants.
+58:38
+Mais pour ne pas être sous la contrainte des extractions notamment de Mokao pour
+58:43
+les actualisations prochaines parce que ça veut dire qu'après on peut switcher
+58:47
+et même voir si c'est pas dispata pour pour sauter un peu cette case
+58:52
+d'extraction. Oui. Ouais,
+58:56
+en fait ser des mises à jour. Tout ce qui est là en fait est là, mais
+59:02
+tout ce qui a besoin d'être mis à jour en fait, l'outil permettrait de mettre à
+59:05
+jour les données avec des nouvelles données. Hm
+59:07
+hm. Ouais, je pensais à ça. C'est parce que
+59:17
+par exemple par rapport au fichier PDF euh ben le fichier PDF effectivement
+59:22
+étaient pas prévu mais c'est possible de le faire hein. Mais euh
+59:32
+mais demain enfin je sais pas demain s'il y a un autre un nouveau format qui
+59:34
+sort. Il y a des formats aujourd'hui des formats qui s'appellent des formats MD
+59:37
+donc Markdown. Euh ben on va pas développer à chaque fois pour et l'idée
+59:44
+c'est de créer une grosse base de données avec les données qui se mettent
+59:48
+à jour au moins une fois euh une fois ou plusieurs fois par an. Après je sais pas
+59:52
+parce que j'imagine que les données de Mocao ne se mettent pas en même temps à
+59:55
+jour que les données de l'Open data. Hm
+59:58
+hm. Mais concrètement pour nous, ça voudrait
+1:00:03
+dire qu'on va vous fournir tous les fichiers Mo
+1:00:07
+télécharger directement via les lien qui sont
+1:00:10
+C'est ça. Ce serait juste vous donner tous les
+1:00:12
+fichiers. C'est ça.
+1:00:14
+Tous les fichiers MO et tous les fichiers PDF
+1:00:17
+en fait. Tous les fichiers MOCAO dont vous avez besoin pour euh pour la BDI.
+1:00:23
+Oui oui mais on a pas besoin de télécharger des
+1:00:28
+PDF et tout ça vous pouvez le faire vu que c'est un
+1:00:32
+les PDF vous les ferez c'est ça pardon
+1:00:36
+pour les PDF en open data en open data bah si vous voulez donner
+1:00:41
+ça ça me ça me facilite de travail parce qu'après moi je vais faire une
+1:00:44
+extraction fait compte des données à l'intérieur H
+1:00:47
+H parce que si jamais vous ne savez pas où
+1:00:51
+aller chercher d'information tion autant fournir les PDF
+1:00:56
+si elles sont dans la BDI normalement oui mais c'est vrai que ça ça faerait le
+1:00:59
+travail parce que c'est vrai que là en fait je
+1:01:05
+me suis fait avoir c'était que bah quand j'ai regardé effectivement sur le lien
+1:01:09
+euh si j'étais pas avec vous je savais pas
+1:01:12
+que c'était un PDF et si entré par ordre de priorité ça
+1:01:21
+voudrait dire Là, on vous enverrait les fichiers PDF pour noyad euh les fichiers
+1:01:28
+vous voulez qu'on vous envoie directement les fichiers Excel pour les
+1:01:31
+années concernées pour accident de la route
+1:01:34
+et on vous envoie aussi du coup les fichiers suicides.
+1:01:38
+Voilà, comme ça vous pouvez mettre directement
+1:01:42
+automatiser directement l'intégration dans les fichiers qu'on va réintégrer
+1:01:45
+dans danse. Ça ira plus vite du coup.
+1:01:50
+D'accord. Bah on peut vous faire ça et après dans
+1:01:56
+un secondaire on vous fait la même chose mais du coup vous serez pour les toutes
+1:01:59
+les autres thématiques. Hm hm.
+1:02:01
+Mais là l'extraction au chaos prendrait peut-être un peu plus de temps. Ben fait
+1:02:06
+qu'on avait parlé une fois avec Jess de ça, c'était possible de le faire euh
+1:02:13
+à payer. Oui
+1:02:14
+mais mais je
+1:02:16
+il a payé aussi mais c'était mais là mon niveau c'est possible de le faire par
+1:02:20
+thématique. Je pourrais pas c'est ce que je disais extraire pour toutes les
+1:02:23
+indicateurs sur une seule méga base c'est pas possible.
+1:02:27
+Bah, je pense qu'on peut le faire effectivement par thématique, petit à
+1:02:30
+petit au fil de l'eau, comme ça on si c'est plus facile et euh
+1:02:38
+et puis voilà. En fait, en fait, non, c'est tout. En fait, si on le fait par
+1:02:41
+thématique, le le but surtout, c'est d'avoir surtout les données dont vous
+1:02:45
+avez besoin dans la BDI, des indicateurs besoin de la BDI. Hm
+1:02:48
+hm. Et ensuite, il y aurait une base de données miroir en quelque sorte euh des
+1:02:53
+enfin de la BDI avec les données dedans. Et vous tout ce que vous avez à faire en
+1:02:58
+fait, c'est dire bah voilà moi je veux traumatisme accident de la circulation
+1:03:02
+pour l'année 2024, je cliqueon et tax télécharge c'est tout.
+1:03:06
+Il a plus d'import à faire à chaque fois. Un
+1:03:10
+premier travail en compte de d'enregistrement de la donnée. Ça
+1:03:16
+c'est notre côté. Mais ensuite vous euh tout ce que vous
+1:03:20
+avez faire en fait c'est d'extraire les données dont vous avez besoin.
+1:03:25
+OK. Mais si on fait ça, du coup vous avez
+1:03:29
+plus besoin de l'exemple au KO pour chaque thématique, on est d'accord ?
+1:03:35
+Euh ben si
+1:03:39
+ça faudra les importer de toute façon pour les mises à jour. En fait le W
+1:03:45
+c'est ça en fait l'exemple des fichiers mo c juste pour avoir le la structure
+1:03:50
+la structure mais en fait si j'ai toutes les données directement de toute façon
+1:03:55
+je quand même devoir adapter la structure. Donc c'est soit l'un soit
+1:03:57
+l'autre effectivement. Ben ce qu'on peut faire c'est qu'on vous
+1:04:02
+envoie tous les fichiers sources pour les les trois les trois indicateurs pour
+1:04:07
+le rapport Atlas prise enfin le rapport prise qui doit être valorisé comme ça si
+1:04:12
+ça vous permet de paramétrer déjà le ce fameux cloud et nous permettre de
+1:04:17
+pouvoir intriguer le plus taux possible des données d'emprise.
+1:04:20
+Hm. Et après on peut travailler sous euh
+1:04:23
+thématique. Mais comment on vous a déjà envoyé des fichiers Moca ? Je sais pas
+1:04:27
+si on reprend depuis le début. ou si vous nous dites simplement où c'est
+1:04:31
+manquant parce que je sais qu'on vous a envoyé plein de fichiers mais pour
+1:04:34
+éviter pour les réduire un peu les extractions parce que ça prend du temps.
+1:04:39
+Bien sûr. B pour population pour pardon pour population et conditions de vie
+1:04:44
+normalement on a déjà on a déjà tout normalement.
+1:04:47
+OK. Donc ça c'est tout euh enfin
+1:04:52
+au cas où j'ai par exemple sur la répartition de la population des par
+1:04:57
+sexe, j'ai jusqu'à 2020 mais j'ai pas avant.
+1:05:04
+Donc potentiellement population de vie pourrait être réintégré d'emprise là.
+1:05:11
+Oui. Oui.
+1:05:14
+Ben en fait, si vous avez des données qui sont antérieures,
+1:05:19
+c'est euh ça peut être intéressant pour vous.
+1:05:25
+La seule problématique avec cette idée, c'est que ça multiplie du coup les
+1:05:28
+extractions qui sont assez chronoples aussi, vous voyez ? Peut-être dans
+1:05:33
+l'immédiat, c'est vrai que pour accélérer la mise à jour de prise, je
+1:05:37
+comprends l'intérêt, mais par la suite, l'idée de l'open data c'était surtout de
+1:05:42
+nous permettre de pouvoir avoir un peu une automatisation des sources si vous
+1:05:46
+voulez, mais je crains que ça multiplique, ça change pas trop à ce
+1:05:50
+niveau-là de l'extraction des fichiers mo qui est déjà assez complexe.
+1:05:57
+Je sais pas qu'est-ce que tu en penses Jessie mais
+1:06:00
+en fait je suis en train de me dire que de toute façon faudra qu'on fasse des
+1:06:03
+extractions parce qu'on doit on doit importer les données intérieures. Hm
+1:06:09
+hm. Tu vois
+1:06:10
+bah c'était si elles étaient dispo. Oui. Sinon
+1:06:14
+data je ça en fait c'est que quoi qu'il
+1:06:18
+arrive, il faut importer les données et il y a toutes les données, elles sont
+1:06:21
+pas euh en open data sont pas forcément toutes disponibles.
+1:06:29
+Mais au cas où en fait ce que je comprends c'est que vous pouvez pas
+1:06:32
+importer un gros fichier en une seule fois. Hm hm h
+1:06:36
+et même la portée euh par thématique, c'est euh c'est lourd à faire.
+1:06:47
+Euh par thématique ? Non, c'est vraiment par sous-groupe d'indicateur par
+1:06:52
+thématique. En fait, les fichiers M qu'on les a
+1:06:59
+envoyé, c'est ce que je peux le moment en tout cas.
+1:07:12
+Dans ces cas-là, ce que je vais faire déjà, c'est que aujourd'hui là pour euh
+1:07:17
+pour la semaine prochaine, c'est que il faut que traumatisme euh soit complet.
+1:07:21
+C'est bien ça. Et pour l'emportement,
+1:07:26
+et comportement. Hm hm.
+1:07:30
+et suicide en comportement pas tous les comportements.
+1:07:33
+D'accord. Surtout suicide. Oui. Donc ça, on peut vous envoyer rapidement
+1:07:40
+les tous les fichiers sources. Si vous les avez, oui, ça je peux je
+1:07:47
+peux vous le faire comme je vous dis euh ce weekend.
+1:07:50
+D'accord. Et entre-temps, est-ce que vous vous
+1:07:53
+pouvez nous dire euh pour les thématiques restantes du coup état de
+1:07:57
+santé et pathologie, ce que vous avez ou pas en terme de fichier mono comme ça ça
+1:08:03
+réduit déjà un peu les extractions qui restera à faire.
+1:08:07
+Bah pour population et conditions de vie, j'en ai 22/ 36 indicateurs
+1:08:13
+et pour état de santé, j'en ai 2/ 12. D'accord.
+1:08:18
+Et normalement dans le référentiel BDI, si euh je vais dessus, je prends état de
+1:08:24
+santé, quand j'ouvre quand j'ouvre une thématique,
+1:08:29
+euh il me dit en fait en quand je suis en non configuré, ça veut dire que j'ai
+1:08:32
+pas les fichiers mo h là je les ai effectivement bah c'est sur
+1:08:38
+les deux sur les 12 en fait c'est je les ai mais en open data.
+1:08:42
+OK. Après je trompe pas, on a déjà tout on a déjà pour la majorité des fichiers
+1:08:48
+mo déjà sur chaque point. On a tous les fichiers mo
+1:08:53
+offre de son. D'accord.
+1:08:56
+Monsieur, ce qu'on peut faire c'est qu'on vous envoie pour traumatisme et
+1:09:02
+suicide. Hm hm.
+1:09:04
+Là, normalement, effectivement, comme on avait si je sais pas si vous vous
+1:09:07
+rappelez, mais on avait commencé à faire tout manuellement. Donc on a déjà les
+1:09:11
+fix les fichiers mocao extrait pour pathologie,
+1:09:16
+le reste des indicateur de comportement hormis suicide et état de santé. Donc ça
+1:09:21
+on peut nous transférer, je sais pas si peut-être un oui transfert, je sais pas
+1:09:25
+si tout va passer par mail et euh juste laisser un petit peu de temps pour
+1:09:29
+l'extraction de structure activité de soin.
+1:09:31
+OK. Je sais pas si ça
+1:09:35
+donc là en gros euh vous m'avez dit pour pathologie
+1:09:41
+pour partologie je crois que vous avez déjà les tous les fichiers au cas non
+1:09:45
+je vais regarder en surtout ce qui me ce qui m'intéresse c'est savoir si au
+1:09:48
+niveau des dates est-ce que vous avez qu'une les dates de façon partielle ou
+1:09:52
+est-ce que vous avez euh toutes les dates
+1:09:57
+par toutes les dates c'estàd alors pour le
+1:10:02
+la plus ancienne des dates. Euh
+1:10:10
+la plus ancienne des dates, c'est 2018 quand même.
+1:10:13
+D'accord. Je suis perdu. Hop. Tac tac tac.
+1:10:24
+Oculation et conditions de vie. Donc ça serait bon. Il y avait un autre fichier.
+1:10:27
+Ouais. données pathologique. Moi j'ai ça en donné pathologique. J'ai de 2018 à
+1:10:31
+2023. C'est ça.
+1:10:34
+Ben c'est bon ça je peux. Et ça du coup ce dans de ce fichier
+1:10:38
+Mocao là si donc pathologie ça concerne toutes ces données là tous les
+1:10:42
+indicateurs normalement. Oui. Vous avez la mortalité
+1:10:46
+pour toutes ces pathologies parce que le taux finalement n'est plus
+1:10:51
+fait via l'outil mais directement via prise.
+1:10:54
+OK. Ben je vais les intégrer donc normalement ça c'est bon mortalité
+1:11:01
+pour homme et femme et et l'ensemble. D'accord.
+1:11:06
+Ben ça je vais l'intégrer donc ça ce sera fait.
+1:11:10
+Donc il y a pas besoin du coup de me l'envoyer. J'avais mortalité
+1:11:14
+mortalité c'est dans euh je vais l'ouvrir vite fait.
+1:11:26
+Je tout fermer enregistrer. Hop,
+1:11:32
+je regarde juste en mortalité à ce que j'ai. J'ai de 2017. Ah, j'ai que 2017
+1:11:38
+mortalité. Oui, parce que c'était le fichier qui
+1:11:43
+déjà existe. D'accord. Porte de 2018 à 2023.
+1:11:54
+OK. Bah en fait ce que je vais faire du coup là, c'est que en attendant euh en
+1:11:58
+attendant les données pour comportement et traumatisme, je vais m'occuper de
+1:12:00
+pathologie. OK.
+1:12:03
+Et après juste que je me que je me souvienne dans comportement au
+1:12:07
+traumatisme, il y avait un qui était en fichier PDF. C'est ça. Noyad.
+1:12:12
+D'accord. Noyad fiché PDF. OK. Je cré une extraction dessus.
+1:12:20
+D'accord. Et par contre, il faut aller enlever les taux.
+1:12:22
+Oui, aussi. OK.
+1:12:27
+Ben et comportement lui c'est euh alors ça je peux pas l'avoir là le SNDS là.
+1:12:33
+C'est ça hein. Ça prévalence ça non.
+1:12:36
+D'accord. Vous aurez pour alcool tabac il y a les
+1:12:40
+on a bien les fichiers en KO pour mortalité alcool et tabac
+1:12:44
+et suicide. Et suicide aussi. Oui
+1:12:47
+mais suicide c'est dans l'observation. l'observation régionale de sucite en
+1:12:50
+Guillane. En fait, comment on l'a listé dans la
+1:12:52
+BDI ? Euh, on a que euh normalement euh euh la mentalité par suicide, il y a
+1:13:00
+le fichier Mota. Mais maintenant, je pense que si en fait
+1:13:03
+c'était dans l'option de l'open data c'est-à-dire que vous pourriez avoir
+1:13:06
+éventuellement des données complémentaires
+1:13:09
+mais n'était pas listé initialement dans la BDI.
+1:13:12
+D'accord. Donc pour mortalité par suicide, on
+1:13:22
+prend les données de Mokao ou euh je les ai pas de l'open data ou alors de du
+1:13:27
+site c'était euh l'observatoire général de
+1:13:31
+des suicidan. Alors moi je vous dirais de rester sur
+1:13:39
+nos chaos par que je regarder les données comment elles sont présentées
+1:13:43
+dans l'observatoire. Ouais. Mais éventuellement, je pense que
+1:13:46
+si c'est des données complémentaires, on les ajoutera par la suite. Je penser
+1:13:50
+Ouais, mais je peux les rajouter en fait aussi. Pourquoi je suis d'accord pour
+1:13:53
+Mokao ? Parce que si dans Moao vous avez des données
+1:13:57
+sur la France entière, elle risque de ne pas être dans l'observatoire régional de
+1:14:01
+ce Guan. C'est ça. C'est vrai.
+1:14:07
+On vous renvoie le fichier pour mortalité alcool, mortalité ta mortalité
+1:14:11
+suicide, le PDF. et euh les bilan annuels format Excel
+1:14:20
+pour accident. D'accord.
+1:14:26
+C'est enfin pour les données accident de la route blessé et décès. Ça c'est pas
+1:14:31
+moi. Non, ça c'était sur ce qu'on était tout
+1:14:34
+à l'heure, le baromètre de la route où vous aviez les fichers Excel BUEL sur la
+1:14:39
+droite. OK. Voilà, ça
+1:14:41
+c'est ça. Alors,
+1:14:46
+désolz, je faire un truc comme ça. Je vais faire tout maintenant. Donc ça
+1:14:50
+c'est pour me dit c'était pour euh
+1:15:03
+donc tout ce qui est sur la circulation, ça c'est dans euh
+1:15:09
+excusez-moi, c'est ici là. Oui.
+1:15:11
+Et et tout et toutes les données sont dedans.
+1:15:14
+Oui. OK. Ben ça ce sera fait aussi assez
+1:15:17
+rapidement. je m'en occupe. Donc c'est dans traumatie, c'est tout ce qui est
+1:15:20
+accident de la circulation. Donc ça c'est égal à euh
+1:15:32
+ça plus on a dit on prenait pas les taux ça
+1:15:38
+plus ça.
+1:15:43
+OK donc ça c'est bon. Donc ça on va pouvoir les avoir. Noyade, on a dit
+1:15:47
+c'était le PDF. Oui, noyade, c'est le PDF.
+1:15:55
+Juste je regarde rapidement sur les noyades. Euh
+1:16:00
+si va sur noyade, normalement j'ai les années
+1:16:04
+de tête. En fait, vous avez un dans le fichier PDF, vous avez des tableaux.
+1:16:10
+D'accord. Et on a jusqu'à l'année, on a 2020 2021 on a pas 2022
+1:16:18
+et 2025 et après c'est durant l'été 2025 bilan.
+1:16:29
+Moi je vais essayer de le comprendre. En gros, ce que je comprends, c'est que
+1:16:31
+pour une année, il y a trois fichiers PDF,
+1:16:35
+mais nous ce qui nous intéresse, c'est le dernier.
+1:16:38
+Oui. Alors, c'est parce que c'est alors faut pas regarder aux données de
+1:16:42
+surveillance, il faut vraiment regarder au résultat de l'enquête. Ce que je vous
+1:16:46
+propose c'est une charge. Oui, parce qu'en fait c'est trien
+1:16:49
+donc je télécharge, je vous envoie directement comme ça vous aurez pas
+1:16:53
+d'accord à chercher parce que c'est c'est un peu
+1:16:56
+Ah oui, effectivement là aussi j'ai pas euh
+1:16:59
+comme ça vous avez sur l'année et c'est pas segmenté par mois ou par trimestre.
+1:17:03
+D'accord. Donc je télécharge et je vous renvoie
+1:17:06
+par le mail directement. OK.
+1:17:08
+OK. Aussi qu' a des années précédentes aussi
+1:17:11
+jusqu'à 2000. OK. Bon. OK. Euh donc ça ce sera bon. Donc on aura du coup tous
+1:17:17
+les traumatismes, on aura les comportements
+1:17:22
+comportement et les prévalent je peux pas.
+1:17:24
+Ça c'est mo ça c'est mo ça c'est mo et en pathologie euh normalement j'ai le
+1:17:30
+fichier. OK restera du coup juste offre de soins
+1:17:35
+et état de santé et quelques et quelques données de population conditions de vie.
+1:17:41
+OK. On a enlevé une grosse partie déjà.
+1:17:47
+Et puis euh puis voilà, c'est tout hein. Ce que je vous propose c'est que moi je
+1:17:56
+vais attaquer maintenant comme ça c'est fait euh déjà avec pathologie euh
+1:18:03
+si c'est possible effectivement d'avoir les données pour traumatisme
+1:18:08
+euh comme ça euh vous l'avez pour lundi.
+1:18:13
+C'était surtout noyal ou c'était en général ? Non, c'était suicide.
+1:18:17
+C'est uniquement suicide d'un comportement et l'ensemble des
+1:18:21
+indicateurs pour traumatis. Voilà. Si c'est possible du coup d'avoir
+1:18:24
+aussi ça aujourd'hui comme ça j'attaque aussi aujourd'hui pour vous éviez
+1:18:27
+l'avoir pour lundi et puis ensuite ensuite on attaquera les derniers euh
+1:18:35
+les dernières thématiques. Normalement on aura toutes les données.
+1:18:38
+Oui. Je vous envoie ça par mail pendant la demique.
+1:18:42
+OK. Super. Euh bon après bon sur les gens
+1:18:46
+d'utilisateur euh euh ça on avait vu la dernière fois,
+1:18:51
+j'ai fait des modifications maintenant comme je disais, on pouvait modifier le
+1:18:54
+profil, on peut réinitialiser le mot de passe et aussi on peut passer en mode
+1:18:59
+authentification par par le code envoyé par mail ou alors
+1:19:05
+par juste mot de passe. Regardez, j'ai dû faire un truc.
+1:19:14
+Donc voilà. Bon, désolé, ça durait plus longtemps que
+1:19:19
+prévu, mais bon, je pense qu'on qu'on aura bien avancé après.
+1:19:23
+Donc, est-ce qu'on fait un point lundi ou mardi ou
+1:19:27
+euh Moi, je propose un point lundi euh pour par rapport à ce qu'on s'est
+1:19:34
+dit sur la thématique des comportements si je suis toujours
+1:19:39
+et puis et puis en même temps, ben je vous montrerai aussi ce que j'ai fait
+1:19:44
+sur pathologie. et et noyad moi lundi je suis en déplacement je sais pas si toute
+1:19:50
+façon je vais vous envoyer un un récapitulatif par mail et ça donc même
+1:19:53
+si on n'est pas là au moins vous aurez un ce qui ce qui a été fait vous
+1:19:57
+enverrez un récapitulatif comme ça d'accord d'accord
+1:20:04
+voilà et puis après bah peut-être qu'effectivement je sais pas quand
+1:20:08
+est-ce que madame Castor revient mais faudrait juste qu'on revoit
+1:20:11
+effectivement pour le pour l'histoire du déploiement pour le déploiement pardon
+1:20:15
+Euh et puis pour pour la maintenance après par la suite
+1:20:19
+euh d'ailleurs elle me fait lui dire que vous avez oublié de lui envoyer l'email
+1:20:23
+la drame de l'email pour action. Ouais, je l'ai le mail je je l'ai envoyé
+1:20:28
+tout de suite. Il était un peu un peu près ces derniers
+1:20:32
+temps. Je m'en excuse. OK. OK. OK. Bon ben il y a plus qu'à
+1:20:39
+ben on vous envoie ça. D'accord.
+1:20:42
+Bah merci. Euh bah si vous je pas vous du coup d'ici ce weekend vous souhaite
+1:20:46
+un bon weekend. Merci à vous aussi
+1:20:49
+et puis ben je vous tiens au courant très vite par mail des avancées.
+1:20:53
+Merci beaucoup. Merci beaucoup.
+1:20:56
+Bonne journée. Bonne journée.

@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { cn } from "@/lib/utils";
 import { BDI_THEMES } from "@/data/bdi_themes";
-import { ChevronDown, Database, Globe, BarChart3, ArrowRight } from "lucide-react";
+import { ChevronDown, Database, Globe, BarChart3, ArrowRight, Upload } from "lucide-react";
 import { Acronym } from "@/components/ui/Acronym";
 
 const OPEN_DATA_SUPPORTED_THEMES = [
@@ -86,19 +86,22 @@ export function Step1_ThemeSelection({
         const readyDs = uniqIds.filter(id => datasets.find((d: any) => d.id === id)?.demoReady);
         const hasData = readyDs.length > 0;
         const isSelected = selectedSubThemeId === sub.id;
+        const hasAnyDataset = uniqIds.length > 0;
 
         return (
             <button
                 key={sub.id}
-                onClick={() => hasData && onSubjectSelect(themeId, sub.id)}
-                disabled={!hasData}
+                onClick={() => hasAnyDataset && onSubjectSelect(themeId, sub.id)}
+                disabled={!hasAnyDataset}
                 className={cn(
                     "w-full text-left rounded-lg border-2 transition-all p-4 group",
                     isSelected
                         ? "border-[#3bb3a9] bg-[#3bb3a9]/5 shadow-sm"
                         : hasData
                             ? "border-gray-200 bg-white hover:border-[#3bb3a9]/60 hover:shadow-sm cursor-pointer"
-                            : "border-gray-100 bg-gray-50 opacity-60 cursor-not-allowed"
+                            : hasAnyDataset
+                                ? "border-amber-200 bg-amber-50/40 hover:border-amber-400 hover:bg-amber-50 cursor-pointer"
+                                : "border-gray-100 bg-gray-50 opacity-60 cursor-not-allowed"
                 )}
             >
                 <div className="flex items-start justify-between gap-3 mb-2">
@@ -109,7 +112,7 @@ export function Step1_ThemeSelection({
                             {uniqIds.length !== datasets.length && ` · ${uniqIds.length} jeu${uniqIds.length > 1 ? 'x' : ''} de données`}
                         </p>
                     </div>
-                    {hasData && (
+                    {hasData ? (
                         <span className={cn(
                             "shrink-0 text-xs font-semibold flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity",
                             isSelected ? "opacity-100 text-[#3bb3a9]" : "text-[#1a4b8c]"
@@ -117,7 +120,12 @@ export function Step1_ThemeSelection({
                             Choisir
                             <ArrowRight className="w-3.5 h-3.5" />
                         </span>
-                    )}
+                    ) : hasAnyDataset ? (
+                        <span className="shrink-0 text-[10px] font-semibold flex items-center gap-1 text-amber-700 bg-amber-100 px-2 py-1 rounded-full">
+                            <Upload className="w-3 h-3" />
+                            Import requis
+                        </span>
+                    ) : null}
                 </div>
 
                 {/* Indicators as info pills */}
