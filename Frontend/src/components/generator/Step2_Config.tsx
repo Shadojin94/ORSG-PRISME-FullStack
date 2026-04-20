@@ -1,4 +1,5 @@
-import { CheckCircle2, Play, Calendar, AlertTriangle, Database, ArrowLeft, Loader2, Globe, HardDrive, Info } from "lucide-react";
+import { CheckCircle2, Calendar, AlertTriangle, Database, ArrowLeft, Loader2, Globe, HardDrive, Info } from "lucide-react";
+import { Acronym } from "@/components/ui/Acronym";
 import { cn } from "@/lib/utils";
 import { MocaUpload } from "./MocaUpload";
 
@@ -11,9 +12,7 @@ interface Step2Props {
     format: string;
     onFormatChange: (format: string) => void;
 
-    onGenerate: () => void;
     onBack: () => void;
-    isProcessing: boolean;
     error: string | null;
 
     supportsOpenData: boolean;
@@ -36,9 +35,7 @@ export function Step2_Config({
     onYearChange,
     format,
     onFormatChange,
-    onGenerate,
     onBack,
-    isProcessing,
     error,
     supportsOpenData,
     sourceMode,
@@ -100,7 +97,7 @@ export function Step2_Config({
                         <div className="flex justify-between items-start mb-1.5 w-full">
                             <span className="font-bold text-gray-800 flex items-center gap-2">
                                 <HardDrive className="w-4 h-4 text-[#1a4b8c]" />
-                                MOCA-O
+                                <Acronym term="MOCA-O" />
                             </span>
                             {sourceMode === 'moca' && <CheckCircle2 className="w-5 h-5 text-[#1a4b8c]" />}
                         </div>
@@ -251,30 +248,6 @@ export function Step2_Config({
                     </button>
                 </div>
             </div>
-
-            {/* Generate Button */}
-            <button
-                onClick={onGenerate}
-                disabled={isProcessing || !year}
-                className={cn(
-                    "w-full py-4 text-lg font-bold rounded-2xl shadow-lg transition-all flex items-center justify-center gap-3",
-                    isProcessing || !year
-                        ? "bg-gray-300 text-gray-500 cursor-not-allowed"
-                        : "bg-gradient-to-r from-[#1a4b8c] to-[#3bb3a9] text-white hover:shadow-xl hover:scale-[1.005]"
-                )}
-            >
-                {isProcessing ? (
-                    <>
-                        <Loader2 className="w-5 h-5 animate-spin" />
-                        Génération en cours...
-                    </>
-                ) : (
-                    <>
-                        <Play className="w-5 h-5 fill-current" />
-                        GÉNÉRER MON FICHIER
-                    </>
-                )}
-            </button>
 
             {error && (
                 <div className="bg-red-50 p-4 rounded-xl border border-red-200 animate-in slide-in-from-bottom-2">

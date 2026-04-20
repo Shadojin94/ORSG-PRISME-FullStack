@@ -11,6 +11,7 @@ import {
 } from "recharts"
 import { getFiles } from "@/services/api"
 import type { GeneratedFile } from "@/services/api"
+import { Acronym } from "@/components/ui/Acronym"
 
 // ── Palette ORSG ──
 const C = { darkBlue: "#1a4b8c", teal: "#3bb3a9", green: "#4caf50", yellow: "#f5c542" }
@@ -180,8 +181,8 @@ function CoverageMatrix({ files }: { files: GeneratedFile[] }) {
             </table>
 
             <div className="flex flex-wrap items-center gap-5 mt-5 pt-4 border-t border-gray-100 text-xs text-gray-400">
-                <span className="flex items-center gap-1.5"><span className="w-3 h-3 rounded-full bg-[#1a4b8c]" />MOCA-O (base interne)</span>
-                <span className="flex items-center gap-1.5"><span className="w-3 h-3 rounded-full bg-[#3bb3a9]" />Open Data (INSEE · CAF · IRCOM)</span>
+                <span className="flex items-center gap-1.5"><span className="w-3 h-3 rounded-full bg-[#1a4b8c]" /><Acronym term="MOCA-O" /> (base interne)</span>
+                <span className="flex items-center gap-1.5"><span className="w-3 h-3 rounded-full bg-[#3bb3a9]" />Open Data (<Acronym term="INSEE" /> · <Acronym term="CAF" /> · <Acronym term="IRCOM" />)</span>
                 <span className="flex items-center gap-1.5"><span className="w-3 h-3 rounded-full bg-[#4caf50]" />Les deux sources disponibles</span>
                 <span className="flex items-center gap-1.5"><span className="w-3 h-3 rounded-full bg-[#e9eef5] border border-gray-200" />Non disponible</span>
             </div>
@@ -392,7 +393,7 @@ export function DashboardPage() {
                                 <div className="grid grid-cols-2 gap-2 mt-auto">
                                     <div className="bg-[#1a4b8c]/5 rounded-xl p-3 text-center">
                                         <p className="text-xl font-black text-[#1a4b8c]">{mocaCount}</p>
-                                        <p className="text-[10px] text-gray-500 mt-0.5">MOCA-O</p>
+                                        <p className="text-[10px] text-gray-500 mt-0.5"><Acronym term="MOCA-O" /></p>
                                     </div>
                                     <div className="bg-[#3bb3a9]/10 rounded-xl p-3 text-center">
                                         <p className="text-xl font-black text-[#3bb3a9]">{openDataCount}</p>
@@ -415,7 +416,7 @@ export function DashboardPage() {
                                     <div className="p-2 bg-green-50 rounded-lg" aria-hidden="true">
                                         <CheckCircle2 className="w-5 h-5 text-[#4caf50]" />
                                     </div>
-                                    <h2 className="font-bold text-[#1a4b8c] text-base">Conformité Géoclip</h2>
+                                    <h2 className="font-bold text-[#1a4b8c] text-base">Conformité <Acronym term="Géoclip" /></h2>
                                 </div>
 
                                 <div className="space-y-4 flex-1">

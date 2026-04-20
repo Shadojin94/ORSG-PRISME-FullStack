@@ -2,6 +2,7 @@ import { useState } from "react";
 import { cn } from "@/lib/utils";
 import { BDI_THEMES } from "@/data/bdi_themes";
 import { ChevronDown, ChevronRight, Database, Upload, Globe, BarChart3 } from "lucide-react";
+import { Acronym } from "@/components/ui/Acronym";
 
 // Supported Open Data Themes (mirrored from GeneratorPage)
 const OPEN_DATA_SUPPORTED_THEMES = [
@@ -139,7 +140,7 @@ export function Step1_ThemeSelection({
                     {ds.demoReady && !dsIsOpenData ? (
                         <span className="text-[10px] bg-green-100 text-green-700 px-2 py-0.5 rounded-full font-medium flex items-center gap-1">
                             <Database className="w-3 h-3" />
-                            MOCA-O
+                            <Acronym term="MOCA-O" />
                         </span>
                     ) : !ds.demoReady ? (
                         <span className="text-[10px] bg-amber-100 text-amber-700 px-2 py-0.5 rounded-full font-medium flex items-center gap-1">
@@ -181,7 +182,7 @@ export function Step1_ThemeSelection({
                     </div>
                     <div>
                         <div className="text-lg font-bold text-blue-600">{totalOpenData}</div>
-                        <div className="text-[11px] text-gray-500">Open Data (INSEE, CepiDc...)</div>
+                        <div className="text-[11px] text-gray-500">Open Data (<Acronym term="INSEE" />, <Acronym term="CépiDc" />...)</div>
                     </div>
                 </div>
                 <div className="bg-white rounded-lg border border-gray-200 px-4 py-3 flex items-center gap-3">
@@ -190,7 +191,7 @@ export function Step1_ThemeSelection({
                     </div>
                     <div>
                         <div className="text-lg font-bold text-green-600">{totalMoca}</div>
-                        <div className="text-[11px] text-gray-500">MOCA-O (CSV locaux)</div>
+                        <div className="text-[11px] text-gray-500"><Acronym term="MOCA-O" /> (CSV locaux)</div>
                     </div>
                 </div>
             </div>
@@ -222,15 +223,15 @@ export function Step1_ThemeSelection({
                                     <Icon className="w-5 h-5" />
                                 </div>
                                 <div className="flex-1 min-w-0">
-                                    <div className="flex items-center gap-2">
-                                        <h3 className="font-bold text-gray-800">{theme.shortTitle}</h3>
+                                    <div className="flex items-center gap-2 flex-wrap">
+                                        <h3 className="font-bold text-gray-800 leading-snug" title={theme.title || theme.shortTitle}>{theme.shortTitle}</h3>
                                         {readyCount > 0 && (
-                                            <span className="text-[10px] bg-green-50 text-green-600 px-2 py-0.5 rounded-full font-medium">
+                                            <span className="text-[10px] bg-green-50 text-green-600 px-2 py-0.5 rounded-full font-medium shrink-0">
                                                 {readyCount}/{totalCount}
                                             </span>
                                         )}
                                     </div>
-                                    <p className="text-xs text-gray-500 mt-0.5 truncate">{theme.description}</p>
+                                    <p className="text-xs text-gray-500 mt-0.5 line-clamp-2">{theme.description}</p>
                                 </div>
                                 <ChevronDown className={cn("w-5 h-5 text-gray-400 shrink-0 transition-transform", isExpanded && "rotate-180")} />
                             </button>

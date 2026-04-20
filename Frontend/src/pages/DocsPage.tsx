@@ -3,6 +3,7 @@ import { BDI_THEMES } from "@/data/bdi_themes"
 import { cn } from "@/lib/utils"
 import { Search, ChevronRight, ChevronDown, Database, FileSpreadsheet, Loader2 } from "lucide-react"
 import { checkCsvAvailability } from "@/services/api"
+import { Acronym } from "@/components/ui/Acronym"
 
 // Collect unique sources from BDI_THEMES
 function countUniqueSources(): number {
@@ -195,7 +196,7 @@ export function DocsPage() {
 
             <div className="flex justify-between items-end mb-8">
                 <div>
-                    <h1 className="text-3xl font-bold text-[#1a4b8c] mb-2">Référentiel BDI</h1>
+                    <h1 className="text-3xl font-bold text-[#1a4b8c] mb-2">Référentiel <Acronym term="BDI" /></h1>
                     <p className="text-gray-600">
                         Dictionnaire complet des indicateurs et variables de la Base de Données.
                     </p>
@@ -416,9 +417,9 @@ export function DocsPage() {
                             <div className="flex items-center justify-between text-xs text-gray-500">
                                 <div className="flex items-center gap-4">
                                     <span>Sources principales :</span>
-                                    <span className="font-medium text-gray-700">INSEE</span>
-                                    <span className="font-medium text-gray-700">MOCA-O</span>
-                                    <span className="font-medium text-gray-700">INSERM-CépiDc</span>
+                                    <span className="font-medium text-gray-700"><Acronym term="INSEE" /></span>
+                                    <span className="font-medium text-gray-700"><Acronym term="MOCA-O" /></span>
+                                    <span className="font-medium text-gray-700">INSERM-<Acronym term="CépiDc" /></span>
                                     <span className="font-medium text-gray-700">DREES</span>
                                     <span className="font-medium text-gray-700">ONISR</span>
                                 </div>

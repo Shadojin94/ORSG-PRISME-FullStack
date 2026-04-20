@@ -4,6 +4,8 @@ import { getFiles, type GeneratedFile, getDownloadUrl } from "../services/api"
 import { Card } from "../components/ui/card"
 import { StatsCard } from "../components/ui/StatsCard"
 import { cn } from "@/lib/utils"
+import { formatDateFR } from "@/utils/date"
+import { Acronym } from "@/components/ui/Acronym"
 
 const getThemeColor = (theme: string) => {
     // Normalisation pour correspondre aux clés exactes si besoin
@@ -140,7 +142,7 @@ export function HistoryPage() {
                 </div>
 
                 {/* Table */}
-                <div className="overflow-x-auto min-h-[400px]">
+                <div className="min-h-[400px]">
                     {isLoading && files.length === 0 ? (
                         <div className="flex flex-col items-center justify-center py-20 text-gray-400 animate-pulse">
                             <Loader2 className="w-10 h-10 animate-spin mb-4 text-[#3bb3a9]" />
@@ -157,7 +159,14 @@ export function HistoryPage() {
                             </p>
                         </div>
                     ) : (
-                        <table className="w-full text-left text-sm">
+                        <table className="w-full text-left text-sm table-fixed">
+                            <colgroup>
+                                <col style={{ width: '40%' }} />
+                                <col style={{ width: '17%' }} />
+                                <col style={{ width: '18%' }} />
+                                <col style={{ width: '12%' }} />
+                                <col style={{ width: '13%' }} />
+                            </colgroup>
                             <thead className="bg-gray-50/50 text-gray-500 uppercase tracking-wider text-xs font-semibold">
                                 <tr>
                                     <th className="px-6 py-4">Fichier</th>
@@ -171,26 +180,29 @@ export function HistoryPage() {
                                 {filteredFiles.map((file, index) => (
                                     <tr key={index} className="hover:bg-blue-50/40 transition-colors group">
                                         <td className="px-6 py-4">
-                                            <div className="flex items-center gap-4">
-                                                <div className="w-10 h-10 rounded-lg bg-green-50 border border-green-100 flex items-center justify-center text-green-600 shadow-sm group-hover:scale-110 transition-transform">
+                                            <div className="flex items-center gap-4 min-w-0">
+                                                <div className="w-10 h-10 shrink-0 rounded-lg bg-green-50 border border-green-100 flex items-center justify-center text-green-600 shadow-sm group-hover:scale-110 transition-transform">
                                                     <FileSpreadsheet className="w-5 h-5" />
                                                 </div>
-                                                <span className="font-semibold text-gray-900 line-clamp-1" title={file.filename}>
+                                                <span className="font-semibold text-gray-900 truncate min-w-0" title={file.filename}>
                                                     {file.filename}
                                                 </span>
                                             </div>
                                         </td>
                                         <td className="px-6 py-4">
                                             <div className="flex flex-col">
-                                                <span className="font-medium text-gray-700">{file.date}</span>
+                                                <span className="font-medium text-gray-700">{formatDateFR(file.date)}</span>
                                                 <span className="text-xs text-gray-400 font-mono">{file.size}</span>
                                             </div>
                                         </td>
                                         <td className="px-6 py-4">
-                                            <span className={cn(
-                                                "inline-flex items-center px-2.5 py-1 rounded-md text-xs font-bold ring-1 ring-inset",
-                                                getThemeColor(file.theme).replace("bg-", "bg-opacity-10 ring-").replace("text-", "text-") // Tweaking colors
-                                            )}>
+                                            <span
+                                                title={file.theme}
+                                                className={cn(
+                                                    "inline-flex items-center max-w-full truncate px-2.5 py-1 rounded-md text-xs font-bold ring-1 ring-inset",
+                                                    getThemeColor(file.theme).replace("bg-", "bg-opacity-10 ring-").replace("text-", "text-")
+                                                )}
+                                            >
                                                 {file.theme}
                                             </span>
                                         </td>
@@ -203,7 +215,7 @@ export function HistoryPage() {
                                             ) : (
                                                 <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md text-xs font-bold bg-emerald-50 text-emerald-700 ring-1 ring-inset ring-emerald-200">
                                                     <HardDrive className="w-3 h-3" />
-                                                    MOCA-O
+                                                    <Acronym term="MOCA-O" />
                                                 </span>
                                             )}
                                         </td>

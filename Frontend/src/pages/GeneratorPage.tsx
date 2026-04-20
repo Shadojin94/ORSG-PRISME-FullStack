@@ -77,7 +77,7 @@ export function GeneratorPage() {
     const [format, setFormat] = useState<string>(saved.format || "zip");
 
     // Source Mode
-    const [sourceMode, setSourceMode] = useState<'opendata' | 'moca'>(saved.sourceMode || 'moca');
+    const [sourceMode, setSourceMode] = useState<'opendata' | 'moca'>(saved.sourceMode || 'opendata');
 
     // Process
     const [isProcessing, setIsProcessing] = useState(false);
@@ -315,9 +315,7 @@ export function GeneratorPage() {
                             onYearChange={setYear}
                             format={format}
                             onFormatChange={setFormat}
-                            onGenerate={handleGenerate}
                             onBack={handleBack}
-                            isProcessing={isProcessing}
                             error={error}
                             supportsOpenData={supportsOpenData}
                             sourceMode={sourceMode}

@@ -1,6 +1,7 @@
-import { FileSpreadsheet, Info, CheckCircle2, Loader2, Play, Pencil } from "lucide-react";
+import { FileSpreadsheet, Info, CheckCircle2, Loader2, Play, Pencil, ClipboardList } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { BDI_THEMES } from "@/data/bdi_themes";
+import { Acronym } from "@/components/ui/Acronym";
 
 interface SidebarSummaryProps {
     step: number;
@@ -96,6 +97,17 @@ export function SidebarSummary({
                 {/* Content - Scrollable */}
                 <div className="p-6 space-y-6 overflow-y-auto">
 
+                    {/* Empty state — affiché à l'étape 1 tant qu'aucune sélection */}
+                    {step === 1 && !selectedThemeId && !selectedSubThemeId && !selectedDatasetId ? (
+                        <div className="flex flex-col items-center text-center py-6 px-4 text-gray-400">
+                            <ClipboardList className="w-10 h-10 mb-3 text-gray-300" />
+                            <p className="text-sm font-medium text-gray-500">Vos choix apparaîtront ici</p>
+                            <p className="text-xs mt-1 leading-relaxed">
+                                Sélectionnez une thématique, un sujet puis un indicateur pour composer votre fichier.
+                            </p>
+                        </div>
+                    ) : (
+                    <>
                     {/* Theme */}
                     <div className={cn("relative pl-6 border-l-2 transition-all duration-300", selectedTheme ? "border-[#3bb3a9]" : "border-gray-200")}>
                         <span className={cn("absolute -left-[9px] top-0 w-4 h-4 rounded-full border-2 bg-white", selectedTheme ? "border-[#3bb3a9]" : "border-gray-300")} />
@@ -191,7 +203,7 @@ export function SidebarSummary({
                                             ? "bg-green-100 text-green-700"
                                             : "bg-blue-100 text-[#1a4b8c]"
                                     )}>
-                                        {isOpenDataMode ? "Open Data" : "MOCA-O"}
+                                        {isOpenDataMode ? "Open Data" : <Acronym term="MOCA-O" />}
                                     </span>
                                 </div>
                                 <div className="flex justify-between items-center">
@@ -204,6 +216,8 @@ export function SidebarSummary({
                                 </div>
                             </div>
                         </div>
+                    )}
+                    </>
                     )}
                 </div>
 
