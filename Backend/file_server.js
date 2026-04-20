@@ -66,6 +66,8 @@ let pbAdminReady = false;
 let pbAdminLastAuth = 0;
 const PB_AUTH_TTL = 10 * 60 * 1000; // Re-auth every 10 minutes
 
+let pbSetupRan = false;
+
 async function getPbAdmin() {
     const now = Date.now();
     // Re-auth if: not ready, token stale, or TTL expired
@@ -80,6 +82,42 @@ async function getPbAdmin() {
         } catch (e) {
             console.error(`   PocketBase admin auth failed for ${PB_ADMIN_EMAIL} at ${PB_URL}:`, e.message);
             pbAdminReady = false;
+            // Auto-repair: try creating admin via API (works when PB has zero admins = fresh DB)
+            try {
+                const http = require('http');
+                const createBody = JSON.stringify({ email: PB_ADMIN_EMAIL, password: PB_ADMIN_PASSWORD, passwordConfirm: PB_ADMIN_PASSWORD });
+                const createRes = await new Promise((resolve, reject) => {
+                    const req = http.request(`${PB_URL}/api/admins`, {
+                        method: 'POST', headers: { 'Content-Type': 'application/json', 'Content-Length': Buffer.byteLength(createBody) }, timeout: 5000,
+                    }, (res) => { let d = ''; res.on('data', c => d += c); res.on('end', () => resolve({ status: res.statusCode, body: d })); });
+                    req.on('error', reject); req.on('timeout', () => { req.destroy(); reject(new Error('timeout')); });
+                    req.write(createBody); req.end();
+                });
+                if (createRes.status === 200) {
+                    console.log(`[AUTO-REPAIR] PB admin created via API for ${PB_ADMIN_EMAIL}`);
+                    // Now auth should work
+                    await pbAdmin.admins.authWithPassword(PB_ADMIN_EMAIL, PB_ADMIN_PASSWORD);
+                    pbAdminReady = true;
+                    pbAdminLastAuth = now;
+                    console.log('   PocketBase admin authenticated (after auto-repair)');
+                    // Run setup_pocketbase.js to create collections + seed users
+                    if (!pbSetupRan) {
+                        pbSetupRan = true;
+                        console.log('[AUTO-REPAIR] Running setup_pocketbase.js...');
+                        const { execSync } = require('child_process');
+                        try {
+                            execSync('node setup_pocketbase.js', { cwd: __dirname, stdio: 'inherit', timeout: 30000 });
+                            console.log('[AUTO-REPAIR] setup_pocketbase.js completed');
+                        } catch (setupErr) {
+                            console.error('[AUTO-REPAIR] setup_pocketbase.js failed:', setupErr.message);
+                        }
+                    }
+                } else {
+                    console.warn(`[AUTO-REPAIR] Could not create PB admin (${createRes.status}): ${createRes.body}`);
+                }
+            } catch (repairErr) {
+                console.warn('[AUTO-REPAIR] PB admin auto-repair failed:', repairErr.message);
+            }
         }
     } else {
         console.error('   PocketBase admin credentials not configured');
