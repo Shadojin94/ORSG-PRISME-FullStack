@@ -8,40 +8,31 @@ import { useDatasetYears } from "@/hooks/useThemes";
 import { BDI_THEMES } from "@/data/bdi_themes";
 import { cn } from "@/lib/utils";
 
-// Supported Open Data Themes
 const OPEN_DATA_SUPPORTED_THEMES = [
-    'educ',
-    'pers_sup65ans_seules',
-    'familles_mono',
-    'pop_inf3ans',
-    'pers_menages',
-    'types_menages',
-    'alloc',
-    'revenu',
-    'densite',
-    'route',
-    'mortalite_gen',
-    'mortalite_cardio',
-    'mortalite_tumeurs',
-    'mortalite_respi',
-    'mortalite_neuro',
-    'mortalite_diabete',
-    'mortalite_covid'
+    'educ', 'pers_sup65ans_seules', 'familles_mono', 'pop_inf3ans',
+    'pers_menages', 'types_menages', 'alloc', 'revenu', 'densite',
+    'route', 'mortalite_gen', 'mortalite_cardio', 'mortalite_tumeurs',
+    'mortalite_respi', 'mortalite_neuro', 'mortalite_diabete', 'mortalite_covid'
 ];
 
-// Persist generator state in sessionStorage so navigation doesn't lose progress
 const STORAGE_KEY = 'prisme_generator_state';
+
+export interface SubjectDataset {
+    id: string;
+    variable: string;
+    label: string;
+    source: string;
+    demoReady: boolean;
+}
 
 interface SavedState {
     step: number;
     selectedThemeId: string | null;
     selectedSubThemeId: string | null;
-    selectedDatasetId: string | null;
-    selectedDatasetVariable: string | null;
     sourceMode: 'opendata' | 'moca';
     year: string;
     format: string;
-    generatedFile: string | null;
+    generatedFiles: string[];
 }
 
 function loadSavedState(): Partial<SavedState> {
@@ -58,147 +49,162 @@ function saveState(state: SavedState) {
     } catch (e) { }
 }
 
+function findSubject(themeId: string | null, subThemeId: string | null): { theme: any; sub: any } | null {
+    if (!themeId || !subThemeId) return null;
+    const theme = (BDI_THEMES as any[]).find(t => t.id === themeId);
+    if (!theme) return null;
+    const walk = (items: any[]): any => {
+        for (const item of items) {
+            if (item.id === subThemeId) return item;
+            if (item.subThemes) {
+                const found = walk(item.subThemes);
+                if (found) return found;
+            }
+        }
+        return null;
+    };
+    const sub = walk(theme.subThemes || []);
+    if (!sub) return null;
+    return { theme, sub };
+}
+
 export function GeneratorPage() {
-    // ----------------------------------------------------
-    // State (restored from sessionStorage if available)
-    // ----------------------------------------------------
     const saved = useMemo(() => loadSavedState(), []);
 
     const [step, setStep] = useState<number>(saved.step || 1);
 
-    // Selection
     const [selectedThemeId, setSelectedThemeId] = useState<string | null>(saved.selectedThemeId || null);
     const [selectedSubThemeId, setSelectedSubThemeId] = useState<string | null>(saved.selectedSubThemeId || null);
-    const [selectedDatasetId, setSelectedDatasetId] = useState<string | null>(saved.selectedDatasetId || null);
-    const [selectedDatasetVariable, setSelectedDatasetVariable] = useState<string | null>(saved.selectedDatasetVariable || null);
 
-    // Config
     const [year, setYear] = useState<string>(saved.year || "");
     const [format, setFormat] = useState<string>(saved.format || "zip");
 
-    // Source Mode
     const [sourceMode, setSourceMode] = useState<'opendata' | 'moca'>(saved.sourceMode || 'opendata');
 
-    // Process
     const [isProcessing, setIsProcessing] = useState(false);
-    const [generatedFile, setGeneratedFile] = useState<string | null>(saved.generatedFile || null);
+    const [progress, setProgress] = useState<{ current: number; total: number; label: string } | null>(null);
+    const [generatedFiles, setGeneratedFiles] = useState<string[]>(saved.generatedFiles || []);
     const [generationWarnings, setGenerationWarnings] = useState<string[]>([]);
 
     const [error, setError] = useState<string | null>(null);
 
-    // Persist state on every change
     useEffect(() => {
         saveState({
-            step, selectedThemeId, selectedSubThemeId, selectedDatasetId, selectedDatasetVariable,
-            sourceMode, year, format, generatedFile
+            step, selectedThemeId, selectedSubThemeId,
+            sourceMode, year, format, generatedFiles
         });
-    }, [step, selectedThemeId, selectedSubThemeId, selectedDatasetId, selectedDatasetVariable, sourceMode, year, format, generatedFile]);
+    }, [step, selectedThemeId, selectedSubThemeId, sourceMode, year, format, generatedFiles]);
 
-    // ----------------------------------------------------
-    // Computed Checks
-    // ----------------------------------------------------
-    // Does the selected dataset support Open Data?
-    const supportsOpenData = selectedDatasetId
-        ? OPEN_DATA_SUPPORTED_THEMES.includes(selectedDatasetId)
-        : false;
+    // Compute subject context
+    const subjectCtx = useMemo(() => findSubject(selectedThemeId, selectedSubThemeId), [selectedThemeId, selectedSubThemeId]);
 
-    // Compute labels for breadcrumb in Step2 — match by (id + variable) because
-    // the same dataset id can be reused across sub-themes (ex: comp_mortalite
-    // pour alcool / tabac / suicide) with different variables/labels.
-    const { themeLabel, datasetLabel } = useMemo(() => {
-        if (!selectedThemeId || !selectedDatasetId) return { themeLabel: "", datasetLabel: "" };
-        const theme = (BDI_THEMES as any[]).find(t => t.id === selectedThemeId);
-        if (!theme) return { themeLabel: "", datasetLabel: "" };
-
-        const matches = (d: any) =>
-            d.id === selectedDatasetId &&
-            (selectedDatasetVariable ? d.variable === selectedDatasetVariable : true);
-
-        let dsLabel = "";
-        const findDataset = (items: any[]) => {
-            for (const item of items) {
-                if (item.datasets) {
-                    const ds = item.datasets.find(matches);
-                    if (ds) { dsLabel = ds.label; return; }
-                }
-                if (item.subThemes) findDataset(item.subThemes);
-                if (dsLabel) return;
-            }
-        };
-        findDataset(theme.subThemes || []);
-        if (!dsLabel && theme.datasets) {
-            const ds = theme.datasets.find(matches);
-            if (ds) dsLabel = ds.label;
+    // Unique datasets of selected subject (one entry per backend-distinct dataset ID)
+    const subjectDatasets: SubjectDataset[] = useMemo(() => {
+        if (!subjectCtx) return [];
+        const all = (subjectCtx.sub.datasets || []).filter((d: any) => d?.tool !== "Calcul");
+        const seen = new Set<string>();
+        const out: SubjectDataset[] = [];
+        for (const d of all) {
+            if (seen.has(d.id)) continue;
+            seen.add(d.id);
+            out.push({
+                id: d.id,
+                variable: d.variable,
+                label: d.label,
+                source: d.source || '',
+                demoReady: !!d.demoReady
+            });
         }
-        return { themeLabel: theme.shortTitle || theme.title, datasetLabel: dsLabel };
-    }, [selectedThemeId, selectedDatasetId, selectedDatasetVariable]);
+        return out;
+    }, [subjectCtx]);
 
-    // Load years for selected dataset based on CURRENT source mode
+    // All indicator entries (includes duplicates with different variables, for display)
+    const subjectIndicators = useMemo(() => {
+        if (!subjectCtx) return [];
+        return (subjectCtx.sub.datasets || []).filter((d: any) => d?.tool !== "Calcul");
+    }, [subjectCtx]);
+
+    const themeLabel = subjectCtx?.theme.shortTitle || subjectCtx?.theme.title || "";
+    const subjectLabel = subjectCtx?.sub.title || "";
+
+    // Primary dataset (for year detection — backend offers per-dataset year endpoint only)
+    const primaryDatasetId = subjectDatasets[0]?.id || null;
+
+    // Does the subject support Open Data? (true if ANY of its datasets supports it)
+    const supportsOpenData = subjectDatasets.some(d => OPEN_DATA_SUPPORTED_THEMES.includes(d.id));
+
     const { years: availableYears, loading: yearsLoading, reload: reloadYears } = useDatasetYears(
-        selectedDatasetId,
+        primaryDatasetId,
         sourceMode === 'opendata'
     );
 
-    // ----------------------------------------------------
-    // Effects
-    // ----------------------------------------------------
-    // Auto-select latest year when dataset changes (or years loaded)
     useEffect(() => {
         if (availableYears && availableYears.length > 0) {
             const maxYear = Math.max(...availableYears);
             setYear(String(maxYear));
         } else {
-            setYear(""); // Reset if no years
+            setYear("");
         }
-    }, [availableYears, selectedDatasetId, sourceMode]);
+    }, [availableYears, primaryDatasetId, sourceMode]);
 
-    // ----------------------------------------------------
-    // Handlers
-    // ----------------------------------------------------
-    const handleDatasetSelect = (themeId: string, subThemeId: string, datasetId: string, variable: string) => {
+    const handleSubjectSelect = (themeId: string, subThemeId: string) => {
         setSelectedThemeId(themeId);
         setSelectedSubThemeId(subThemeId);
-        setSelectedDatasetId(datasetId);
-        setSelectedDatasetVariable(variable);
 
-        // Auto-detect best mode
-        // If dataset supports OpenData, default to it? Or user preference?
-        // Prompt implies user choice, but usually defaults stick.
-        // Let's default to OpenData if available as it is "better/faster/client-like".
-        if (OPEN_DATA_SUPPORTED_THEMES.includes(datasetId)) {
-            setSourceMode('opendata');
-        } else {
-            setSourceMode('moca');
-        }
+        const ctx = findSubject(themeId, subThemeId);
+        const ds = (ctx?.sub.datasets || []).filter((d: any) => d?.tool !== "Calcul");
+        const hasOpenData = ds.some((d: any) => OPEN_DATA_SUPPORTED_THEMES.includes(d.id));
+        setSourceMode(hasOpenData ? 'opendata' : 'moca');
 
-        setStep(2); // Go to Config
-        setGeneratedFile(null); // Reset previous result
+        setStep(2);
+        setGeneratedFiles([]);
         setError(null);
     };
 
     const handleGenerate = async () => {
-        if (!selectedDatasetId || !year) return;
+        if (subjectDatasets.length === 0 || !year) return;
 
         setIsProcessing(true);
         setError(null);
+        setGeneratedFiles([]);
+        setGenerationWarnings([]);
+
+        const files: string[] = [];
+        const warnings: string[] = [];
+        const total = subjectDatasets.length;
 
         try {
-            const result = sourceMode === 'opendata'
-                ? await api.generateOpenData(selectedDatasetId, parseInt(year))
-                : await api.generateExcel(selectedDatasetId, parseInt(year));
+            for (let i = 0; i < subjectDatasets.length; i++) {
+                const ds = subjectDatasets[i];
+                setProgress({ current: i + 1, total, label: ds.label });
 
-            if (result.success && result.filename) {
-                setGeneratedFile(result.filename);
-                setGenerationWarnings(result.warnings || []);
-                setStep(3); // Success!
-            } else {
-                setError(result.error || "Erreur inconnue lors de la génération.");
+                // Use open data only if this specific dataset supports it
+                const useOpenData = sourceMode === 'opendata' && OPEN_DATA_SUPPORTED_THEMES.includes(ds.id);
+                const result = useOpenData
+                    ? await api.generateOpenData(ds.id, parseInt(year))
+                    : await api.generateExcel(ds.id, parseInt(year));
+
+                if (result.success && result.filename) {
+                    files.push(result.filename);
+                    if (result.warnings?.length) warnings.push(...result.warnings);
+                } else {
+                    warnings.push(`[${ds.label}] ${result.error || 'Erreur inconnue'}`);
+                }
             }
-        } catch (error: any) {
-            console.error("Generation error:", error);
-            setError(`Erreur système: ${error.message}`);
+
+            if (files.length === 0) {
+                setError(warnings.join(' · ') || "Aucun fichier généré");
+            } else {
+                setGeneratedFiles(files);
+                setGenerationWarnings(warnings);
+                setStep(3);
+            }
+        } catch (err: any) {
+            console.error("Generation error:", err);
+            setError(`Erreur système: ${err.message}`);
         } finally {
             setIsProcessing(false);
+            setProgress(null);
         }
     };
 
@@ -207,19 +213,17 @@ export function GeneratorPage() {
     };
 
     const handleGoToStep = (targetStep: number) => {
-        if (targetStep >= step) return; // Can only go back
+        if (targetStep >= step) return;
         if (isProcessing) return;
 
         if (targetStep === 1) {
-            // Back to indicator selection - keep selections so accordion is open
             setStep(1);
             setYear("");
-            setGeneratedFile(null);
+            setGeneratedFiles([]);
             setError(null);
         } else if (targetStep === 2) {
-            // Back to config - keep dataset selection, reset result
             setStep(2);
-            setGeneratedFile(null);
+            setGeneratedFiles([]);
             setError(null);
         }
     };
@@ -229,10 +233,8 @@ export function GeneratorPage() {
     const handleRestart = () => {
         setStep(1);
         setSelectedSubThemeId(null);
-        setSelectedDatasetId(null);
-        setSelectedDatasetVariable(null);
         setSelectedThemeId(null);
-        setGeneratedFile(null);
+        setGeneratedFiles([]);
         setYear("");
         setError(null);
         try { sessionStorage.removeItem(STORAGE_KEY); } catch (e) { }
@@ -241,7 +243,6 @@ export function GeneratorPage() {
     return (
         <div className="max-w-[1600px] mx-auto py-8 px-4 pb-32">
 
-            {/* Header / Title */}
             <div className="text-center mb-12 animate-in fade-in slide-in-from-top-4 duration-700">
                 <h1 className="text-4xl font-extrabold text-[#1a4b8c] mb-4 tracking-tight">
                     Assistant de Génération
@@ -250,10 +251,9 @@ export function GeneratorPage() {
                     Créez vos fichiers de données en 3 étapes simples.
                 </p>
 
-                {/* Visual Steps Indicator - clickable for completed steps */}
                 <div className="flex justify-center items-center gap-4 mt-8">
                     {[
-                        { n: 1, label: "Indicateur" },
+                        { n: 1, label: "Sujet" },
                         { n: 2, label: "Configuration" },
                         { n: 3, label: "Résultat" }
                     ].map(({ n: s, label }) => {
@@ -294,16 +294,13 @@ export function GeneratorPage() {
 
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start relative pb-20">
 
-                {/* Main Content Area (Left) */}
                 <div className="lg:col-span-8 space-y-8 min-h-[500px]">
 
                     {step === 1 && (
                         <Step1_ThemeSelection
-                            onDatasetSelect={handleDatasetSelect}
+                            onSubjectSelect={handleSubjectSelect}
                             selectedThemeId={selectedThemeId}
                             selectedSubThemeId={selectedSubThemeId}
-                            selectedDatasetId={selectedDatasetId}
-                            selectedDatasetVariable={selectedDatasetVariable}
                         />
                     )}
 
@@ -320,16 +317,17 @@ export function GeneratorPage() {
                             supportsOpenData={supportsOpenData}
                             sourceMode={sourceMode}
                             onSourceChange={setSourceMode}
-                            datasetLabel={datasetLabel}
+                            subjectLabel={subjectLabel}
                             themeLabel={themeLabel}
-                            datasetId={selectedDatasetId}
+                            indicators={subjectIndicators}
+                            primaryDatasetId={primaryDatasetId}
                             onUploadComplete={reloadYears}
                         />
                     )}
 
                     {step === 3 && (
                         <Step3_Result
-                            generatedFile={generatedFile}
+                            generatedFiles={generatedFiles}
                             warnings={generationWarnings}
                             onDownload={handleDownload}
                             onRestart={handleRestart}
@@ -338,20 +336,19 @@ export function GeneratorPage() {
 
                 </div>
 
-                {/* Right Panel (Sticky Summary) */}
                 <div className="hidden lg:block lg:col-span-4">
                     <SidebarSummary
                         step={step}
-                        selectedThemeId={selectedThemeId}
-                        selectedSubThemeId={selectedSubThemeId}
-                        selectedDatasetId={selectedDatasetId}
-                        selectedDatasetVariable={selectedDatasetVariable}
+                        themeLabel={themeLabel}
+                        subjectLabel={subjectLabel}
+                        subjectDatasets={subjectDatasets}
                         year={year}
                         format={format}
                         isProcessing={isProcessing}
+                        progress={progress}
                         onGenerate={handleGenerate}
                         onGoToStep={handleGoToStep}
-                        canGenerate={!!selectedDatasetId && !!year}
+                        canGenerate={subjectDatasets.length > 0 && !!year}
                         isOpenDataMode={sourceMode === 'opendata'}
                     />
                 </div>

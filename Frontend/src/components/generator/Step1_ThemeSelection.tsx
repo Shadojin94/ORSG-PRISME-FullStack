@@ -1,10 +1,9 @@
 import { useState } from "react";
 import { cn } from "@/lib/utils";
 import { BDI_THEMES } from "@/data/bdi_themes";
-import { ChevronDown, ChevronRight, Database, Upload, Globe, BarChart3 } from "lucide-react";
+import { ChevronDown, Database, Globe, BarChart3, ArrowRight } from "lucide-react";
 import { Acronym } from "@/components/ui/Acronym";
 
-// Supported Open Data Themes (mirrored from GeneratorPage)
 const OPEN_DATA_SUPPORTED_THEMES = [
     'educ', 'pers_sup65ans_seules', 'familles_mono', 'pop_inf3ans',
     'pers_menages', 'types_menages', 'alloc', 'revenu', 'densite',
@@ -13,156 +12,149 @@ const OPEN_DATA_SUPPORTED_THEMES = [
 ];
 
 interface Step1Props {
-    onDatasetSelect: (themeId: string, subThemeId: string, datasetId: string, variable: string) => void;
+    onSubjectSelect: (themeId: string, subThemeId: string) => void;
     selectedThemeId: string | null;
     selectedSubThemeId: string | null;
-    selectedDatasetId: string | null;
-    selectedDatasetVariable: string | null;
 }
 
 const isCalculated = (d: any) => d?.tool === "Calcul";
 const isSelectable = (d: any) => !isCalculated(d);
 const isOpenData = (d: any) => OPEN_DATA_SUPPORTED_THEMES.includes(d?.id);
 
-function countReadyDatasets(items: any[]): number {
-    let count = 0;
+function flattenSubThemes(items: any[]): any[] {
+    const out: any[] = [];
     for (const item of items) {
-        if (item.datasets) {
-            count += item.datasets.filter((d: any) => isSelectable(d) && d.demoReady).length;
-        }
-        if (item.subThemes) {
-            count += countReadyDatasets(item.subThemes);
-        }
+        if (item.datasets && item.datasets.length > 0) out.push(item);
+        if (item.subThemes) out.push(...flattenSubThemes(item.subThemes));
     }
-    return count;
+    return out;
 }
-function countAllDatasets(items: any[]): number {
-    let count = 0;
-    for (const item of items) {
-        if (item.datasets) count += item.datasets.filter((d: any) => isSelectable(d)).length;
-        if (item.subThemes) count += countAllDatasets(item.subThemes);
+
+function uniqueDatasetIds(datasets: any[]): string[] {
+    const seen = new Set<string>();
+    const out: string[] = [];
+    for (const d of datasets) {
+        if (!isSelectable(d)) continue;
+        if (!seen.has(d.id)) { seen.add(d.id); out.push(d.id); }
     }
-    return count;
+    return out;
 }
-function countOpenDataDatasets(items: any[]): number {
-    let count = 0;
-    for (const item of items) {
-        if (item.datasets) {
-            count += item.datasets.filter((d: any) => isSelectable(d) && isOpenData(d)).length;
-        }
-        if (item.subThemes) count += countOpenDataDatasets(item.subThemes);
+
+function countReady(subjects: any[]): number {
+    let c = 0;
+    for (const s of subjects) {
+        if (uniqueDatasetIds((s.datasets || []).filter((d: any) => d.demoReady)).length > 0) c++;
     }
-    return count;
+    return c;
 }
-function countMocaDatasets(items: any[]): number {
-    let count = 0;
-    for (const item of items) {
-        if (item.datasets) {
-            count += item.datasets.filter((d: any) => isSelectable(d) && d.demoReady && !isOpenData(d)).length;
+
+function globalStats() {
+    let readySubjects = 0, totalSubjects = 0, openDataDs = 0, mocaDs = 0;
+    for (const theme of BDI_THEMES as any[]) {
+        const subs = flattenSubThemes(theme.subThemes || []);
+        for (const sub of subs) {
+            totalSubjects++;
+            const ds = (sub.datasets || []).filter(isSelectable);
+            const uniq = uniqueDatasetIds(ds);
+            const hasReady = uniq.some(id => ds.find((d: any) => d.id === id)?.demoReady);
+            if (hasReady) readySubjects++;
+            for (const id of uniq) {
+                const sample = ds.find((d: any) => d.id === id);
+                if (!sample?.demoReady) continue;
+                if (isOpenData(sample)) openDataDs++;
+                else mocaDs++;
+            }
         }
-        if (item.subThemes) count += countMocaDatasets(item.subThemes);
     }
-    return count;
+    return { readySubjects, totalSubjects, openDataDs, mocaDs };
 }
 
 export function Step1_ThemeSelection({
-    onDatasetSelect,
+    onSubjectSelect,
     selectedThemeId,
-    selectedDatasetId,
-    selectedDatasetVariable
+    selectedSubThemeId
 }: Step1Props) {
     const [expandedThemeId, setExpandedThemeId] = useState<string | null>(selectedThemeId);
-    const [expandedSubThemeId, setExpandedSubThemeId] = useState<string | null>(null);
 
     const handleThemeClick = (id: string) => {
         setExpandedThemeId(expandedThemeId === id ? null : id);
-        setExpandedSubThemeId(null);
     };
 
-    const handleSubThemeClick = (subTheme: any, themeId: string) => {
-        const id = subTheme.id;
-        if (expandedSubThemeId === id) {
-            setExpandedSubThemeId(null);
-            return;
-        }
-        setExpandedSubThemeId(id);
+    const renderSubject = (sub: any, themeId: string) => {
+        const datasets = (sub.datasets || []).filter(isSelectable);
+        const uniqIds = uniqueDatasetIds(datasets);
+        const readyDs = uniqIds.filter(id => datasets.find((d: any) => d.id === id)?.demoReady);
+        const hasData = readyDs.length > 0;
+        const isSelected = selectedSubThemeId === sub.id;
 
-        // Auto-select if only 1 selectable dataset
-        const allDs: any[] = [];
-        if (subTheme.datasets) allDs.push(...subTheme.datasets);
-        if (subTheme.subThemes) {
-            for (const nested of subTheme.subThemes) {
-                if (nested.datasets) allDs.push(...nested.datasets);
-            }
-        }
-        const selectable = allDs.filter(isSelectable);
-        if (selectable.length === 1) {
-            onDatasetSelect(themeId, id, selectable[0].id, selectable[0].variable);
-        }
-    };
-
-    const renderDatasetButton = (ds: any, themeId: string, subThemeId: string) => {
-        if (isCalculated(ds)) return null;
-        const isSelected = selectedDatasetId === ds.id && selectedDatasetVariable === ds.variable;
-        const dsIsOpenData = isOpenData(ds);
         return (
             <button
-                key={`${subThemeId}::${ds.id}::${ds.variable}`}
-                onClick={(e) => {
-                    e.stopPropagation();
-                    onDatasetSelect(themeId, subThemeId, ds.id, ds.variable);
-                }}
+                key={sub.id}
+                onClick={() => hasData && onSubjectSelect(themeId, sub.id)}
+                disabled={!hasData}
                 className={cn(
-                    "w-full text-left py-2.5 px-3 rounded-lg text-sm transition-all flex items-center justify-between gap-2",
+                    "w-full text-left rounded-lg border-2 transition-all p-4 group",
                     isSelected
-                        ? "bg-[#3bb3a9]/10 text-[#2f9a91] font-semibold ring-1 ring-[#3bb3a9]/30"
-                        : ds.demoReady
-                            ? "text-gray-700 hover:bg-[#3bb3a9]/5 hover:text-[#2f9a91] cursor-pointer"
-                            : "text-gray-700 hover:bg-amber-50 hover:text-amber-700 cursor-pointer"
+                        ? "border-[#3bb3a9] bg-[#3bb3a9]/5 shadow-sm"
+                        : hasData
+                            ? "border-gray-200 bg-white hover:border-[#3bb3a9]/60 hover:shadow-sm cursor-pointer"
+                            : "border-gray-100 bg-gray-50 opacity-60 cursor-not-allowed"
                 )}
             >
-                <span className="flex-1">{ds.label}</span>
-                <span className="flex items-center gap-1.5 shrink-0">
-                    {/* Source tag */}
-                    {ds.source && (
-                        <span className="text-[9px] bg-gray-100 text-gray-500 px-1.5 py-0.5 rounded font-medium hidden sm:inline">
-                            {ds.source.split(",")[0].split("/")[0].trim()}
+                <div className="flex items-start justify-between gap-3 mb-2">
+                    <div className="flex-1 min-w-0">
+                        <h4 className="font-bold text-gray-800 text-sm">{sub.title}</h4>
+                        <p className="text-[11px] text-gray-500 mt-0.5">
+                            {datasets.length} indicateur{datasets.length > 1 ? 's' : ''}
+                            {uniqIds.length !== datasets.length && ` · ${uniqIds.length} jeu${uniqIds.length > 1 ? 'x' : ''} de données`}
+                        </p>
+                    </div>
+                    {hasData && (
+                        <span className={cn(
+                            "shrink-0 text-xs font-semibold flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity",
+                            isSelected ? "opacity-100 text-[#3bb3a9]" : "text-[#1a4b8c]"
+                        )}>
+                            Choisir
+                            <ArrowRight className="w-3.5 h-3.5" />
                         </span>
                     )}
-                    {/* Open Data badge */}
-                    {dsIsOpenData && ds.demoReady && (
-                        <span className="text-[10px] bg-blue-50 text-blue-600 px-2 py-0.5 rounded-full font-medium flex items-center gap-1">
-                            <Globe className="w-3 h-3" />
-                            Open Data
-                        </span>
-                    )}
-                    {/* Availability badge */}
-                    {ds.demoReady && !dsIsOpenData ? (
-                        <span className="text-[10px] bg-green-100 text-green-700 px-2 py-0.5 rounded-full font-medium flex items-center gap-1">
-                            <Database className="w-3 h-3" />
-                            <Acronym term="MOCA-O" />
-                        </span>
-                    ) : !ds.demoReady ? (
-                        <span className="text-[10px] bg-amber-100 text-amber-700 px-2 py-0.5 rounded-full font-medium flex items-center gap-1">
-                            <Upload className="w-3 h-3" />
-                            Import requis
-                        </span>
-                    ) : null}
-                </span>
+                </div>
+
+                {/* Indicators as info pills */}
+                <div className="flex flex-wrap gap-1.5 mt-3">
+                    {datasets.map((ds: any, idx: number) => {
+                        const dsIsOpenData = isOpenData(ds);
+                        return (
+                            <span
+                                key={`${ds.id}-${ds.variable}-${idx}`}
+                                title={`${ds.label} · ${ds.source || ''}`}
+                                className={cn(
+                                    "text-[10px] px-2 py-1 rounded-full font-medium flex items-center gap-1 border",
+                                    !ds.demoReady
+                                        ? "bg-amber-50 text-amber-700 border-amber-200"
+                                        : dsIsOpenData
+                                            ? "bg-blue-50 text-blue-700 border-blue-100"
+                                            : "bg-green-50 text-green-700 border-green-100"
+                                )}
+                            >
+                                {ds.demoReady && (dsIsOpenData
+                                    ? <Globe className="w-2.5 h-2.5" />
+                                    : <Database className="w-2.5 h-2.5" />)}
+                                <span className="truncate max-w-[180px]">{ds.label}</span>
+                            </span>
+                        );
+                    })}
+                </div>
             </button>
         );
     };
 
-    // Global stats
-    const totalReady = countReadyDatasets(BDI_THEMES as any[]);
-    const totalAll = countAllDatasets(BDI_THEMES as any[]);
-    const totalOpenData = countOpenDataDatasets(BDI_THEMES as any[]);
-    const totalMoca = countMocaDatasets(BDI_THEMES as any[]);
+    const stats = globalStats();
 
     return (
         <div className="space-y-4">
             <div className="flex items-center justify-between mb-2">
-                <h2 className="text-2xl font-bold text-[#1a4b8c]">1. Choisissez un indicateur</h2>
+                <h2 className="text-2xl font-bold text-[#1a4b8c]">1. Choisissez un sujet</h2>
             </div>
 
             {/* Summary stats bar */}
@@ -172,8 +164,8 @@ export function Step1_ThemeSelection({
                         <BarChart3 className="w-4 h-4 text-green-600" />
                     </div>
                     <div>
-                        <div className="text-lg font-bold text-gray-800">{totalReady}<span className="text-sm font-normal text-gray-400">/{totalAll}</span></div>
-                        <div className="text-[11px] text-gray-500">Indicateurs disponibles</div>
+                        <div className="text-lg font-bold text-gray-800">{stats.readySubjects}<span className="text-sm font-normal text-gray-400">/{stats.totalSubjects}</span></div>
+                        <div className="text-[11px] text-gray-500">Sujets disponibles</div>
                     </div>
                 </div>
                 <div className="bg-white rounded-lg border border-gray-200 px-4 py-3 flex items-center gap-3">
@@ -181,7 +173,7 @@ export function Step1_ThemeSelection({
                         <Globe className="w-4 h-4 text-blue-600" />
                     </div>
                     <div>
-                        <div className="text-lg font-bold text-blue-600">{totalOpenData}</div>
+                        <div className="text-lg font-bold text-blue-600">{stats.openDataDs}</div>
                         <div className="text-[11px] text-gray-500">Open Data (<Acronym term="INSEE" />, <Acronym term="CépiDc" />...)</div>
                     </div>
                 </div>
@@ -190,7 +182,7 @@ export function Step1_ThemeSelection({
                         <Database className="w-4 h-4 text-green-600" />
                     </div>
                     <div>
-                        <div className="text-lg font-bold text-green-600">{totalMoca}</div>
+                        <div className="text-lg font-bold text-green-600">{stats.mocaDs}</div>
                         <div className="text-[11px] text-gray-500"><Acronym term="MOCA-O" /> (CSV locaux)</div>
                     </div>
                 </div>
@@ -201,8 +193,9 @@ export function Step1_ThemeSelection({
                 {(BDI_THEMES as any[]).map((theme) => {
                     const isExpanded = expandedThemeId === theme.id;
                     const Icon = theme.icon;
-                    const readyCount = countReadyDatasets(theme.subThemes || []);
-                    const totalCount = countAllDatasets(theme.subThemes || []);
+                    const subjects = flattenSubThemes(theme.subThemes || []);
+                    const ready = countReady(subjects);
+                    const total = subjects.length;
 
                     return (
                         <div
@@ -214,7 +207,6 @@ export function Step1_ThemeSelection({
                                     : "border-gray-200 shadow-sm hover:shadow-md hover:border-gray-300"
                             )}
                         >
-                            {/* Theme Header */}
                             <button
                                 onClick={() => handleThemeClick(theme.id)}
                                 className="w-full text-left p-4 flex items-center gap-4"
@@ -225,9 +217,9 @@ export function Step1_ThemeSelection({
                                 <div className="flex-1 min-w-0">
                                     <div className="flex items-center gap-2 flex-wrap">
                                         <h3 className="font-bold text-gray-800 leading-snug" title={theme.title || theme.shortTitle}>{theme.shortTitle}</h3>
-                                        {readyCount > 0 && (
+                                        {ready > 0 && (
                                             <span className="text-[10px] bg-green-50 text-green-600 px-2 py-0.5 rounded-full font-medium shrink-0">
-                                                {readyCount}/{totalCount}
+                                                {ready}/{total} sujets
                                             </span>
                                         )}
                                     </div>
@@ -236,66 +228,9 @@ export function Step1_ThemeSelection({
                                 <ChevronDown className={cn("w-5 h-5 text-gray-400 shrink-0 transition-transform", isExpanded && "rotate-180")} />
                             </button>
 
-                            {/* Expanded: Sub-themes */}
                             {isExpanded && (
-                                <div className="bg-gray-50 border-t border-gray-100 p-3 space-y-2 animate-in fade-in slide-in-from-top-2 duration-200">
-                                    {theme.subThemes?.map((sub: any) => {
-                                        const isSubExpanded = expandedSubThemeId === sub.id;
-                                        const hasContent = (sub.datasets && sub.datasets.length > 0) || (sub.subThemes && sub.subThemes.length > 0);
-                                        const subReady = countReadyDatasets([sub]);
-                                        const subTotal = countAllDatasets([sub]);
-
-                                        return (
-                                            <div key={sub.id} className={cn(
-                                                "rounded-lg bg-white border overflow-hidden transition-all",
-                                                isSubExpanded ? "border-[#3bb3a9]/30 shadow-sm" : "border-gray-100"
-                                            )}>
-                                                <button
-                                                    onClick={() => handleSubThemeClick(sub, theme.id)}
-                                                    className="w-full flex items-center justify-between p-3 text-sm font-semibold text-gray-700 hover:bg-gray-50 transition-colors"
-                                                >
-                                                    <span className="flex items-center gap-2">
-                                                        <div className={cn("w-1.5 h-1.5 rounded-full", isSubExpanded ? "bg-[#3bb3a9]" : subReady > 0 ? "bg-green-400" : "bg-gray-300")} />
-                                                        {sub.title}
-                                                    </span>
-                                                    <span className="flex items-center gap-2">
-                                                        {subTotal > 0 && (
-                                                            <span className={cn(
-                                                                "text-[10px] px-2 py-0.5 rounded-full font-medium",
-                                                                subReady === subTotal
-                                                                    ? "bg-green-50 text-green-600"
-                                                                    : subReady > 0
-                                                                        ? "bg-amber-50 text-amber-600"
-                                                                        : "bg-gray-50 text-gray-400"
-                                                            )}>
-                                                                {subReady}/{subTotal} dispo
-                                                            </span>
-                                                        )}
-                                                        {hasContent && (
-                                                            <ChevronRight className={cn("w-4 h-4 text-gray-400 transition-transform", isSubExpanded && "rotate-90")} />
-                                                        )}
-                                                    </span>
-                                                </button>
-
-                                                {isSubExpanded && (
-                                                    <div className="px-3 pb-3 space-y-1">
-                                                        {/* Direct datasets */}
-                                                        {sub.datasets?.map((ds: any) => renderDatasetButton(ds, theme.id, sub.id))}
-
-                                                        {/* Nested sub-themes (Level 3) */}
-                                                        {sub.subThemes?.map((nested: any) => (
-                                                            <div key={nested.id} className="mt-2">
-                                                                <div className="text-[11px] font-bold text-gray-400 uppercase tracking-wider mb-1 px-3">
-                                                                    {nested.title}
-                                                                </div>
-                                                                {nested.datasets?.map((ds: any) => renderDatasetButton(ds, theme.id, nested.id))}
-                                                            </div>
-                                                        ))}
-                                                    </div>
-                                                )}
-                                            </div>
-                                        );
-                                    })}
+                                <div className="bg-gray-50 border-t border-gray-100 p-3 grid grid-cols-1 md:grid-cols-2 gap-2 animate-in fade-in slide-in-from-top-2 duration-200">
+                                    {subjects.map((sub: any) => renderSubject(sub, theme.id))}
                                 </div>
                             )}
                         </div>

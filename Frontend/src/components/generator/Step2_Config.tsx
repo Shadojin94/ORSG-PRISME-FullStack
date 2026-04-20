@@ -1,4 +1,4 @@
-import { CheckCircle2, Calendar, AlertTriangle, Database, ArrowLeft, Loader2, Globe, HardDrive, Info } from "lucide-react";
+import { CheckCircle2, Calendar, AlertTriangle, Database, ArrowLeft, Loader2, Globe, HardDrive, Info, ListChecks } from "lucide-react";
 import { Acronym } from "@/components/ui/Acronym";
 import { cn } from "@/lib/utils";
 import { MocaUpload } from "./MocaUpload";
@@ -19,14 +19,18 @@ interface Step2Props {
     sourceMode: 'opendata' | 'moca';
     onSourceChange: (mode: 'opendata' | 'moca') => void;
 
-    // Display info
-    datasetLabel: string;
+    subjectLabel: string;
     themeLabel: string;
+    indicators: Array<{ id: string; variable: string; label: string; source?: string; demoReady?: boolean }>;
 
-    // Upload
-    datasetId: string | null;
+    primaryDatasetId: string | null;
     onUploadComplete: () => void;
 }
+
+const CEPIDC_THEMES = [
+    'mortalite_gen', 'mortalite_cardio', 'mortalite_tumeurs',
+    'mortalite_respi', 'mortalite_neuro', 'mortalite_diabete', 'mortalite_covid'
+];
 
 export function Step2_Config({
     year,
@@ -40,20 +44,15 @@ export function Step2_Config({
     supportsOpenData,
     sourceMode,
     onSourceChange,
-    datasetLabel,
+    subjectLabel,
     themeLabel,
-    datasetId,
+    indicators,
+    primaryDatasetId,
     onUploadComplete
 }: Step2Props) {
 
     const sortedYears = [...availableYears].sort((a, b) => parseInt(b) - parseInt(a));
-
-    // CepiDc mortality themes: no commune-level data available
-    const CEPIDC_THEMES = [
-        'mortalite_gen', 'mortalite_cardio', 'mortalite_tumeurs',
-        'mortalite_respi', 'mortalite_neuro', 'mortalite_diabete', 'mortalite_covid'
-    ];
-    const isCepiDcTheme = datasetId ? CEPIDC_THEMES.includes(datasetId) : false;
+    const isCepiDcSubject = indicators.some(d => CEPIDC_THEMES.includes(d.id));
 
     return (
         <div className="space-y-6 animate-in fade-in slide-in-from-right-4 duration-300">
@@ -70,13 +69,37 @@ export function Step2_Config({
                 <div className="text-sm text-gray-400">
                     <span className="text-[#1a4b8c] font-medium">{themeLabel}</span>
                     <span className="mx-1.5">/</span>
-                    <span className="font-medium text-gray-600">{datasetLabel}</span>
+                    <span className="font-medium text-gray-600">{subjectLabel}</span>
                 </div>
             </div>
 
             <h2 className="text-2xl font-bold text-[#1a4b8c]">2. Configurez la génération</h2>
 
-            {/* Source Selection - Always visible, MOCA-O first */}
+            {/* Subject summary: included indicators */}
+            <div className="bg-white p-5 rounded-xl border border-gray-200 shadow-sm">
+                <h3 className="text-base font-bold text-gray-800 mb-3 flex items-center gap-2">
+                    <ListChecks className="w-5 h-5 text-[#3bb3a9]" />
+                    Indicateurs inclus dans ce sujet
+                    <span className="ml-1 text-xs bg-gray-100 text-gray-600 px-2 py-0.5 rounded-full font-medium">
+                        {indicators.length}
+                    </span>
+                </h3>
+                <ul className="space-y-1.5">
+                    {indicators.map((d, i) => (
+                        <li key={`${d.id}-${d.variable}-${i}`} className="flex items-center gap-2 text-sm text-gray-700">
+                            <CheckCircle2 className={cn("w-4 h-4 shrink-0", d.demoReady ? "text-green-500" : "text-gray-300")} />
+                            <span className="flex-1">{d.label}</span>
+                            {d.source && (
+                                <span className="text-[10px] text-gray-500 bg-gray-50 px-1.5 py-0.5 rounded">
+                                    {d.source.split(",")[0].split("/")[0].trim()}
+                                </span>
+                            )}
+                        </li>
+                    ))}
+                </ul>
+            </div>
+
+            {/* Source Selection */}
             <div className="bg-white p-5 rounded-xl border border-gray-200 shadow-sm">
                 <h3 className="text-base font-bold text-gray-800 mb-3 flex items-center gap-2">
                     <Database className="w-5 h-5 text-[#3bb3a9]" />
@@ -84,7 +107,6 @@ export function Step2_Config({
                 </h3>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                    {/* MOCA-O option (always available) */}
                     <button
                         onClick={() => onSourceChange('moca')}
                         className={cn(
@@ -106,7 +128,6 @@ export function Step2_Config({
                         </p>
                     </button>
 
-                    {/* Open Data option */}
                     <button
                         onClick={() => supportsOpenData && onSourceChange('opendata')}
                         disabled={!supportsOpenData}
@@ -131,18 +152,17 @@ export function Step2_Config({
                         </div>
                         <p className="text-xs text-gray-500">
                             {supportsOpenData
-                                ? "Sources publiques (INSEE, CepiDc...). Données plus récentes, génération automatique."
-                                : "Non disponible pour cet indicateur."
+                                ? "Sources publiques (INSEE, CépiDc...). Données plus récentes, génération automatique."
+                                : "Non disponible pour ce sujet."
                             }
                         </p>
                     </button>
                 </div>
 
-                {/* MOCA-O Upload */}
                 {sourceMode === 'moca' && (
                     <div className="mt-4">
                         <MocaUpload
-                            datasetId={datasetId}
+                            datasetId={primaryDatasetId}
                             onUploadComplete={onUploadComplete}
                         />
                     </div>
@@ -187,23 +207,22 @@ export function Step2_Config({
                         {sourceMode === 'moca' && supportsOpenData ? (
                             <p>Aucun fichier CSV trouvé. Importez vos fichiers ci-dessus ou <button onClick={() => onSourceChange('opendata')} className="underline font-bold hover:text-amber-900">basculez sur Open Data</button>.</p>
                         ) : sourceMode === 'moca' ? (
-                            <p>Aucun fichier CSV trouvé pour cet indicateur. Importez vos fichiers MOCA-O dans la zone ci-dessus.</p>
+                            <p>Aucun fichier CSV trouvé pour ce sujet. Importez vos fichiers MOCA-O dans la zone ci-dessus.</p>
                         ) : (
-                            <p>Les données Open Data ne sont pas encore disponibles pour cet indicateur et cette configuration.</p>
+                            <p>Les données Open Data ne sont pas encore disponibles pour ce sujet et cette configuration.</p>
                         )}
                     </div>
                 )}
             </div>
 
-            {/* CepiDc commune-level data warning */}
-            {isCepiDcTheme && sourceMode === 'opendata' && (
+            {isCepiDcSubject && sourceMode === 'opendata' && (
                 <div className="bg-amber-50 p-4 rounded-xl border border-amber-200 animate-in fade-in">
                     <div className="flex items-start gap-3">
                         <Info className="w-5 h-5 text-amber-600 mt-0.5 shrink-0" />
                         <div className="text-sm text-amber-800">
                             <p className="font-bold mb-1">Données communales non disponibles pour la mortalité</p>
                             <p className="text-amber-700">
-                                La source CepiDc ne fournit les données de mortalité qu'au <strong>niveau régional</strong>.
+                                La source CépiDc ne fournit les données de mortalité qu'au <strong>niveau régional</strong>.
                                 Les fichiers générés contiendront :
                             </p>
                             <ul className="mt-1.5 ml-4 list-disc text-amber-700 space-y-0.5">

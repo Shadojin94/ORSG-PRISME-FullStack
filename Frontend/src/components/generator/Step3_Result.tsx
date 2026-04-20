@@ -1,18 +1,21 @@
 import { CheckCircle2, Download, RefreshCw, FileSpreadsheet, AlertTriangle } from "lucide-react";
 
 interface Step3Props {
-    generatedFile: string | null;
+    generatedFiles: string[];
     warnings?: string[];
     onDownload: (filename: string) => void;
     onRestart: () => void;
 }
 
 export function Step3_Result({
-    generatedFile,
+    generatedFiles,
     warnings = [],
     onDownload,
     onRestart
 }: Step3Props) {
+
+    const count = generatedFiles.length;
+    const isMulti = count > 1;
 
     return (
         <div className="flex flex-col items-center justify-center py-12 px-6 animate-in zoom-in-95 duration-500 text-center">
@@ -22,11 +25,15 @@ export function Step3_Result({
             </div>
 
             <h2 className="text-3xl font-extrabold text-[#1a4b8c] mb-4">
-                Fichier généré avec succès !
+                {isMulti
+                    ? `${count} fichiers générés avec succès !`
+                    : 'Fichier généré avec succès !'}
             </h2>
 
             <p className="text-gray-500 text-lg mb-8 max-w-lg mx-auto">
-                Votre fichier de données est prêt. Vous pouvez le télécharger ci-dessous.
+                {isMulti
+                    ? 'Chaque indicateur a produit son propre pack. Téléchargez-les ci-dessous.'
+                    : 'Votre fichier de données est prêt. Vous pouvez le télécharger ci-dessous.'}
             </p>
 
             {warnings.length > 0 && (
@@ -50,25 +57,39 @@ export function Step3_Result({
                 </div>
             )}
 
-            {generatedFile && (
-                <div className="bg-gray-50 p-4 rounded-xl border border-gray-200 mb-8 flex items-center gap-3 max-w-md w-full">
-                    <div className="bg-green-100 p-2 rounded-lg text-green-700">
-                        <FileSpreadsheet className="w-6 h-6" />
+            <div className="w-full max-w-md space-y-3 mb-6">
+                {generatedFiles.map((file) => (
+                    <div
+                        key={file}
+                        className="bg-gray-50 p-4 rounded-xl border border-gray-200 flex items-center gap-3"
+                    >
+                        <div className="bg-green-100 p-2 rounded-lg text-green-700 shrink-0">
+                            <FileSpreadsheet className="w-6 h-6" />
+                        </div>
+                        <div className="text-left overflow-hidden flex-1 min-w-0">
+                            <p className="font-bold text-gray-800 truncate" title={file}>{file}</p>
+                            <p className="text-xs text-gray-500 uppercase tracking-widest mt-0.5">Excel / Zip</p>
+                        </div>
+                        <button
+                            onClick={() => onDownload(file)}
+                            className="shrink-0 bg-[#4caf50] hover:bg-[#43a047] text-white font-bold py-2 px-4 rounded-lg flex items-center gap-2 transition-colors"
+                        >
+                            <Download className="w-4 h-4" />
+                            Télécharger
+                        </button>
                     </div>
-                    <div className="text-left overflow-hidden flex-1">
-                        <p className="font-bold text-gray-800 truncate">{generatedFile}</p>
-                        <p className="text-xs text-gray-500 uppercase tracking-widest mt-0.5">Excel / Zip</p>
-                    </div>
-                </div>
-            )}
+                ))}
+            </div>
 
-            <button
-                onClick={() => generatedFile && onDownload(generatedFile)}
-                className="w-full max-w-md bg-[#4caf50] hover:bg-[#43a047] text-white text-xl font-bold py-5 rounded-2xl shadow-lg hover:shadow-2xl hover:scale-105 transition-all flex items-center justify-center gap-3 mb-6"
-            >
-                <Download className="w-7 h-7" />
-                TÉLÉCHARGER
-            </button>
+            {isMulti && (
+                <button
+                    onClick={() => generatedFiles.forEach(f => onDownload(f))}
+                    className="w-full max-w-md bg-[#4caf50] hover:bg-[#43a047] text-white text-lg font-bold py-4 rounded-2xl shadow-lg hover:shadow-2xl hover:scale-105 transition-all flex items-center justify-center gap-3 mb-6"
+                >
+                    <Download className="w-6 h-6" />
+                    TOUT TÉLÉCHARGER ({count})
+                </button>
+            )}
 
             <button
                 onClick={onRestart}
