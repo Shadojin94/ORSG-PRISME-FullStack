@@ -5,6 +5,8 @@ import { MocaUpload } from "./MocaUpload";
 
 interface Step2Props {
     year: string;
+    yearEnd: string;
+    onYearEndChange: (year: string) => void;
     availableYears: string[];
     yearsLoading: boolean;
     onYearChange: (year: string) => void;
@@ -40,6 +42,8 @@ const CEPIDC_THEMES = [
 
 export function Step2_Config({
     year,
+    yearEnd,
+    onYearEndChange,
     availableYears,
     yearsLoading,
     onYearChange,
@@ -184,15 +188,36 @@ export function Step2_Config({
             <div className="bg-white p-5 rounded-xl border border-gray-200 shadow-sm">
                 <h3 className="text-base font-bold text-gray-800 mb-3 flex items-center gap-2">
                     <Calendar className="w-5 h-5 text-[#3bb3a9]" />
-                    Année
+                    {format === 'consolidated' ? 'Plage d\'années' : 'Année'}
                 </h3>
+
+                {format === 'consolidated' && !yearsLoading && sortedYears.length > 0 && (
+                    <div className="flex items-center gap-3 mb-3 text-sm">
+                        <span className="text-gray-500 font-medium">De</span>
+                        <select
+                            value={year}
+                            onChange={(e) => onYearChange(e.target.value)}
+                            className="px-3 py-1.5 rounded-lg border border-gray-300 bg-white text-gray-800 font-semibold focus:border-[#1a4b8c] focus:outline-none"
+                        >
+                            {[...sortedYears].reverse().map(y => <option key={y} value={y}>{y}</option>)}
+                        </select>
+                        <span className="text-gray-500 font-medium">à</span>
+                        <select
+                            value={yearEnd || year}
+                            onChange={(e) => onYearEndChange(e.target.value)}
+                            className="px-3 py-1.5 rounded-lg border border-gray-300 bg-white text-gray-800 font-semibold focus:border-[#1a4b8c] focus:outline-none"
+                        >
+                            {[...sortedYears].reverse().map(y => <option key={y} value={y}>{y}</option>)}
+                        </select>
+                    </div>
+                )}
 
                 {yearsLoading ? (
                     <div className="flex items-center gap-2 text-gray-400 text-sm">
                         <Loader2 className="w-4 h-4 animate-spin" />
                         Chargement des années disponibles...
                     </div>
-                ) : sortedYears.length > 0 ? (
+                ) : format === 'consolidated' ? null : sortedYears.length > 0 ? (
                     <div className="flex flex-wrap gap-2">
                         {sortedYears.map((y) => (
                             <button
@@ -265,16 +290,15 @@ export function Step2_Config({
                     <button
                         onClick={() => onFormatChange('consolidated')}
                         className={cn(
-                            "p-3 rounded-xl border-2 text-left transition-all opacity-50 cursor-not-allowed",
-                            "border-gray-200"
+                            "p-3 rounded-xl border-2 text-left transition-all",
+                            format === 'consolidated' ? "border-[#3bb3a9] bg-[#3bb3a9]/5" : "border-gray-200 hover:border-gray-300"
                         )}
-                        disabled
                     >
                         <div className="flex justify-between items-start mb-1">
-                            <span className="font-bold text-gray-800 text-sm">Consolidé</span>
-                            <span className="text-[10px] bg-gray-200 text-gray-500 px-2 py-0.5 rounded-full font-bold">BIENTÔT</span>
+                            <span className="font-bold text-gray-800 text-sm">MOCA-O Consolidé (.xlsx)</span>
+                            {format === 'consolidated' && <CheckCircle2 className="w-4 h-4 text-[#3bb3a9]" />}
                         </div>
-                        <p className="text-xs text-gray-500">Un seul fichier Excel</p>
+                        <p className="text-xs text-gray-500">Multi-années, format natif client</p>
                     </button>
                 </div>
             </div>

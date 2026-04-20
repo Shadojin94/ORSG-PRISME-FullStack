@@ -805,6 +805,39 @@ except Exception as e:
         return;
     }
 
+    // ========== GENERATE MOCA-O CONSOLIDATED ENDPOINT ==========
+    // POST /generate-mocao-consolidated?theme=comp_mortalite&yearStart=2018&yearEnd=2023&source=moca
+    // Produces a single .xlsx matching client's native MOCA-O format
+    // (sheets COM / REG YYYY / DROM / franENT / FranHEX)
+    if (urlPath === '/generate-mocao-consolidated' && req.method === 'POST') {
+        const theme = url.searchParams.get('theme');
+        const yearStart = parseInt(url.searchParams.get('yearStart') || '0');
+        const yearEnd = parseInt(url.searchParams.get('yearEnd') || '0');
+        const source = url.searchParams.get('source') || 'moca';
+
+        if (!theme || !yearStart || !yearEnd || yearEnd < yearStart) {
+            jsonResponse(res, 400, { success: false, error: 'Paramètres requis: theme, yearStart, yearEnd (yearEnd >= yearStart)' });
+            return;
+        }
+
+        console.log(`\nConsolidated MOCA-O generation: ${theme} ${yearStart}-${yearEnd} (${source})`);
+
+        try {
+            const result = await generateConsolidatedFile(theme, yearStart, yearEnd, source);
+            if (result.success) {
+                logActivity('generate', { source: `mocao_cons_${source}`, theme, yearStart, yearEnd, filename: result.filename });
+                jsonResponse(res, 200, { success: true, filename: result.filename, message: `Consolidated file: ${result.filename}` });
+            } else {
+                logActivity('error', { source: 'mocao_cons', theme, yearStart, yearEnd, error: result.error });
+                jsonResponse(res, 500, { success: false, error: result.error });
+            }
+        } catch (err) {
+            logActivity('error', { source: 'mocao_cons', theme, yearStart, yearEnd, error: err.message });
+            jsonResponse(res, 500, { success: false, error: err.message });
+        }
+        return;
+    }
+
     // ========== DOWNLOAD ENDPOINT ==========
     if (urlPath.startsWith('/download/')) {
         const filename = decodeURIComponent(urlPath.replace('/download/', ''));
@@ -1453,6 +1486,43 @@ function generateOpenDataFile(theme, year) {
         child.on('error', (err) => {
             resolve({ success: false, error: err.message });
         });
+    });
+}
+
+/**
+ * Generate a consolidated multi-year MOCA-O native xlsx
+ * Calls Backend/generate_mocao_consolidated.py
+ */
+function generateConsolidatedFile(theme, yearStart, yearEnd, source) {
+    return new Promise((resolve) => {
+        const scriptPath = path.join(__dirname, 'generate_mocao_consolidated.py');
+        if (!fs.existsSync(scriptPath)) {
+            resolve({ success: false, error: 'generate_mocao_consolidated.py not found' });
+            return;
+        }
+
+        const args = [scriptPath, theme, String(yearStart), String(yearEnd), '--source', source];
+        const child = spawn(PYTHON_EXE, args, { cwd: __dirname });
+
+        let stdout = '';
+        let stderr = '';
+        child.stdout.on('data', (d) => { stdout += d.toString(); });
+        child.stderr.on('data', (d) => {
+            stderr += d.toString();
+            console.log(`   ${d.toString().trim()}`);
+        });
+
+        child.on('close', (code) => {
+            const filename = stdout.trim().split('\n').pop();
+            if (code === 0 && filename && filename.endsWith('.xlsx')) {
+                console.log(`Generated consolidated: ${filename}`);
+                resolve({ success: true, filename });
+            } else {
+                resolve({ success: false, error: stderr || stdout || `Exit ${code}` });
+            }
+        });
+
+        child.on('error', (err) => resolve({ success: false, error: err.message }));
     });
 }
 

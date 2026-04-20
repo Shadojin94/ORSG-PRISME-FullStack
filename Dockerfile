@@ -30,6 +30,7 @@ RUN cd Backend && npm install --production
 COPY Backend/file_server.js ./Backend/
 COPY Backend/prisme_engine.py ./Backend/
 COPY Backend/generate_from_opendata.py ./Backend/
+COPY Backend/generate_mocao_consolidated.py ./Backend/
 COPY Backend/csv_reader.py ./Backend/
 COPY Backend/download_opendata.py ./Backend/
 COPY Backend/download_missing_data.py ./Backend/

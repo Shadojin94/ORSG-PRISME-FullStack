@@ -77,6 +77,7 @@ export function GeneratorPage() {
     const [selectedSubThemeId, setSelectedSubThemeId] = useState<string | null>(saved.selectedSubThemeId || null);
 
     const [year, setYear] = useState<string>(saved.year || "");
+    const [yearEnd, setYearEnd] = useState<string>("");
     const [format, setFormat] = useState<string>(saved.format || "zip");
 
     const [sourceMode, setSourceMode] = useState<'opendata' | 'moca'>(saved.sourceMode || 'opendata');
@@ -141,11 +142,19 @@ export function GeneratorPage() {
     useEffect(() => {
         if (availableYears && availableYears.length > 0) {
             const maxYear = Math.max(...availableYears);
+            const minYear = Math.min(...availableYears);
             setYear(String(maxYear));
+            setYearEnd(String(maxYear));
+            // Default consolidated range = full span
+            if (format === 'consolidated') {
+                setYear(String(minYear));
+                setYearEnd(String(maxYear));
+            }
         } else {
             setYear("");
+            setYearEnd("");
         }
-    }, [availableYears, primaryDatasetId, sourceMode]);
+    }, [availableYears, primaryDatasetId, sourceMode, format]);
 
     const handleSubjectSelect = (themeId: string, subThemeId: string) => {
         setSelectedThemeId(themeId);
@@ -180,9 +189,20 @@ export function GeneratorPage() {
 
                 // Use open data only if this specific dataset supports it
                 const useOpenData = sourceMode === 'opendata' && OPEN_DATA_SUPPORTED_THEMES.includes(ds.id);
-                const result = useOpenData
-                    ? await api.generateOpenData(ds.id, parseInt(year))
-                    : await api.generateExcel(ds.id, parseInt(year));
+
+                let result;
+                if (format === 'consolidated') {
+                    const ys = parseInt(year);
+                    const ye = parseInt(yearEnd || year);
+                    result = await api.generateMocaoConsolidated(
+                        ds.id, Math.min(ys, ye), Math.max(ys, ye),
+                        useOpenData ? 'opendata' : 'moca'
+                    );
+                } else if (useOpenData) {
+                    result = await api.generateOpenData(ds.id, parseInt(year));
+                } else {
+                    result = await api.generateExcel(ds.id, parseInt(year));
+                }
 
                 if (result.success && result.filename) {
                     files.push(result.filename);
@@ -313,6 +333,8 @@ export function GeneratorPage() {
                     {step === 2 && (
                         <Step2_Config
                             year={year}
+                            yearEnd={yearEnd}
+                            onYearEndChange={setYearEnd}
                             availableYears={availableYears.map(String)}
                             yearsLoading={yearsLoading}
                             onYearChange={setYear}

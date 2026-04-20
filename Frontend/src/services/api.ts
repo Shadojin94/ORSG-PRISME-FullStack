@@ -116,6 +116,20 @@ export async function generateOpenData(theme: string, year: number): Promise<{
     return response.json();
 }
 
+// Generate consolidated multi-year MOCA-O native xlsx
+export async function generateMocaoConsolidated(
+    theme: string,
+    yearStart: number,
+    yearEnd: number,
+    source: 'moca' | 'opendata' = 'moca'
+): Promise<{ success: boolean; filename?: string; error?: string; warnings?: string[] }> {
+    const qs = `theme=${theme}&yearStart=${yearStart}&yearEnd=${yearEnd}&source=${source}`;
+    const response = await fetch(`${API_BASE}/api/generate-mocao-consolidated?${qs}`, {
+        method: 'POST'
+    });
+    return response.json();
+}
+
 // Upload CSV/XLSX files to Backend/csv_sources/
 export interface GeoAnalysis {
     filename: string;
