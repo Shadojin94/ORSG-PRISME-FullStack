@@ -1050,8 +1050,8 @@
           "id": "nb_acci",
           "type": "variable",
           "label": "Nombre d'accidents",
-          "csvPattern": "nb_acci",
-          "parser": "external",
+          "csvPattern": "nb_acci_route",
+          "parser": "tabular",
           "source": "BAAC/ONISR"
         },
         {
@@ -1066,8 +1066,8 @@
           "id": "nb_blesses",
           "type": "variable",
           "label": "Nombre de blessés",
-          "csvPattern": "nb_blesses",
-          "parser": "external",
+          "csvPattern": "nb_blesses_route",
+          "parser": "tabular",
           "source": "BAAC/ONISR"
         },
         {
@@ -1082,8 +1082,8 @@
           "id": "nb_morts",
           "type": "variable",
           "label": "Nombre de morts",
-          "csvPattern": "nb_morts",
-          "parser": "external",
+          "csvPattern": "nb_morts_route",
+          "parser": "tabular",
           "source": "BAAC/ONISR"
         },
         {
@@ -1120,8 +1120,8 @@
           "id": "nb_noyades",
           "type": "variable",
           "label": "Nombre de noyades",
-          "csvPattern": "nb_noyades",
-          "parser": "external",
+          "csvPattern": "nb_noyades_guyane",
+          "parser": "tabular",
           "source": "SPF-GEODES"
         },
         {
@@ -1136,8 +1136,8 @@
           "id": "nb_noyades_deces",
           "type": "variable",
           "label": "Nombre de décès par noyade",
-          "csvPattern": "nb_noyades_deces",
-          "parser": "external",
+          "csvPattern": "nb_noyades_deces_guyane",
+          "parser": "tabular",
           "source": "SPF-GEODES"
         },
         {
