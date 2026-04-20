@@ -203,9 +203,9 @@ async function seedUsersIfEmpty(pb) {
         { email: 'naissa.chateau@ors-guyane.org', name: 'Naissa Chateau Remy', role: 'admin', organization: 'ORSG-CTPS', department: 'Direction' },
         { email: 'cedric.atticot@live.fr', name: 'Cedric Atticot', role: 'admin', organization: 'N.O.V.I. Connected', department: 'Developpement' },
         { email: 'marc.ravino@gmail.com', name: 'Cedric Atticot', role: 'admin', organization: 'N.O.V.I. Connected', department: 'Developpement' },
-        { email: 'm-j.castor@ors-guyane.org', name: 'Marie-Josiane Castor', role: 'expert', organization: 'ORSG-CTPS', department: 'Observation' },
-        { email: 'jessy.pajot@ors-guyane.org', name: 'Jessy Pajot', role: 'expert', organization: 'ORSG-CTPS', department: 'Observation' },
-        { email: 'm.imounga-desroziers@ors-guyane.org', name: 'Manuella Imounga-Desroziers', role: 'expert', organization: 'ORSG-CTPS', department: 'Observation' },
+        { email: 'm-j.castor@ors-guyane.org', name: 'Marie-Josiane Castor', role: 'admin', organization: 'ORSG-CTPS', department: 'Observation' },
+        { email: 'jessy.pajot@ors-guyane.org', name: 'Jessy Pajot', role: 'admin', organization: 'ORSG-CTPS', department: 'Observation' },
+        { email: 'm.imounga-desroziers@ors-guyane.org', name: 'Manuella Imounga-Desroziers', role: 'admin', organization: 'ORSG-CTPS', department: 'Observation' },
     ];
 
     for (const u of seedUsers) {
@@ -288,6 +288,37 @@ async function ensurePersonalPasswordsAlways(pb) {
     }
 }
 
+/**
+ * Met a jour le role des utilisateurs existants si necessaire.
+ * Couvre le cas ou les users ont ete crees avec role 'expert' avant la correction.
+ */
+async function ensureUserRoles(pb) {
+    console.log('\n[SETUP] --- Verification roles utilisateurs ---');
+    const expectedRoles = [
+        { email: 'naissa.chateau@ors-guyane.org', role: 'admin' },
+        { email: 'cedric.atticot@live.fr', role: 'admin' },
+        { email: 'marc.ravino@gmail.com', role: 'admin' },
+        { email: 'm-j.castor@ors-guyane.org', role: 'admin' },
+        { email: 'jessy.pajot@ors-guyane.org', role: 'admin' },
+        { email: 'm.imounga-desroziers@ors-guyane.org', role: 'admin' },
+    ];
+    for (const entry of expectedRoles) {
+        try {
+            const users = await pb.collection('users').getFullList({ filter: `email="${entry.email}"` });
+            if (users.length === 0) continue;
+            const user = users[0];
+            if (user.role === entry.role) {
+                console.log(`  = Role deja correct : ${entry.email} (${entry.role})`);
+                continue;
+            }
+            await pb.collection('users').update(user.id, { role: entry.role });
+            console.log(`  + Role mis a jour : ${entry.email} ${user.role} -> ${entry.role}`);
+        } catch (e) {
+            console.error(`  Echec mise a jour role ${entry.email} :`, e.message);
+        }
+    }
+}
+
 async function ensureUsersApiRules(pb) {
     console.log('\n[SETUP] --- Verification regles API users ---');
     try {
@@ -331,6 +362,7 @@ async function main() {
     await ensureSupportTicketsCollection(pb);
     await seedUsersIfEmpty(pb);
     await ensurePersonalPasswordsAlways(pb);
+    await ensureUserRoles(pb);
     await ensureUsersApiRules(pb);
 
     console.log('\n[SETUP] === Setup termine (idempotent) ===\n');

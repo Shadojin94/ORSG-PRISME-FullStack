@@ -1,7 +1,15 @@
 import { useState } from "react";
 import { cn } from "@/lib/utils";
 import { BDI_THEMES } from "@/data/bdi_themes";
-import { ChevronDown, ChevronRight, Database, Upload } from "lucide-react";
+import { ChevronDown, ChevronRight, Database, Upload, Globe, BarChart3 } from "lucide-react";
+
+// Supported Open Data Themes (mirrored from GeneratorPage)
+const OPEN_DATA_SUPPORTED_THEMES = [
+    'educ', 'pers_sup65ans_seules', 'familles_mono', 'pop_inf3ans',
+    'pers_menages', 'types_menages', 'alloc', 'revenu', 'densite',
+    'route', 'mortalite_gen', 'mortalite_cardio', 'mortalite_tumeurs',
+    'mortalite_respi', 'mortalite_neuro', 'mortalite_diabete', 'mortalite_covid'
+];
 
 interface Step1Props {
     onDatasetSelect: (themeId: string, subThemeId: string, datasetId: string, variable: string) => void;
@@ -13,6 +21,7 @@ interface Step1Props {
 
 const isCalculated = (d: any) => d?.tool === "Calcul";
 const isSelectable = (d: any) => !isCalculated(d);
+const isOpenData = (d: any) => OPEN_DATA_SUPPORTED_THEMES.includes(d?.id);
 
 function countReadyDatasets(items: any[]): number {
     let count = 0;
@@ -31,6 +40,26 @@ function countAllDatasets(items: any[]): number {
     for (const item of items) {
         if (item.datasets) count += item.datasets.filter((d: any) => isSelectable(d)).length;
         if (item.subThemes) count += countAllDatasets(item.subThemes);
+    }
+    return count;
+}
+function countOpenDataDatasets(items: any[]): number {
+    let count = 0;
+    for (const item of items) {
+        if (item.datasets) {
+            count += item.datasets.filter((d: any) => isSelectable(d) && isOpenData(d)).length;
+        }
+        if (item.subThemes) count += countOpenDataDatasets(item.subThemes);
+    }
+    return count;
+}
+function countMocaDatasets(items: any[]): number {
+    let count = 0;
+    for (const item of items) {
+        if (item.datasets) {
+            count += item.datasets.filter((d: any) => isSelectable(d) && d.demoReady && !isOpenData(d)).length;
+        }
+        if (item.subThemes) count += countMocaDatasets(item.subThemes);
     }
     return count;
 }
@@ -74,6 +103,7 @@ export function Step1_ThemeSelection({
     const renderDatasetButton = (ds: any, themeId: string, subThemeId: string) => {
         if (isCalculated(ds)) return null;
         const isSelected = selectedDatasetId === ds.id && selectedDatasetVariable === ds.variable;
+        const dsIsOpenData = isOpenData(ds);
         return (
             <button
                 key={`${subThemeId}::${ds.id}::${ds.variable}`}
@@ -92,29 +122,77 @@ export function Step1_ThemeSelection({
             >
                 <span className="flex-1">{ds.label}</span>
                 <span className="flex items-center gap-1.5 shrink-0">
-                    {ds.demoReady ? (
+                    {/* Source tag */}
+                    {ds.source && (
+                        <span className="text-[9px] bg-gray-100 text-gray-500 px-1.5 py-0.5 rounded font-medium hidden sm:inline">
+                            {ds.source.split(",")[0].split("/")[0].trim()}
+                        </span>
+                    )}
+                    {/* Open Data badge */}
+                    {dsIsOpenData && ds.demoReady && (
+                        <span className="text-[10px] bg-blue-50 text-blue-600 px-2 py-0.5 rounded-full font-medium flex items-center gap-1">
+                            <Globe className="w-3 h-3" />
+                            Open Data
+                        </span>
+                    )}
+                    {/* Availability badge */}
+                    {ds.demoReady && !dsIsOpenData ? (
                         <span className="text-[10px] bg-green-100 text-green-700 px-2 py-0.5 rounded-full font-medium flex items-center gap-1">
                             <Database className="w-3 h-3" />
-                            Disponible
+                            MOCA-O
                         </span>
-                    ) : (
+                    ) : !ds.demoReady ? (
                         <span className="text-[10px] bg-amber-100 text-amber-700 px-2 py-0.5 rounded-full font-medium flex items-center gap-1">
                             <Upload className="w-3 h-3" />
                             Import requis
                         </span>
-                    )}
+                    ) : null}
                 </span>
             </button>
         );
     };
 
+    // Global stats
+    const totalReady = countReadyDatasets(BDI_THEMES as any[]);
+    const totalAll = countAllDatasets(BDI_THEMES as any[]);
+    const totalOpenData = countOpenDataDatasets(BDI_THEMES as any[]);
+    const totalMoca = countMocaDatasets(BDI_THEMES as any[]);
+
     return (
         <div className="space-y-4">
             <div className="flex items-center justify-between mb-2">
                 <h2 className="text-2xl font-bold text-[#1a4b8c]">1. Choisissez un indicateur</h2>
-                <span className="text-sm text-gray-400">
-                    {countReadyDatasets(BDI_THEMES as any[])} indicateurs disponibles
-                </span>
+            </div>
+
+            {/* Summary stats bar */}
+            <div className="grid grid-cols-3 gap-3 mb-2">
+                <div className="bg-white rounded-lg border border-gray-200 px-4 py-3 flex items-center gap-3">
+                    <div className="p-2 rounded-lg bg-green-50">
+                        <BarChart3 className="w-4 h-4 text-green-600" />
+                    </div>
+                    <div>
+                        <div className="text-lg font-bold text-gray-800">{totalReady}<span className="text-sm font-normal text-gray-400">/{totalAll}</span></div>
+                        <div className="text-[11px] text-gray-500">Indicateurs disponibles</div>
+                    </div>
+                </div>
+                <div className="bg-white rounded-lg border border-gray-200 px-4 py-3 flex items-center gap-3">
+                    <div className="p-2 rounded-lg bg-blue-50">
+                        <Globe className="w-4 h-4 text-blue-600" />
+                    </div>
+                    <div>
+                        <div className="text-lg font-bold text-blue-600">{totalOpenData}</div>
+                        <div className="text-[11px] text-gray-500">Open Data (INSEE, CepiDc...)</div>
+                    </div>
+                </div>
+                <div className="bg-white rounded-lg border border-gray-200 px-4 py-3 flex items-center gap-3">
+                    <div className="p-2 rounded-lg bg-green-50">
+                        <Database className="w-4 h-4 text-green-600" />
+                    </div>
+                    <div>
+                        <div className="text-lg font-bold text-green-600">{totalMoca}</div>
+                        <div className="text-[11px] text-gray-500">MOCA-O (CSV locaux)</div>
+                    </div>
+                </div>
             </div>
 
             {/* Theme Cards Grid */}
@@ -163,6 +241,8 @@ export function Step1_ThemeSelection({
                                     {theme.subThemes?.map((sub: any) => {
                                         const isSubExpanded = expandedSubThemeId === sub.id;
                                         const hasContent = (sub.datasets && sub.datasets.length > 0) || (sub.subThemes && sub.subThemes.length > 0);
+                                        const subReady = countReadyDatasets([sub]);
+                                        const subTotal = countAllDatasets([sub]);
 
                                         return (
                                             <div key={sub.id} className={cn(
@@ -174,12 +254,26 @@ export function Step1_ThemeSelection({
                                                     className="w-full flex items-center justify-between p-3 text-sm font-semibold text-gray-700 hover:bg-gray-50 transition-colors"
                                                 >
                                                     <span className="flex items-center gap-2">
-                                                        <div className={cn("w-1.5 h-1.5 rounded-full", isSubExpanded ? "bg-[#3bb3a9]" : "bg-gray-300")} />
+                                                        <div className={cn("w-1.5 h-1.5 rounded-full", isSubExpanded ? "bg-[#3bb3a9]" : subReady > 0 ? "bg-green-400" : "bg-gray-300")} />
                                                         {sub.title}
                                                     </span>
-                                                    {hasContent && (
-                                                        <ChevronRight className={cn("w-4 h-4 text-gray-400 transition-transform", isSubExpanded && "rotate-90")} />
-                                                    )}
+                                                    <span className="flex items-center gap-2">
+                                                        {subTotal > 0 && (
+                                                            <span className={cn(
+                                                                "text-[10px] px-2 py-0.5 rounded-full font-medium",
+                                                                subReady === subTotal
+                                                                    ? "bg-green-50 text-green-600"
+                                                                    : subReady > 0
+                                                                        ? "bg-amber-50 text-amber-600"
+                                                                        : "bg-gray-50 text-gray-400"
+                                                            )}>
+                                                                {subReady}/{subTotal} dispo
+                                                            </span>
+                                                        )}
+                                                        {hasContent && (
+                                                            <ChevronRight className={cn("w-4 h-4 text-gray-400 transition-transform", isSubExpanded && "rotate-90")} />
+                                                        )}
+                                                    </span>
                                                 </button>
 
                                                 {isSubExpanded && (

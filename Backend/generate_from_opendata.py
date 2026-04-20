@@ -243,16 +243,39 @@ def _aggregate_levels(df: pd.DataFrame, value_columns, code_col: str = "commune_
     reg_full = pd.DataFrame({"codgeo": REGION_ORDER})
     reg = reg_full.merge(reg, on="codgeo", how="left").fillna(0)
 
-    # DOM / FH / FR
-    dom_sum = reg[reg["codgeo"].isin(DOM_CODES)][value_columns].sum().to_frame().T
+    # Coverage check: how many regions actually have non-zero data?
+    # If coverage is < 50%, aggregated values are misleading (e.g. only Guyane data for BAAC).
+    dom_regions_with_data = (reg[reg["codgeo"].isin(DOM_CODES)][value_columns].sum(axis=1) > 0).sum()
+    fh_regions_with_data = (reg[reg["codgeo"].isin(FH_REGIONS)][value_columns].sum(axis=1) > 0).sum()
+    total_regions_with_data = dom_regions_with_data + fh_regions_with_data
+
+    dom_coverage_ok = dom_regions_with_data >= len(DOM_CODES) * 0.5
+    fh_coverage_ok = fh_regions_with_data >= len(FH_REGIONS) * 0.5
+    fra_coverage_ok = total_regions_with_data >= len(REGION_ORDER) * 0.5
+
+    if not fra_coverage_ok:
+        print(f"  [WARN_DATA] Couverture regionale insuffisante ({total_regions_with_data}/{len(REGION_ORDER)} regions). "
+              "Les niveaux DOM/FH/FRA peuvent etre incomplets ou vides.")
+
+    # DOM / FH / FR — set to NaN if coverage too low
+    if dom_coverage_ok:
+        dom_sum = reg[reg["codgeo"].isin(DOM_CODES)][value_columns].sum().to_frame().T
+    else:
+        dom_sum = pd.DataFrame({c: [float("nan")] for c in value_columns})
     dom_sum["codgeo"] = "DOM"
     dom = dom_sum[["codgeo"] + value_columns]
 
-    fh_sum = reg[reg["codgeo"].isin(FH_REGIONS)][value_columns].sum().to_frame().T
+    if fh_coverage_ok:
+        fh_sum = reg[reg["codgeo"].isin(FH_REGIONS)][value_columns].sum().to_frame().T
+    else:
+        fh_sum = pd.DataFrame({c: [float("nan")] for c in value_columns})
     fh_sum["codgeo"] = "0"
     fh = fh_sum[["codgeo"] + value_columns]
 
-    fra_sum = reg[value_columns].sum().to_frame().T
+    if fra_coverage_ok:
+        fra_sum = reg[value_columns].sum().to_frame().T
+    else:
+        fra_sum = pd.DataFrame({c: [float("nan")] for c in value_columns})
     fra_sum["codgeo"] = "99"
     fra = fra_sum[["codgeo"] + value_columns]
 
@@ -836,16 +859,32 @@ def _build_cepidc_levels(theme: str, year: int):
     reg_full = pd.DataFrame({"codgeo": REGION_ORDER})
     reg = reg_full.merge(reg_df, on="codgeo", how="left").fillna(0)
 
-    # DOM / FH / FRA aggregation
+    # DOM / FH / FRA aggregation — counts are summed, rates use source data when available
     dom_n = reg[reg["codgeo"].isin(DOM_CODES)][var_n].sum()
     fh_n = reg[reg["codgeo"].isin(FH_REGIONS)][var_n].sum()
-    # For taux: use weighted average or France total
-    dom_tx = reg[reg["codgeo"].isin(DOM_CODES)][var_tx].mean()
-    fh_tx = reg[reg["codgeo"].isin(FH_REGIONS)][var_tx].mean()
 
-    dom = pd.DataFrame({"codgeo": ["DOM"], var_n: [dom_n], var_tx: [round(dom_tx, 1)]})
-    fh = pd.DataFrame({"codgeo": ["0"], var_n: [fh_n], var_tx: [round(fh_tx, 1)]})
-    fra = pd.DataFrame({"codgeo": ["99"], var_n: [france_n if france_n else dom_n + fh_n], var_tx: [round(france_tx if france_tx else (dom_tx + fh_tx) / 2, 1)]})
+    # Rates: unweighted mean is statistically incorrect (regions have different populations).
+    # Use France-level source values when available; otherwise mark as NaN rather than fake it.
+    if france_tx:
+        # Source provides a France-level rate — use it for FRA directly
+        fra_tx_val = round(france_tx, 1)
+        # For DOM/FH sub-aggregates, we don't have source values and no population data
+        # to weight properly, so mark as NaN (approximate) with a warning
+        dom_tx_val = float("nan")
+        fh_tx_val = float("nan")
+        print(f"  [WARN_DATA] CepiDc: taux DOM/FH non disponibles dans la source "
+              f"(moyenne non ponderee exclue). Taux France utilise depuis la source.")
+    else:
+        # No France-level rate in source — cannot compute reliably
+        dom_tx_val = float("nan")
+        fh_tx_val = float("nan")
+        fra_tx_val = float("nan")
+        print(f"  [WARN_DATA] CepiDc: aucun taux France disponible dans la source. "
+              f"Les taux agreges DOM/FH/FRA sont laisses vides (pas de population pour ponderer).")
+
+    dom = pd.DataFrame({"codgeo": ["DOM"], var_n: [dom_n], var_tx: [dom_tx_val]})
+    fh = pd.DataFrame({"codgeo": ["0"], var_n: [fh_n], var_tx: [fh_tx_val]})
+    fra = pd.DataFrame({"codgeo": ["99"], var_n: [france_n if france_n else dom_n + fh_n], var_tx: [fra_tx_val]})
 
     # Communes Guyane: CepiDc data is regional only
     # - effectifs (nb_deces): not available at commune level -> leave empty (NaN)
@@ -991,13 +1030,32 @@ def _build_odisse_consommation_levels(year: int, kind: str):
         out_var: [gy_tx] * len(COMMUNES_GUYANE),
     })
 
-    dom_tx = reg[reg["codgeo"].isin(DOM_CODES)][out_var].mean()
-    fh_tx = reg[reg["codgeo"].isin(FH_REGIONS)][out_var].mean()
-    fra_tx = reg[out_var].mean()
+    # Rates (prevalence): unweighted mean across regions is statistically incorrect
+    # (regions have very different population sizes). Without population data to weight,
+    # we leave aggregated rates as NaN rather than produce misleading values.
+    dom_regions_with_data = (reg[reg["codgeo"].isin(DOM_CODES)][out_var] > 0).sum()
+    fh_regions_with_data = (reg[reg["codgeo"].isin(FH_REGIONS)][out_var] > 0).sum()
 
-    dom = pd.DataFrame({"codgeo": ["DOM"], out_var: [round(dom_tx, 2)]})
-    fh = pd.DataFrame({"codgeo": ["0"], out_var: [round(fh_tx, 2)]})
-    fra = pd.DataFrame({"codgeo": ["99"], out_var: [round(fra_tx, 2)]})
+    if dom_regions_with_data >= len(DOM_CODES) * 0.5:
+        dom_tx = round(reg[reg["codgeo"].isin(DOM_CODES)][out_var].mean(), 2)
+    else:
+        dom_tx = float("nan")
+    if fh_regions_with_data >= len(FH_REGIONS) * 0.5:
+        fh_tx = round(reg[reg["codgeo"].isin(FH_REGIONS)][out_var].mean(), 2)
+    else:
+        fh_tx = float("nan")
+
+    # FRA: only compute if both DOM and FH have sufficient coverage
+    if dom_regions_with_data >= len(DOM_CODES) * 0.5 and fh_regions_with_data >= len(FH_REGIONS) * 0.5:
+        fra_tx = round(reg[out_var].mean(), 2)
+    else:
+        fra_tx = float("nan")
+        print(f"  [WARN_DATA] Odisse {kind}: couverture regionale insuffisante pour agreger DOM/FH/FRA. "
+              f"Taux agreges laisses vides (moyenne non ponderee exclue).")
+
+    dom = pd.DataFrame({"codgeo": ["DOM"], out_var: [dom_tx]})
+    fh = pd.DataFrame({"codgeo": ["0"], out_var: [fh_tx]})
+    fra = pd.DataFrame({"codgeo": ["99"], out_var: [fra_tx]})
 
     return _add_year({"com": com, "reg": reg, "dom": dom, "fh": fh, "fra": fra}, year)
 
@@ -1161,6 +1219,14 @@ def _generate_excel_and_zip(theme: str, year: int, all_levels, guyane_only: bool
         if guyane_only and geo_key in ("fh", "fra"):
             _add_note_to_sheet(ws, df, BAAC_GUYANE_NOTE)
 
+        # CepiDc / Odisse rate annotation for DOM/FH/FRA: rates may be NaN (no population weighting)
+        if geo_key in ("dom", "fh", "fra") and cfg.get("source_type") in ("cepidc", "odisse_alcool", "odisse_tabac"):
+            _add_note_to_sheet(ws, df,
+                "NOTE: Les taux agreges (DOM/FH/FRA) ne sont pas disponibles dans la source. "
+                "Une moyenne non ponderee serait statistiquement incorrecte (populations regionales differentes). "
+                "Les cellules de taux vides correspondent a cette limitation.",
+                note_color="0000FF")
+
         wb.save(folder / f"{excel_name}.xlsx")
 
     wb_cons = Workbook()
@@ -1196,6 +1262,14 @@ def _generate_excel_and_zip(theme: str, year: int, all_levels, guyane_only: bool
         # BAAC Guyane-only annotation in FH and FRA sheets of consolidated
         if guyane_only and geo_key in ("fh", "fra"):
             _add_note_to_sheet(ws, df, BAAC_GUYANE_NOTE)
+
+        # CepiDc / Odisse rate annotation for DOM/FH/FRA in consolidated
+        if geo_key in ("dom", "fh", "fra") and cfg.get("source_type") in ("cepidc", "odisse_alcool", "odisse_tabac"):
+            _add_note_to_sheet(ws, df,
+                "NOTE: Les taux agreges (DOM/FH/FRA) ne sont pas disponibles dans la source. "
+                "Une moyenne non ponderee serait statistiquement incorrecte (populations regionales differentes). "
+                "Les cellules de taux vides correspondent a cette limitation.",
+                note_color="0000FF")
 
     wb_cons.save(root_dir / f"{excel_name}_consolidated_{year}.xlsx")
     zip_path = shutil.make_archive(str(OUTPUT_DIR / f"{theme}_opendata_{year}"), "zip", str(OUTPUT_DIR / f"{theme}_opendata"), str(year))

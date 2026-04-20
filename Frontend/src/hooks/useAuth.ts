@@ -39,19 +39,17 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     // On mount: check if auth is still valid
     useEffect(() => {
         async function init() {
-            if (pb.authStore.isValid) {
-                const token = pb.authStore.token;
-                // Dev token bypass — don't try to refresh against PocketBase
-                if (token && token.startsWith('dev_token_')) {
+            const token = pb.authStore.token;
+            // Dev token bypass — don't try to refresh against PocketBase
+            if (token && token.startsWith('dev_token_')) {
+                syncUser();
+            } else if (pb.authStore.isValid) {
+                try {
+                    await pb.collection('users').authRefresh();
                     syncUser();
-                } else {
-                    try {
-                        await pb.collection('users').authRefresh();
-                        syncUser();
-                    } catch {
-                        pb.authStore.clear();
-                        setUser(null);
-                    }
+                } catch {
+                    pb.authStore.clear();
+                    setUser(null);
                 }
             }
             setLoading(false);
@@ -180,7 +178,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
     const value: AuthContextType = {
         user,
-        isAuthenticated: !!user && pb.authStore.isValid,
+        isAuthenticated: !!user && (pb.authStore.isValid || (pb.authStore.token || '').startsWith('dev_token_')),
         isAdmin: checkAdmin(),
         loading,
         checkEmail,

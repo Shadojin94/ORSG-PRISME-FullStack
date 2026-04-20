@@ -23,6 +23,30 @@ function countUniqueSources(): number {
 
 const UNIQUE_SOURCES_COUNT = countUniqueSources()
 
+// Count datasets ready (demoReady) for a theme
+function countThemeReady(theme: any): number {
+    let count = 0
+    const walk = (items: any[]) => {
+        for (const item of items) {
+            if (item.datasets) count += item.datasets.filter((d: any) => d.demoReady).length
+            if (item.subThemes) walk(item.subThemes)
+        }
+    }
+    walk(theme.subThemes || [])
+    return count
+}
+function countThemeTotal(theme: any): number {
+    let count = 0
+    const walk = (items: any[]) => {
+        for (const item of items) {
+            if (item.datasets) count += item.datasets.length
+            if (item.subThemes) walk(item.subThemes)
+        }
+    }
+    walk(theme.subThemes || [])
+    return count
+}
+
 export function DocsPage() {
     const [activeThemeId, setActiveThemeId] = useState(BDI_THEMES[0].id)
     const [expandedSubThemes, setExpandedSubThemes] = useState<string[]>([])
@@ -97,7 +121,11 @@ export function DocsPage() {
 
     const totalDatasets = activeTheme?.subThemes?.reduce((acc, st) => acc + st.datasets.length, 0) || 0
 
-    // Availability badge renderer
+    // Availability badge renderer — consistent color coding:
+    // green = fully available (MOCA CSV ready)
+    // blue = Open Data source available
+    // amber = partial (some CSV missing)
+    // gray = not configured
     const renderAvailability = (dsId: string, ds: any) => {
         const avail = availability[dsId]
         if (loadingAvail && !avail) {
@@ -112,26 +140,26 @@ export function DocsPage() {
         if (ds.demoReady) {
             if (avail && avail.available) {
                 return (
-                    <div className="flex items-center justify-center gap-1.5">
-                        <div className="w-2 h-2 rounded-full bg-green-500" />
-                        <span className="text-xs text-green-600 font-medium">MOCA + Config</span>
-                    </div>
+                    <span className="inline-flex items-center gap-1.5 text-xs font-medium px-2.5 py-1 rounded-full bg-green-50 text-green-700 border border-green-200">
+                        <span className="w-2 h-2 rounded-full bg-green-500" />
+                        MOCA + Config
+                    </span>
                 )
             }
             if (avail && avail.foundCount > 0) {
                 return (
-                    <div className="flex items-center justify-center gap-1.5">
-                        <div className="w-2 h-2 rounded-full bg-amber-400" />
-                        <span className="text-xs text-amber-600 font-medium">{avail.foundCount}/{avail.totalCount} CSV</span>
-                    </div>
+                    <span className="inline-flex items-center gap-1.5 text-xs font-medium px-2.5 py-1 rounded-full bg-amber-50 text-amber-700 border border-amber-200">
+                        <span className="w-2 h-2 rounded-full bg-amber-400" />
+                        {avail.foundCount}/{avail.totalCount} CSV
+                    </span>
                 )
             }
             // demoReady but no MOCA CSV - likely Open Data only
             return (
-                <div className="flex items-center justify-center gap-1.5">
-                    <div className="w-2 h-2 rounded-full bg-blue-500" />
-                    <span className="text-xs text-blue-600 font-medium">Open Data</span>
-                </div>
+                <span className="inline-flex items-center gap-1.5 text-xs font-medium px-2.5 py-1 rounded-full bg-blue-50 text-blue-700 border border-blue-200">
+                    <span className="w-2 h-2 rounded-full bg-blue-500" />
+                    Open Data
+                </span>
             )
         }
 
@@ -139,26 +167,26 @@ export function DocsPage() {
         if (avail && avail.totalCount > 0) {
             if (avail.available) {
                 return (
-                    <div className="flex items-center justify-center gap-1.5">
-                        <div className="w-2 h-2 rounded-full bg-green-500" />
-                        <span className="text-xs text-green-600 font-medium">Disponible</span>
-                    </div>
+                    <span className="inline-flex items-center gap-1.5 text-xs font-medium px-2.5 py-1 rounded-full bg-green-50 text-green-700 border border-green-200">
+                        <span className="w-2 h-2 rounded-full bg-green-500" />
+                        Disponible
+                    </span>
                 )
             }
             return (
-                <div className="flex items-center justify-center gap-1.5">
-                    <div className="w-2 h-2 rounded-full bg-amber-400" />
-                    <span className="text-xs text-amber-600 font-medium">Partiel</span>
-                </div>
+                <span className="inline-flex items-center gap-1.5 text-xs font-medium px-2.5 py-1 rounded-full bg-amber-50 text-amber-700 border border-amber-200">
+                    <span className="w-2 h-2 rounded-full bg-amber-400" />
+                    Partiel
+                </span>
             )
         }
 
         // No config at all
         return (
-            <div className="flex items-center justify-center gap-1.5">
-                <div className="w-2 h-2 rounded-full bg-gray-300" />
-                <span className="text-xs text-gray-400 font-medium">Non configuré</span>
-            </div>
+            <span className="inline-flex items-center gap-1.5 text-xs font-medium px-2.5 py-1 rounded-full bg-gray-50 text-gray-400 border border-gray-200">
+                <span className="w-2 h-2 rounded-full bg-gray-300" />
+                Non configuré
+            </span>
         )
     }
 
@@ -205,7 +233,10 @@ export function DocsPage() {
                     <div className="px-3 py-2 text-xs font-bold text-gray-500 uppercase tracking-wider">
                         Thématiques BDI
                     </div>
-                    {BDI_THEMES.map((theme) => (
+                    {BDI_THEMES.map((theme) => {
+                        const tReady = countThemeReady(theme)
+                        const tTotal = countThemeTotal(theme)
+                        return (
                         <button
                             key={theme.id}
                             onClick={() => {
@@ -223,12 +254,23 @@ export function DocsPage() {
                             <theme.icon className={cn("w-5 h-5", activeThemeId === theme.id ? "text-[#3bb3a9]" : "text-gray-400")} />
                             <div className="flex-1 min-w-0">
                                 <span className="text-sm block truncate">{theme.shortTitle}</span>
-                                <span className="text-[10px] text-gray-400">
+                                <span className="text-[10px] text-gray-400 flex items-center gap-2">
                                     {theme.subThemes?.length || 0} sous-thèmes
+                                    <span className={cn(
+                                        "px-1.5 py-0.5 rounded-full font-medium",
+                                        tReady === tTotal && tReady > 0
+                                            ? "bg-green-50 text-green-600"
+                                            : tReady > 0
+                                                ? "bg-amber-50 text-amber-600"
+                                                : "bg-gray-50 text-gray-400"
+                                    )}>
+                                        {tReady}/{tTotal}
+                                    </span>
                                 </span>
                             </div>
                         </button>
-                    ))}
+                        )
+                    })}
                 </div>
 
                 {/* Content Area */}
@@ -272,7 +314,10 @@ export function DocsPage() {
 
                         {/* Sub-themes and Datasets */}
                         <div className="p-4 space-y-3">
-                            {filteredSubThemes?.map((subTheme) => (
+                            {filteredSubThemes?.map((subTheme) => {
+                                const stReady = subTheme.datasets.filter((d: any) => d.demoReady).length
+                                const stTotal = subTheme.datasets.length
+                                return (
                                 <div key={subTheme.id} className="border border-gray-200 rounded-lg overflow-hidden">
                                     {/* Sub-theme Header */}
                                     <button
@@ -283,14 +328,26 @@ export function DocsPage() {
                                             <Database className="w-5 h-5 text-[#3bb3a9]" />
                                             <div className="text-left">
                                                 <h3 className="font-bold text-gray-800">{subTheme.title}</h3>
-                                                <p className="text-xs text-gray-500">{subTheme.datasets.length} indicateurs</p>
+                                                <p className="text-xs text-gray-500">{stTotal} indicateurs</p>
                                             </div>
                                         </div>
-                                        {expandedSubThemes.includes(subTheme.id) ? (
-                                            <ChevronDown className="w-5 h-5 text-gray-400" />
-                                        ) : (
-                                            <ChevronRight className="w-5 h-5 text-gray-400" />
-                                        )}
+                                        <div className="flex items-center gap-3">
+                                            <span className={cn(
+                                                "text-[10px] px-2 py-0.5 rounded-full font-medium",
+                                                stReady === stTotal && stReady > 0
+                                                    ? "bg-green-50 text-green-600 border border-green-200"
+                                                    : stReady > 0
+                                                        ? "bg-amber-50 text-amber-600 border border-amber-200"
+                                                        : "bg-gray-50 text-gray-400 border border-gray-200"
+                                            )}>
+                                                {stReady}/{stTotal} dispo
+                                            </span>
+                                            {expandedSubThemes.includes(subTheme.id) ? (
+                                                <ChevronDown className="w-5 h-5 text-gray-400" />
+                                            ) : (
+                                                <ChevronRight className="w-5 h-5 text-gray-400" />
+                                            )}
+                                        </div>
                                     </button>
 
                                     {/* Datasets Table */}
@@ -340,7 +397,7 @@ export function DocsPage() {
                                         </div>
                                     )}
                                 </div>
-                            ))}
+                            )})}
 
                             {/* Empty state for search */}
                             {filteredSubThemes?.length === 0 && searchTerm && (
