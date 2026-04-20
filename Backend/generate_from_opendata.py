@@ -18,6 +18,8 @@ import pandas as pd
 from openpyxl import Workbook
 from openpyxl.styles import PatternFill, Font
 
+from csv_reader import read_csv_safe, log_read, normalize_geo_code
+
 
 BASE_DIR = Path(__file__).parent
 INPUTS_DIR = BASE_DIR / "inputs" / "opendata"
@@ -188,13 +190,10 @@ THEME_CONFIGS = {
 
 
 def _read_csv_auto(path: Path, dtype=None) -> pd.DataFrame:
-    last_error = None
-    for sep in (";", ","):
-        try:
-            return pd.read_csv(path, sep=sep, dtype=dtype, low_memory=False)
-        except Exception as exc:
-            last_error = exc
-    raise RuntimeError(f"Impossible de lire {path}: {last_error}")
+    """Lecture robuste : encoding + séparateur auto-détectés, NA normalisés."""
+    df, meta = read_csv_safe(path, dtype=dtype)
+    log_read(meta)
+    return df
 
 
 def _safe_numeric(df: pd.DataFrame, candidates) -> pd.Series:
@@ -909,16 +908,10 @@ ODISSE_DIR = INPUTS_DIR / "cepidc" / "mortalite_causes_comportementales"
 
 
 def _read_odisse(path: Path) -> pd.DataFrame:
-    """Odissé CSVs: try utf-8-sig then latin-1, semicolon-separated."""
-    for enc in ("utf-8-sig", "utf-8", "latin-1"):
-        try:
-            df = pd.read_csv(path, sep=";", encoding=enc, low_memory=False)
-            # Heuristique : si plus d'une colonne, encoding OK
-            if len(df.columns) > 1:
-                return df
-        except Exception:
-            continue
-    return pd.read_csv(path, sep=";", encoding="latin-1", low_memory=False)
+    """Odissé/MOCA-O CSVs : encoding + séparateur auto, NA normalisés, BOM strip."""
+    df, meta = read_csv_safe(path)
+    log_read(meta)
+    return df
 
 
 def _find_col(df: pd.DataFrame, *needles) -> str:
@@ -1002,7 +995,8 @@ def _build_odisse_consommation_levels(year: int, kind: str):
 
     df = df[df[yr_col] == year].copy()
     if df.empty:
-        available = sorted(pd.read_csv(path, sep=";", encoding="latin-1")[yr_col].dropna().unique().tolist())
+        df_all, _ = read_csv_safe(path)
+        available = sorted(df_all[yr_col].dropna().unique().tolist())
         raise ValueError(f"Aucune donnée {kind} pour {year}. Années dispo: {available}")
 
     # Prendre "Hommes et Femmes" en priorité, sinon moyenne H+F
@@ -1068,12 +1062,15 @@ def _build_spf_noyades_levels(year: int):
     full_path = noyades_dir / "noyades_departement_2003_2024.csv"
     legacy_path = noyades_dir / "noyades_departement_2003_2021.csv"
     if full_path.exists():
-        df = pd.read_csv(full_path, sep=";", encoding="utf-8-sig")
+        df, meta = read_csv_safe(full_path)
+        log_read(meta)
     elif legacy_path.exists():
         # Agrège tous les CSV du dossier (legacy + extensions éventuelles).
         frames = []
         for p in sorted(noyades_dir.glob("noyades_departement_*.csv")):
-            frames.append(pd.read_csv(p, sep=";", encoding="utf-8-sig"))
+            sub_df, sub_meta = read_csv_safe(p)
+            log_read(sub_meta)
+            frames.append(sub_df)
         if not frames:
             raise FileNotFoundError(f"Source noyades manquante dans {noyades_dir}")
         df = pd.concat(frames, ignore_index=True)

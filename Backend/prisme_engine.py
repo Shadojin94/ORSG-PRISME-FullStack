@@ -46,6 +46,67 @@ def _read_lines_autoenc(filepath):
         lines = f.readlines()
     return lines, 'latin-1 (fallback)'
 
+
+# ============================================================================
+# HELPERS MOCA-O : séparateur, NA, BOM
+# ============================================================================
+
+# Valeurs à interpréter comme manquantes dans les CSV MOCA-O
+_MOCA_NA_SET = frozenset({
+    '', ' ', 'NA', 'N/A', 'n/a', 'na', 'ND', 'nd', 'N.D.', 'n.d.',
+    '.', '-', '–', '—', 'null', 'NULL', 'None', '#N/A',
+})
+
+
+def _is_na_value(v) -> bool:
+    """Retourne True si la valeur brute doit être traitée comme NaN."""
+    if v is None:
+        return True
+    return str(v).strip() in _MOCA_NA_SET
+
+
+def _clean_bom(s: str) -> str:
+    """Retire le BOM \\ufeff en début de chaîne (apparaît sur parts[0] même après utf-8-sig si double encodage)."""
+    if s and s.startswith('\ufeff'):
+        return s.lstrip('\ufeff')
+    return s
+
+
+def _detect_separator(lines) -> str:
+    """Détecte le séparateur dominant parmi ;, tab, |, , sur la 1ère ligne non vide.
+
+    Défaut MOCA-O = ';'. On ne descend sur ',' que si la ligne contient clairement
+    plus de virgules que de points-virgules.
+    """
+    for line in lines[:5]:
+        line = _clean_bom(line).strip()
+        if not line:
+            continue
+        counts = {sep: line.count(sep) for sep in (';', '\t', '|', ',')}
+        best = max(counts, key=counts.get)
+        if counts[best] >= 1:
+            # Garde ';' par défaut si ex-aequo ou si ';' >= 1 et ',' proche (FR decimal)
+            if counts[';'] >= 1 and counts[';'] >= counts[','] - 1:
+                return ';'
+            return best
+        return ';'
+    return ';'
+
+
+def _parse_float_fr(raw) -> float:
+    """Parse un float tolérant : virgule décimale FR, espace millier, NA normalisé.
+
+    Retourne float('nan') si la valeur n'est pas numérique ou est NA.
+    """
+    if _is_na_value(raw):
+        return float('nan')
+    s = str(raw).replace(',', '.').replace(' ', '').replace('\xa0', '')
+    try:
+        return float(s)
+    except ValueError:
+        return float('nan')
+
+
 # ============================================================================
 # CONFIGURATION & PATHS
 # ============================================================================
@@ -200,37 +261,38 @@ def parse_moca_legacy_csv(filepath):
 
     try:
         lines, enc = _read_lines_autoenc(filepath)
-        print(f"  [ENC] {Path(filepath).name} -> {enc}")
+        sep = _detect_separator(lines)
+        print(f"  [ENC] {Path(filepath).name} -> {enc} sep={sep!r}")
     except Exception as e:
         print(f"Erreur lecture {filepath}: {e}")
         return {k: pd.DataFrame(columns=['annee', 'codgeo', 'valeur']) for k in result}
 
-    for line in lines:
+    for idx, line in enumerate(lines):
+        if idx == 0:
+            line = _clean_bom(line)
         if not line.strip():
             continue
-        
-        parts = line.strip().split(';')
+
+        parts = line.strip().split(sep)
         if len(parts) < 3:
             continue
-        
+
         try:
-            annee = int(parts[0])
+            annee = int(_clean_bom(parts[0]).strip())
             if not (2000 <= annee <= 2030):
                 continue
-        except:
+        except (ValueError, TypeError):
             continue
-        
-        valeur = None
+
+        valeur = float('nan')
         for p in reversed(parts):
-            try:
-                valeur = float(p.replace(',', '.'))
+            v = _parse_float_fr(p)
+            if v == v:  # not NaN
+                valeur = v
                 break
-            except:
-                continue
-        
-        if valeur is None:
+        if valeur != valeur:  # NaN
             continue
-        
+
         line_lower = line.lower()
         
         match_com = re.search(r'(973\d{2})', line)
@@ -278,31 +340,33 @@ def parse_long_format_csv(filepath):
 
     try:
         lines, enc = _read_lines_autoenc(filepath)
-        print(f"  [ENC] {Path(filepath).name} -> {enc}")
+        sep = _detect_separator(lines)
+        print(f"  [ENC] {Path(filepath).name} -> {enc} sep={sep!r}")
     except Exception as e:
         print(f"Erreur lecture {filepath}: {e}")
         return {k: pd.DataFrame(columns=['annee', 'codgeo', 'valeur']) for k in result}
 
-    for line in lines:
+    for idx, line in enumerate(lines):
+        if idx == 0:
+            line = _clean_bom(line)
         if not line.strip():
             continue
-        
-        parts = line.strip().split(';')
+
+        parts = line.strip().split(sep)
         if len(parts) < 3:
-            continue
-            
-        try:
-            annee = int(parts[0])
-            if not (2000 <= annee <= 2030):
-                continue
-        except:
             continue
 
         try:
-            valeur = float(parts[-1].replace(',', '.'))
-        except:
+            annee = int(_clean_bom(parts[0]).strip())
+            if not (2000 <= annee <= 2030):
+                continue
+        except (ValueError, TypeError):
             continue
-            
+
+        valeur = _parse_float_fr(parts[-1])
+        if valeur != valeur:  # NaN
+            continue
+
         geo_str = parts[-2].strip()
         geo_lower = geo_str.lower()
         
@@ -352,7 +416,8 @@ def parse_tabular_csv(filepath, value_column=2, year_column=0, geo_column=1, dim
 
     try:
         lines, enc = _read_lines_autoenc(filepath)
-        print(f"  [ENC] {Path(filepath).name} -> {enc}")
+        sep = _detect_separator(lines)
+        print(f"  [ENC] {Path(filepath).name} -> {enc} sep={sep!r}")
     except Exception as e:
         print(f"Erreur lecture {filepath}: {e}")
         return {k: pd.DataFrame(columns=['annee', 'codgeo', 'valeur']) for k in result}
@@ -361,14 +426,18 @@ def parse_tabular_csv(filepath, value_column=2, year_column=0, geo_column=1, dim
     if dimension_column:
         max_col = max(max_col, dimension_column)
 
+    # Strip BOM de la 1ère ligne (header) pour que les futures lectures soient cohérentes
+    if lines:
+        lines[0] = _clean_bom(lines[0])
+
     for line in lines[1:]:  # Skip header
         if not line.strip():
             continue
 
-        parts = line.strip().split(';')
+        parts = line.strip().split(sep)
         if len(parts) <= max_col:
             continue
-        
+
         # Extract dim
         dim_val = None
         if dimension_column:
@@ -382,9 +451,8 @@ def parse_tabular_csv(filepath, value_column=2, year_column=0, geo_column=1, dim
         if not (2000 <= annee <= 2030):
             continue
 
-        try:
-            valeur = float(parts[value_column].replace(',', '.'))
-        except:
+        valeur = _parse_float_fr(parts[value_column])
+        if valeur != valeur:  # NaN
             continue
             
         geo_str = parts[geo_column].strip()
@@ -454,15 +522,15 @@ def parse_moca_csv(filepath, year_column=3, geo_column=5, value_column=6, dimens
 
     try:
         lines, enc = _read_lines_autoenc(filepath)
-        print(f"  [ENC] {Path(filepath).name} -> {enc}")
+        sep = _detect_separator(lines)
+        print(f"  [ENC] {Path(filepath).name} -> {enc} sep={sep!r}")
     except Exception as e:
         print(f"Erreur lecture {filepath}: {e}")
         return {k: pd.DataFrame(columns=['annee', 'codgeo', 'valeur']) for k in result}
-    
-    # Determine split char (auto-detect roughly)
-    sep = ';'
-    if lines and ',' in lines[0] and ';' not in lines[0]:
-        sep = ','
+
+    # Strip BOM de la 1ère ligne
+    if lines:
+        lines[0] = _clean_bom(lines[0])
 
     for line in lines:
         if not line.strip():
@@ -473,7 +541,7 @@ def parse_moca_csv(filepath, year_column=3, geo_column=5, value_column=6, dimens
         max_idx = max(year_column, geo_column, value_column)
         if dimension_column is not None:
             max_idx = max(max_idx, dimension_column)
-        
+
         if len(parts) <= max_idx:
             continue
 
@@ -485,15 +553,14 @@ def parse_moca_csv(filepath, year_column=3, geo_column=5, value_column=6, dimens
         if not (2000 <= annee <= 2030):
             continue
 
-        # Extract value
-        try:
-            val_str = parts[value_column].replace(',', '.').replace(' ', '') # Handle space thousands sep
-            if val_str == '' or val_str.lower() == 'nd':
-                valeur = 0.0
-            else:
-                valeur = float(val_str)
-        except:
-            continue
+        # Extract value (NA => 0.0 pour rester compatible avec l'ancien comportement MOCA-O)
+        raw_val = parts[value_column]
+        if _is_na_value(raw_val):
+            valeur = 0.0
+        else:
+            valeur = _parse_float_fr(raw_val)
+            if valeur != valeur:  # NaN => ligne ignorée
+                continue
             
         # Extract dimension if needed
         dim_val = None
@@ -570,14 +637,15 @@ def parse_moca_filter_csv(filepath, filter_column, filter_value, year_column=3, 
 
     try:
         lines, enc = _read_lines_autoenc(filepath)
-        print(f"  [ENC] {Path(filepath).name} -> {enc}")
+        sep = _detect_separator(lines)
+        print(f"  [ENC] {Path(filepath).name} -> {enc} sep={sep!r}")
     except Exception as e:
         print(f"Erreur lecture {filepath}: {e}")
         return {k: pd.DataFrame(columns=['annee', 'codgeo', 'valeur']) for k in result}
-    
-    sep = ';'
-    if lines and ',' in lines[0] and ';' not in lines[0]:
-        sep = ','
+
+    # Strip BOM de la 1ère ligne
+    if lines:
+        lines[0] = _clean_bom(lines[0])
 
     max_col = max(filter_column, year_column, geo_column, value_column)
     if dimension_column is not None:
@@ -597,24 +665,21 @@ def parse_moca_filter_csv(filepath, filter_column, filter_value, year_column=3, 
             continue
 
         # Extract year
-        try:
-            year_match = re.search(r'(\d{4})', parts[year_column])
-            if not year_match: continue
-            annee = int(year_match.group(1))
-            if not (2000 <= annee <= 2030):
-                continue
-        except:
+        year_match = re.search(r'(\d{4})', parts[year_column])
+        if not year_match:
+            continue
+        annee = int(year_match.group(1))
+        if not (2000 <= annee <= 2030):
             continue
 
-        # Extract value
-        try:
-             val_str = parts[value_column].replace(',', '.').replace(' ', '')
-             if val_str == '' or val_str.lower() == 'nd':
-                 valeur = 0.0
-             else:
-                 valeur = float(val_str)
-        except:
-            continue
+        # Extract value (NA => 0.0 pour compat historique)
+        raw_val = parts[value_column]
+        if _is_na_value(raw_val):
+            valeur = 0.0
+        else:
+            valeur = _parse_float_fr(raw_val)
+            if valeur != valeur:
+                continue
             
         # Extract dimension
         dim_val = None
