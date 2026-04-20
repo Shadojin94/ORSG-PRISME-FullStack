@@ -1,6 +1,7 @@
 import { useState } from "react"
 import { Sidebar } from "./Sidebar"
 import { Menu } from "lucide-react"
+import { BackendHealthBanner } from "@/components/BackendHealthBanner"
 
 interface AppLayoutProps {
     children: React.ReactNode
@@ -33,6 +34,7 @@ export function AppLayout({ children }: AppLayoutProps) {
             )}
 
             <main className="md:ml-64 min-h-screen transition-all duration-300 relative pt-16 md:pt-0">
+                <BackendHealthBanner />
                 {children}
             </main>
         </div>
