@@ -261,81 +261,6 @@ function jsonResponse(res, statusCode, data) {
     res.end(JSON.stringify(data));
 }
 
-function bytesToHuman(bytes) {
-    if (!Number.isFinite(bytes) || bytes <= 0) return '0 KB';
-    if (bytes >= 1024 * 1024 * 1024) return `${(bytes / (1024 * 1024 * 1024)).toFixed(1)} GB`;
-    if (bytes >= 1024 * 1024) return `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
-    return `${Math.max(1, Math.round(bytes / 1024))} KB`;
-}
-
-function summarizeDirectory(label, dir) {
-    const summary = {
-        label,
-        path: dir,
-        exists: fs.existsSync(dir),
-        writable: false,
-        file_count: 0,
-        total_bytes: 0,
-        total_size: '0 KB',
-        latest_modified: null,
-    };
-
-    if (!summary.exists) return summary;
-
-    try {
-        fs.accessSync(dir, fs.constants.W_OK);
-        summary.writable = true;
-    } catch (_e) {
-        summary.writable = false;
-    }
-
-    const walk = (currentDir) => {
-        for (const entry of fs.readdirSync(currentDir, { withFileTypes: true })) {
-            const entryPath = path.join(currentDir, entry.name);
-            if (entry.isDirectory()) {
-                walk(entryPath);
-            } else if (entry.isFile()) {
-                const stat = fs.statSync(entryPath);
-                summary.file_count += 1;
-                summary.total_bytes += stat.size;
-                if (!summary.latest_modified || stat.mtime > new Date(summary.latest_modified)) {
-                    summary.latest_modified = stat.mtime.toISOString();
-                }
-            }
-        }
-    };
-
-    try {
-        walk(dir);
-        summary.total_size = bytesToHuman(summary.total_bytes);
-    } catch (e) {
-        summary.error = e.message;
-    }
-
-    return summary;
-}
-
-async function getPocketBaseHealth() {
-    return new Promise((resolve) => {
-        const started = Date.now();
-        const req = http.get(`${PB_URL}/api/health`, { timeout: 3000 }, (resp) => {
-            let body = '';
-            resp.on('data', c => body += c);
-            resp.on('end', () => resolve({
-                status: resp.statusCode === 200 ? 'ok' : 'degraded',
-                status_code: resp.statusCode,
-                latency_ms: Date.now() - started,
-                body: body.slice(0, 200),
-            }));
-        });
-        req.on('error', (e) => resolve({ status: 'offline', error: e.message, latency_ms: Date.now() - started }));
-        req.on('timeout', () => {
-            req.destroy();
-            resolve({ status: 'timeout', latency_ms: Date.now() - started });
-        });
-    });
-}
-
 const server = http.createServer(async (req, res) => {
     // Enable CORS
     res.setHeader('Access-Control-Allow-Origin', '*');
@@ -379,31 +304,6 @@ const server = http.createServer(async (req, res) => {
     // ========== HEALTH CHECK ==========
     if (urlPath === '/health') {
         jsonResponse(res, 200, { status: 'ok', version: '4.0' });
-        return;
-    }
-
-    // ========== SYSTEM STATUS ==========
-    if (urlPath === '/system-status' && req.method === 'GET') {
-        const directories = [
-            summarizeDirectory('Base PocketBase', path.join(__dirname, '..', 'pb_data')),
-            summarizeDirectory('Rapports generes', OUTPUT_DIR),
-            summarizeDirectory('Sources CSV importees', CSV_SOURCES_DIR),
-            summarizeDirectory('Historique applicatif', STATE_DIR),
-            summarizeDirectory('Open Data cache', path.join(__dirname, 'inputs', 'opendata')),
-        ];
-        const pbHealth = await getPocketBaseHealth();
-        const criticalOk = directories
-            .filter(d => ['Base PocketBase', 'Rapports generes', 'Sources CSV importees', 'Historique applicatif'].includes(d.label))
-            .every(d => d.exists && d.writable);
-        const status = pbHealth.status === 'ok' && criticalOk ? 'ok' : 'degraded';
-        jsonResponse(res, 200, {
-            success: true,
-            status,
-            version: '4.0',
-            checked_at: new Date().toISOString(),
-            pocketbase: pbHealth,
-            directories,
-        });
         return;
     }
 
