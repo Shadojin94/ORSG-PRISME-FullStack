@@ -41,10 +41,35 @@ const PORT = process.env.PORT || 3001;
 const OUTPUT_DIR = path.join(__dirname, 'output');
 const CONFIG_FILE = path.join(__dirname, 'themes_config.json');
 const CSV_SOURCES_DIR = path.join(__dirname, 'csv_sources');
-const IMPORT_HISTORY_FILE = path.join(CSV_SOURCES_DIR, 'import_history.json');
 const FRONTEND_DIST = path.join(__dirname, '..', 'Frontend', 'dist');
 const PYTHON_EXE = process.env.PYTHON_EXE || 'py';
-const ACTIVITY_LOG_FILE = path.join(__dirname, 'activity_log.json');
+const STATE_DIR = process.env.PRISME_STATE_DIR || path.join(__dirname, 'state');
+const IMPORT_HISTORY_FILE = path.join(STATE_DIR, 'import_history.json');
+const ACTIVITY_LOG_FILE = path.join(STATE_DIR, 'activity_log.json');
+
+function ensureDir(dir) {
+    if (!fs.existsSync(dir)) {
+        fs.mkdirSync(dir, { recursive: true });
+    }
+}
+
+function migrateLegacyState() {
+    ensureDir(STATE_DIR);
+    const migrations = [
+        { from: path.join(CSV_SOURCES_DIR, 'import_history.json'), to: IMPORT_HISTORY_FILE },
+        { from: path.join(__dirname, 'activity_log.json'), to: ACTIVITY_LOG_FILE },
+    ];
+    for (const migration of migrations) {
+        try {
+            if (!fs.existsSync(migration.to) && fs.existsSync(migration.from)) {
+                fs.copyFileSync(migration.from, migration.to);
+                console.log(`[STATE] Migrated ${path.basename(migration.from)} to ${STATE_DIR}`);
+            }
+        } catch (e) {
+            console.warn(`[STATE] Migration skipped for ${migration.from}: ${e.message}`);
+        }
+    }
+}
 
 // PocketBase config
 const PB_URL = process.env.POCKETBASE_URL || 'http://127.0.0.1:8090';
@@ -191,10 +216,10 @@ async function sendTempPassword(email, tempPassword) {
     console.log(`   [PWD] Temp password sent to ${email}`);
 }
 
-// Ensure output directory exists
-if (!fs.existsSync(OUTPUT_DIR)) {
-    fs.mkdirSync(OUTPUT_DIR, { recursive: true });
-}
+// Ensure mutable directories exist before routes can read/write them.
+ensureDir(OUTPUT_DIR);
+ensureDir(CSV_SOURCES_DIR);
+migrateLegacyState();
 
 // Load themes config (cached, reloadable)
 let themesConfig = loadConfig();

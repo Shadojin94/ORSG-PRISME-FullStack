@@ -36,6 +36,10 @@ services:
       - prisme_opendata:/app/Backend/inputs/opendata
       # Rapports Excel generes par les utilisateurs - CRITIQUE
       - prisme_output:/app/Backend/output
+      # CSV importes depuis l'interface - CRITIQUE pour l'historique client
+      - prisme_csv_sources:/app/Backend/csv_sources
+      # Journaux applicatifs + historique des imports - CRITIQUE
+      - prisme_state:/app/Backend/state
     healthcheck:
       test: ["CMD", "curl", "-f", "http://127.0.0.1:8000/api/health"]
       interval: 30s
@@ -50,3 +54,7 @@ volumes:
     name: prisme_opendata
   prisme_output:
     name: prisme_output
+  prisme_csv_sources:
+    name: prisme_csv_sources
+  prisme_state:
+    name: prisme_state

@@ -31,8 +31,9 @@ PB_SYSTEM_PASSWORD=${PB_SYSTEM_PASSWORD:-PrismeSystemAuth2026!}
 SMTP_HOST=${SMTP_HOST:-smtp.resend.com}
 SMTP_PORT=${SMTP_PORT:-465}
 SMTP_USER=${SMTP_USER:-resend}
-SMTP_PASS=${SMTP_PASS:-re_JgvpFiDq_PeTzbD3rBubuvb9W1bbdLwoJ}
+SMTP_PASS=${SMTP_PASS:-}
 SMTP_FROM=${SMTP_FROM:-Data Visus <noreply@live.cercleonline.com>}
+PRISME_STATE_DIR=${PRISME_STATE_DIR:-/app/Backend/state}
 ENVEOF
 
     # Start PocketBase in background

@@ -52,7 +52,7 @@ COPY Backend/inputs/opendata/spf_noyades/ ./Backend/_seed_data/spf_noyades/
 COPY Frontend/dist/ ./Frontend/dist/
 
 # Create directories
-RUN mkdir -p Backend/output Backend/inputs/opendata pb_data
+RUN mkdir -p Backend/output Backend/inputs/opendata Backend/csv_sources Backend/state pb_data
 
 # Entrypoint script (starts PocketBase + downloads data + starts server)
 COPY entrypoint.sh ./
@@ -62,10 +62,11 @@ RUN chmod +x entrypoint.sh
 ENV PYTHON_EXE=python3
 ENV PORT=8000
 ENV POCKETBASE_URL=http://127.0.0.1:8090
+ENV PRISME_STATE_DIR=/app/Backend/state
 
 # Volumes persistants : Open Data (~928 Mo), base PocketBase (users/sessions),
-# et rapports Excel generes par les utilisateurs (doivent survivre aux redeploys).
-VOLUME ["/app/Backend/inputs/opendata", "/app/pb_data", "/app/Backend/output"]
+# rapports Excel, CSV importes et historique applicatif (doivent survivre aux redeploys).
+VOLUME ["/app/Backend/inputs/opendata", "/app/pb_data", "/app/Backend/output", "/app/Backend/csv_sources", "/app/Backend/state"]
 
 # Match the port cercleonline expects
 EXPOSE 8000
