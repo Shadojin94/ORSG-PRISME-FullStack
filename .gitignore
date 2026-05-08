@@ -54,6 +54,25 @@ Devis_*
 .vscode/
 .idea/
 .claude/
+.agent/
+.coordination/
+
+# Documents internes (jamais sur GitHub - confidentiel client)
+BILAN_PROJET_PRISME.md
+CONTEXTE_AGENTS_IA_2026.md
+CONTEXTE_PROJET_FULLSTACK.md
+DEPLOY_UBUNTU.md
+LIVRAISON_VPS.md
+PROMPT_*.md
+RAG_*.md
+main_projet.md
+livrables_*/
+HANDOFF*.md
+EMAIL_*.md
+INVENTAIRE_*.md
+RECAP_*.html
+Reunion_*.txt
+RAPPORT_*.md
 
 # Exemple client (660 fichiers, trop lourd)
 Exemple Arbo Client/
@@ -64,3 +83,7 @@ Thumbs.db
 
 # Environment
 .env
+.env.local
+.env.production
+*.key
+*.pem
