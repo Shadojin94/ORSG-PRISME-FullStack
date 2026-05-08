@@ -128,6 +128,17 @@
   --color-orsg-darkBlue: #0033A0;
   --color-orsg-red: #EF4444;
 
+  /* PRISME product palette */
+  --color-prisme-950: #071c33;
+  --color-prisme-900: #0b2d4f;
+  --color-prisme-800: #123f6a;
+  --color-prisme-700: #1a5687;
+  --color-prisme-600: #2372a5;
+  --color-prisme-teal: #2fb7aa;
+  --color-prisme-green: #4caf50;
+  --color-prisme-gold: #f5c542;
+  --color-prisme-ink: #102033;
+
   /* Sidebar */
   --color-sidebar: #0033A0;
   --color-sidebar-foreground: #ffffff;
@@ -163,9 +174,30 @@
     @apply border-border;
   }
 
+  :root {
+    --surface-app: #f4f7fb;
+    --surface-panel: #ffffff;
+    --surface-muted: #eef4f8;
+    --ring-strong: #2372a5;
+  }
+
   body {
     @apply bg-background text-foreground;
-    font-family: 'Poppins', 'Segoe UI', sans-serif;
+    font-family: "Aptos", "Segoe UI Variable", "Segoe UI", sans-serif;
+    font-feature-settings: "cv02", "cv03", "cv04";
+  }
+
+  button,
+  a,
+  input,
+  select,
+  textarea {
+    @apply focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-prisme-600;
+  }
+
+  ::selection {
+    background: color-mix(in oklab, var(--color-prisme-teal) 32%, white);
+    color: var(--color-prisme-950);
   }
 }
 
@@ -255,5 +287,22 @@
 
   .glass {
     @apply bg-white/10 backdrop-blur-sm border border-white/20;
+  }
+
+  .dv-panel {
+    @apply rounded-lg border border-slate-200 bg-white shadow-sm;
+  }
+
+  .dv-panel-muted {
+    @apply rounded-lg border border-slate-200 bg-slate-50;
+  }
+
+  .dv-kicker {
+    @apply text-xs font-black uppercase tracking-[0.18em] text-prisme-600;
+  }
+
+  .dv-scrollbar {
+    scrollbar-width: thin;
+    scrollbar-color: #b6c6d6 transparent;
   }
 }

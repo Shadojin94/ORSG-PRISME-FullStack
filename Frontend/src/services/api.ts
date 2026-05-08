@@ -36,6 +36,39 @@ export async function checkHealth(): Promise<{ status: string; version: string }
     return response.json();
 }
 
+export interface SystemDirectoryStatus {
+    label: string;
+    path: string;
+    exists: boolean;
+    writable: boolean;
+    file_count: number;
+    total_bytes: number;
+    total_size: string;
+    latest_modified: string | null;
+    error?: string;
+}
+
+export interface SystemStatus {
+    success: boolean;
+    status: 'ok' | 'degraded' | 'offline' | string;
+    version: string;
+    checked_at: string;
+    pocketbase: {
+        status: 'ok' | 'degraded' | 'offline' | 'timeout' | string;
+        status_code?: number;
+        latency_ms?: number;
+        body?: string;
+        error?: string;
+    };
+    directories: SystemDirectoryStatus[];
+}
+
+export async function getSystemStatus(): Promise<SystemStatus> {
+    const response = await fetch(`${API_BASE}/api/system-status`);
+    if (!response.ok) throw new Error(`Erreur serveur (${response.status})`);
+    return response.json();
+}
+
 // Get theme tree from server
 export async function getThemes(): Promise<ThemeTreeNode[]> {
     const response = await fetch(`${API_BASE}/api/themes`);
