@@ -1336,6 +1336,11 @@ except Exception as e:
         return;
     }
 
+    if (rawPath.startsWith('/api/')) {
+        jsonResponse(res, 404, { success: false, error: 'Endpoint API introuvable' });
+        return;
+    }
+
     // ========== STATIC FILE SERVING (Frontend dist/) ==========
     if (fs.existsSync(FRONTEND_DIST)) {
         const MIME_TYPES = {
