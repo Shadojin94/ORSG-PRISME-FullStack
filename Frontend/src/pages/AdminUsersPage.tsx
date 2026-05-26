@@ -181,10 +181,10 @@ export function AdminUsersPage() {
                 </div>
             </div>
 
-            <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+            <div className="bg-white rounded-xl shadow-sm border border-gray-200">
 
                 {/* Toolbar */}
-                <div className="p-4 border-b border-gray-200 flex items-center gap-4 bg-gray-50/50">
+                <div className="p-4 border-b border-gray-200 flex items-center gap-4 bg-gray-50/50 rounded-t-xl">
                     <div className="relative flex-1 max-w-md">
                         <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
                         <input
@@ -218,7 +218,7 @@ export function AdminUsersPage() {
                     </div>
                 ) : (
                     <div className="divide-y divide-gray-100">
-                        {filteredUsers.map((user) => (
+                        {filteredUsers.map((user, idx) => (
                             <div key={user.id} className="p-4 flex items-center justify-between hover:bg-gray-50 transition-colors">
                                 <div className="flex items-center gap-4">
                                     <div className={cn(
@@ -304,7 +304,10 @@ export function AdminUsersPage() {
                                             <MoreVertical className="w-5 h-5" />
                                         </button>
                                         {menuOpen === user.id && (
-                                            <div className="absolute right-0 top-full mt-1 bg-white rounded-lg shadow-lg border border-gray-200 py-2 z-20 w-56">
+                                            <div className={cn(
+                                                "absolute right-0 bg-white rounded-lg shadow-lg border border-gray-200 py-2 z-30 w-56",
+                                                idx >= filteredUsers.length - 2 ? "bottom-full mb-1" : "top-full mt-1"
+                                            )}>
                                                 <button
                                                     onClick={() => { setEditingUser(user); setMenuOpen(null); }}
                                                     className="w-full text-left px-3 py-2 text-sm hover:bg-gray-50 flex items-center gap-2 text-gray-700"

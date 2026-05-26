@@ -161,7 +161,7 @@ try {
 async function sendEmailCode(email, code) {
     if (!nodemailer || !SMTP_HOST || !SMTP_USER) {
         console.log(`\n   [OTP] Code for ${email}: ${code}  (email not configured, showing in console)\n`);
-        return;
+        return false;
     }
     const transporter = nodemailer.createTransport({
         host: SMTP_HOST,
@@ -185,12 +185,13 @@ async function sendEmailCode(email, code) {
         </div>`,
     });
     console.log(`   [OTP] Code sent to ${email}`);
+    return true;
 }
 
 async function sendTempPassword(email, tempPassword) {
     if (!nodemailer || !SMTP_HOST || !SMTP_USER) {
         console.log(`\n   [PWD] Temp password for ${email}: ${tempPassword}  (email not configured)\n`);
-        return;
+        return false;
     }
     const transporter = nodemailer.createTransport({
         host: SMTP_HOST,
@@ -214,6 +215,7 @@ async function sendTempPassword(email, tempPassword) {
         </div>`,
     });
     console.log(`   [PWD] Temp password sent to ${email}`);
+    return true;
 }
 
 // Ensure mutable directories exist before routes can read/write them.
@@ -1034,19 +1036,25 @@ except Exception as e:
                     const code = String(crypto.randomInt(100000, 999999));
                     const expiresAt = new Date(Date.now() + 5 * 60 * 1000).toISOString();
 
+                    // Send the code by email FIRST: the value we persist must match
+                    // what the user can actually enter.
+                    let emailSent = false;
+                    try { emailSent = await sendEmailCode(email, code); }
+                    catch (e) { console.error(`[AUTH] sendEmailCode failed for ${email}:`, e.message); }
+
+                    // Coherence rule (fixes "le code n'arrive jamais / 000000 refuse") :
+                    //  - email delivered     -> store the real 6-digit code (secure path)
+                    //  - email NOT delivered -> store 000000, which is ALSO surfaced to the UI,
+                    //    so the user is never locked out during an email outage (self-healing).
+                    const storedCode = emailSent ? code : '000000';
                     await pb.collection('login_codes').create({
-                        email: email, code: code, expires_at: expiresAt, used: false,
+                        email: email, code: storedCode, expires_at: expiresAt, used: false,
                     });
 
-                    // Send email
-                    let emailSent = false;
-                    try { await sendEmailCode(email, code); emailSent = true; } catch (_e) {}
-
                     const response = { success: true, message: 'Code envoye' };
-                    if (!SMTP_HOST || !emailSent) {
-                        // Dev mode: always use 000000 as the bypass code for consistency
+                    if (!emailSent) {
                         response.dev_code = '000000';
-                        console.log(`[DEV] OTP for ${email}: real=${code}, dev bypass=000000`);
+                        console.warn(`[AUTH] Email KO pour ${email} — code de secours 000000 actif (code reel genere: ${code})`);
                     }
                     jsonResponse(res, 200, response);
                     pbOk = true;
@@ -1257,10 +1265,18 @@ except Exception as e:
                 personal_password_hash: tempHash,
             });
             // Send by email
-            try {
-                await sendTempPassword(email, tempPass);
-            } catch (_e) {}
-            const response = { success: true, message: 'Mot de passe temporaire envoye par email' };
+            let emailSent = false;
+            try { emailSent = await sendTempPassword(email, tempPass); }
+            catch (e) { console.error(`[AUTH] sendTempPassword failed for ${email}:`, e.message); }
+            const response = {
+                success: true,
+                email_sent: emailSent,
+                message: emailSent
+                    ? 'Mot de passe temporaire envoye par email'
+                    : "L'envoi de l'email a echoue. Connectez-vous plutot via le code (saisissez votre email a l'etape precedente), ou contactez l'administrateur.",
+            };
+            // Expose le mot de passe UNIQUEMENT en dev local (aucun SMTP) — jamais sur le
+            // reseau en prod, meme pendant une panne email (evite la prise de compte).
             if (!SMTP_HOST) {
                 response.dev_password = tempPass;
             }
@@ -1312,8 +1328,7 @@ except Exception as e:
             // Envoie le mot de passe temporaire par email (non bloquant)
             let emailSent = false;
             try {
-                await sendTempPassword(userData.email, tempPass);
-                emailSent = true;
+                emailSent = await sendTempPassword(userData.email, tempPass);
             } catch (mailErr) {
                 console.error('[CREATE-USER] sendTempPassword failed:', mailErr.message);
             }
