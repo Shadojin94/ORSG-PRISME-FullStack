@@ -1,15 +1,9 @@
 import { useState } from "react";
 import { cn } from "@/lib/utils";
 import { BDI_THEMES } from "@/data/bdi_themes";
+import { OPEN_DATA_SUPPORTED_THEMES } from "@/constants/openDataThemes";
 import { ChevronDown, Database, Globe, BarChart3, ArrowRight, Upload } from "lucide-react";
 import { Acronym } from "@/components/ui/Acronym";
-
-const OPEN_DATA_SUPPORTED_THEMES = [
-    'educ', 'pers_sup65ans_seules', 'familles_mono', 'pop_inf3ans',
-    'pers_menages', 'types_menages', 'alloc', 'revenu', 'densite',
-    'route', 'mortalite_gen', 'mortalite_cardio', 'mortalite_tumeurs',
-    'mortalite_respi', 'mortalite_neuro', 'mortalite_diabete', 'mortalite_covid'
-];
 
 interface Step1Props {
     onSubjectSelect: (themeId: string, subThemeId: string) => void;
@@ -18,7 +12,8 @@ interface Step1Props {
 }
 
 const isCalculated = (d: any) => d?.tool === "Calcul";
-const isSelectable = (d: any) => !isCalculated(d);
+// Indicateurs générables : ni calcul, ni masqué (non implémenté), ni non-disponible en accès public.
+const isSelectable = (d: any) => !isCalculated(d) && !d?.hidden && !d?.publicUnavailable;
 const isOpenData = (d: any) => OPEN_DATA_SUPPORTED_THEMES.includes(d?.id);
 
 function flattenSubThemes(items: any[]): any[] {
@@ -82,6 +77,8 @@ export function Step1_ThemeSelection({
 
     const renderSubject = (sub: any, themeId: string) => {
         const datasets = (sub.datasets || []).filter(isSelectable);
+        // Indicateurs non disponibles en accès public (affichés en mention, non sélectionnables).
+        const unavailablePublic = (sub.datasets || []).filter((d: any) => d?.publicUnavailable && !d?.hidden);
         const uniqIds = uniqueDatasetIds(datasets);
         const readyDs = uniqIds.filter(id => datasets.find((d: any) => d.id === id)?.demoReady);
         const hasData = readyDs.length > 0;
@@ -152,6 +149,15 @@ export function Step1_ThemeSelection({
                             </span>
                         );
                     })}
+                    {unavailablePublic.map((ds: any, idx: number) => (
+                        <span
+                            key={`unavail-${ds.id}-${ds.variable}-${idx}`}
+                            title={`${ds.label} · Donnée non disponible en accès public`}
+                            className="text-[10px] px-2 py-1 rounded-full font-medium flex items-center gap-1 border bg-gray-100 text-gray-500 border-gray-200"
+                        >
+                            <span className="truncate max-w-[180px]">{ds.label} — non disponible en accès public</span>
+                        </span>
+                    ))}
                 </div>
             </button>
         );

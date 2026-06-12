@@ -6,15 +6,8 @@ import { Step3_Result } from "@/components/generator/Step3_Result";
 import * as api from "@/services/api";
 import { useDatasetYears } from "@/hooks/useThemes";
 import { BDI_THEMES } from "@/data/bdi_themes";
+import { OPEN_DATA_SUPPORTED_THEMES } from "@/constants/openDataThemes";
 import { cn } from "@/lib/utils";
-
-const OPEN_DATA_SUPPORTED_THEMES = [
-    'educ', 'pers_sup65ans_seules', 'familles_mono', 'pop_inf3ans',
-    'pers_menages', 'types_menages', 'alloc', 'revenu', 'densite',
-    'route', 'mortalite_gen', 'mortalite_cardio', 'mortalite_tumeurs',
-    'mortalite_respi', 'mortalite_neuro', 'mortalite_diabete', 'mortalite_covid',
-    'accueil_pop_inf3ans'
-];
 
 const STORAGE_KEY = 'prisme_generator_state';
 
@@ -103,7 +96,9 @@ export function GeneratorPage() {
     // Unique datasets of selected subject (one entry per backend-distinct dataset ID)
     const subjectDatasets: SubjectDataset[] = useMemo(() => {
         if (!subjectCtx) return [];
-        const all = (subjectCtx.sub.datasets || []).filter((d: any) => d?.tool !== "Calcul");
+        // Cibles de génération : on exclut les calculs, les indicateurs masqués (non implémentés)
+        // et ceux non disponibles en accès public (génération impossible).
+        const all = (subjectCtx.sub.datasets || []).filter((d: any) => d?.tool !== "Calcul" && !d?.hidden && !d?.publicUnavailable);
         const seen = new Set<string>();
         const out: SubjectDataset[] = [];
         for (const d of all) {
@@ -123,7 +118,9 @@ export function GeneratorPage() {
     // All indicator entries (includes duplicates with different variables, for display)
     const subjectIndicators = useMemo(() => {
         if (!subjectCtx) return [];
-        return (subjectCtx.sub.datasets || []).filter((d: any) => d?.tool !== "Calcul");
+        // Affichage : on masque les calculs et les indicateurs masqués, mais on garde
+        // ceux non disponibles en accès public (affichés avec une mention explicite).
+        return (subjectCtx.sub.datasets || []).filter((d: any) => d?.tool !== "Calcul" && !d?.hidden);
     }, [subjectCtx]);
 
     const themeLabel = subjectCtx?.theme.shortTitle || subjectCtx?.theme.title || "";
@@ -135,10 +132,31 @@ export function GeneratorPage() {
     // Does the subject support Open Data? (true if ANY of its datasets supports it)
     const supportsOpenData = subjectDatasets.some(d => OPEN_DATA_SUPPORTED_THEMES.includes(d.id));
 
+    // Le sujet peut toujours être alimenté par import MOCA-O dès qu'il a un jeu de données.
+    const supportsMoca = subjectDatasets.length > 0;
+
+    // Message d'aiguillage non technique affiché quand on bascule automatiquement de source.
+    const [autoSwitchNotice, setAutoSwitchNotice] = useState<string | null>(null);
+
     const { years: availableYears, loading: yearsLoading, reload: reloadYears } = useDatasetYears(
         primaryDatasetId,
         sourceMode === 'opendata'
     );
+
+    // Anti cul-de-sac : Open Data sans année disponible -> bascule auto vers l'import MOCA-O.
+    useEffect(() => {
+        if (
+            sourceMode === 'opendata' &&
+            !yearsLoading &&
+            availableYears.length === 0 &&
+            supportsMoca
+        ) {
+            setSourceMode('moca');
+            setAutoSwitchNotice(
+                "Les données publiques ne sont pas encore disponibles pour ce sujet. Importez vos fichiers MOCA-O ci-dessous pour générer."
+            );
+        }
+    }, [sourceMode, yearsLoading, availableYears, supportsMoca]);
 
     useEffect(() => {
         if (availableYears && availableYears.length > 0) {
@@ -165,6 +183,7 @@ export function GeneratorPage() {
         const ds = (ctx?.sub.datasets || []).filter((d: any) => d?.tool !== "Calcul");
         const hasOpenData = ds.some((d: any) => OPEN_DATA_SUPPORTED_THEMES.includes(d.id));
         setSourceMode(hasOpenData ? 'opendata' : 'moca');
+        setAutoSwitchNotice(null);
 
         setStep(2);
         setGeneratedFiles([]);
@@ -344,8 +363,10 @@ export function GeneratorPage() {
                             onBack={handleBack}
                             error={error}
                             supportsOpenData={supportsOpenData}
+                            supportsMoca={supportsMoca}
                             sourceMode={sourceMode}
-                            onSourceChange={setSourceMode}
+                            onSourceChange={(mode) => { setAutoSwitchNotice(null); setSourceMode(mode); }}
+                            autoSwitchNotice={autoSwitchNotice}
                             subjectLabel={subjectLabel}
                             themeLabel={themeLabel}
                             indicators={subjectIndicators}

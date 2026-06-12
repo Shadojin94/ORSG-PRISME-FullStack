@@ -36,7 +36,7 @@ export function BackendHealthBanner() {
         <div className="bg-red-600 text-white px-4 py-2.5 flex items-center justify-center gap-3 shadow-md text-sm font-medium">
             <AlertTriangle className="w-4 h-4 shrink-0" />
             <span>
-                Serveur hors ligne — impossible de charger les donnees. Contactez l'administrateur technique.
+                Connexion indisponible — impossible de charger les données. Réessayez dans quelques instants.
             </span>
             <button
                 onClick={ping}

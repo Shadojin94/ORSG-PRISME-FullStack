@@ -18,8 +18,10 @@ interface Step2Props {
     error: string | null;
 
     supportsOpenData: boolean;
+    supportsMoca: boolean;
     sourceMode: 'opendata' | 'moca';
     onSourceChange: (mode: 'opendata' | 'moca') => void;
+    autoSwitchNotice: string | null;
 
     subjectLabel: string;
     themeLabel: string;
@@ -52,8 +54,10 @@ export function Step2_Config({
     onBack,
     error,
     supportsOpenData,
+    supportsMoca,
     sourceMode,
     onSourceChange,
+    autoSwitchNotice,
     subjectLabel,
     themeLabel,
     indicators,
@@ -89,6 +93,15 @@ export function Step2_Config({
             </div>
 
             <h2 className="text-2xl font-bold text-[#1a4b8c]">2. Configurez la génération</h2>
+
+            {autoSwitchNotice && (
+                <div className="bg-blue-50 p-4 rounded-xl border border-blue-200 animate-in fade-in">
+                    <div className="flex items-start gap-3">
+                        <Info className="w-5 h-5 text-blue-600 mt-0.5 shrink-0" />
+                        <p className="text-sm text-blue-800">{autoSwitchNotice}</p>
+                    </div>
+                </div>
+            )}
 
             {/* Subject summary: included indicators */}
             <div className="bg-white p-5 rounded-xl border border-gray-200 shadow-sm">
@@ -243,9 +256,11 @@ export function Step2_Config({
                         {sourceMode === 'moca' && supportsOpenData ? (
                             <p>Aucun fichier CSV trouvé. Importez vos fichiers ci-dessus ou <button onClick={() => onSourceChange('opendata')} className="underline font-bold hover:text-amber-900">basculez sur Open Data</button>.</p>
                         ) : sourceMode === 'moca' ? (
-                            <p>Aucun fichier CSV trouvé pour ce sujet. Importez vos fichiers MOCA-O dans la zone ci-dessus.</p>
+                            <p>Aucun fichier importé pour ce sujet. Importez les fichiers MOCA-O attendus (la liste précise des fichiers requis est affichée dans la zone d'import ci-dessus, avec leur statut) pour pouvoir générer.</p>
+                        ) : supportsMoca ? (
+                            <p>Les données publiques ne sont pas encore disponibles pour ce sujet. <button onClick={() => onSourceChange('moca')} className="underline font-bold hover:text-amber-900">Importez vos fichiers MOCA-O</button> pour générer.</p>
                         ) : (
-                            <p>Les données Open Data ne sont pas encore disponibles pour ce sujet et cette configuration.</p>
+                            <p>Les données ne sont pas encore disponibles pour ce sujet et cette configuration.</p>
                         )}
                     </div>
                 )}

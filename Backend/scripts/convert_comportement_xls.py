@@ -1,4 +1,4 @@
-"""
+﻿"""
 Convertit le fichier MOCA-O Comportements fourni par ORSG-CTPS (.xls) au format
 CSV MOCA-O standard (identique a Mortalite_Patho_GF_2018_2023.csv) exploitable
 par le parser `moca_filter` de prisme_engine.py.
@@ -36,6 +36,7 @@ ROOT = Path(__file__).resolve().parents[2]
 # On cherche le .xls d'abord dans le repo (racine projet), sinon dans la racine
 # principale (hors worktree). Permet de rejouer le script depuis n'importe ou.
 _CANDIDATES = [
+    Path("C:/Users/chad9/Documents/003.ORSG/Dernier fichiers sources client") / "Fichier Moca O_Comportement_2018_2023.xls",
     ROOT / "livrables_17avril" / "Retour client" / "Fichier Moca O_Comportement_2018_2023.xls",
     Path("C:/Users/chad9/Documents/003.ORSG/Livraison_Client/Version_FullStack") /
         "livrables_17avril" / "Retour client" / "Fichier Moca O_Comportement_2018_2023.xls",
@@ -182,3 +183,4 @@ def main() -> int:
 
 if __name__ == "__main__":
     sys.exit(main())
+

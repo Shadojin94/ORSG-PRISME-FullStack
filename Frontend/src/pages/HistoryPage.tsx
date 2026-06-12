@@ -39,7 +39,7 @@ export function HistoryPage() {
             setFiles(data);
         } catch (err) {
             console.error("Erreur chargement historique:", err);
-            setError("Impossible de charger l'historique. Vérifiez que le Backend est lancé.");
+            setError("Connexion impossible. Réessayez dans quelques instants.");
         } finally {
             setIsLoading(false);
         }

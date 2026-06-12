@@ -53,7 +53,7 @@ export const BDI_THEMES = [
                 title: "Personnes âgées",
                 datasets: [
                     { id: "pers_sup65ans_seules", label: "Nombre de personnes de 65 ans et plus", variable: "nb_pop_65ans", source: "INSEE", tool: "MOCA-O", demoReady: true },
-                    { id: "accroiss_sup65ans", label: "Taux d'accroissement de la population des plus de 65 ans", variable: "tx_accroiss", source: "INSEE" },
+                    { id: "accroiss_sup65ans", label: "Taux d'accroissement de la population des plus de 65 ans", variable: "tx_accroiss", source: "INSEE", hidden: true },
                 ]
             },
             {
@@ -151,8 +151,8 @@ export const BDI_THEMES = [
                 id: "esperance_vie",
                 title: "Espérance de vie",
                 datasets: [
-                    { id: "esp_vie", label: "Espérance de vie à 65 ans", variable: "esp_65", source: "INSEE", tool: "MOCA-O" },
-                    { id: "esp_vie", label: "Espérance de vie à la naissance", variable: "esp_naiss", source: "INSEE", tool: "MOCA-O" },
+                    { id: "esp_vie", label: "Espérance de vie à 65 ans", variable: "esp_65", source: "INSEE", tool: "MOCA-O", importRequired: true },
+                    { id: "esp_vie", label: "Espérance de vie à la naissance", variable: "esp_naiss", source: "INSEE", tool: "MOCA-O", importRequired: true },
                 ]
             },
             {
@@ -194,9 +194,9 @@ export const BDI_THEMES = [
                 id: "equip_medecine",
                 title: "Équipements - Médecine",
                 datasets: [
-                    { id: "equipements_acti", label: "Nb Lits Médecine Hospi Complète", variable: "lit_med", source: "DREES, SAE, INSEE", tool: "Enquête SAE" },
+                    { id: "equipements_acti", label: "Nb Lits Médecine Hospi Complète", variable: "lit_med", source: "DREES, SAE, INSEE", tool: "Enquête SAE", importRequired: true },
                     { id: "equipements_acti", label: "Taux Lits Médecine Hospi Complète (pour 1 000 hab.)", variable: "tx_lit_med", source: "DREES, SAE, INSEE", tool: "Calcul" },
-                    { id: "equipements_acti", label: "Nb Places Médecine Hospi Partielle", variable: "pla_med", source: "DREES, SAE, INSEE", tool: "Enquête SAE" },
+                    { id: "equipements_acti", label: "Nb Places Médecine Hospi Partielle", variable: "pla_med", source: "DREES, SAE, INSEE", tool: "Enquête SAE", importRequired: true },
                     { id: "equipements_acti", label: "Taux Places Médecine Hospi Partielle", variable: "tx_pla_med", source: "DREES, SAE, INSEE", tool: "Calcul" },
                 ]
             },
@@ -204,9 +204,9 @@ export const BDI_THEMES = [
                 id: "equip_chirurgie",
                 title: "Équipements - Chirurgie",
                 datasets: [
-                    { id: "equipements_acti", label: "Nb Lits Chirurgie Hospi Complète", variable: "lit_chir", source: "DREES, SAE, INSEE", tool: "Enquête SAE" },
+                    { id: "equipements_acti", label: "Nb Lits Chirurgie Hospi Complète", variable: "lit_chir", source: "DREES, SAE, INSEE", tool: "Enquête SAE", importRequired: true },
                     { id: "equipements_acti", label: "Taux Lits Chirurgie Hospi Complète", variable: "tx_lit_chir", source: "DREES, SAE, INSEE", tool: "Calcul" },
-                    { id: "equipements_acti", label: "Nb Places Chirurgie Hospi Partielle", variable: "pla_chir", source: "DREES, SAE, INSEE", tool: "Enquête SAE" },
+                    { id: "equipements_acti", label: "Nb Places Chirurgie Hospi Partielle", variable: "pla_chir", source: "DREES, SAE, INSEE", tool: "Enquête SAE", importRequired: true },
                     { id: "equipements_acti", label: "Taux Places Chirurgie Hospi Partielle", variable: "tx_pla_chir", source: "DREES, SAE, INSEE", tool: "Calcul" },
                 ]
             },
@@ -214,9 +214,9 @@ export const BDI_THEMES = [
                 id: "equip_obstetrique",
                 title: "Équipements - Gynécologie-Obstétrique",
                 datasets: [
-                    { id: "equipements_acti", label: "Nb Lits Obstétrique Hospi Complète", variable: "lit_obs", source: "DREES, SAE, INSEE", tool: "Enquête SAE" },
+                    { id: "equipements_acti", label: "Nb Lits Obstétrique Hospi Complète", variable: "lit_obs", source: "DREES, SAE, INSEE", tool: "Enquête SAE", importRequired: true },
                     { id: "equipements_acti", label: "Taux Lits Obstétrique (pour 1 000 femmes 15+)", variable: "tx_lit_obs", source: "DREES, SAE, INSEE", tool: "Calcul" },
-                    { id: "equipements_acti", label: "Nb Places Obstétrique Hospi Partielle", variable: "pla_obs", source: "DREES, SAE, INSEE", tool: "Enquête SAE" },
+                    { id: "equipements_acti", label: "Nb Places Obstétrique Hospi Partielle", variable: "pla_obs", source: "DREES, SAE, INSEE", tool: "Enquête SAE", importRequired: true },
                     { id: "equipements_acti", label: "Taux Places Obstétrique", variable: "tx_pla_obs", source: "DREES, SAE, INSEE", tool: "Calcul" },
                 ]
             },
@@ -224,13 +224,13 @@ export const BDI_THEMES = [
                 id: "equip_psychiatrie",
                 title: "Équipements - Psychiatrie",
                 datasets: [
-                    { id: "equipements_acti", label: "Nb Lits Psy Générale Hospi Complète", variable: "lit_psy_gen", source: "DREES, SAE, INSEE", tool: "Enquête SAE" },
+                    { id: "equipements_acti", label: "Nb Lits Psy Générale Hospi Complète", variable: "lit_psy_gen", source: "DREES, SAE, INSEE", tool: "Enquête SAE", importRequired: true },
                     { id: "equipements_acti", label: "Taux Lits Psy Générale (pour 1 000 hab. 17+)", variable: "tx_lits_psygen", source: "DREES, SAE, INSEE", tool: "Calcul" },
-                    { id: "equipements_acti", label: "Nb Places Psy Générale Hospi Partielle", variable: "pla_psy_gen", source: "DREES, SAE, INSEE", tool: "Enquête SAE" },
+                    { id: "equipements_acti", label: "Nb Places Psy Générale Hospi Partielle", variable: "pla_psy_gen", source: "DREES, SAE, INSEE", tool: "Enquête SAE", importRequired: true },
                     { id: "equipements_acti", label: "Taux Places Psy Générale", variable: "tx_pla_psygen", source: "DREES, SAE, INSEE", tool: "Calcul" },
-                    { id: "equipements_acti", label: "Nb Lits Psy Juvénile Hospi Complète", variable: "lit_psy_inf", source: "DREES, SAE, INSEE", tool: "Enquête SAE" },
+                    { id: "equipements_acti", label: "Nb Lits Psy Juvénile Hospi Complète", variable: "lit_psy_inf", source: "DREES, SAE, INSEE", tool: "Enquête SAE", importRequired: true },
                     { id: "equipements_acti", label: "Taux Lits Psy Juvénile (pour 1 000 hab. 16-)", variable: "tx_lit_psyinf", source: "DREES, SAE, INSEE", tool: "Calcul" },
-                    { id: "equipements_acti", label: "Nb Places Psy Juvénile Hospi Partielle", variable: "pla_psy_inf", source: "DREES, SAE, INSEE", tool: "Enquête SAE" },
+                    { id: "equipements_acti", label: "Nb Places Psy Juvénile Hospi Partielle", variable: "pla_psy_inf", source: "DREES, SAE, INSEE", tool: "Enquête SAE", importRequired: true },
                     { id: "equipements_acti", label: "Taux Places Psy Juvénile", variable: "tx_pla_psyinf", source: "DREES, SAE, INSEE", tool: "Calcul" },
                 ]
             },
@@ -238,11 +238,11 @@ export const BDI_THEMES = [
                 id: "equip_ssr_had_usld",
                 title: "Équipements - SSR, HAD, USLD",
                 datasets: [
-                    { id: "equipements_acti", label: "Nb Lits SSR Hospi Complète", variable: "lit_ssr", source: "DREES, SAE, INSEE", tool: "Enquête SAE" },
+                    { id: "equipements_acti", label: "Nb Lits SSR Hospi Complète", variable: "lit_ssr", source: "DREES, SAE, INSEE", tool: "Enquête SAE", importRequired: true },
                     { id: "equipements_acti", label: "Taux Lits SSR", variable: "tx_lit_ssr", source: "DREES, SAE, INSEE", tool: "Calcul" },
                     { id: "equipements_acti", label: "Capacité HAD", variable: "capacite_had", source: "DREES, SAE, INSEE", tool: "Calcul" },
-                    { id: "equipements_acti", label: "Nb Capacités HAD", variable: "capa_had", source: "DREES, SAE, INSEE", tool: "Enquête SAE" },
-                    { id: "equipements_acti", label: "Nb Lits USLD Hospi Complète", variable: "lit_usld", source: "DREES, SAE, INSEE", tool: "Enquête SAE" },
+                    { id: "equipements_acti", label: "Nb Capacités HAD", variable: "capa_had", source: "DREES, SAE, INSEE", tool: "Enquête SAE", importRequired: true },
+                    { id: "equipements_acti", label: "Nb Lits USLD Hospi Complète", variable: "lit_usld", source: "DREES, SAE, INSEE", tool: "Enquête SAE", importRequired: true },
                     { id: "equipements_acti", label: "Taux Lits USLD (pour 1 000 hab. 60+)", variable: "tx_lits_usld", source: "DREES, SAE, INSEE", tool: "Calcul" },
                 ]
             },
@@ -250,26 +250,26 @@ export const BDI_THEMES = [
                 id: "acti_medecine_chirurgie",
                 title: "Activités - Médecine, Chirurgie, Obstétrique",
                 datasets: [
-                    { id: "equipements_acti", label: "Recours Médecine Hospi Complète", variable: "rec_med", source: "ATIH, INSEE", tool: "MOCA-O" },
-                    { id: "equipements_acti", label: "Occupation Médecine Hospi Complète", variable: "tx_occup_med", source: "DREES, INSEE", tool: "Enquête SAE" },
-                    { id: "equipements_acti", label: "Recours Chirurgie Hospi Complète", variable: "rec_chir", source: "ATIH, INSEE", tool: "MOCA-O" },
-                    { id: "equipements_acti", label: "Occupation Chirurgie Hospi Complète", variable: "occup_chir", source: "DREES, INSEE", tool: "Enquête SAE" },
-                    { id: "equipements_acti", label: "Recours Obstétrique Hospi Complète (femmes 15+)", variable: "rec_obs", source: "ATIH, INSEE", tool: "MOCA-O" },
-                    { id: "equipements_acti", label: "Occupation Obstétrique Hospi Complète", variable: "occup_obs", source: "DREES, INSEE", tool: "Enquête SAE" },
+                    { id: "equipements_acti", label: "Recours Médecine Hospi Complète", variable: "rec_med", source: "ATIH, INSEE", tool: "MOCA-O", importRequired: true },
+                    { id: "equipements_acti", label: "Occupation Médecine Hospi Complète", variable: "tx_occup_med", source: "DREES, INSEE", tool: "Enquête SAE", importRequired: true },
+                    { id: "equipements_acti", label: "Recours Chirurgie Hospi Complète", variable: "rec_chir", source: "ATIH, INSEE", tool: "MOCA-O", importRequired: true },
+                    { id: "equipements_acti", label: "Occupation Chirurgie Hospi Complète", variable: "occup_chir", source: "DREES, INSEE", tool: "Enquête SAE", importRequired: true },
+                    { id: "equipements_acti", label: "Recours Obstétrique Hospi Complète (femmes 15+)", variable: "rec_obs", source: "ATIH, INSEE", tool: "MOCA-O", importRequired: true },
+                    { id: "equipements_acti", label: "Occupation Obstétrique Hospi Complète", variable: "occup_obs", source: "DREES, INSEE", tool: "Enquête SAE", importRequired: true },
                 ]
             },
             {
                 id: "acti_psy_ssr_had",
                 title: "Activités - SSR, Psychiatrie, HAD",
                 datasets: [
-                    { id: "equipements_acti", label: "Recours SSR Hospi Complète", variable: "rec_ssr", source: "ATIH, INSEE", tool: "MOCA-O" },
-                    { id: "equipements_acti", label: "Occupation SSR Hospi Complète", variable: "occup_ssr", source: "DREES, INSEE", tool: "Enquête SAE" },
-                    { id: "equipements_acti", label: "Recours Psy Générale Hospi Complète (17+)", variable: "rec_psy_g", source: "ATIH, INSEE", tool: "MOCA-O" },
-                    { id: "equipements_acti", label: "Occupation Psy Générale Hospi Complète", variable: "occup_psygen", source: "DREES, INSEE", tool: "Enquête SAE" },
-                    { id: "equipements_acti", label: "Recours Psy Juvénile Hospi Complète (16-)", variable: "rec_psy_juv", source: "ATIH, INSEE", tool: "MOCA-O" },
-                    { id: "equipements_acti", label: "Occupation Psy Juvénile Hospi Complète", variable: "occup_psyinf", source: "DREES, INSEE", tool: "Enquête SAE" },
-                    { id: "equipements_acti", label: "Recours HAD Hospi Complète", variable: "rec_had", source: "ATIH, INSEE", tool: "MOCA-O" },
-                    { id: "equipements_acti", label: "Recours USLD", variable: "rec_usld", source: "ATIH, INSEE", tool: "MOCA-O" },
+                    { id: "equipements_acti", label: "Recours SSR Hospi Complète", variable: "rec_ssr", source: "ATIH, INSEE", tool: "MOCA-O", importRequired: true },
+                    { id: "equipements_acti", label: "Occupation SSR Hospi Complète", variable: "occup_ssr", source: "DREES, INSEE", tool: "Enquête SAE", importRequired: true },
+                    { id: "equipements_acti", label: "Recours Psy Générale Hospi Complète (17+)", variable: "rec_psy_g", source: "ATIH, INSEE", tool: "MOCA-O", importRequired: true },
+                    { id: "equipements_acti", label: "Occupation Psy Générale Hospi Complète", variable: "occup_psygen", source: "DREES, INSEE", tool: "Enquête SAE", importRequired: true },
+                    { id: "equipements_acti", label: "Recours Psy Juvénile Hospi Complète (16-)", variable: "rec_psy_juv", source: "ATIH, INSEE", tool: "MOCA-O", importRequired: true },
+                    { id: "equipements_acti", label: "Occupation Psy Juvénile Hospi Complète", variable: "occup_psyinf", source: "DREES, INSEE", tool: "Enquête SAE", importRequired: true },
+                    { id: "equipements_acti", label: "Recours HAD Hospi Complète", variable: "rec_had", source: "ATIH, INSEE", tool: "MOCA-O", importRequired: true },
+                    { id: "equipements_acti", label: "Recours USLD", variable: "rec_usld", source: "ATIH, INSEE", tool: "MOCA-O", importRequired: true },
                 ]
             },
             {
@@ -437,7 +437,7 @@ export const BDI_THEMES = [
                 id: "cardio_hta",
                 title: "Hypertension artérielle",
                 datasets: [
-                    { id: "prevalence_cardio", label: "Prévalence des traitements hypertenseurs", variable: "p_hta", source: "SNDS" },
+                    { id: "prevalence_cardio", label: "Prévalence des traitements hypertenseurs", variable: "p_hta", source: "SNDS", publicUnavailable: true },
                     { id: "mortalite_cardio", label: "Mortalité par maladies hypertensives", variable: "m_hta", source: "INSERM-CépiDc, INSEE", tool: "MOCA-O" },
                 ]
             },
@@ -445,7 +445,7 @@ export const BDI_THEMES = [
                 id: "cardio_avc",
                 title: "Maladies vasculaires cérébrales (AVC)",
                 datasets: [
-                    { id: "prevalence_cardio", label: "Prévalence de l'accident vasculaire cérébral aigu", variable: "p_avc", source: "SNDS" },
+                    { id: "prevalence_cardio", label: "Prévalence de l'accident vasculaire cérébral aigu", variable: "p_avc", source: "SNDS", publicUnavailable: true },
                     { id: "mortalite_cardio", label: "Mortalité par maladies vasculaires cérébrales", variable: "m_avc", source: "INSERM-CépiDc, INSEE", tool: "MOCA-O", demoReady: true },
                 ]
             },
@@ -460,7 +460,7 @@ export const BDI_THEMES = [
                 id: "cardio_insuff",
                 title: "Insuffisance cardiaque",
                 datasets: [
-                    { id: "prevalence_cardio", label: "Prévalence de l'insuffisance cardiaque", variable: "p_insuff_card", source: "SNDS" },
+                    { id: "prevalence_cardio", label: "Prévalence de l'insuffisance cardiaque", variable: "p_insuff_card", source: "SNDS", publicUnavailable: true },
                     { id: "mortalite_cardio", label: "Mortalité par insuffisance cardiaque", variable: "M_Insuff_Cardiaque", source: "INSERM-CépiDc, INSEE", tool: "MOCA-O", demoReady: true },
                 ]
             },
@@ -468,14 +468,14 @@ export const BDI_THEMES = [
                 id: "cardio_coronarien",
                 title: "Syndrome coronarien chronique",
                 datasets: [
-                    { id: "prevalence_cardio", label: "Prévalence des maladies coronaires chroniques", variable: "p_coronaire", source: "SNDS" },
+                    { id: "prevalence_cardio", label: "Prévalence des maladies coronaires chroniques", variable: "p_coronaire", source: "SNDS", publicUnavailable: true },
                 ]
             },
             {
                 id: "respiratoire",
                 title: "Maladies de l'appareil respiratoire",
                 datasets: [
-                    { id: "prevalence_respi", label: "Prévalence des maladies respiratoires chroniques", variable: "p_respi", source: "SNDS" },
+                    { id: "prevalence_respi", label: "Prévalence des maladies respiratoires chroniques", variable: "p_respi", source: "SNDS", publicUnavailable: true },
                     { id: "mortalite_respi", label: "Mortalité par maladies respiratoires", variable: "M_Maladies_Respi", source: "INSERM-CépiDc, INSEE", tool: "MOCA-O", demoReady: true },
                     { id: "mortalite_respi", label: "Mortalité par Asthme", variable: "m_asthme", source: "INSERM-CépiDc, INSEE", tool: "MOCA-O", demoReady: true },
                     { id: "mortalite_respi", label: "Mortalité par BPCO", variable: "m_bpco", source: "INSERM-CépiDc, INSEE", tool: "MOCA-O", demoReady: true },
@@ -485,10 +485,10 @@ export const BDI_THEMES = [
                 id: "neurologique",
                 title: "Maladies du système nerveux",
                 datasets: [
-                    { id: "prevalence_neuro", label: "Prévalence de l'épilepsie", variable: "p_epilepsie", source: "SNDS" },
-                    { id: "prevalence_neuro", label: "Prévalence des démences dont Alzheimer", variable: "p_alzheimer", source: "SNDS" },
+                    { id: "prevalence_neuro", label: "Prévalence de l'épilepsie", variable: "p_epilepsie", source: "SNDS", publicUnavailable: true },
+                    { id: "prevalence_neuro", label: "Prévalence des démences dont Alzheimer", variable: "p_alzheimer", source: "SNDS", publicUnavailable: true },
                     { id: "mortalite_neuro", label: "Mortalité Alzheimer", variable: "m_alzheimer", source: "INSERM-CépiDc, INSEE", tool: "MOCA-O", demoReady: true },
-                    { id: "prevalence_neuro", label: "Prévalence de la maladie de Parkinson", variable: "p_parkinson", source: "SNDS" },
+                    { id: "prevalence_neuro", label: "Prévalence de la maladie de Parkinson", variable: "p_parkinson", source: "SNDS", publicUnavailable: true },
                     { id: "mortalite_neuro", label: "Mortalité par la maladie de Parkinson", variable: "m_parkinson", source: "INSERM-CépiDc, INSEE", tool: "MOCA-O", demoReady: true },
                 ]
             },
@@ -496,7 +496,7 @@ export const BDI_THEMES = [
                 id: "digestif",
                 title: "Maladies de l'appareil digestif",
                 datasets: [
-                    { id: "prevalence_digestif", label: "Prévalence des maladies du foie ou du pancréas", variable: "p_foie", source: "SNDS" },
+                    { id: "prevalence_digestif", label: "Prévalence des maladies du foie ou du pancréas", variable: "p_foie", source: "SNDS", publicUnavailable: true },
                     { id: "mortalite_digestif", label: "Mortalité par maladies du foie ou du pancréas", variable: "m_foie", source: "INSERM-CépiDc, INSEE", tool: "MOCA-O" },
                 ]
             },
@@ -504,7 +504,7 @@ export const BDI_THEMES = [
                 id: "metabolique",
                 title: "Maladies endocriniennes, nutritionnelles et métaboliques",
                 datasets: [
-                    { id: "prevalence_diabete", label: "Prévalence du diabète", variable: "p_diabete", source: "SNDS" },
+                    { id: "prevalence_diabete", label: "Prévalence du diabète", variable: "p_diabete", source: "SNDS", publicUnavailable: true },
                     { id: "mortalite_diabete", label: "Mortalité par diabète", variable: "m_diabete", source: "INSERM-CépiDc, INSEE", tool: "MOCA-O", demoReady: true },
                 ]
             },
@@ -512,7 +512,7 @@ export const BDI_THEMES = [
                 id: "infectieuses",
                 title: "Maladies infectieuses - VIH/SIDA",
                 datasets: [
-                    { id: "prevalence_vih", label: "Prévalence du VIH ou du SIDA", variable: "p_vih", source: "SNDS" },
+                    { id: "prevalence_vih", label: "Prévalence du VIH ou du SIDA", variable: "p_vih", source: "SNDS", publicUnavailable: true },
                     { id: "mortalite_vih", label: "Mortalité par SIDA", variable: "m_sida", source: "INSERM-CépiDc, INSEE", tool: "MOCA-O" },
                 ]
             },
@@ -520,11 +520,11 @@ export const BDI_THEMES = [
                 id: "troubles_mentaux",
                 title: "Troubles mentaux et du comportement",
                 datasets: [
-                    { id: "prevalence_psy", label: "Prévalence de la déficience mentale", variable: "p_deficience", source: "SNDS" },
+                    { id: "prevalence_psy", label: "Prévalence de la déficience mentale", variable: "p_deficience", source: "SNDS", publicUnavailable: true },
                     { id: "mortalite_psy", label: "Mortalité liée aux troubles mentaux et du comportement", variable: "M_Trouble_Ment", source: "INSERM-CépiDc, INSEE", tool: "MOCA-O" },
-                    { id: "prevalence_psy", label: "Prévalence des traitements neuroleptiques (troubles psychotiques)", variable: "p_neuroleptiques", source: "SNDS" },
-                    { id: "prevalence_psy", label: "Prévalence des traitements antidépresseurs (troubles de l'humeur)", variable: "p_antidepresseurs", source: "SNDS" },
-                    { id: "prevalence_psy", label: "Prévalence des traitements anxiolytiques (troubles de l'anxiété)", variable: "p_anxiolytiques", source: "SNDS" },
+                    { id: "prevalence_psy", label: "Prévalence des traitements neuroleptiques (troubles psychotiques)", variable: "p_neuroleptiques", source: "SNDS", publicUnavailable: true },
+                    { id: "prevalence_psy", label: "Prévalence des traitements antidépresseurs (troubles de l'humeur)", variable: "p_antidepresseurs", source: "SNDS", publicUnavailable: true },
+                    { id: "prevalence_psy", label: "Prévalence des traitements anxiolytiques (troubles de l'anxiété)", variable: "p_anxiolytiques", source: "SNDS", publicUnavailable: true },
                 ]
             },
             {
@@ -532,20 +532,20 @@ export const BDI_THEMES = [
                 title: "Cancers",
                 datasets: [
                     { id: "mortalite_tumeurs", label: "Mortalité par cancer du poumon (trachée, bronches)", variable: "m_kc_poumon", source: "INSERM-CépiDc, INSEE", tool: "MOCA-O", demoReady: true },
-                    { id: "prevalence_cancer", label: "Prévalence du cancer du poumon", variable: "p_kc_poumon", source: "SNDS" },
+                    { id: "prevalence_cancer", label: "Prévalence du cancer du poumon", variable: "p_kc_poumon", source: "SNDS", publicUnavailable: true },
                     { id: "mortalite_tumeurs", label: "Mortalité par cancer du sein (femmes)", variable: "m_kc_sein", source: "INSERM-CépiDc, INSEE", tool: "MOCA-O", demoReady: true },
-                    { id: "prevalence_cancer", label: "Prévalence du cancer du sein chez la femme", variable: "p_kc_sein", source: "SNDS" },
+                    { id: "prevalence_cancer", label: "Prévalence du cancer du sein chez la femme", variable: "p_kc_sein", source: "SNDS", publicUnavailable: true },
                     { id: "mortalite_tumeurs", label: "Mortalité par cancer colorectal", variable: "m_kc_colon", source: "INSERM-CépiDc, INSEE", tool: "MOCA-O", demoReady: true },
-                    { id: "prevalence_cancer", label: "Prévalence du cancer colorectal", variable: "p_kc_colon", source: "SNDS" },
+                    { id: "prevalence_cancer", label: "Prévalence du cancer colorectal", variable: "p_kc_colon", source: "SNDS", publicUnavailable: true },
                     { id: "mortalite_tumeurs", label: "Mortalité par cancer de la prostate", variable: "m_kc_prostate", source: "INSERM-CépiDc, INSEE", tool: "MOCA-O", demoReady: true },
-                    { id: "prevalence_cancer", label: "Prévalence du cancer de la prostate", variable: "p_kc_prostate", source: "SNDS" },
+                    { id: "prevalence_cancer", label: "Prévalence du cancer de la prostate", variable: "p_kc_prostate", source: "SNDS", publicUnavailable: true },
                 ]
             },
             {
                 id: "handicap",
                 title: "Handicap",
                 datasets: [
-                    { id: "prevalence_handicap", label: "Prévalence de la paraplégie", variable: "p_paraplegie", source: "SNDS" },
+                    { id: "prevalence_handicap", label: "Prévalence de la paraplégie", variable: "p_paraplegie", source: "SNDS", publicUnavailable: true },
                 ]
             }
         ],
@@ -565,7 +565,7 @@ export const BDI_THEMES = [
                 id: "addictions_ensemble",
                 title: "Ensemble des addictions",
                 datasets: [
-                    { id: "prevalence_addictions", label: "Prévalence des addictions", variable: "p_add", source: "SNDS" },
+                    { id: "prevalence_addictions", label: "Prévalence des addictions", variable: "p_add", source: "SNDS", publicUnavailable: true },
                 ]
             },
             {

@@ -1,4 +1,4 @@
-"""Extraction des données noyades 2023-2024 depuis les bilans SPF PDF.
+﻿"""Extraction des données noyades 2023-2024 depuis les bilans SPF PDF.
 
 Source : "Bilan Noyades -2024-2025.pdf" (Santé publique France, 22 mai 2025).
 Le Tableau 3 (pages 5-7) liste noyades + décès par région ET par département pour
@@ -34,7 +34,7 @@ import pdfplumber
 sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding="utf-8", errors="replace")
 
 ROOT = Path(__file__).resolve().parents[2]
-PDF_DIR = Path(r"C:/Users/chad9/Documents/003.ORSG/Livraison_Client/Version_FullStack/livrables_17avril/Retour client")
+PDF_DIR = Path(r"C:/Users/chad9/Documents/003.ORSG/Dernier fichiers sources client")
 PDF_FILE = PDF_DIR / "Bilan Noyades -2024-2025.pdf"
 OUT_DIR = ROOT / "Backend" / "inputs" / "opendata" / "spf_noyades"
 OUT_NEW = OUT_DIR / "noyades_departement_2022_2024.csv"
@@ -288,3 +288,4 @@ if __name__ == "__main__":
     print(f"Guyane : {guyane}")
     write_new_csv(rows)
     merge_with_old()
+

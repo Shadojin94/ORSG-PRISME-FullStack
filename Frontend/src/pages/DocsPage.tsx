@@ -137,6 +137,26 @@ export function DocsPage() {
             )
         }
 
+        // Indicateur non disponible en accès public (ex. prévalences SNDS).
+        if (ds.publicUnavailable) {
+            return (
+                <span className="inline-flex items-center gap-1.5 text-xs font-medium px-2.5 py-1 rounded-full bg-gray-50 text-gray-500 border border-gray-200">
+                    <span className="w-2 h-2 rounded-full bg-gray-300" />
+                    Non disponible en accès public
+                </span>
+            )
+        }
+
+        // Indicateur disponible uniquement via import de fichiers ORSG (MOCA-O).
+        if (ds.importRequired) {
+            return (
+                <span className="inline-flex items-center gap-1.5 text-xs font-medium px-2.5 py-1 rounded-full bg-amber-50 text-amber-700 border border-amber-200">
+                    <span className="w-2 h-2 rounded-full bg-amber-400" />
+                    Import de fichiers ORSG requis
+                </span>
+            )
+        }
+
         // Has demoReady flag = generation is supported
         if (ds.demoReady) {
             if (avail && avail.available) {
@@ -316,8 +336,10 @@ export function DocsPage() {
                         {/* Sub-themes and Datasets */}
                         <div className="p-4 space-y-3">
                             {filteredSubThemes?.map((subTheme) => {
-                                const stReady = subTheme.datasets.filter((d: any) => d.demoReady).length
-                                const stTotal = subTheme.datasets.length
+                                // On masque les indicateurs marqués hidden (non implémentés).
+                                const visibleDatasets = subTheme.datasets.filter((d: any) => !d.hidden)
+                                const stReady = visibleDatasets.filter((d: any) => d.demoReady).length
+                                const stTotal = visibleDatasets.length
                                 return (
                                 <div key={subTheme.id} className="border border-gray-200 rounded-lg overflow-hidden">
                                     {/* Sub-theme Header */}
@@ -365,7 +387,7 @@ export function DocsPage() {
                                                     </tr>
                                                 </thead>
                                                 <tbody className="divide-y divide-gray-100 text-sm">
-                                                    {subTheme.datasets.map((ds: any, idx: number) => (
+                                                    {visibleDatasets.map((ds: any, idx: number) => (
                                                         <tr key={`${ds.id}-${idx}`} className="hover:bg-[#3bb3a9]/5 transition-colors">
                                                             <td className="px-4 py-3 font-medium text-gray-900">
                                                                 {ds.label}

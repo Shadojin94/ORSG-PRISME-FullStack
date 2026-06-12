@@ -445,11 +445,18 @@ else:
             if y.isdigit(): years.append(int(y))
     elif src == "caf":
         import pandas as pd
-        caf = INPUTS_DIR / "caf_allocataires_2023.csv"
-        if caf.exists():
-            df = pd.read_csv(caf, sep=";", low_memory=False)
+        for caf in sorted(INPUTS_DIR.glob("caf_allocataires*.csv")):
+            try:
+                df = pd.read_csv(caf, sep=";", low_memory=False, encoding="utf-8-sig")
+            except Exception:
+                continue
             if "Date référence" in df.columns:
-                years = sorted(set(int(str(v)[:4]) for v in df["Date référence"].dropna()))
+                years.extend(int(str(v)[:4]) for v in df["Date référence"].dropna() if str(v)[:4].isdigit())
+            else:
+                # Fallback : année depuis le nom de fichier (ex. caf_allocataires_2023.csv)
+                tail = caf.stem.split("_")[-1]
+                if tail.isdigit() and len(tail) == 4:
+                    years.append(int(tail))
     elif src == "ircom":
         for p in INPUTS_DIR.rglob("ircom_communes_complet_revenus_*.xlsx"):
             y = p.stem.split("_")[-1]
@@ -481,7 +488,24 @@ else:
     elif src == "odisse_tabac":
         years = [2000, 2005, 2010, 2014, 2017, 2021]
     elif src == "spf_noyades":
-        years = [2003, 2004, 2006, 2009, 2012, 2015, 2018, 2021]
+        import pandas as pd
+        noyades_dir = INPUTS_DIR / "spf_noyades"
+        for p in sorted(noyades_dir.glob("noyades_departement_*.csv")):
+            try:
+                df = pd.read_csv(p, sep=";", low_memory=False, encoding="utf-8-sig")
+            except Exception:
+                continue
+            yr_col = next((c for c in df.columns if "ann" in c.lower()), None)
+            if yr_col:
+                years.extend(int(v) for v in df[yr_col].dropna() if str(v).strip().isdigit())
+        if not years:
+            years = [2003, 2004, 2006, 2009, 2012, 2015, 2018, 2021]
+    elif src == "drees_eaje":
+        drees_dir = INPUTS_DIR / "drees"
+        for p in sorted(drees_dir.glob("drees_offre_accueil_jeune_enfant_*_series_longues.xlsx")):
+            for tok in p.stem.split("_"):
+                if tok.isdigit() and len(tok) == 4:
+                    years.append(int(tok))
     years = sorted(set(years))
     print(json.dumps({"success": True, "years": years}))
 `);
@@ -758,6 +782,11 @@ except Exception as e:
         const theme = url.searchParams.get('theme') || 'educ';
         const year = url.searchParams.get('year') || '2022';
 
+        if (!(themesConfig.datasets || {})[theme]) {
+            jsonResponse(res, 400, { success: false, error: `Thème inconnu : ${theme}. Vérifiez le sujet sélectionné.` });
+            return;
+        }
+
         console.log(`\nGeneration requested: ${theme}_${year}`);
 
         try {
@@ -844,6 +873,11 @@ except Exception as e:
 
         if (!theme || !yearStart || !yearEnd || yearEnd < yearStart) {
             jsonResponse(res, 400, { success: false, error: 'Paramètres requis: theme, yearStart, yearEnd (yearEnd >= yearStart)' });
+            return;
+        }
+
+        if (!(themesConfig.datasets || {})[theme]) {
+            jsonResponse(res, 400, { success: false, error: `Thème inconnu : ${theme}. Vérifiez le sujet sélectionné.` });
             return;
         }
 

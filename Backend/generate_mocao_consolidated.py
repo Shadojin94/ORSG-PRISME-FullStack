@@ -30,7 +30,10 @@ import tempfile
 import shutil
 from pathlib import Path
 from openpyxl import load_workbook, Workbook
-from openpyxl.styles import Font
+from openpyxl.styles import Font, PatternFill
+
+# Meme convention que prisme_engine.py / generate_from_opendata.py
+ORANGE_FILL = PatternFill(start_color="FFC000", end_color="FFC000", fill_type="solid")
 
 BASE = Path(__file__).parent
 OUTPUT_DIR = BASE / "output"
@@ -169,6 +172,21 @@ def _norm_value(v):
     return v
 
 
+def _style_sheet(ws):
+    """Applique la convention MOCA-O des fichiers unitaires :
+    - en-tetes (ligne 1) : bold + ORANGE_FILL sur toutes les cellules
+    - donnees : ORANGE_FILL sur les colonnes > 1 sauf valeur manquante (MISSING_VALUE)
+      (la colonne 1 = code geo/commune n'est jamais coloree, comme dans les unitaires)
+    """
+    for c in ws[1]:
+        c.font = Font(bold=True)
+        c.fill = ORANGE_FILL
+    for row in ws.iter_rows(min_row=2):
+        for c in row:
+            if c.column > 1 and c.value != MISSING_VALUE:
+                c.fill = ORANGE_FILL
+
+
 def build_consolidated_xlsx(dataset_id: str, years: list[int],
                             year_data: dict, out_path: Path):
     """
@@ -192,8 +210,7 @@ def build_consolidated_xlsx(dataset_id: str, years: list[int],
         ws.append(com_headers)
         for row in com_rows:
             ws.append([_norm_value(c) for c in row])
-        for c in ws[1]:
-            c.font = Font(bold=True)
+        _style_sheet(ws)
 
     # ========== REG YYYY: one sheet per year ==========
     for y in years:
@@ -205,8 +222,7 @@ def build_consolidated_xlsx(dataset_id: str, years: list[int],
         ws.append(_rename_headers(headers))
         for row in body:
             ws.append([_norm_value(c) for c in row])
-        for c in ws[1]:
-            c.font = Font(bold=True)
+        _style_sheet(ws)
 
     # ========== DROM: all years ==========
     drom_headers = None
@@ -222,8 +238,7 @@ def build_consolidated_xlsx(dataset_id: str, years: list[int],
         ws.append(drom_headers)
         for row in drom_rows:
             ws.append([_norm_value(c) for c in row])
-        for c in ws[1]:
-            c.font = Font(bold=True)
+        _style_sheet(ws)
 
     # ========== franENT: all years ==========
     fra_headers = None
@@ -239,8 +254,7 @@ def build_consolidated_xlsx(dataset_id: str, years: list[int],
         ws.append(fra_headers)
         for row in fra_rows:
             ws.append([_norm_value(c) for c in row])
-        for c in ws[1]:
-            c.font = Font(bold=True)
+        _style_sheet(ws)
 
     # ========== FranHEX: all years ==========
     fh_headers = None
@@ -256,8 +270,7 @@ def build_consolidated_xlsx(dataset_id: str, years: list[int],
         ws.append(fh_headers)
         for row in fh_rows:
             ws.append([_norm_value(c) for c in row])
-        for c in ws[1]:
-            c.font = Font(bold=True)
+        _style_sheet(ws)
 
     out_path.parent.mkdir(parents=True, exist_ok=True)
     wb.save(out_path)

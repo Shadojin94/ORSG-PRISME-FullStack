@@ -64,7 +64,7 @@ export function UploadCSV({ onUploadComplete }: UploadCSVProps) {
             }
         } catch (error) {
             setUploadStatus('error');
-            setStatusMessage('Erreur de connexion au serveur');
+            setStatusMessage('Connexion impossible. Réessayez dans quelques instants.');
         } finally {
             setIsUploading(false);
         }

@@ -454,7 +454,7 @@ export function DashboardPage() {
                                 </span>
                             </div>
                             <p className="mt-2 text-sm text-white/85">
-                                Backend Python + Open Data INSEE en ligne
+                                Données publiques connectées
                             </p>
                         </div>
 
