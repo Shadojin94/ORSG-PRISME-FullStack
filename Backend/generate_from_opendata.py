@@ -434,16 +434,21 @@ def _build_educ_levels(year: int):
 
 
 def _build_alloc_levels(year: int):
-    source = INPUTS_DIR / "caf_allocataires_2023.csv"
-    if not source.exists():
-        raise FileNotFoundError(f"Source manquante: {source}")
+    sources = sorted(INPUTS_DIR.glob("caf_allocataires*.csv"))
+    if not sources:
+        raise FileNotFoundError(f"Source manquante: {INPUTS_DIR / 'caf_allocataires*.csv'}")
 
-    raw = _read_csv_auto(source)
-    if "Date référence" not in raw.columns:
-        raise ValueError("Colonne 'Date référence' absente du fichier CAF")
-    raw["year"] = raw["Date référence"].astype(str).str[:4]
-    raw = raw[raw["year"] == str(year)].copy()
-    if raw.empty:
+    raw = None
+    for source in sources:
+        candidate = _read_csv_auto(source)
+        if "Date référence" not in candidate.columns:
+            continue
+        candidate["year"] = candidate["Date référence"].astype(str).str[:4]
+        candidate = candidate[candidate["year"] == str(year)].copy()
+        if not candidate.empty:
+            raw = candidate
+            break
+    if raw is None:
         raise ValueError(f"Aucune ligne CAF pour l'annee {year}")
 
     if "Numéro commune" not in raw.columns:
