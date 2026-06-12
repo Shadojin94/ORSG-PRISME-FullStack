@@ -1,7 +1,10 @@
 import { useState, useEffect, useCallback } from "react"
 import { useNavigate } from "react-router-dom"
 import { Users, Search, MoreVertical, CheckCircle2, XCircle, UserPlus, Shield, Mail, Calendar, X, Loader2, ShieldCheck, ShieldOff, Pencil, KeyRound, Trash2 } from "lucide-react"
+import { motion } from "framer-motion"
 import { cn } from "@/lib/utils"
+import { PageHero } from "@/components/ui/PageHero"
+import { Avatar } from "@/components/ui/Avatar"
 import { useAuth } from "@/hooks/useAuth"
 import { pb, roleLabelFr } from "@/lib/pocketbase"
 import type { PrismeUser } from "@/lib/pocketbase"
@@ -132,70 +135,54 @@ export function AdminUsersPage() {
         }
     }
 
-    const getRoleAvatarColor = (role: string) => {
-        switch (role) {
-            case 'admin': return 'bg-purple-500'
-            case 'expert': return 'bg-blue-500'
-            case 'analyste': return 'bg-cyan-500'
-            case 'utilisateur': return 'bg-gray-500'
-            case 'invite': return 'bg-yellow-500'
-            default: return 'bg-gray-400'
-        }
-    }
-
     return (
-        <main className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
+        <main className="mx-auto max-w-7xl space-y-8 px-4 py-8 sm:px-6 lg:px-8">
 
-            <div className="flex flex-wrap items-end justify-between gap-4 mb-8">
-                <div className="flex items-center gap-3">
-                    <div className="grid h-10 w-10 place-items-center rounded-xl bg-[#1a4b8c]/10 text-[#1a4b8c]">
-                        <Users className="h-5 w-5" />
-                    </div>
-                    <div>
-                        <h1 className="text-2xl font-black text-[#1a4b8c]">Gestion des Utilisateurs</h1>
-                        <p className="text-sm text-slate-500">
-                            Administration des accès et des rôles de la plateforme.
-                        </p>
-                    </div>
-                </div>
-                <button
-                    onClick={() => setShowCreateModal(true)}
-                    className="flex items-center gap-2 rounded-lg bg-[#1a4b8c] px-3 py-2 text-xs font-black text-white shadow-sm transition-all hover:-translate-y-0.5 hover:bg-[#153e75] hover:shadow-lg"
-                >
-                    <UserPlus className="h-4 w-4" /> Nouvel Utilisateur
-                </button>
-            </div>
+            <PageHero
+                icon={Users}
+                eyebrow="Administration"
+                title="Comptes utilisateurs"
+                description="Gerez les acces, roles et statuts des membres de la plateforme."
+                actions={
+                    <button
+                        onClick={() => setShowCreateModal(true)}
+                        className="flex items-center gap-2 rounded-xl bg-[#f5c542] px-4 py-2.5 text-sm font-black text-[#1a4b8c] shadow-lg transition-all hover:-translate-y-0.5 hover:bg-[#f3bd2a] hover:shadow-xl"
+                    >
+                        <UserPlus className="h-4 w-4" /> Nouvel Utilisateur
+                    </button>
+                }
+            />
 
             {/* Stats */}
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
-                <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm transition-all hover:-translate-y-0.5 hover:shadow-lg">
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4, delay: 0.05 }} className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm transition-all hover:-translate-y-0.5 hover:shadow-lg">
                     <div className="grid h-10 w-10 place-items-center rounded-xl bg-[#1a4b8c]/10 text-[#1a4b8c] mb-3">
                         <Users className="h-5 w-5" />
                     </div>
                     <div className="text-2xl font-black text-[#1a4b8c]">{users.length}</div>
                     <div className="text-xs text-slate-500">Utilisateurs total</div>
-                </div>
-                <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm transition-all hover:-translate-y-0.5 hover:shadow-lg">
+                </motion.div>
+                <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4, delay: 0.1 }} className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm transition-all hover:-translate-y-0.5 hover:shadow-lg">
                     <div className="grid h-10 w-10 place-items-center rounded-xl bg-[#4caf50]/10 text-[#4caf50] mb-3">
                         <CheckCircle2 className="h-5 w-5" />
                     </div>
                     <div className="text-2xl font-black text-[#4caf50]">{users.filter(u => u.status === 'active').length}</div>
                     <div className="text-xs text-slate-500">Actifs</div>
-                </div>
-                <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm transition-all hover:-translate-y-0.5 hover:shadow-lg">
+                </motion.div>
+                <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4, delay: 0.15 }} className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm transition-all hover:-translate-y-0.5 hover:shadow-lg">
                     <div className="grid h-10 w-10 place-items-center rounded-xl bg-red-100 text-red-600 mb-3">
                         <XCircle className="h-5 w-5" />
                     </div>
                     <div className="text-2xl font-black text-red-500">{users.filter(u => u.status === 'inactive').length}</div>
                     <div className="text-xs text-slate-500">Inactifs</div>
-                </div>
-                <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm transition-all hover:-translate-y-0.5 hover:shadow-lg">
+                </motion.div>
+                <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4, delay: 0.2 }} className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm transition-all hover:-translate-y-0.5 hover:shadow-lg">
                     <div className="grid h-10 w-10 place-items-center rounded-xl bg-purple-100 text-purple-600 mb-3">
                         <Shield className="h-5 w-5" />
                     </div>
                     <div className="text-2xl font-black text-purple-500">{users.filter(u => u.role === 'admin').length}</div>
                     <div className="text-xs text-slate-500">Administrateurs</div>
-                </div>
+                </motion.div>
             </div>
 
             <div className="rounded-2xl border border-slate-200 bg-white shadow-sm">
@@ -225,7 +212,9 @@ export function AdminUsersPage() {
                     </div>
                 ) : filteredUsers.length === 0 ? (
                     <div className="p-12 text-center">
-                        <Users className="h-12 w-12 text-slate-300 mx-auto mb-4" />
+                        <div className="mx-auto mb-4 grid h-20 w-20 place-items-center rounded-full bg-gradient-to-br from-[#1a4b8c]/10 to-[#3bb3a9]/10">
+                            <Users className="h-9 w-9 text-[#1a4b8c]/60" />
+                        </div>
                         <h3 className="font-black text-[#1a4b8c] mb-1">Aucun utilisateur</h3>
                         <p className="text-slate-500 text-sm max-w-md mx-auto">
                             Aucun utilisateur ne correspond à votre recherche.
@@ -234,14 +223,9 @@ export function AdminUsersPage() {
                 ) : (
                     <div className="divide-y divide-slate-100">
                         {filteredUsers.map((user, idx) => (
-                            <div key={user.id} className="p-4 flex items-center justify-between hover:bg-slate-50/50 transition-colors">
+                            <div key={user.id} className="p-4 flex items-center justify-between transition-colors hover:bg-slate-50">
                                 <div className="flex items-center gap-4">
-                                    <div className={cn(
-                                        "w-12 h-12 rounded-xl flex items-center justify-center font-black text-white text-lg",
-                                        getRoleAvatarColor(user.role)
-                                    )}>
-                                        {(user.name || '?').split(' ').map(n => n[0]).join('').slice(0, 2)}
-                                    </div>
+                                    <Avatar user={user} className="h-12 w-12 rounded-xl text-lg" />
                                     <div>
                                         <div className="font-black text-[#1a4b8c] flex items-center gap-2">
                                             {user.name || user.email}

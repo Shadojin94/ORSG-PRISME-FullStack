@@ -1,7 +1,8 @@
 import { Link, useLocation, useNavigate } from "react-router-dom"
 import { cn } from "@/lib/utils"
 import { useAuth } from "@/hooks/useAuth"
-import { userInitials, roleLabelFr } from "@/lib/pocketbase"
+import { roleLabelFr } from "@/lib/pocketbase"
+import { Avatar } from "@/components/ui/Avatar"
 import {
     BookOpen,
     History,
@@ -50,7 +51,6 @@ export function Sidebar({ isOpen = false, onClose }: SidebarProps) {
 
     const displayName = user?.name || "Utilisateur"
     const displayRole = user ? roleLabelFr(user.role) : "Mon profil"
-    const initials = userInitials(user)
 
     return (
         <aside className={cn(
@@ -110,9 +110,10 @@ export function Sidebar({ isOpen = false, onClose }: SidebarProps) {
                     className="flex items-center gap-3 rounded-lg px-3 py-3 transition hover:bg-white/5"
                 >
                     <div className="relative">
-                        <div className="flex h-10 w-10 items-center justify-center rounded-full border-2 border-white/20 bg-[#3bb3a9] text-sm font-black text-white">
-                            {user ? initials : <UserCircle className="h-6 w-6" />}
-                        </div>
+                        {user
+                            ? <Avatar user={user} className="h-10 w-10 border-2 border-white/20 text-sm" />
+                            : <div className="flex h-10 w-10 items-center justify-center rounded-full border-2 border-white/20 bg-[#3bb3a9] text-white"><UserCircle className="h-6 w-6" /></div>
+                        }
                         <span className="absolute bottom-0 right-0 h-3 w-3 rounded-full border-2 border-[#153e75] bg-green-400" />
                     </div>
                     <div className="min-w-0 flex-1">

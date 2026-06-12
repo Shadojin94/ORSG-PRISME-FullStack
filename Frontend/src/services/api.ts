@@ -3,6 +3,8 @@
  * Centralise tous les appels à l'API backend
  */
 
+import { pb } from '@/lib/pocketbase';
+
 const API_BASE = '';  // Empty string = same origin
 
 // Types
@@ -233,6 +235,39 @@ export async function reloadConfig(): Promise<{ success: boolean; message?: stri
         method: 'POST'
     });
     return response.json();
+}
+
+// Donnees d'un fichier genere pour la dataviz du rapport de synthese
+export interface ReportSheet {
+    name: string;
+    columns: string[];
+    rows: Array<Record<string, string | number | null>>;
+}
+
+export async function getReportData(file: string): Promise<{ success: boolean; file?: string; sheets?: ReportSheet[]; error?: string }> {
+    const response = await fetch(`${API_BASE}/api/report-data?file=${encodeURIComponent(file)}`);
+    return response.json();
+}
+
+// ===== Avatar (photo de profil) =====
+
+// Envoie une image (data URI base64) au serveur. Max 2 Mo, png/jpeg/webp.
+export async function uploadAvatar(dataUri: string): Promise<{ success: boolean; url?: string; error?: string }> {
+    const response = await fetch(`${API_BASE}/api/avatar`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${pb.authStore.token}`,
+        },
+        body: JSON.stringify({ image: dataUri }),
+    });
+    return response.json();
+}
+
+// URL de l'avatar d'un utilisateur (cache-buster optionnel pour rafraichir apres upload).
+export function getAvatarUrl(userId: string, version?: number | string): string {
+    const v = version ? `?v=${version}` : '';
+    return `${API_BASE}/api/avatar/${userId}${v}`;
 }
 
 // Download URL helper

@@ -1,7 +1,9 @@
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { FileImage, FileDown, Loader2 } from "lucide-react";
 import html2canvas from "html2canvas";
 import { jsPDF } from "jspdf";
+import { getReportData, type ReportSheet } from "../../services/api";
+import { ReportCharts } from "./ReportCharts";
 
 /**
  * Rapport de synthèse téléchargeable (PDF / PNG).
@@ -56,6 +58,24 @@ export function ReportPreview({
 }: ReportPreviewProps) {
     const reportRef = useRef<HTMLDivElement>(null);
     const [busy, setBusy] = useState<"png" | "pdf" | null>(null);
+    const [sheets, setSheets] = useState<ReportSheet[] | null>(null);
+
+    // Charge les donnees du 1er fichier genere pour la dataviz.
+    useEffect(() => {
+        const file = generatedFiles[0];
+        if (!file) return;
+        let cancelled = false;
+        getReportData(file)
+            .then((res) => {
+                if (!cancelled && res.success && res.sheets) setSheets(res.sheets);
+            })
+            .catch(() => {
+                /* dataviz optionnelle : on garde le rapport metadonnees seul */
+            });
+        return () => {
+            cancelled = true;
+        };
+    }, [generatedFiles]);
 
     const today = new Date().toLocaleDateString("fr-FR", {
         day: "2-digit",
@@ -308,6 +328,13 @@ export function ReportPreview({
                             </div>
                         )}
                     </div>
+
+                    {/* Visualisation des donnees (graphiques recharts) */}
+                    {sheets && sheets.length > 0 && (
+                        <div style={{ borderTop: `1px solid ${COLORS.line}` }}>
+                            <ReportCharts sheets={sheets} />
+                        </div>
+                    )}
 
                     {/* Footer */}
                     <div

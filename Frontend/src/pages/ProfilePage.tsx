@@ -1,8 +1,11 @@
-import { useState, useEffect } from "react"
-import { User, Shield, Save, Loader2, CheckCircle2, Mail, Clock, ShieldCheck, ShieldOff, KeyRound, Eye, EyeOff } from "lucide-react"
+import { useState, useEffect, useRef } from "react"
+import { User, Shield, Save, Loader2, CheckCircle2, Mail, Clock, ShieldCheck, ShieldOff, KeyRound, Eye, EyeOff, Camera, UserCircle } from "lucide-react"
 import { cn } from "@/lib/utils"
 import { useAuth } from "@/hooks/useAuth"
-import { pb, userInitials } from "@/lib/pocketbase"
+import { pb } from "@/lib/pocketbase"
+import { PageHero } from "@/components/ui/PageHero"
+import { Avatar } from "@/components/ui/Avatar"
+import { uploadAvatar } from "@/services/api"
 
 export function ProfilePage() {
     const { user, refreshUser } = useAuth()
@@ -17,6 +20,12 @@ export function ProfilePage() {
         organization: '',
         department: '',
     })
+
+    // Avatar (photo de profil)
+    const fileInputRef = useRef<HTMLInputElement>(null)
+    const [uploadingAvatar, setUploadingAvatar] = useState(false)
+    const [avatarError, setAvatarError] = useState<string | null>(null)
+    const [avatarVersion, setAvatarVersion] = useState(() => Date.now())
 
     // Password change
     const [pwdForm, setPwdForm] = useState({ newPassword: '', confirmPassword: '' })
@@ -55,6 +64,36 @@ export function ProfilePage() {
             alert('Erreur lors de la sauvegarde du profil.')
         }
         setSaving(false)
+    }
+
+    const handleAvatarChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+        const file = e.target.files?.[0]
+        e.target.value = '' // permet de re-selectionner le meme fichier
+        if (!file) return
+        setAvatarError(null)
+        if (!['image/png', 'image/jpeg', 'image/webp'].includes(file.type)) {
+            setAvatarError('Format non supporté (PNG, JPEG ou WebP).')
+            return
+        }
+        if (file.size > 2 * 1024 * 1024) {
+            setAvatarError('Image trop lourde (2 Mo maximum).')
+            return
+        }
+        setUploadingAvatar(true)
+        try {
+            const dataUri: string = await new Promise((resolve, reject) => {
+                const reader = new FileReader()
+                reader.onload = () => resolve(reader.result as string)
+                reader.onerror = () => reject(new Error('Lecture du fichier impossible'))
+                reader.readAsDataURL(file)
+            })
+            const res = await uploadAvatar(dataUri)
+            if (!res.success) throw new Error(res.error || 'Échec du téléversement.')
+            setAvatarVersion(Date.now()) // force le rafraichissement de l'image
+        } catch (err: any) {
+            setAvatarError(err?.message || "Erreur lors de l'envoi de la photo.")
+        }
+        setUploadingAvatar(false)
     }
 
     const handleChangePassword = async () => {
@@ -108,21 +147,39 @@ export function ProfilePage() {
         setTogglingOtp(false)
     }
 
-    const initials = userInitials(user)
-
     return (
-        <main className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
+        <main className="mx-auto max-w-7xl space-y-8 px-4 py-8 sm:px-6 lg:px-8">
 
-            <div className="mb-8 flex flex-col gap-1">
-                <h1 className="text-2xl font-black text-[#1a4b8c]">Mon profil</h1>
-                <p className="text-sm text-slate-500">Gérez vos informations personnelles et vos paramètres de sécurité.</p>
-            </div>
+            <PageHero
+                icon={UserCircle}
+                eyebrow="Espace personnel"
+                title="Mon profil"
+                description="Gérez vos informations personnelles, votre photo et vos paramètres de sécurité."
+            />
 
-            <div className="mb-8 flex flex-col items-center gap-8 rounded-2xl border border-slate-200 bg-white p-5 shadow-sm md:flex-row md:items-start">
-                <div className="relative">
-                    <div className="flex h-32 w-32 items-center justify-center rounded-2xl border-4 border-white bg-gradient-to-br from-[#1a4b8c] to-[#3bb3a9] text-4xl font-black text-white shadow-lg">
-                        {initials}
-                    </div>
+            <div className="flex flex-col items-center gap-8 rounded-2xl border border-slate-200 bg-white p-6 shadow-sm transition-shadow hover:shadow-md md:flex-row md:items-start">
+                <div className="group relative shrink-0">
+                    <Avatar
+                        user={user}
+                        version={avatarVersion}
+                        className="h-32 w-32 rounded-2xl border-4 border-white text-4xl shadow-lg"
+                    />
+                    <button
+                        type="button"
+                        onClick={() => fileInputRef.current?.click()}
+                        disabled={uploadingAvatar}
+                        className="absolute -bottom-2 -right-2 flex h-10 w-10 items-center justify-center rounded-full border-2 border-white bg-[#1a4b8c] text-white shadow-lg transition hover:bg-[#153e75] disabled:opacity-60"
+                        aria-label="Changer la photo"
+                    >
+                        {uploadingAvatar ? <Loader2 className="h-4 w-4 animate-spin" /> : <Camera className="h-4 w-4" />}
+                    </button>
+                    <input
+                        ref={fileInputRef}
+                        type="file"
+                        accept="image/png,image/jpeg,image/webp"
+                        className="hidden"
+                        onChange={handleAvatarChange}
+                    />
                 </div>
                 <div className="flex-grow text-center md:text-left">
                     <h2 className="text-2xl font-black text-[#1a4b8c]">{user?.name || 'Utilisateur'}</h2>
@@ -135,6 +192,8 @@ export function ProfilePage() {
                         )}
                         <span className="rounded-full bg-green-50 px-3 py-1 text-sm font-black text-orsg-green">Compte actif</span>
                     </div>
+                    {avatarError && <p className="mt-3 text-sm text-red-600">{avatarError}</p>}
+                    <p className="mt-3 text-xs text-slate-400">Cliquez sur l'appareil photo pour changer votre image (PNG, JPEG ou WebP, 2 Mo max).</p>
                 </div>
             </div>
 

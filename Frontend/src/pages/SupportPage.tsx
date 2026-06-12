@@ -1,10 +1,12 @@
 import { useState, useEffect, useCallback } from "react"
-import { Mail, Send, Loader2, CheckCircle2, AlertCircle, Clock, MessageSquare, FileText, RefreshCw } from "lucide-react"
+import { motion } from "framer-motion"
+import { Mail, Send, Loader2, CheckCircle2, AlertCircle, Clock, MessageSquare, FileText, RefreshCw, LifeBuoy, BookOpen } from "lucide-react"
 import { cn } from "@/lib/utils"
 import { useAuth } from "@/hooks/useAuth"
 import { pb } from "@/lib/pocketbase"
 import type { SupportTicket } from "@/lib/pocketbase"
 import { getLogs } from "@/services/api"
+import { PageHero } from "@/components/ui/PageHero"
 
 const CATEGORIES = [
     { value: 'account', label: 'Mon compte' },
@@ -115,28 +117,31 @@ export function SupportPage() {
     }
 
     return (
-        <main className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
+        <main className="mx-auto max-w-7xl space-y-8 px-4 py-8 sm:px-6 lg:px-8">
 
-            <div className="mb-8 flex flex-col gap-1">
-                <div className="flex items-center gap-3">
-                    <h1 className="text-2xl font-black text-[#1a4b8c]">Centre d'aide & support</h1>
-                    <span className="rounded-full bg-teal-50 px-3 py-1 text-xs font-black text-[#3bb3a9]">Support</span>
-                </div>
-                <p className="text-sm text-slate-500">
-                    Besoin d'aide ? Soumettez un ticket de support ou contactez directement l'administration.
-                </p>
-            </div>
+            <PageHero
+                icon={LifeBuoy}
+                eyebrow="Assistance"
+                title="Support"
+                description="Une question, un bug ou un besoin d'aide ? Ouvrez un ticket ou contactez directement l'administration."
+            />
 
             <div className="grid gap-6 lg:grid-cols-2">
 
             {/* Ticket Form */}
-            <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
-                <h2 className="mb-4 flex items-center gap-3 text-lg font-black text-[#1a4b8c]">
-                    <span className="grid h-10 w-10 place-items-center rounded-xl bg-blue-50 text-[#1a4b8c]">
+            <motion.div
+                initial={{ opacity: 0, y: 12 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.4 }}
+                className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm transition hover:shadow-md"
+            >
+                <div className="mb-1 flex items-center gap-3">
+                    <span className="grid h-10 w-10 place-items-center rounded-xl bg-gradient-to-br from-[#1a4b8c]/15 to-[#3bb3a9]/15 text-[#1a4b8c]">
                         <MessageSquare className="h-5 w-5" />
                     </span>
-                    Nouveau ticket de support
-                </h2>
+                    <h2 className="text-lg font-black text-[#1a4b8c]">Nouveau ticket de support</h2>
+                </div>
+                <p className="mb-5 pl-[52px] text-sm text-slate-500">Decrivez votre situation, nous revenons vers vous rapidement.</p>
 
                 {submitted && (
                     <div className="mb-4 flex items-center gap-2 rounded-xl border border-green-200 bg-green-50 p-3 text-sm text-green-700">
@@ -207,22 +212,22 @@ export function SupportPage() {
                         <button
                             type="submit"
                             disabled={submitting}
-                            className="flex items-center gap-2 rounded-lg bg-[#1a4b8c] px-4 py-2 text-sm font-black text-white transition-colors hover:bg-[#153e75] disabled:opacity-60"
+                            className="flex items-center gap-2 rounded-lg bg-[#1a4b8c] px-5 py-2.5 text-sm font-black text-white shadow-sm transition-all hover:bg-[#153e75] hover:shadow-md disabled:opacity-60"
                         >
                             {submitting ? <Loader2 className="h-4 w-4 animate-spin" /> : <Send className="h-4 w-4" />}
                             Envoyer le ticket
                         </button>
                     </div>
                 </form>
-            </div>
+            </motion.div>
 
             {/* Contact Admin */}
             <div className="grid gap-4 sm:grid-cols-2 lg:col-span-2 lg:order-last">
                 <a
                     href="mailto:naissa.chateau@ors-guyane.org?subject=[Data Visus] Demande de support"
-                    className="block rounded-2xl border border-slate-200 bg-white p-5 text-center shadow-sm transition-all hover:-translate-y-0.5 hover:shadow-lg"
+                    className="group block rounded-2xl border border-slate-200 bg-white p-6 text-center shadow-sm transition-all hover:-translate-y-0.5 hover:shadow-md"
                 >
-                    <div className="mx-auto mb-4 grid h-11 w-11 place-items-center rounded-xl bg-blue-50 text-[#1a4b8c]">
+                    <div className="mx-auto mb-4 grid h-12 w-12 place-items-center rounded-xl bg-gradient-to-br from-[#1a4b8c]/15 to-[#3bb3a9]/15 text-[#1a4b8c] transition group-hover:scale-105">
                         <Mail className="h-6 w-6" />
                     </div>
                     <h3 className="mb-1 font-black text-[#1a4b8c]">Contacter l'admin</h3>
@@ -231,10 +236,10 @@ export function SupportPage() {
 
                 <a
                     href="/docs"
-                    className="block rounded-2xl border border-slate-200 bg-white p-5 text-center shadow-sm transition-all hover:-translate-y-0.5 hover:shadow-lg"
+                    className="group block rounded-2xl border border-slate-200 bg-white p-6 text-center shadow-sm transition-all hover:-translate-y-0.5 hover:shadow-md"
                 >
-                    <div className="mx-auto mb-4 grid h-11 w-11 place-items-center rounded-xl bg-emerald-50 text-emerald-700">
-                        <MessageSquare className="h-6 w-6" />
+                    <div className="mx-auto mb-4 grid h-12 w-12 place-items-center rounded-xl bg-gradient-to-br from-[#3bb3a9]/15 to-[#4caf50]/15 text-[#3bb3a9] transition group-hover:scale-105">
+                        <BookOpen className="h-6 w-6" />
                     </div>
                     <h3 className="mb-1 font-black text-[#1a4b8c]">Documentation</h3>
                     <p className="text-sm text-slate-500">Référentiel BDI & guide d'utilisation</p>
@@ -242,21 +247,23 @@ export function SupportPage() {
             </div>
 
             {/* Tickets List */}
-            <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm lg:col-span-2">
-                <h2 className="mb-4 flex items-center gap-3 text-lg font-black text-[#1a4b8c]">
-                    <span className="grid h-10 w-10 place-items-center rounded-xl bg-amber-50 text-amber-600">
+            <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm transition hover:shadow-md lg:col-span-2">
+                <div className="mb-5 flex items-center gap-3">
+                    <span className="grid h-10 w-10 place-items-center rounded-xl bg-gradient-to-br from-[#f5c542]/25 to-[#ff9800]/20 text-[#ff9800]">
                         <Clock className="h-5 w-5" />
                     </span>
-                    Mes tickets ({tickets.length})
-                </h2>
+                    <h2 className="text-lg font-black text-[#1a4b8c]">Mes tickets ({tickets.length})</h2>
+                </div>
 
                 {loadingTickets ? (
                     <div className="py-6 text-center">
                         <Loader2 className="mx-auto h-5 w-5 animate-spin text-[#3bb3a9]" />
                     </div>
                 ) : tickets.length === 0 ? (
-                    <div className="py-8 text-center">
-                        <MessageSquare className="mx-auto mb-3 h-8 w-8 text-slate-300" />
+                    <div className="rounded-xl border border-dashed border-slate-200 bg-slate-50/50 py-12 text-center">
+                        <div className="mx-auto mb-4 grid h-14 w-14 place-items-center rounded-2xl bg-gradient-to-br from-[#1a4b8c]/10 to-[#3bb3a9]/10 text-[#3bb3a9]">
+                            <MessageSquare className="h-7 w-7" />
+                        </div>
                         <p className="font-black text-slate-700">Aucun ticket de support</p>
                         <p className="mt-1 text-sm text-slate-500">Soumettez un ticket ci-dessus si vous avez besoin d'aide.</p>
                     </div>
@@ -266,7 +273,7 @@ export function SupportPage() {
                             const status = STATUS_LABELS[ticket.status] || STATUS_LABELS.open
                             const priority = PRIORITIES.find(p => p.value === ticket.priority)
                             return (
-                                <div key={ticket.id} className="rounded-xl border border-slate-200 p-4 transition-all hover:-translate-y-0.5 hover:shadow-lg">
+                                <div key={ticket.id} className="rounded-xl border border-slate-200 bg-white p-4 transition-all hover:-translate-y-0.5 hover:border-slate-300 hover:shadow-md">
                                     <div className="flex items-start justify-between">
                                         <div className="flex-1">
                                             <h4 className="text-sm font-black text-slate-900">{ticket.subject}</h4>
@@ -301,14 +308,14 @@ export function SupportPage() {
             </div>
 
             {/* Journal technique */}
-            <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm lg:col-span-2">
-                <div className="mb-3 flex items-center justify-between gap-3">
-                    <h2 className="flex items-center gap-3 text-lg font-black text-[#1a4b8c]">
-                        <span className="grid h-10 w-10 place-items-center rounded-xl bg-slate-100 text-slate-600">
+            <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm transition hover:shadow-md lg:col-span-2">
+                <div className="mb-3 flex flex-wrap items-center justify-between gap-3">
+                    <div className="flex items-center gap-3">
+                        <span className="grid h-10 w-10 place-items-center rounded-xl bg-gradient-to-br from-slate-200 to-slate-100 text-slate-600">
                             <FileText className="h-5 w-5" />
                         </span>
-                        Journal technique
-                    </h2>
+                        <h2 className="text-lg font-black text-[#1a4b8c]">Journal technique</h2>
+                    </div>
                     <button
                         onClick={loadLogs}
                         disabled={loadingLogs}
@@ -318,7 +325,7 @@ export function SupportPage() {
                         Rafraîchir
                     </button>
                 </div>
-                <p className="mb-3 text-xs text-slate-500">
+                <p className="mb-4 pl-[52px] text-xs text-slate-500">
                     Derniers événements du serveur (générations, connexions, erreurs). Utile pour le suivi des bugs.
                 </p>
 

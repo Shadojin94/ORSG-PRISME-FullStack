@@ -2,9 +2,10 @@ import { useState, useEffect, useCallback } from "react"
 import { motion } from "framer-motion"
 import { BDI_THEMES } from "@/data/bdi_themes"
 import { cn } from "@/lib/utils"
-import { Search, ChevronRight, ChevronDown, Database, FileSpreadsheet, Loader2, BookOpen } from "lucide-react"
+import { Search, ChevronRight, Database, FileSpreadsheet, Loader2, BookOpen } from "lucide-react"
 import { checkCsvAvailability } from "@/services/api"
 import { Acronym } from "@/components/ui/Acronym"
+import { PageHero } from "@/components/ui/PageHero"
 
 // Collect unique sources from BDI_THEMES
 function countUniqueSources(): number {
@@ -213,46 +214,42 @@ export function DocsPage() {
     }
 
     return (
-        <main className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
+        <main className="mx-auto max-w-7xl space-y-8 px-4 py-8 sm:px-6 lg:px-8">
+
+            {/* En-tete de page premium */}
+            <PageHero
+                icon={BookOpen}
+                eyebrow="Reference des donnees"
+                title="Dictionnaire BDI"
+                description="Explorez les themes, sources et jeux de donnees de la Base de Donnees Indicateurs."
+            />
+
             <motion.div
                 initial={{ opacity: 0, y: 8 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.4 }}
-                className="space-y-6"
+                className="space-y-8"
             >
-
-                {/* En-tête de page */}
-                <div className="flex items-center gap-4">
-                    <div className="grid h-10 w-10 place-items-center rounded-xl bg-blue-50 text-[#1a4b8c]">
-                        <BookOpen className="h-5 w-5" />
-                    </div>
-                    <div>
-                        <h1 className="text-lg font-black text-[#1a4b8c] sm:text-2xl">Référentiel <Acronym term="BDI" /></h1>
-                        <p className="text-xs text-slate-500 sm:text-sm">
-                            Dictionnaire complet des indicateurs et variables de la Base de Données.
-                        </p>
-                    </div>
-                </div>
 
                 {/* Stats */}
                 <div className="grid grid-cols-2 gap-4 md:grid-cols-4">
-                    <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
+                    <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm transition hover:shadow-md">
                         <div className="text-2xl font-black text-[#1a4b8c]">{BDI_THEMES.length}</div>
                         <div className="text-xs text-slate-500">Thématiques</div>
                     </div>
-                    <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
+                    <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm transition hover:shadow-md">
                         <div className="text-2xl font-black text-[#3bb3a9]">
                             {BDI_THEMES.reduce((acc, t) => acc + (t.subThemes?.length || 0), 0)}
                         </div>
                         <div className="text-xs text-slate-500">Sous-thèmes</div>
                     </div>
-                    <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
+                    <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm transition hover:shadow-md">
                         <div className="text-2xl font-black text-[#4caf50]">
                             {BDI_THEMES.reduce((acc, t) => acc + (t.subThemes?.reduce((a, st) => a + st.datasets.length, 0) || 0), 0)}
                         </div>
                         <div className="text-xs text-slate-500">Indicateurs</div>
                     </div>
-                    <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
+                    <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm transition hover:shadow-md">
                         <div className="text-2xl font-black text-[#f5c542]">{UNIQUE_SOURCES_COUNT}</div>
                         <div className="text-xs text-slate-500">Sources de données</div>
                     </div>
@@ -261,13 +258,14 @@ export function DocsPage() {
                 <div className="grid gap-6 md:grid-cols-4">
 
                     {/* Categories Sidebar */}
-                    <div className="h-fit space-y-1 rounded-2xl border border-slate-200 bg-white p-3 shadow-sm">
+                    <div className="h-fit space-y-1.5 rounded-2xl border border-slate-200 bg-white p-3 shadow-sm">
                         <div className="px-3 py-2 text-xs font-black uppercase tracking-wider text-slate-500">
                             Thématiques BDI
                         </div>
                         {BDI_THEMES.map((theme) => {
                             const tReady = countThemeReady(theme)
                             const tTotal = countThemeTotal(theme)
+                            const isActive = activeThemeId === theme.id
                             return (
                             <button
                                 key={theme.id}
@@ -277,13 +275,21 @@ export function DocsPage() {
                                     setSearchTerm("")
                                 }}
                                 className={cn(
-                                    "flex w-full items-center gap-3 rounded-lg px-3 py-3 text-left transition-all",
-                                    activeThemeId === theme.id
-                                        ? "border border-[#3bb3a9]/20 bg-[#3bb3a9]/10 font-black text-[#1a4b8c] shadow-sm"
-                                        : "text-slate-600 hover:bg-slate-50 hover:text-slate-900"
+                                    "flex w-full items-center gap-3 rounded-xl px-3 py-3 text-left transition-all",
+                                    isActive
+                                        ? "border border-[#3bb3a9]/20 bg-gradient-to-r from-[#1a4b8c]/5 to-[#3bb3a9]/10 font-black text-[#1a4b8c] shadow-sm"
+                                        : "border border-transparent text-slate-600 hover:bg-slate-50 hover:text-slate-900"
                                 )}
                             >
-                                <theme.icon className={cn("h-5 w-5", activeThemeId === theme.id ? "text-[#3bb3a9]" : "text-slate-400")} />
+                                {/* Pastille d'icone arrondie degradee */}
+                                <span className={cn(
+                                    "grid h-9 w-9 shrink-0 place-items-center rounded-xl transition-all",
+                                    isActive
+                                        ? "bg-gradient-to-br from-[#1a4b8c] to-[#3bb3a9] text-white shadow-sm"
+                                        : "bg-slate-100 text-slate-400"
+                                )}>
+                                    <theme.icon className="h-5 w-5" />
+                                </span>
                                 <div className="min-w-0 flex-1">
                                     <span className="block truncate text-sm">{theme.shortTitle}</span>
                                     <span className="flex items-center gap-2 text-[10px] text-slate-400">
@@ -310,10 +316,10 @@ export function DocsPage() {
                         <div className="min-h-[600px] overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
 
                             {/* Theme Header */}
-                            <div className="border-b border-slate-100 bg-gradient-to-r from-slate-50 to-white p-5">
+                            <div className="border-b border-slate-100 bg-gradient-to-r from-slate-50 to-white p-5 sm:p-6">
                                 <div className="flex flex-col justify-between gap-4 md:flex-row md:items-center">
                                     <div className="flex items-center gap-4">
-                                        <div className={cn("grid h-12 w-12 place-items-center rounded-xl", activeTheme?.bgColor)}>
+                                        <div className={cn("grid h-12 w-12 place-items-center rounded-2xl shadow-sm", activeTheme?.bgColor)}>
                                             {activeTheme && <activeTheme.icon className="h-6 w-6 text-white" />}
                                         </div>
                                         <div>
@@ -331,35 +337,42 @@ export function DocsPage() {
                                     </div>
                                 </div>
 
-                                {/* Search */}
-                                <div className="relative mt-4">
-                                    <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
+                                {/* Search premium */}
+                                <div className="relative mt-5">
+                                    <Search className="absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
                                     <input
                                         type="text"
                                         placeholder="Rechercher un indicateur, une variable, une source..."
                                         value={searchTerm}
                                         onChange={(e) => setSearchTerm(e.target.value)}
-                                        className="w-full rounded-lg border border-slate-200 py-2 pl-9 pr-4 text-sm outline-none transition focus:border-[#3bb3a9] focus:ring-4 focus:ring-[#3bb3a9]/10"
+                                        className="w-full rounded-2xl border border-slate-200 bg-white py-3 pl-11 pr-4 text-sm shadow-sm outline-none transition focus:border-[#3bb3a9] focus:shadow-md focus:ring-4 focus:ring-[#3bb3a9]/10"
                                     />
                                 </div>
                             </div>
 
                             {/* Sub-themes and Datasets */}
-                            <div className="space-y-3 p-4">
+                            <div className="space-y-3 p-4 sm:p-5">
                                 {filteredSubThemes?.map((subTheme) => {
                                     // On masque les indicateurs marqués hidden (non implémentés).
                                     const visibleDatasets = subTheme.datasets.filter((d: any) => !d.hidden)
                                     const stReady = visibleDatasets.filter((d: any) => d.demoReady).length
                                     const stTotal = visibleDatasets.length
+                                    const isOpen = expandedSubThemes.includes(subTheme.id)
                                     return (
-                                    <div key={subTheme.id} className="overflow-hidden rounded-xl border border-slate-200">
+                                    <div key={subTheme.id} className="overflow-hidden rounded-2xl border border-slate-200 shadow-sm transition hover:shadow-md">
                                         {/* Sub-theme Header */}
                                         <button
                                             onClick={() => toggleSubTheme(subTheme.id)}
-                                            className="flex w-full items-center justify-between bg-slate-50 p-4 transition-colors hover:bg-slate-100"
+                                            className={cn(
+                                                "flex w-full items-center justify-between p-4 transition-colors",
+                                                isOpen ? "bg-slate-50" : "bg-white hover:bg-slate-50"
+                                            )}
                                         >
                                             <div className="flex items-center gap-3">
-                                                <Database className="h-5 w-5 text-[#3bb3a9]" />
+                                                {/* Pastille d'icone degradee */}
+                                                <span className="grid h-10 w-10 shrink-0 place-items-center rounded-xl bg-gradient-to-br from-[#1a4b8c]/10 to-[#3bb3a9]/15 text-[#3bb3a9]">
+                                                    <Database className="h-5 w-5" />
+                                                </span>
                                                 <div className="text-left">
                                                     <h3 className="font-black text-slate-800">{subTheme.title}</h3>
                                                     <p className="text-xs text-slate-500">{stTotal} indicateurs</p>
@@ -367,7 +380,7 @@ export function DocsPage() {
                                             </div>
                                             <div className="flex items-center gap-3">
                                                 <span className={cn(
-                                                    "rounded-full px-2 py-0.5 text-[10px] font-medium",
+                                                    "rounded-full px-2.5 py-0.5 text-[10px] font-medium",
                                                     stReady === stTotal && stReady > 0
                                                         ? "border border-green-200 bg-green-50 text-green-600"
                                                         : stReady > 0
@@ -376,16 +389,16 @@ export function DocsPage() {
                                                 )}>
                                                     {stReady}/{stTotal} dispo
                                                 </span>
-                                                {expandedSubThemes.includes(subTheme.id) ? (
-                                                    <ChevronDown className="h-5 w-5 text-slate-400" />
-                                                ) : (
-                                                    <ChevronRight className="h-5 w-5 text-slate-400" />
-                                                )}
+                                                {/* Chevron anime au depliage */}
+                                                <ChevronRight className={cn(
+                                                    "h-5 w-5 text-slate-400 transition-transform duration-200",
+                                                    isOpen && "rotate-90"
+                                                )} />
                                             </div>
                                         </button>
 
                                         {/* Datasets Table */}
-                                        {expandedSubThemes.includes(subTheme.id) && (
+                                        {isOpen && (
                                             <div className="border-t border-slate-200">
                                                 <table className="w-full text-left">
                                                     <thead className="border-b border-slate-200 bg-slate-50 text-xs font-black uppercase tracking-wider text-slate-500">
@@ -399,7 +412,7 @@ export function DocsPage() {
                                                     </thead>
                                                     <tbody className="divide-y divide-slate-100 text-sm">
                                                         {visibleDatasets.map((ds: any, idx: number) => (
-                                                            <tr key={`${ds.id}-${idx}`} className="transition-colors hover:bg-slate-50/50">
+                                                            <tr key={`${ds.id}-${idx}`} className="transition-colors hover:bg-slate-50">
                                                                 <td className="px-4 py-3 font-medium text-slate-900">
                                                                     {ds.label}
                                                                 </td>
@@ -411,7 +424,7 @@ export function DocsPage() {
                                                                     )}
                                                                 </td>
                                                                 <td className="px-4 py-3">
-                                                                    <span className="inline-flex items-center gap-1 rounded border border-slate-200 bg-slate-100 px-2 py-1 text-xs font-medium text-slate-600">
+                                                                    <span className="inline-flex items-center gap-1 rounded-lg border border-slate-200 bg-slate-100 px-2 py-1 text-xs font-medium text-slate-600">
                                                                         <FileSpreadsheet className="h-3 w-3" />
                                                                         {ds.source}
                                                                     </span>
@@ -435,11 +448,13 @@ export function DocsPage() {
 
                                 {/* Empty state for search */}
                                 {filteredSubThemes?.length === 0 && searchTerm && (
-                                    <div className="flex flex-col items-center justify-center p-10 text-center">
-                                        <Search className="h-12 w-12 text-slate-300" />
-                                        <h3 className="mt-4 text-base font-black text-[#1a4b8c]">Aucun résultat</h3>
-                                        <p className="mt-1 text-sm text-slate-500">
-                                            Aucun indicateur ne correspond à "{searchTerm}"
+                                    <div className="flex flex-col items-center justify-center px-6 py-16 text-center">
+                                        <div className="grid h-20 w-20 place-items-center rounded-full bg-gradient-to-br from-[#1a4b8c]/10 to-[#3bb3a9]/10">
+                                            <Search className="h-9 w-9 text-[#3bb3a9]" />
+                                        </div>
+                                        <h3 className="mt-5 text-base font-black text-[#1a4b8c]">Aucun résultat</h3>
+                                        <p className="mt-1.5 max-w-sm text-sm text-slate-500">
+                                            Aucun indicateur ne correspond à « {searchTerm} ». Essayez un autre terme ou une autre thématique.
                                         </p>
                                     </div>
                                 )}

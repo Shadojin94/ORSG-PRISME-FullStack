@@ -10,6 +10,8 @@ const crypto = require('crypto');
 const { spawn } = require('child_process');
 const Busboy = require('busboy');
 const PocketBase = require('pocketbase').default || require('pocketbase');
+const { handleReportData } = require('./report_data');
+const { handleAvatar } = require('./avatar');
 
 // Utility: SHA256 hash
 function sha256(str) {
@@ -1472,6 +1474,14 @@ except Exception as e:
         }
         return;
     }
+
+    // ========== RAPPORT GRAPHIQUE (donnees du fichier genere) ==========
+    if (urlPath === '/report-data' && req.method === 'GET') {
+        return handleReportData(req, res, urlPath, Object.fromEntries(url.searchParams));
+    }
+
+    // ========== AVATARS (photo de profil) ==========
+    if (await handleAvatar(req, res, urlPath)) return;
 
     if (rawPath.startsWith('/api/')) {
         jsonResponse(res, 404, { success: false, error: 'Endpoint API introuvable' });
