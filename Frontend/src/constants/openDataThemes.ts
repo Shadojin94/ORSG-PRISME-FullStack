@@ -5,5 +5,5 @@ export const OPEN_DATA_SUPPORTED_THEMES = [
     'pers_menages', 'types_menages', 'alloc', 'revenu', 'densite',
     'route', 'mortalite_gen', 'mortalite_cardio', 'mortalite_tumeurs',
     'mortalite_respi', 'mortalite_neuro', 'mortalite_diabete', 'mortalite_covid',
-    'accueil_pop_inf3ans'
+    'accueil_pop_inf3ans', 'noyades'
 ];
