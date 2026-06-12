@@ -1,17 +1,30 @@
 import { CheckCircle2, Download, RefreshCw, FileSpreadsheet, AlertTriangle } from "lucide-react";
+import { ReportPreview } from "./ReportPreview";
 
 interface Step3Props {
     generatedFiles: string[];
     warnings?: string[];
     onDownload: (filename: string) => void;
     onRestart: () => void;
+    themeLabel: string;
+    subjectLabel: string;
+    indicators: Array<{ id: string; variable: string; label: string; source?: string; demoReady?: boolean }>;
+    year: string;
+    sourceMode: "opendata" | "moca";
+    format: string;
 }
 
 export function Step3_Result({
     generatedFiles,
     warnings = [],
     onDownload,
-    onRestart
+    onRestart,
+    themeLabel,
+    subjectLabel,
+    indicators,
+    year,
+    sourceMode,
+    format
 }: Step3Props) {
 
     const count = generatedFiles.length;
@@ -91,9 +104,21 @@ export function Step3_Result({
                 </button>
             )}
 
+            <div className="w-full border-t border-gray-200 pt-10 mt-2 text-left">
+                <ReportPreview
+                    themeLabel={themeLabel}
+                    subjectLabel={subjectLabel}
+                    indicators={indicators}
+                    year={year}
+                    sourceMode={sourceMode}
+                    format={format}
+                    generatedFiles={generatedFiles}
+                />
+            </div>
+
             <button
                 onClick={onRestart}
-                className="text-gray-400 hover:text-[#1a4b8c] text-sm font-bold flex items-center gap-2 transition-colors py-2 px-4 rounded-lg hover:bg-gray-100"
+                className="text-gray-400 hover:text-[#1a4b8c] text-sm font-bold flex items-center gap-2 transition-colors py-2 px-4 rounded-lg hover:bg-gray-100 mt-8"
             >
                 <RefreshCw className="w-4 h-4" />
                 Nouvelle génération

@@ -83,6 +83,9 @@ const SMTP_PORT = parseInt(process.env.SMTP_PORT || '587');
 const SMTP_USER = process.env.SMTP_USER || '';
 const SMTP_PASS = process.env.SMTP_PASS || '';
 const SMTP_FROM = process.env.SMTP_FROM || 'Data Visus ORSG <noreply@orsg.fr>';
+// Resend HTTP API (port 443 — fiable derriere les pare-feux qui bloquent le SMTP sortant).
+// Utilise RESEND_API_KEY, ou SMTP_PASS si c'est une cle Resend (prefixe re_).
+const RESEND_API_KEY = process.env.RESEND_API_KEY || (SMTP_PASS.startsWith('re_') ? SMTP_PASS : '');
 
 // PocketBase admin client (initialized lazily)
 let pbAdmin = null;
@@ -158,7 +161,37 @@ try {
     console.warn('   nodemailer not installed — OTP codes will be logged to console only');
 }
 
+// Envoi via l'API HTTPS Resend (contourne les blocages du port SMTP sortant)
+async function sendViaResendApi(to, subject, text, html) {
+    const res = await fetch('https://api.resend.com/emails', {
+        method: 'POST',
+        headers: { 'Authorization': `Bearer ${RESEND_API_KEY}`, 'Content-Type': 'application/json' },
+        body: JSON.stringify({ from: SMTP_FROM, to: [to], subject, text, html }),
+    });
+    if (!res.ok) {
+        const body = await res.text().catch(() => '');
+        throw new Error(`Resend API ${res.status}: ${body}`);
+    }
+    return true;
+}
+
 async function sendEmailCode(email, code) {
+    const subject = `Votre code de connexion Data Visus : ${code}`;
+    const text = `Votre code de connexion Data Visus est : ${code}\n\nCe code expire dans 5 minutes.\nSi vous n'avez pas demande ce code, ignorez ce message.`;
+    const html = `<div style="font-family:Arial,sans-serif;max-width:480px;margin:0 auto;padding:32px;border:1px solid #e5e7eb;border-radius:16px">
+            <h2 style="color:#1a4b8c;margin-bottom:8px">Data Visus</h2>
+            <p style="color:#374151">Votre code de connexion :</p>
+            <div style="background:#f0f9ff;border:2px solid #3bb3a9;border-radius:12px;padding:24px;text-align:center;margin:16px 0">
+                <span style="font-size:32px;font-weight:bold;letter-spacing:8px;color:#1a4b8c">${code}</span>
+            </div>
+            <p style="color:#6b7280;font-size:14px">Ce code expire dans <strong>5 minutes</strong>.</p>
+            <p style="color:#9ca3af;font-size:12px;margin-top:24px">Si vous n'avez pas demande ce code, ignorez ce message.</p>
+        </div>`;
+    if (RESEND_API_KEY) {
+        await sendViaResendApi(email, subject, text, html);
+        console.log(`   [OTP] Code sent to ${email} (Resend API)`);
+        return true;
+    }
     if (!nodemailer || !SMTP_HOST || !SMTP_USER) {
         console.log(`\n   [OTP] Code for ${email}: ${code}  (email not configured, showing in console)\n`);
         return false;
@@ -169,26 +202,28 @@ async function sendEmailCode(email, code) {
         secure: parseInt(SMTP_PORT) === 465,
         auth: { user: SMTP_USER, pass: SMTP_PASS },
     });
-    await transporter.sendMail({
-        from: SMTP_FROM,
-        to: email,
-        subject: `Votre code de connexion Data Visus : ${code}`,
-        text: `Votre code de connexion Data Visus est : ${code}\n\nCe code expire dans 5 minutes.\nSi vous n'avez pas demande ce code, ignorez ce message.`,
-        html: `<div style="font-family:Arial,sans-serif;max-width:480px;margin:0 auto;padding:32px;border:1px solid #e5e7eb;border-radius:16px">
-            <h2 style="color:#1a4b8c;margin-bottom:8px">Data Visus</h2>
-            <p style="color:#374151">Votre code de connexion :</p>
-            <div style="background:#f0f9ff;border:2px solid #3bb3a9;border-radius:12px;padding:24px;text-align:center;margin:16px 0">
-                <span style="font-size:32px;font-weight:bold;letter-spacing:8px;color:#1a4b8c">${code}</span>
-            </div>
-            <p style="color:#6b7280;font-size:14px">Ce code expire dans <strong>5 minutes</strong>.</p>
-            <p style="color:#9ca3af;font-size:12px;margin-top:24px">Si vous n'avez pas demande ce code, ignorez ce message.</p>
-        </div>`,
-    });
+    await transporter.sendMail({ from: SMTP_FROM, to: email, subject, text, html });
     console.log(`   [OTP] Code sent to ${email}`);
     return true;
 }
 
 async function sendTempPassword(email, tempPassword) {
+    const subject = 'Data Visus — Mot de passe temporaire';
+    const text = `Votre mot de passe temporaire Data Visus est : ${tempPassword}\n\nConnectez-vous et changez-le des que possible.\nSi vous n'avez pas demande cette reinitialisation, ignorez ce message.`;
+    const html = `<div style="font-family:Arial,sans-serif;max-width:480px;margin:0 auto;padding:32px;border:1px solid #e5e7eb;border-radius:16px">
+            <h2 style="color:#1a4b8c;margin-bottom:8px">Data Visus</h2>
+            <p style="color:#374151">Votre mot de passe temporaire :</p>
+            <div style="background:#fef3c7;border:2px solid #f59e0b;border-radius:12px;padding:24px;text-align:center;margin:16px 0">
+                <span style="font-size:20px;font-weight:bold;color:#92400e">${tempPassword}</span>
+            </div>
+            <p style="color:#6b7280;font-size:14px">Connectez-vous et changez votre mot de passe des que possible.</p>
+            <p style="color:#9ca3af;font-size:12px;margin-top:24px">Si vous n'avez pas demande cette reinitialisation, ignorez ce message.</p>
+        </div>`;
+    if (RESEND_API_KEY) {
+        await sendViaResendApi(email, subject, text, html);
+        console.log(`   [PWD] Temp password sent to ${email} (Resend API)`);
+        return true;
+    }
     if (!nodemailer || !SMTP_HOST || !SMTP_USER) {
         console.log(`\n   [PWD] Temp password for ${email}: ${tempPassword}  (email not configured)\n`);
         return false;
@@ -199,21 +234,7 @@ async function sendTempPassword(email, tempPassword) {
         secure: parseInt(SMTP_PORT) === 465,
         auth: { user: SMTP_USER, pass: SMTP_PASS },
     });
-    await transporter.sendMail({
-        from: SMTP_FROM,
-        to: email,
-        subject: 'Data Visus — Mot de passe temporaire',
-        text: `Votre mot de passe temporaire Data Visus est : ${tempPassword}\n\nConnectez-vous et changez-le des que possible.\nSi vous n'avez pas demande cette reinitialisation, ignorez ce message.`,
-        html: `<div style="font-family:Arial,sans-serif;max-width:480px;margin:0 auto;padding:32px;border:1px solid #e5e7eb;border-radius:16px">
-            <h2 style="color:#1a4b8c;margin-bottom:8px">Data Visus</h2>
-            <p style="color:#374151">Votre mot de passe temporaire :</p>
-            <div style="background:#fef3c7;border:2px solid #f59e0b;border-radius:12px;padding:24px;text-align:center;margin:16px 0">
-                <span style="font-size:20px;font-weight:bold;color:#92400e">${tempPassword}</span>
-            </div>
-            <p style="color:#6b7280;font-size:14px">Connectez-vous et changez votre mot de passe des que possible.</p>
-            <p style="color:#9ca3af;font-size:12px;margin-top:24px">Si vous n'avez pas demande cette reinitialisation, ignorez ce message.</p>
-        </div>`,
-    });
+    await transporter.sendMail({ from: SMTP_FROM, to: email, subject, text, html });
     console.log(`   [PWD] Temp password sent to ${email}`);
     return true;
 }

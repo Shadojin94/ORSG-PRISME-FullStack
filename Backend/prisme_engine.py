@@ -408,6 +408,30 @@ def parse_long_format_csv(filepath):
 # TABULAR FORMAT PARSER (OpenData style)
 # ============================================================================
 
+def _reconstruct_guyane_region(result, enabled, dimension_column):
+    """Reconstitue la ligne régionale Guyane (codgeo 3) par somme des 22 communes
+    guyanaises quand la source ne la fournit pas pour une année donnée
+    (ex. emploi 2021/2022). Variables additives uniquement (enabled), cohérence
+    vérifiée sur 2020 où somme(communes) == régional source à l'arrondi près.
+    Modifie result['reg'] en place.
+    """
+    if not enabled or not result['com']:
+        return
+    key_cols = ['annee', 'dimension'] if dimension_column else ['annee']
+    reg_guyane_keys = {tuple(r[c] for c in key_cols) for r in result['reg'] if r.get('codgeo') == 3}
+    com_sums = {}
+    for c in result['com']:
+        if c.get('codgeo') in COMMUNES_GUYANE:
+            k = tuple(c[c2] for c2 in key_cols)
+            com_sums[k] = com_sums.get(k, 0.0) + c['valeur']
+    for k, total in com_sums.items():
+        if k not in reg_guyane_keys:
+            reg_item = dict(zip(key_cols, k))
+            reg_item['codgeo'] = 3
+            reg_item['valeur'] = total
+            result['reg'].append(reg_item)
+
+
 def parse_tabular_csv(filepath, value_column=2, year_column=0, geo_column=1, dimension_column=None, compute_fra_from_fh_dom=False):
     """Parse un fichier CSV au format tabulaire (OpenData).
     Détecte automatiquement l'encodage (utf-8-sig, utf-8, cp1252, latin-1).
@@ -509,6 +533,8 @@ def parse_tabular_csv(filepath, value_column=2, year_column=0, geo_column=1, dim
             if k in dom_map:
                 fe = {**fh, 'codgeo': 99, 'valeur': fh['valeur'] + dom_map[k]}
                 result['fra'].append(fe)
+
+    _reconstruct_guyane_region(result, compute_fra_from_fh_dom, dimension_column)
 
     dfs = {}
     for k, v in result.items():
@@ -752,6 +778,9 @@ def parse_moca_filter_csv(filepath, filter_column, filter_value, year_column=3, 
             if k in dom_map:
                 fe = {**fh, 'codgeo': 99, 'valeur': fh['valeur'] + dom_map[k]}
                 result['fra'].append(fe)
+
+    _reconstruct_guyane_region(result, compute_fra_from_fh_dom,
+                               dimension_column if dimension_column is not None else None)
 
     dfs = {}
     for k, v in result.items():

@@ -388,6 +388,12 @@ export function GeneratorPage() {
                             warnings={generationWarnings}
                             onDownload={handleDownload}
                             onRestart={handleRestart}
+                            themeLabel={themeLabel}
+                            subjectLabel={subjectLabel}
+                            indicators={subjectIndicators}
+                            year={year}
+                            sourceMode={sourceMode}
+                            format={format}
                         />
                     )}
 

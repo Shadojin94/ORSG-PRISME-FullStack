@@ -335,9 +335,11 @@ export function DashboardPage() {
         const dailyData = Array.from({ length: 30 }, (_, i) => {
             const d = new Date(today)
             d.setDate(d.getDate() - (29 - i))
-            const iso = d.toISOString().split("T")[0]
             const dd = d.getDate().toString().padStart(2, "0")
             const mm = (d.getMonth() + 1).toString().padStart(2, "0")
+            // Local-date key (YYYY-MM-DD) to match backend mtime date; toISOString()
+            // would shift to UTC and miss entries in timezones behind/ahead of UTC.
+            const iso = `${d.getFullYear()}-${mm}-${dd}`
             return {
                 date: iso,
                 label: `${dd}/${mm}`,
