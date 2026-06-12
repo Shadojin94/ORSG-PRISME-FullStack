@@ -138,7 +138,7 @@ export function GeneratorPage() {
     // Message d'aiguillage non technique affiché quand on bascule automatiquement de source.
     const [autoSwitchNotice, setAutoSwitchNotice] = useState<string | null>(null);
 
-    const { years: availableYears, loading: yearsLoading, reload: reloadYears } = useDatasetYears(
+    const { years: availableYears, loading: yearsLoading, error: yearsError, reload: reloadYears } = useDatasetYears(
         primaryDatasetId,
         sourceMode === 'opendata'
     );
@@ -148,6 +148,7 @@ export function GeneratorPage() {
         if (
             sourceMode === 'opendata' &&
             !yearsLoading &&
+            !yearsError &&
             availableYears.length === 0 &&
             supportsMoca
         ) {
@@ -156,7 +157,7 @@ export function GeneratorPage() {
                 "Les données publiques ne sont pas encore disponibles pour ce sujet. Importez vos fichiers MOCA-O ci-dessous pour générer."
             );
         }
-    }, [sourceMode, yearsLoading, availableYears, supportsMoca]);
+    }, [sourceMode, yearsLoading, yearsError, availableYears, supportsMoca]);
 
     useEffect(() => {
         if (availableYears && availableYears.length > 0) {
@@ -357,6 +358,7 @@ export function GeneratorPage() {
                             onYearEndChange={setYearEnd}
                             availableYears={availableYears.map(String)}
                             yearsLoading={yearsLoading}
+                            yearsError={yearsError}
                             onYearChange={setYear}
                             format={format}
                             onFormatChange={setFormat}

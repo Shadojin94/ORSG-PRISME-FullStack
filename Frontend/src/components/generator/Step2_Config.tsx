@@ -9,6 +9,7 @@ interface Step2Props {
     onYearEndChange: (year: string) => void;
     availableYears: string[];
     yearsLoading: boolean;
+    yearsError: string | null;
     onYearChange: (year: string) => void;
 
     format: string;
@@ -48,6 +49,7 @@ export function Step2_Config({
     onYearEndChange,
     availableYears,
     yearsLoading,
+    yearsError,
     onYearChange,
     format,
     onFormatChange,
@@ -228,7 +230,14 @@ export function Step2_Config({
                 {yearsLoading ? (
                     <div className="flex items-center gap-2 text-gray-400 text-sm">
                         <Loader2 className="w-4 h-4 animate-spin" />
-                        Chargement des années disponibles...
+                        Vérification des données disponibles…
+                    </div>
+                ) : yearsError ? (
+                    <div className="p-3 bg-red-50 rounded-lg border border-red-200 text-sm text-red-600">
+                        <div className="flex items-center gap-2 font-bold">
+                            <AlertTriangle className="w-4 h-4" />
+                            Connexion impossible. Réessayez dans quelques instants.
+                        </div>
                     </div>
                 ) : format === 'consolidated' ? null : sortedYears.length > 0 ? (
                     <div className="flex flex-wrap gap-2">

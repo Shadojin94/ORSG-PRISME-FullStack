@@ -215,18 +215,24 @@ function getStaticYears(datasetId: string): number[] {
 // Hook pour charger les années d'un dataset spécifique
 export function useDatasetYears(datasetId: string | null, openDataMode: boolean = false) {
     const [years, setYears] = useState<number[]>([]);
-    const [loading, setLoading] = useState(false);
+    // On démarre en chargement dès qu'un dataset est présent : évite une fenêtre
+    // où l'UI croit qu'aucune donnée n'existe avant même le premier appel réseau.
+    const [loading, setLoading] = useState<boolean>(!!datasetId);
     const [error, setError] = useState<string | null>(null);
     const [refreshCounter, setRefreshCounter] = useState(0);
 
     useEffect(() => {
         if (!datasetId) {
             setYears([]);
+            setLoading(false);
             return;
         }
 
+        // Bascule en chargement de façon synchrone (avant l'await) pour fermer la
+        // fenêtre years=[] / loading=false lors d'un changement de sujet ou de source.
+        setLoading(true);
+
         const load = async () => {
-            setLoading(true);
             setError(null);
             try {
                 const yearsData = openDataMode

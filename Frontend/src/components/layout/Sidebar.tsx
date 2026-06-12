@@ -34,7 +34,9 @@ export function Sidebar({ isOpen = false, onClose }: SidebarProps) {
     ]
 
     const handleNavClick = (path: string) => {
-        if (path === "/generate") {
+        // On ne réinitialise l'assistant que lorsqu'on y entre depuis une autre page.
+        // Si l'utilisateur est déjà sur "Générer" et reclique, on conserve son état.
+        if (path === "/generate" && location.pathname !== "/generate") {
             try { sessionStorage.removeItem("prisme_generator_state") } catch (_e) { /* ignore */ }
         }
         onClose?.()
