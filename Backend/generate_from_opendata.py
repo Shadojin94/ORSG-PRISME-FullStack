@@ -183,8 +183,12 @@ THEME_CONFIGS = {
     },
     "noyades": {
         "excel_name": "noyades",
-        "variables": ["nb_noyades", "nb_noyades_deces"],
+        "variables": ["nb_noyades", "tx_noyades", "nb_noyades_deces", "tx_noyades_deces"],
         "source_type": "spf_noyades",
+        # Les taux noyades sont calculés ici (nb / population x 1 000 000 hab.) et
+        # livrés directement dans l'Excel (demande client), donc NON filtrés
+        # malgré le préfixe tx_ (cf. emit_calculated_rates ci-dessous).
+        "emit_calculated_rates": True,
     },
     # DREES - Offre d'accueil du jeune enfant (EAJE), niveau departement -> agrege
     "accueil_pop_inf3ans": {
@@ -1070,6 +1074,62 @@ def _build_odisse_consommation_levels(year: int, kind: str):
     return _add_year({"com": com, "reg": reg, "dom": dom, "fh": fh, "fra": fra}, year)
 
 
+def _load_region_population(year: int) -> dict[str, float]:
+    """Population totale (PTOT) par code région, depuis populations_YYYY.csv.
+
+    Pas de fichier populations pour l'année demandée (ex. 2024/2025) -> on retombe
+    sur le fichier le plus récent disponible (la population régionale varie peu,
+    acceptable pour un taux d'incidence). Retourne {code_reg(2 chiffres): pop}.
+    """
+    candidates = [INPUTS_DIR / f"populations_{year}.csv"]
+    candidates += sorted(INPUTS_DIR.glob("populations_*.csv"), reverse=True)
+    src = next((p for p in candidates if p.exists()), None)
+    if src is None:
+        return {}
+    raw = _read_csv_auto(src)
+    reg_col = "REG" if "REG" in raw.columns else None
+    pop_col = next((c for c in ("PTOT", "PMUN") if c in raw.columns), None)
+    if not reg_col or not pop_col:
+        return {}
+    raw["_reg"] = raw[reg_col].astype(str).str.strip().str.replace(r"\.0$", "", regex=True).str.zfill(2)
+    raw["_pop"] = pd.to_numeric(raw[pop_col], errors="coerce").fillna(0)
+    return raw.groupby("_reg")["_pop"].sum().to_dict()
+
+
+def _apply_noyades_rates(levels: dict, year: int) -> dict:
+    """Ajoute tx_noyades / tx_noyades_deces (taux d'incidence pour 1 000 000 hab.).
+
+    tx = nb / population x 1 000 000. Niveaux : reg via pop régionale ; dom/fh/fra
+    via pop agrégée des régions correspondantes ; com laissé vide (pas de pop
+    communale exploitable pour la ventilation Guyane).
+    """
+    reg_pop = _load_region_population(year)
+
+    def rate(nb, pop):
+        if pop and pd.notna(nb):
+            return round(float(nb) / pop * 1_000_000, 1)
+        return None
+
+    # Région
+    reg = levels["reg"]
+    reg["tx_noyades"] = [rate(n, reg_pop.get(str(c))) for c, n in zip(reg["codgeo"], reg["nb_noyades"])]
+    reg["tx_noyades_deces"] = [rate(n, reg_pop.get(str(c))) for c, n in zip(reg["codgeo"], reg["nb_noyades_deces"])]
+
+    pop_dom = sum(reg_pop.get(c, 0) for c in DOM_CODES)
+    pop_fh = sum(reg_pop.get(c, 0) for c in FH_REGIONS)
+    pop_fra = pop_dom + pop_fh
+
+    for key, pop in (("dom", pop_dom), ("fh", pop_fh), ("fra", pop_fra)):
+        df = levels[key]
+        df["tx_noyades"] = [rate(n, pop) for n in df["nb_noyades"]]
+        df["tx_noyades_deces"] = [rate(n, pop) for n in df["nb_noyades_deces"]]
+
+    com = levels["com"]
+    com["tx_noyades"] = [None] * len(com)
+    com["tx_noyades_deces"] = [None] * len(com)
+    return levels
+
+
 def _build_spf_noyades_levels(year: int):
     # Priorité : fichier fusionné 2003-2024 (inclut 2023-2024 SPF/Snosan extrait des PDF).
     # Fallback : ancien CSV 2003-2021 seul, puis concaténation de tous les
@@ -1155,7 +1215,8 @@ def _build_spf_noyades_levels(year: int):
         "nb_noyades_deces": [reg["nb_noyades_deces"].sum()],
     })
 
-    return _add_year({"com": com, "reg": reg, "dom": dom, "fh": fh, "fra": fra}, year)
+    levels = _apply_noyades_rates({"com": com, "reg": reg, "dom": dom, "fh": fh, "fra": fra}, year)
+    return _add_year(levels, year)
 
 
 def _add_note_to_sheet(ws, df, note_text, note_color="FF0000"):
@@ -1427,10 +1488,12 @@ def _generate_excel_and_zip(theme: str, year: int, all_levels, guyane_only: bool
     """
     cfg = THEME_CONFIGS[theme]
     all_variables = cfg["variables"]
-    # Exclure les variables calculées (tx_*) — PRISME les recalcule côté client
+    # Exclure les variables calculées (tx_*) — PRISME les recalcule côté client,
+    # SAUF si le thème demande explicitement de livrer ses taux (emit_calculated_rates).
+    emit_rates = cfg.get("emit_calculated_rates", False)
     variables = []
     for v in all_variables:
-        if is_calculated_variable(v):
+        if is_calculated_variable(v) and not emit_rates:
             print(f"  [FILTER] Skipped calculated variable: {v}")
         else:
             variables.append(v)
