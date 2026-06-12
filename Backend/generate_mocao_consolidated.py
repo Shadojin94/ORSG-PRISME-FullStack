@@ -157,8 +157,14 @@ def _rename_headers(headers: tuple) -> list:
 
 
 def _norm_value(v):
-    """Replace empty/None/0.0 placeholders with MISSING_VALUE."""
+    """Replace empty/None/0.0 placeholders with MISSING_VALUE.
+
+    -9 (et "-9") = code SPF "donnée non disponible / secret statistique" :
+    traité comme manquant pour ne jamais apparaître brut dans l'Excel final.
+    """
     if v is None or v == '':
+        return MISSING_VALUE
+    if v == -9 or v == -9.0 or (isinstance(v, str) and v.strip() == '-9'):
         return MISSING_VALUE
     return v
 

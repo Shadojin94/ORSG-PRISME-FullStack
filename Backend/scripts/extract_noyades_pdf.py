@@ -180,6 +180,19 @@ def _normalize_code(raw: str) -> str:
     return raw
 
 
+def _clean_count(raw: str):
+    """Convertit une cellule d'effectif PDF en int, ou None si manquant.
+
+    Le PDF SPF code la donnée non disponible / secret statistique par -9.
+    Cette valeur ne doit jamais traverser le pipeline : on la transforme en
+    manquant (None -> cellule vide dans le CSV puis dans l'Excel final).
+    """
+    val = int(str(raw).strip())
+    if val == -9:
+        return None
+    return val
+
+
 def parse_dep_tables() -> list[dict]:
     """Retourne les lignes par département pour 2023 et 2024."""
     rows: list[dict] = []
@@ -202,10 +215,10 @@ def parse_dep_tables() -> list[dict]:
                     code = _normalize_code(m.group(1))
                     # Valeurs colonnes: 2023_N, 2023_deces, 2023_%, 2024_N, 2024_deces, 2024_%
                     try:
-                        n23 = int(str(line[1]).strip())
-                        d23 = int(str(line[2]).strip())
-                        n24 = int(str(line[4]).strip())
-                        d24 = int(str(line[5]).strip())
+                        n23 = _clean_count(line[1])
+                        d23 = _clean_count(line[2])
+                        n24 = _clean_count(line[4])
+                        d24 = _clean_count(line[5])
                     except (ValueError, IndexError):
                         continue
                     if code not in DEP_NAME_FIX:

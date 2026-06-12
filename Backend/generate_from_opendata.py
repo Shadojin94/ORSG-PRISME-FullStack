@@ -186,6 +186,17 @@ THEME_CONFIGS = {
         "variables": ["nb_noyades", "nb_noyades_deces"],
         "source_type": "spf_noyades",
     },
+    # DREES - Offre d'accueil du jeune enfant (EAJE), niveau departement -> agrege
+    "accueil_pop_inf3ans": {
+        "excel_name": "accueil_pop_inf3ans",
+        "variables": [
+            "nb_places_acceuil_co", "nb_places_mono", "nb_places_hg", "nb_places_je",
+            "nb_places_multi", "nb_places_familial",
+            "nb_etab_co", "nb_etab_mono", "nb_etab_hg", "nb_etab_je", "nb_etab_multi",
+            "nb_services_familial", "nb_mam",
+        ],
+        "source_type": "drees_eaje",
+    },
 }
 
 
@@ -1107,8 +1118,10 @@ def _build_spf_noyades_levels(year: int):
             return s.zfill(2)
         return s
     df_year["reg"] = df_year[reg_col].apply(_norm_reg)
-    df_year["nb_noyades"] = pd.to_numeric(df_year[n_col], errors="coerce").fillna(0)
-    df_year["nb_noyades_deces"] = pd.to_numeric(df_year[d_col], errors="coerce").fillna(0) if d_col else 0
+    # -9 = code SPF "donnée non disponible / secret statistique" : neutralisé en
+    # NaN avant agrégation pour ne jamais polluer les sommes reg/dom/fh/fra.
+    df_year["nb_noyades"] = pd.to_numeric(df_year[n_col], errors="coerce").replace(-9, pd.NA).fillna(0)
+    df_year["nb_noyades_deces"] = pd.to_numeric(df_year[d_col], errors="coerce").replace(-9, pd.NA).fillna(0) if d_col else 0
 
     reg_agg = df_year.groupby("reg", as_index=False)[["nb_noyades", "nb_noyades_deces"]].sum()
     reg_full = pd.DataFrame({"codgeo": REGION_ORDER})
@@ -1145,6 +1158,260 @@ def _add_note_to_sheet(ws, df, note_text, note_color="FF0000"):
     note_row = len(df) + 3
     note_cell = ws.cell(row=note_row, column=1, value=note_text)
     note_cell.font = Font(italic=True, color=note_color)
+
+
+# ---------------------------------------------------------------------------
+# DREES - Offre d'accueil du jeune enfant (EAJE)
+# ---------------------------------------------------------------------------
+
+EAJE_VARS = [
+    "nb_places_acceuil_co", "nb_places_mono", "nb_places_hg", "nb_places_je",
+    "nb_places_multi", "nb_places_familial",
+    "nb_etab_co", "nb_etab_mono", "nb_etab_hg", "nb_etab_je", "nb_etab_multi",
+    "nb_services_familial", "nb_mam",
+]
+
+
+def _eaje_dep_code(value) -> str:
+    """Normalise un code département DREES (str). '973' -> '973', 1 -> '01'."""
+    s = str(value).strip()
+    if s.endswith(".0"):
+        s = s[:-2]
+    if s.startswith("97") or s.startswith("98"):
+        return s.zfill(3)
+    return s.zfill(2)
+
+
+def _is_valid_dep_code(value) -> bool:
+    """True si col[0]/col[1] ressemble à un code département (chiffre, 2-3 car.)."""
+    if value is None or (isinstance(value, float) and pd.isna(value)):
+        return False
+    s = str(value).strip()
+    if s.endswith(".0"):
+        s = s[:-2]
+    if not s or s[0].upper() not in "0123456789":
+        return False
+    return 2 <= len(s) <= 3
+
+
+def _build_eaje_levels_2021(year: int):
+    """Parser format 2021 (sheets T*). Colonnes mappées selon le plan validé."""
+    drees_dir = INPUTS_DIR / "drees"
+    source = drees_dir / f"drees_offre_accueil_jeune_enfant_{year}_series_longues.xlsx"
+    if not source.exists():
+        raise FileNotFoundError(f"Source DREES EAJE manquante: {source}")
+
+    raw = pd.read_excel(source, sheet_name=None, header=None)
+
+    def _find_sheet(*needles):
+        for sname in raw:
+            low = sname.lower()
+            if all(n.lower() in low for n in needles):
+                return sname
+        raise ValueError(f"Feuille EAJE 2021 introuvable pour {needles}. Feuilles: {list(raw.keys())}")
+
+    t1 = raw[_find_sheet("t1", "total")]      # etab accueil collectif
+    t7 = raw[_find_sheet("t7", "total")]      # places accueil collectif
+    t11 = raw[_find_sheet("t11", "places")]   # places accueil familial
+    t5 = raw[_find_sheet("t5", "familial")]   # services accueil familial
+    t6 = raw[_find_sheet("t6", "mam")]        # MAM
+
+    def _index_by_dep(df, cols):
+        """Retourne {dep_code: {var: value}} pour les lignes data valides."""
+        out = {}
+        for i in range(len(df)):
+            c0 = df.iloc[i, 0]
+            if not _is_valid_dep_code(c0):
+                continue
+            dep = _eaje_dep_code(c0)
+            rec = {}
+            for var, col in cols.items():
+                v = pd.to_numeric(df.iloc[i, col], errors="coerce")
+                rec[var] = None if pd.isna(v) else float(v)
+            out[dep] = rec
+        return out
+
+    places = _index_by_dep(t7, {
+        "nb_places_mono": 2, "nb_places_hg": 3, "nb_places_je": 5,
+        "nb_places_multi": 7, "nb_places_acceuil_co": 8,
+    })
+    places_fam = _index_by_dep(t11, {"nb_places_familial": 6})
+    etab = _index_by_dep(t1, {
+        "nb_etab_mono": 2, "nb_etab_hg": 3, "nb_etab_je": 5,
+        "nb_etab_multi": 7, "nb_etab_co": 8,
+    })
+    services_fam = _index_by_dep(t5, {"nb_services_familial": 2})
+    mam = _index_by_dep(t6, {"nb_mam": 2})
+
+    deps = set(places) | set(etab)
+    rows = []
+    for dep in sorted(deps):
+        rec = {"dep_code": dep}
+        for src in (places, places_fam, etab, services_fam, mam):
+            rec.update(src.get(dep, {}))
+        rows.append(rec)
+
+    dep_df = pd.DataFrame(rows)
+    for var in EAJE_VARS:
+        if var not in dep_df.columns:
+            dep_df[var] = None
+    return dep_df
+
+
+def _build_eaje_levels_2022plus(year: int):
+    """Parser format 2022+ (sheets Tab*-PMI)."""
+    drees_dir = INPUTS_DIR / "drees"
+    source = drees_dir / f"drees_offre_accueil_jeune_enfant_{year}_series_longues.xlsx"
+    if not source.exists():
+        raise FileNotFoundError(f"Source DREES EAJE manquante: {source}")
+
+    raw = pd.read_excel(source, sheet_name=None, header=None)
+    tab1 = raw["Tab1-PMI"]    # etab
+    tab17 = raw["Tab17-PMI"]  # places
+    tab34 = raw["Tab34-PMI"]  # MAM series longues
+
+    def _read_dep_block(df, mapping):
+        """Lit les lignes département (col[1]=code dep) jusqu'au 1er bloc TOTAL/région.
+
+        Le bloc départemental se termine dès qu'on rencontre une ligne dont col[0]
+        commence par 'TOTAL' ou dont col[1] n'est pas un code département valide.
+        """
+        out = {}
+        started = False
+        for i in range(5, len(df)):
+            c0 = df.iloc[i, 0]
+            c1 = df.iloc[i, 1]
+            c0s = "" if c0 is None or (isinstance(c0, float) and pd.isna(c0)) else str(c0).strip()
+            if c0s.upper().startswith("TOTAL"):
+                if started:
+                    break
+                continue
+            if not _is_valid_dep_code(c1):
+                if started:
+                    break
+                continue
+            started = True
+            dep = _eaje_dep_code(c1)
+            rec = {}
+            for var, col in mapping.items():
+                v = pd.to_numeric(df.iloc[i, col], errors="coerce")
+                rec[var] = None if pd.isna(v) else float(v)
+            out[dep] = rec
+        return out
+
+    # Tab1-PMI / Tab17-PMI : col[3]=crèches collectives, col[4]=crèches familiales,
+    # col[5]=multi accueil, col[6]=jardins d'enfants, col[8]=total
+    etab = _read_dep_block(tab1, {
+        "nb_etab_mono": 3, "nb_services_familial": 4, "nb_etab_multi": 5,
+        "nb_etab_je": 6, "nb_etab_co": 8,
+    })
+    places = _read_dep_block(tab17, {
+        "nb_places_mono": 3, "nb_places_familial": 4, "nb_places_multi": 5,
+        "nb_places_je": 6, "nb_places_acceuil_co": 8,
+    })
+
+    # MAM : Tab34-PMI, colonne de l'année demandée (en-tête ligne 5 / index 4)
+    header34 = tab34.iloc[4].tolist()
+    mam_col = None
+    for j in range(3, len(header34)):
+        hv = header34[j]
+        if pd.notna(hv):
+            try:
+                if int(float(hv)) == year:
+                    mam_col = j
+                    break
+            except (ValueError, TypeError):
+                continue
+    mam = {}
+    if mam_col is not None:
+        for i in range(5, len(tab34)):
+            c1 = tab34.iloc[i, 1]
+            c0 = tab34.iloc[i, 0]
+            c0s = "" if c0 is None or (isinstance(c0, float) and pd.isna(c0)) else str(c0).strip()
+            if c0s.upper().startswith("TOTAL"):
+                if mam:
+                    break
+                continue
+            if not _is_valid_dep_code(c1):
+                if mam:
+                    break
+                continue
+            v = pd.to_numeric(tab34.iloc[i, mam_col], errors="coerce")
+            mam[_eaje_dep_code(c1)] = None if pd.isna(v) else float(v)
+    else:
+        print(f"  [WARN_DATA] DREES EAJE {year}: colonne MAM (annee {year}) introuvable dans Tab34-PMI. nb_mam laisse vide.")
+
+    deps = set(places) | set(etab)
+    rows = []
+    for dep in sorted(deps):
+        rec = {"dep_code": dep}
+        for src in (places, etab):
+            rec.update(src.get(dep, {}))
+        if dep in mam:
+            rec["nb_mam"] = mam[dep]
+        # Halte-garderies fusionnées dans crèches collectives dès 2022 -> non disponibles
+        rec["nb_places_hg"] = 0.0
+        rec["nb_etab_hg"] = 0.0
+        rows.append(rec)
+
+    print(f"  [WARN_DATA] DREES EAJE {year}: rupture de serie (taxonomie 2022+). "
+          "Les haltes-garderies sont fusionnees dans les creches collectives (nb_places_hg / nb_etab_hg = 0). "
+          "Les creches familiales servent de proxy pour nb_services_familial.")
+
+    dep_df = pd.DataFrame(rows)
+    for var in EAJE_VARS:
+        if var not in dep_df.columns:
+            dep_df[var] = None
+    return dep_df
+
+
+def _build_eaje_levels(year: int):
+    """Construit les niveaux geo (com/reg/dom/fh/fra) pour l'offre d'accueil DREES.
+
+    Suit le meme schema que _build_cepidc_levels : agregation manuelle dep -> reg ->
+    dom/fh/fra (sans codes commune). Le niveau commune est vide (donnees non publiees).
+    """
+    if year <= 2021:
+        dep_df = _build_eaje_levels_2021(year)
+    else:
+        dep_df = _build_eaje_levels_2022plus(year)
+
+    for var in EAJE_VARS:
+        dep_df[var] = pd.to_numeric(dep_df[var], errors="coerce")
+
+    # reg : somme par region via DEP_TO_REG, complétée sur les 18 régions.
+    # Quelques codes DREES 2022+ ne sont pas dans DEP_TO_REG : Corse '20' (région 94),
+    # Rhône scindé '69D'/'69M' (-> '69'). On les ramène à un code connu pour ne pas
+    # perdre ces départements dans les agrégats FH/FRA.
+    EAJE_DEP_ALIAS = {"20": "2A", "69D": "69", "69M": "69"}
+    dep_df = dep_df.copy()
+    dep_df["reg"] = dep_df["dep_code"].apply(
+        lambda d: DEP_TO_REG.get(EAJE_DEP_ALIAS.get(d, d))
+    )
+    reg_grouped = dep_df.dropna(subset=["reg"]).groupby("reg")[EAJE_VARS].sum(min_count=1).reset_index()
+    reg_grouped.rename(columns={"reg": "codgeo"}, inplace=True)
+    reg = pd.DataFrame({"codgeo": REGION_ORDER}).merge(reg_grouped, on="codgeo", how="left")
+
+    # dom / fh / fra : sommes d'agrégats régionaux
+    def _sum_rows(mask_codes, codgeo_label):
+        sub = reg[reg["codgeo"].isin(mask_codes)]
+        agg = sub[EAJE_VARS].sum(min_count=1).to_frame().T
+        agg["codgeo"] = codgeo_label
+        return agg[["codgeo"] + EAJE_VARS]
+
+    dom = _sum_rows(DOM_CODES, "DOM")
+    fh = _sum_rows(FH_REGIONS, "0")
+    fra_agg = reg[EAJE_VARS].sum(min_count=1).to_frame().T
+    fra_agg["codgeo"] = "99"
+    fra = fra_agg[["codgeo"] + EAJE_VARS]
+
+    # com : 22 communes Guyane, valeurs vides (DREES ne publie pas au niveau commune)
+    com = pd.DataFrame({"codgeo": COMMUNES_GUYANE})
+    for var in EAJE_VARS:
+        com[var] = None
+
+    all_levels = {"com": com, "reg": reg, "dom": dom, "fh": fh, "fra": fra}
+    return _add_year(all_levels, year)
 
 
 def _generate_excel_and_zip(theme: str, year: int, all_levels, guyane_only: bool = False):
@@ -1299,6 +1566,8 @@ def generate_theme(theme: str, year: int):
         all_levels = _build_odisse_consommation_levels(year, "tabac")
     elif source_type == "spf_noyades":
         all_levels = _build_spf_noyades_levels(year)
+    elif source_type == "drees_eaje":
+        all_levels = _build_eaje_levels(year)
     else:
         raise ValueError(f"Source type inconnu: {source_type}")
 

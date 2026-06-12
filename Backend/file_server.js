@@ -800,7 +800,7 @@ except Exception as e:
             'route', 'mortalite_gen', 'mortalite_cardio', 'mortalite_tumeurs',
             'mortalite_respi', 'mortalite_neuro', 'mortalite_diabete', 'mortalite_covid',
             'comp_mortalite', 'suicide', 'addictions_alcool', 'addictions_tabac', 'noyades',
-            'accidents_route', 'blesses_route', 'deces_route'
+            'accidents_route', 'blesses_route', 'deces_route', 'accueil_pop_inf3ans'
         ];
 
         if (!supportedThemes.includes(theme)) {

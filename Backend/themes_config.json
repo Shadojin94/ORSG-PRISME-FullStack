@@ -446,14 +446,6 @@
           "csvPattern": "icf_GF_REG_DOM",
           "parser": "tabular",
           "column": 2
-        },
-        {
-          "id": "tx_natalite",
-          "type": "variable",
-          "label": "Taux de natalité",
-          "csvPattern": "Tx_Natalite_GF_REG_DOM",
-          "parser": "tabular",
-          "column": 2
         }
       ]
     },
@@ -492,17 +484,6 @@
             "40-44 ans",
             "45-49 ans"
           ]
-        },
-        {
-          "id": "tx_fecondite",
-          "type": "variable",
-          "label": "Taux de fécondité",
-          "csvPattern": "Tx_Fecondite",
-          "parser": "tabular",
-          "yearColumn": 0,
-          "geoColumn": 2,
-          "dimensionColumn": 1,
-          "column": 3
         },
         {
           "id": "nb_naiss_vivante",
@@ -601,7 +582,8 @@
           "parser": "tabular",
           "yearColumn": 2,
           "geoColumn": 5,
-          "column": 6
+          "column": 6,
+          "computeFraFromFhDom": true
         },
         {
           "id": "nb_pop",
@@ -611,7 +593,8 @@
           "parser": "tabular",
           "yearColumn": 2,
           "geoColumn": 5,
-          "column": 6
+          "column": 6,
+          "computeFraFromFhDom": true
         },
         {
           "id": "nb_ouvriers",
@@ -623,7 +606,8 @@
           "geoColumn": 5,
           "filterColumn": 6,
           "filterValue": "Ouvriers",
-          "valueColumn": 7
+          "valueColumn": 7,
+          "computeFraFromFhDom": true
         },
         {
           "id": "nb_cadres",
@@ -635,7 +619,8 @@
           "geoColumn": 5,
           "filterColumn": 6,
           "filterValue": "Cadres et professions intellectuelles supérieures",
-          "valueColumn": 7
+          "valueColumn": 7,
+          "computeFraFromFhDom": true
         }
       ]
     },
@@ -883,13 +868,6 @@
           "id": "periode",
           "type": "period",
           "label": "Période"
-        },
-        {
-          "id": "tx_accroiss",
-          "type": "variable",
-          "label": "Taux d'accroissement",
-          "csvPattern": "accroiss_sup65ans",
-          "parser": "moca"
         }
       ]
     },
@@ -1055,14 +1033,6 @@
           "source": "BAAC/ONISR"
         },
         {
-          "id": "tx_acci",
-          "type": "variable",
-          "label": "Taux d'accidents",
-          "csvPattern": "tx_acci",
-          "parser": "external",
-          "source": "BAAC/ONISR"
-        },
-        {
           "id": "nb_blesses",
           "type": "variable",
           "label": "Nombre de blessés",
@@ -1071,27 +1041,11 @@
           "source": "BAAC/ONISR"
         },
         {
-          "id": "tx_blesses",
-          "type": "variable",
-          "label": "Taux de blessés",
-          "csvPattern": "tx_blesses",
-          "parser": "external",
-          "source": "BAAC/ONISR"
-        },
-        {
           "id": "nb_morts",
           "type": "variable",
           "label": "Nombre de morts",
           "csvPattern": "nb_morts_route",
           "parser": "tabular",
-          "source": "BAAC/ONISR"
-        },
-        {
-          "id": "tx_morts",
-          "type": "variable",
-          "label": "Taux de morts",
-          "csvPattern": "tx_morts",
-          "parser": "external",
           "source": "BAAC/ONISR"
         }
       ]
@@ -1125,27 +1079,11 @@
           "source": "SPF-GEODES"
         },
         {
-          "id": "tx_noyades",
-          "type": "variable",
-          "label": "Taux de noyades",
-          "csvPattern": "tx_noyades",
-          "parser": "external",
-          "source": "SPF-GEODES"
-        },
-        {
           "id": "nb_noyades_deces",
           "type": "variable",
           "label": "Nombre de décès par noyade",
           "csvPattern": "nb_noyades_deces_guyane",
           "parser": "tabular",
-          "source": "SPF-GEODES"
-        },
-        {
-          "id": "tx_noyades_deces",
-          "type": "variable",
-          "label": "Taux de décès par noyade",
-          "csvPattern": "tx_noyades_deces",
-          "parser": "external",
           "source": "SPF-GEODES"
         }
       ]

@@ -408,7 +408,7 @@ def parse_long_format_csv(filepath):
 # TABULAR FORMAT PARSER (OpenData style)
 # ============================================================================
 
-def parse_tabular_csv(filepath, value_column=2, year_column=0, geo_column=1, dimension_column=None):
+def parse_tabular_csv(filepath, value_column=2, year_column=0, geo_column=1, dimension_column=None, compute_fra_from_fh_dom=False):
     """Parse un fichier CSV au format tabulaire (OpenData).
     Détecte automatiquement l'encodage (utf-8-sig, utf-8, cp1252, latin-1).
     """
@@ -498,6 +498,17 @@ def parse_tabular_csv(filepath, value_column=2, year_column=0, geo_column=1, dim
                 item['codgeo'] = reg_code
                 result['reg'].append(item.copy())
                 break
+
+    # France entière (FE) absente des sources mais FH + DOM présents -> FE = FH + DOM
+    # Uniquement pour variables additives (comptages), activé via config (computeFraFromFhDom).
+    if compute_fra_from_fh_dom and not result['fra'] and result['fh'] and result['dom']:
+        key_cols = ['annee', 'dimension'] if dimension_column else ['annee']
+        dom_map = {tuple(d[c] for c in key_cols): d['valeur'] for d in result['dom']}
+        for fh in result['fh']:
+            k = tuple(fh[c] for c in key_cols)
+            if k in dom_map:
+                fe = {**fh, 'codgeo': 99, 'valeur': fh['valeur'] + dom_map[k]}
+                result['fra'].append(fe)
 
     dfs = {}
     for k, v in result.items():
@@ -629,7 +640,7 @@ def parse_moca_csv(filepath, year_column=3, geo_column=5, value_column=6, dimens
 # MOCA FILTER PARSER (MOCA with column filter)
 # ============================================================================
 
-def parse_moca_filter_csv(filepath, filter_column, filter_value, year_column=3, geo_column=5, value_column=6, dimension_column=None):
+def parse_moca_filter_csv(filepath, filter_column, filter_value, year_column=3, geo_column=5, value_column=6, dimension_column=None, compute_fra_from_fh_dom=False):
     """Parse un fichier MOCA avec filtre sur une colonne spécifique.
     Détecte automatiquement l'encodage (utf-8-sig, utf-8, cp1252, latin-1).
     """
@@ -731,6 +742,17 @@ def parse_moca_filter_csv(filepath, filter_column, filter_value, year_column=3, 
                 result['reg'].append(item.copy())
                 break
 
+    # France entière (FE) absente des sources mais FH + DOM présents -> FE = FH + DOM
+    # Uniquement pour variables additives (comptages), activé via config (computeFraFromFhDom).
+    if compute_fra_from_fh_dom and not result['fra'] and result['fh'] and result['dom']:
+        key_cols = ['annee', 'dimension'] if dimension_column is not None else ['annee']
+        dom_map = {tuple(d[c] for c in key_cols): d['valeur'] for d in result['dom']}
+        for fh in result['fh']:
+            k = tuple(fh[c] for c in key_cols)
+            if k in dom_map:
+                fe = {**fh, 'codgeo': 99, 'valeur': fh['valeur'] + dom_map[k]}
+                result['fra'].append(fe)
+
     dfs = {}
     for k, v in result.items():
         if v:
@@ -797,14 +819,14 @@ def detect_available_years(dataset_id):
                 value_col = col.get('column', 2)
                 year_col = col.get('yearColumn', 0)
                 geo_col = col.get('geoColumn', 1)
-                parsed = parse_tabular_csv(csv_file, value_column=value_col, year_column=year_col, geo_column=geo_col)
+                parsed = parse_tabular_csv(csv_file, value_column=value_col, year_column=year_col, geo_column=geo_col, compute_fra_from_fh_dom=col.get('computeFraFromFhDom', False))
             elif parser_type == 'moca_filter':
                 filter_col = col.get('filterColumn', 4)
                 filter_val = col.get('filterValue', '')
                 year_col = col.get('yearColumn', 3)
                 geo_col = col.get('geoColumn', 5)
                 value_col = col.get('valueColumn', 6)
-                parsed = parse_moca_filter_csv(csv_file, filter_col, filter_val, year_col, geo_col, value_col, dimension_column=dimension_col)
+                parsed = parse_moca_filter_csv(csv_file, filter_col, filter_val, year_col, geo_col, value_col, dimension_column=dimension_col, compute_fra_from_fh_dom=col.get('computeFraFromFhDom', False))
             elif parser_type == 'external':
                 continue
             else:
@@ -1023,14 +1045,14 @@ def generate_prisme_excel(dataset_id, year):
                 value_col = col.get('column', 2)
                 year_col = col.get('yearColumn', 0)
                 geo_col = col.get('geoColumn', 1)
-                csv_data[var_id] = parse_tabular_csv(csv_file, value_column=value_col, year_column=year_col, geo_column=geo_col, dimension_column=dim_col)
+                csv_data[var_id] = parse_tabular_csv(csv_file, value_column=value_col, year_column=year_col, geo_column=geo_col, dimension_column=dim_col, compute_fra_from_fh_dom=col.get('computeFraFromFhDom', False))
             elif parser_type == 'moca_filter':
                 filter_col = col.get('filterColumn', 4)
                 filter_val = col.get('filterValue', '')
                 year_col = col.get('yearColumn', 3)
                 geo_col = col.get('geoColumn', 5)
                 value_col = col.get('valueColumn', 6)
-                csv_data[var_id] = parse_moca_filter_csv(csv_file, filter_col, filter_val, year_col, geo_col, value_col, dimension_column=dim_col)
+                csv_data[var_id] = parse_moca_filter_csv(csv_file, filter_col, filter_val, year_col, geo_col, value_col, dimension_column=dim_col, compute_fra_from_fh_dom=col.get('computeFraFromFhDom', False))
             else:
                 # Standard moca parser
                 year_col = col.get('yearColumn', 3)
