@@ -14,8 +14,8 @@ INPUTS_DIR = BASE_DIR / "inputs" / "opendata"
 
 # BAAC data from data.gouv.fr (ONISR road accident database)
 # Using the dataset API to resolve current download URLs
-BAAC_DATASET_ID = "56cc6944c751df01f85e0e24"
-BAAC_YEARS = [2019, 2020, 2021, 2022, 2023]
+BAAC_DATASET_ID = "53698f4ca3a729239d2036df"
+BAAC_YEARS = [2019, 2020, 2021, 2022, 2023, 2024]
 
 
 def download_baac():

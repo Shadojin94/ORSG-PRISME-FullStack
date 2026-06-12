@@ -30,6 +30,8 @@ Backend/inputs/opendata/*
 !Backend/inputs/opendata/baac_guyane/**
 !Backend/inputs/opendata/spf_noyades/
 !Backend/inputs/opendata/spf_noyades/**
+!Backend/inputs/opendata/drees/
+!Backend/inputs/opendata/drees/**
 
 # CSV sources - INCLUS dans le repo (nécessaires pour Docker build, 649 KB)
 # Backend/csv_sources/

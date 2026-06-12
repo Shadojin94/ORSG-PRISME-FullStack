@@ -47,6 +47,7 @@ COPY Backend/inputs/opendata/cepidc/ ./Backend/_seed_data/cepidc/
 COPY Backend/inputs/opendata/superficie_communes.json ./Backend/_seed_data/superficie_communes.json
 COPY Backend/inputs/opendata/baac_guyane/ ./Backend/_seed_data/baac_guyane/
 COPY Backend/inputs/opendata/spf_noyades/ ./Backend/_seed_data/spf_noyades/
+COPY Backend/inputs/opendata/drees/ ./Backend/_seed_data/drees/
 
 # Copy Frontend build (served by file_server.js)
 COPY Frontend/dist/ ./Frontend/dist/
