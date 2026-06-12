@@ -8,6 +8,7 @@ import { Avatar } from "@/components/ui/Avatar"
 import { useAuth } from "@/hooks/useAuth"
 import { pb, roleLabelFr } from "@/lib/pocketbase"
 import type { PrismeUser } from "@/lib/pocketbase"
+import { getSettings, saveSettings } from "@/services/api"
 
 const ROLE_OPTIONS = ['admin', 'expert', 'analyste', 'utilisateur', 'invite'] as const
 
@@ -184,6 +185,9 @@ export function AdminUsersPage() {
                     <div className="text-xs text-slate-500">Administrateurs</div>
                 </motion.div>
             </div>
+
+            {/* Contact support editable */}
+            <ContactSupportCard />
 
             <div className="rounded-2xl border border-slate-200 bg-white shadow-sm">
 
@@ -372,6 +376,98 @@ export function AdminUsersPage() {
                 />
             )}
         </main>
+    )
+}
+
+// ===== Contact Support Card (email admin configurable) =====
+
+function ContactSupportCard() {
+    const [email, setEmail] = useState('')
+    const [cc, setCc] = useState('')
+    const [loading, setLoading] = useState(true)
+    const [saving, setSaving] = useState(false)
+    const [saved, setSaved] = useState(false)
+    const [error, setError] = useState('')
+
+    useEffect(() => {
+        getSettings()
+            .then(s => { setEmail(s.contact_email || ''); setCc(s.contact_email_cc || '') })
+            .catch(() => setError("Impossible de charger les paramètres."))
+            .finally(() => setLoading(false))
+    }, [])
+
+    const submit = async () => {
+        setSaving(true)
+        setError('')
+        const res = await saveSettings({ contact_email: email.trim(), contact_email_cc: cc.trim() })
+        setSaving(false)
+        if (res.success) {
+            setSaved(true)
+            setTimeout(() => setSaved(false), 4000)
+        } else {
+            setError(res.error || "Erreur lors de l'enregistrement.")
+        }
+    }
+
+    return (
+        <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
+            <div className="mb-4 flex items-center gap-3">
+                <span className="grid h-10 w-10 place-items-center rounded-xl bg-gradient-to-br from-[#1a4b8c]/15 to-[#3bb3a9]/15 text-[#1a4b8c]">
+                    <Mail className="h-5 w-5" />
+                </span>
+                <div>
+                    <h2 className="text-lg font-black text-[#1a4b8c]">Contact support</h2>
+                    <p className="text-xs text-slate-500">Adresse affichée sur la page Support (« Contacter l'admin »).</p>
+                </div>
+            </div>
+
+            {loading ? (
+                <div className="py-4"><Loader2 className="h-5 w-5 animate-spin text-[#3bb3a9]" /></div>
+            ) : (
+                <div className="grid gap-4 sm:grid-cols-2">
+                    <div>
+                        <label className="mb-1 block text-xs font-black uppercase tracking-wide text-slate-500">Email de contact</label>
+                        <input
+                            type="email"
+                            value={email}
+                            onChange={(e) => setEmail(e.target.value)}
+                            placeholder="support@ors-guyane.org"
+                            className="w-full rounded-lg border border-slate-200 px-4 py-2 outline-none focus:border-[#3bb3a9] focus:ring-2 focus:ring-[#3bb3a9]/20"
+                        />
+                    </div>
+                    <div>
+                        <label className="mb-1 block text-xs font-black uppercase tracking-wide text-slate-500">Copie (CC) — optionnel</label>
+                        <input
+                            type="email"
+                            value={cc}
+                            onChange={(e) => setCc(e.target.value)}
+                            placeholder="copie@ors-guyane.org"
+                            className="w-full rounded-lg border border-slate-200 px-4 py-2 outline-none focus:border-[#3bb3a9] focus:ring-2 focus:ring-[#3bb3a9]/20"
+                        />
+                    </div>
+                    <div className="flex items-center gap-3 sm:col-span-2">
+                        <button
+                            onClick={submit}
+                            disabled={saving}
+                            className="flex items-center gap-2 rounded-lg bg-[#1a4b8c] px-5 py-2.5 text-sm font-black text-white shadow-sm transition-all hover:bg-[#153e75] disabled:opacity-60"
+                        >
+                            {saving ? <Loader2 className="h-4 w-4 animate-spin" /> : null}
+                            Enregistrer
+                        </button>
+                        {saved && (
+                            <span className="flex items-center gap-1 text-sm text-green-600">
+                                <CheckCircle2 className="h-4 w-4" /> Enregistré
+                            </span>
+                        )}
+                        {error && (
+                            <span className="flex items-center gap-1 text-sm text-red-600">
+                                <XCircle className="h-4 w-4" /> {error}
+                            </span>
+                        )}
+                    </div>
+                </div>
+            )}
+        </div>
     )
 }
 

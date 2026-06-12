@@ -1,4 +1,7 @@
 import { useState, useEffect, useMemo } from "react";
+import { motion } from "framer-motion";
+import { Sparkles, Check } from "lucide-react";
+import { PageHero } from "@/components/ui/PageHero";
 import { Step1_ThemeSelection } from "@/components/generator/Step1_ThemeSelection";
 import { Step2_Config } from "@/components/generator/Step2_Config";
 import { Step3_Result } from "@/components/generator/Step3_Result";
@@ -283,54 +286,18 @@ export function GeneratorPage() {
     return (
         <div className="max-w-[1600px] mx-auto py-8 px-4 pb-32">
 
-            <div className="text-center mb-12 animate-in fade-in slide-in-from-top-4 duration-700">
-                <h1 className="text-4xl font-extrabold text-[#1a4b8c] mb-4 tracking-tight">
-                    Assistant de Génération
-                </h1>
-                <p className="text-xl text-gray-500 max-w-2xl mx-auto leading-relaxed">
-                    Créez vos fichiers de données en 3 étapes simples.
-                </p>
+            <PageHero
+                icon={Sparkles}
+                eyebrow="GÉNÉRATION"
+                title="Assistant de génération"
+                description="Créez vos fichiers de données en 3 étapes simples."
+            />
 
-                <div className="flex justify-center items-center gap-4 mt-8">
-                    {[
-                        { n: 1, label: "Sujet" },
-                        { n: 2, label: "Configuration" },
-                        { n: 3, label: "Résultat" }
-                    ].map(({ n: s, label }) => {
-                        const isClickable = s < step && !isProcessing;
-                        return (
-                            <div key={s} className="flex items-center gap-2">
-                                <button
-                                    onClick={() => isClickable && handleGoToStep(s)}
-                                    disabled={!isClickable}
-                                    className={cn(
-                                        "flex flex-col items-center gap-1 group",
-                                        isClickable ? "cursor-pointer" : "cursor-default"
-                                    )}
-                                >
-                                    <div className={cn(
-                                        "w-8 h-8 rounded-full flex items-center justify-center font-bold text-sm transition-all",
-                                        step === s ? "bg-[#1a4b8c] text-white scale-110 shadow-lg" :
-                                            step > s ? "bg-[#4caf50] text-white group-hover:bg-[#388e3c] group-hover:scale-105" :
-                                                "bg-gray-100 text-gray-400"
-                                    )}>
-                                        {step > s ? "✓" : s}
-                                    </div>
-                                    <span className={cn(
-                                        "text-[10px] font-medium",
-                                        step === s ? "text-[#1a4b8c]" :
-                                            step > s ? "text-[#4caf50] group-hover:text-[#388e3c]" :
-                                                "text-gray-400"
-                                    )}>
-                                        {label}
-                                    </span>
-                                </button>
-                                {s < 3 && <div className={cn("w-12 h-1 bg-gray-200 mt-[-14px]", step > s && "bg-[#4caf50]")} />}
-                            </div>
-                        );
-                    })}
-                </div>
-            </div>
+            <GeneratorStepper
+                step={step}
+                isProcessing={isProcessing}
+                onGoToStep={handleGoToStep}
+            />
 
             <div className="relative pb-20">
 
@@ -397,6 +364,79 @@ export function GeneratorPage() {
 
             </div>
 
+        </div>
+    );
+}
+
+const STEPPER_STEPS = [
+    { n: 1, label: "Sujet" },
+    { n: 2, label: "Configuration" },
+    { n: 3, label: "Résultat" }
+];
+
+function GeneratorStepper({
+    step,
+    isProcessing,
+    onGoToStep
+}: {
+    step: number;
+    isProcessing: boolean;
+    onGoToStep: (target: number) => void;
+}) {
+    // Progression de la barre : 0% à l'étape 1, 50% à l'étape 2, 100% à l'étape 3.
+    const progressPct = ((step - 1) / (STEPPER_STEPS.length - 1)) * 100;
+
+    return (
+        <div className="max-w-2xl mx-auto mt-8 mb-12 px-4">
+            <div className="relative flex items-start justify-between">
+                {/* Rail de fond + barre de progression animée */}
+                <div className="absolute left-0 right-0 top-6 h-1 rounded-full bg-slate-200">
+                    <motion.div
+                        className="h-full rounded-full bg-gradient-to-r from-[#1a4b8c] to-[#3bb3a9]"
+                        initial={false}
+                        animate={{ width: `${progressPct}%` }}
+                        transition={{ duration: 0.5, ease: "easeInOut" }}
+                    />
+                </div>
+
+                {STEPPER_STEPS.map(({ n: s, label }) => {
+                    const isClickable = s < step && !isProcessing;
+                    const isActive = step === s;
+                    const isDone = step > s;
+                    return (
+                        <button
+                            key={s}
+                            onClick={() => isClickable && onGoToStep(s)}
+                            disabled={!isClickable}
+                            className={cn(
+                                "relative z-10 flex flex-col items-center gap-2 group",
+                                isClickable ? "cursor-pointer" : "cursor-default"
+                            )}
+                        >
+                            <div className={cn(
+                                "w-12 h-12 rounded-full flex items-center justify-center font-bold text-base border-2 transition-all duration-300",
+                                isActive
+                                    ? "bg-[#1a4b8c] border-[#1a4b8c] text-white shadow-lg shadow-[#1a4b8c]/30 scale-110 ring-4 ring-[#f5c542]/40"
+                                    : isDone
+                                        ? "bg-[#4caf50] border-[#4caf50] text-white group-hover:bg-[#388e3c] group-hover:border-[#388e3c] group-hover:scale-105"
+                                        : "bg-white border-slate-200 text-slate-400"
+                            )}>
+                                {isDone ? <Check className="w-6 h-6" strokeWidth={3} /> : s}
+                            </div>
+                            <span className={cn(
+                                "text-xs font-semibold transition-colors duration-300",
+                                isActive
+                                    ? "text-[#1a4b8c]"
+                                    : isDone
+                                        ? "text-[#4caf50] group-hover:text-[#388e3c]"
+                                        : "text-slate-400"
+                            )}>
+                                {label}
+                            </span>
+                        </button>
+                    );
+                })}
+            </div>
         </div>
     );
 }

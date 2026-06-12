@@ -202,10 +202,37 @@ export async function getImportHistory(): Promise<ImportHistoryEntry[]> {
 
 // Get technical logs (journal technique) — N dernieres lignes de app.log
 export async function getLogs(lines = 200): Promise<string[]> {
-    const response = await fetch(`${API_BASE}/api/logs?lines=${lines}`);
+    const response = await fetch(`${API_BASE}/api/logs?lines=${lines}`, {
+        headers: { 'Authorization': `Bearer ${pb.authStore.token}` },
+    });
     if (!response.ok) throw new Error(`Erreur serveur (${response.status})`);
     const data = await response.json();
     return data.success && Array.isArray(data.lines) ? data.lines : [];
+}
+
+// ===== Settings (contact support editable) =====
+
+export interface PrismeSettings {
+    contact_email: string;
+    contact_email_cc: string;
+}
+
+export async function getSettings(): Promise<PrismeSettings> {
+    const response = await fetch(`${API_BASE}/api/settings`);
+    const data = await response.json();
+    return data.success ? data.settings : { contact_email: '', contact_email_cc: '' };
+}
+
+export async function saveSettings(patch: Partial<PrismeSettings>): Promise<{ success: boolean; settings?: PrismeSettings; error?: string }> {
+    const response = await fetch(`${API_BASE}/api/settings`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${pb.authStore.token}`,
+        },
+        body: JSON.stringify(patch),
+    });
+    return response.json();
 }
 
 // List CSV source files on server

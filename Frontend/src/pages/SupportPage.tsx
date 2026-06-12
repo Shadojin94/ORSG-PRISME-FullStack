@@ -1,12 +1,14 @@
 import { useState, useEffect, useCallback } from "react"
 import { motion } from "framer-motion"
-import { Mail, Send, Loader2, CheckCircle2, AlertCircle, Clock, MessageSquare, FileText, RefreshCw, LifeBuoy, BookOpen } from "lucide-react"
+import { Mail, Send, Loader2, CheckCircle2, AlertCircle, Clock, MessageSquare, FileText, RefreshCw, LifeBuoy, BookOpen, User } from "lucide-react"
 import { cn } from "@/lib/utils"
 import { useAuth } from "@/hooks/useAuth"
 import { pb } from "@/lib/pocketbase"
 import type { SupportTicket } from "@/lib/pocketbase"
-import { getLogs } from "@/services/api"
+import { getLogs, getSettings } from "@/services/api"
 import { PageHero } from "@/components/ui/PageHero"
+
+const DEFAULT_CONTACT_EMAIL = 'naissa.chateau@ors-guyane.org'
 
 const CATEGORIES = [
     { value: 'account', label: 'Mon compte' },
@@ -31,8 +33,10 @@ const STATUS_LABELS: Record<string, { label: string; color: string }> = {
 }
 
 export function SupportPage() {
-    const { user } = useAuth()
+    const { user, isAdmin } = useAuth()
     const [tickets, setTickets] = useState<SupportTicket[]>([])
+    const [contactEmail, setContactEmail] = useState(DEFAULT_CONTACT_EMAIL)
+    const [contactEmailCc, setContactEmailCc] = useState('')
     const [loadingTickets, setLoadingTickets] = useState(true)
     const [submitting, setSubmitting] = useState(false)
     const [submitted, setSubmitted] = useState(false)
@@ -49,9 +53,10 @@ export function SupportPage() {
         if (!user) return
         setLoadingTickets(true)
         try {
+            // Plateforme interne : tous les tickets sont visibles pour eviter les doublons.
             const records = await pb.collection('support_tickets').getFullList<SupportTicket>({
-                filter: `user="${user.id}"`,
                 sort: '-created',
+                expand: 'user',
             })
             setTickets(records)
         } catch (err) {
@@ -61,6 +66,16 @@ export function SupportPage() {
     }, [user])
 
     useEffect(() => { loadTickets() }, [loadTickets])
+
+    // Email de contact support (configurable via la page Comptes)
+    useEffect(() => {
+        getSettings()
+            .then(s => {
+                if (s.contact_email) setContactEmail(s.contact_email)
+                setContactEmailCc(s.contact_email_cc || '')
+            })
+            .catch(() => { /* fallback valeur par defaut */ })
+    }, [])
 
     // Journal technique (logs serveur)
     const [logs, setLogs] = useState<string[]>([])
@@ -80,7 +95,7 @@ export function SupportPage() {
         setLoadingLogs(false)
     }, [])
 
-    useEffect(() => { loadLogs() }, [loadLogs])
+    useEffect(() => { if (isAdmin) loadLogs() }, [loadLogs, isAdmin])
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault()
@@ -133,7 +148,7 @@ export function SupportPage() {
                 initial={{ opacity: 0, y: 12 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.4 }}
-                className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm transition hover:shadow-md"
+                className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm transition hover:shadow-md lg:col-span-2"
             >
                 <div className="mb-1 flex items-center gap-3">
                     <span className="grid h-10 w-10 place-items-center rounded-xl bg-gradient-to-br from-[#1a4b8c]/15 to-[#3bb3a9]/15 text-[#1a4b8c]">
@@ -224,14 +239,14 @@ export function SupportPage() {
             {/* Contact Admin */}
             <div className="grid gap-4 sm:grid-cols-2 lg:col-span-2 lg:order-last">
                 <a
-                    href="mailto:naissa.chateau@ors-guyane.org?subject=[Data Visus] Demande de support"
+                    href={`mailto:${contactEmail}?subject=[Data Visus] Demande de support${contactEmailCc ? `&cc=${contactEmailCc}` : ''}`}
                     className="group block rounded-2xl border border-slate-200 bg-white p-6 text-center shadow-sm transition-all hover:-translate-y-0.5 hover:shadow-md"
                 >
                     <div className="mx-auto mb-4 grid h-12 w-12 place-items-center rounded-xl bg-gradient-to-br from-[#1a4b8c]/15 to-[#3bb3a9]/15 text-[#1a4b8c] transition group-hover:scale-105">
                         <Mail className="h-6 w-6" />
                     </div>
                     <h3 className="mb-1 font-black text-[#1a4b8c]">Contacter l'admin</h3>
-                    <p className="text-sm text-slate-500">naissa.chateau@ors-guyane.org</p>
+                    <p className="text-sm text-slate-500">{contactEmail}</p>
                 </a>
 
                 <a
@@ -252,7 +267,7 @@ export function SupportPage() {
                     <span className="grid h-10 w-10 place-items-center rounded-xl bg-gradient-to-br from-[#f5c542]/25 to-[#ff9800]/20 text-[#ff9800]">
                         <Clock className="h-5 w-5" />
                     </span>
-                    <h2 className="text-lg font-black text-[#1a4b8c]">Mes tickets ({tickets.length})</h2>
+                    <h2 className="text-lg font-black text-[#1a4b8c]">Tickets de l'équipe ({tickets.length})</h2>
                 </div>
 
                 {loadingTickets ? (
@@ -278,7 +293,12 @@ export function SupportPage() {
                                         <div className="flex-1">
                                             <h4 className="text-sm font-black text-slate-900">{ticket.subject}</h4>
                                             <p className="mt-1 line-clamp-2 text-xs text-slate-500">{ticket.description}</p>
-                                            <div className="mt-2 flex items-center gap-2 text-xs text-slate-400">
+                                            <div className="mt-2 flex flex-wrap items-center gap-2 text-xs text-slate-400">
+                                                <span className="flex items-center gap-1 font-medium text-slate-500">
+                                                    <User className="h-3 w-3" />
+                                                    {ticket.expand?.user?.name || ticket.expand?.user?.email || (ticket.user === user?.id ? 'Moi' : 'Utilisateur')}
+                                                </span>
+                                                <span>&bull;</span>
                                                 <span>{new Date(ticket.created).toLocaleDateString('fr-FR')} {new Date(ticket.created).toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' })}</span>
                                                 <span>&bull;</span>
                                                 <span>{CATEGORIES.find(c => c.value === ticket.category)?.label}</span>
@@ -307,7 +327,8 @@ export function SupportPage() {
                 )}
             </div>
 
-            {/* Journal technique */}
+            {/* Journal technique — reserve aux administrateurs */}
+            {isAdmin && (
             <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm transition hover:shadow-md lg:col-span-2">
                 <div className="mb-3 flex flex-wrap items-center justify-between gap-3">
                     <div className="flex items-center gap-3">
@@ -348,6 +369,7 @@ export function SupportPage() {
                     </pre>
                 )}
             </div>
+            )}
 
             </div>
         </main>

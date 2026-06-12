@@ -110,16 +110,36 @@ export function DocsPage() {
         )
     }
 
-    // Filter datasets based on search
+    // Predicat de recherche reutilisable
+    const matchesSearch = (ds: any) => {
+        const q = searchTerm.toLowerCase()
+        return (
+            ds.label.toLowerCase().includes(q) ||
+            ds.id.toLowerCase().includes(q) ||
+            ds.source.toLowerCase().includes(q) ||
+            (ds.variable && ds.variable.toLowerCase().includes(q)) ||
+            (ds.tool && ds.tool.toLowerCase().includes(q))
+        )
+    }
+
+    const isSearching = searchTerm.trim() !== ''
+
+    // Recherche GLOBALE : quand une requete est saisie, on filtre a travers
+    // TOUTES les thematiques, regroupees par thematique.
+    const globalResults = isSearching
+        ? BDI_THEMES.map(theme => ({
+            theme,
+            subThemes: (theme.subThemes || []).map(st => ({
+                ...st,
+                datasets: st.datasets.filter(matchesSearch),
+            })).filter(st => st.datasets.length > 0),
+        })).filter(g => g.subThemes.length > 0)
+        : []
+
+    // Filter datasets based on search (theme actif uniquement, hors recherche)
     const filteredSubThemes = activeTheme?.subThemes?.map(st => ({
         ...st,
-        datasets: st.datasets.filter((ds: any) =>
-            ds.label.toLowerCase().includes(searchTerm.toLowerCase()) ||
-            ds.id.toLowerCase().includes(searchTerm.toLowerCase()) ||
-            ds.source.toLowerCase().includes(searchTerm.toLowerCase()) ||
-            (ds.variable && ds.variable.toLowerCase().includes(searchTerm.toLowerCase())) ||
-            (ds.tool && ds.tool.toLowerCase().includes(searchTerm.toLowerCase()))
-        )
+        datasets: st.datasets.filter(matchesSearch),
     })).filter(st => st.datasets.length > 0 || searchTerm === '')
 
     const totalDatasets = activeTheme?.subThemes?.reduce((acc, st) => acc + st.datasets.length, 0) || 0
@@ -210,6 +230,101 @@ export function DocsPage() {
                 <span className="h-2 w-2 rounded-full bg-slate-300" />
                 Non configuré
             </span>
+        )
+    }
+
+    // Rendu d'un sous-theme (carte depliable avec table d'indicateurs).
+    // forceOpen : en recherche globale, on ouvre tout pour voir les resultats.
+    const renderSubTheme = (subTheme: any, forceOpen = false) => {
+        // On masque les indicateurs marqués hidden (non implémentés).
+        const visibleDatasets = subTheme.datasets.filter((d: any) => !d.hidden)
+        const stReady = visibleDatasets.filter((d: any) => d.demoReady).length
+        const stTotal = visibleDatasets.length
+        const isOpen = forceOpen || expandedSubThemes.includes(subTheme.id)
+        return (
+        <div key={subTheme.id} className="overflow-hidden rounded-2xl border border-slate-200 shadow-sm transition hover:shadow-md">
+            {/* Sub-theme Header */}
+            <button
+                onClick={() => toggleSubTheme(subTheme.id)}
+                className={cn(
+                    "flex w-full items-center justify-between p-4 transition-colors",
+                    isOpen ? "bg-slate-50" : "bg-white hover:bg-slate-50"
+                )}
+            >
+                <div className="flex items-center gap-3">
+                    <span className="grid h-10 w-10 shrink-0 place-items-center rounded-xl bg-gradient-to-br from-[#1a4b8c]/10 to-[#3bb3a9]/15 text-[#3bb3a9]">
+                        <Database className="h-5 w-5" />
+                    </span>
+                    <div className="text-left">
+                        <h3 className="font-black text-slate-800">{subTheme.title}</h3>
+                        <p className="text-xs text-slate-500">{stTotal} indicateurs</p>
+                    </div>
+                </div>
+                <div className="flex items-center gap-3">
+                    <span className={cn(
+                        "rounded-full px-2.5 py-0.5 text-[10px] font-medium",
+                        stReady === stTotal && stReady > 0
+                            ? "border border-green-200 bg-green-50 text-green-600"
+                            : stReady > 0
+                                ? "border border-amber-200 bg-amber-50 text-amber-600"
+                                : "border border-slate-200 bg-slate-50 text-slate-400"
+                    )}>
+                        {stReady}/{stTotal} dispo
+                    </span>
+                    <ChevronRight className={cn(
+                        "h-5 w-5 text-slate-400 transition-transform duration-200",
+                        isOpen && "rotate-90"
+                    )} />
+                </div>
+            </button>
+
+            {/* Datasets Table */}
+            {isOpen && (
+                <div className="border-t border-slate-200">
+                    <table className="w-full text-left">
+                        <thead className="border-b border-slate-200 bg-slate-50 text-xs font-black uppercase tracking-wider text-slate-500">
+                            <tr>
+                                <th className="px-4 py-3">Nom de l'indicateur</th>
+                                <th className="px-4 py-3">Variable</th>
+                                <th className="px-4 py-3">Source</th>
+                                <th className="px-4 py-3">Outil</th>
+                                <th className="px-4 py-3 text-center">Disponibilité</th>
+                            </tr>
+                        </thead>
+                        <tbody className="divide-y divide-slate-100 text-sm">
+                            {visibleDatasets.map((ds: any, idx: number) => (
+                                <tr key={`${ds.id}-${idx}`} className="transition-colors hover:bg-slate-50">
+                                    <td className="px-4 py-3 font-medium text-slate-900">
+                                        {ds.label}
+                                    </td>
+                                    <td className="px-4 py-3">
+                                        {ds.variable && (
+                                            <code className="rounded bg-slate-100 px-2 py-1 font-mono text-xs text-slate-600">
+                                                {ds.variable}
+                                            </code>
+                                        )}
+                                    </td>
+                                    <td className="px-4 py-3">
+                                        <span className="inline-flex items-center gap-1 rounded-lg border border-slate-200 bg-slate-100 px-2 py-1 text-xs font-medium text-slate-600">
+                                            <FileSpreadsheet className="h-3 w-3" />
+                                            {ds.source}
+                                        </span>
+                                    </td>
+                                    <td className="px-4 py-3">
+                                        {ds.tool && (
+                                            <span className="text-xs text-slate-500">{ds.tool}</span>
+                                        )}
+                                    </td>
+                                    <td className="px-4 py-3 text-center">
+                                        {renderAvailability(ds.id, ds)}
+                                    </td>
+                                </tr>
+                            ))}
+                        </tbody>
+                    </table>
+                </div>
+            )}
+        </div>
         )
     }
 
@@ -342,7 +457,7 @@ export function DocsPage() {
                                     <Search className="absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
                                     <input
                                         type="text"
-                                        placeholder="Rechercher un indicateur, une variable, une source..."
+                                        placeholder="Rechercher dans toutes les thématiques (indicateur, variable, source)..."
                                         value={searchTerm}
                                         onChange={(e) => setSearchTerm(e.target.value)}
                                         className="w-full rounded-2xl border border-slate-200 bg-white py-3 pl-11 pr-4 text-sm shadow-sm outline-none transition focus:border-[#3bb3a9] focus:shadow-md focus:ring-4 focus:ring-[#3bb3a9]/10"
@@ -352,111 +467,31 @@ export function DocsPage() {
 
                             {/* Sub-themes and Datasets */}
                             <div className="space-y-3 p-4 sm:p-5">
-                                {filteredSubThemes?.map((subTheme) => {
-                                    // On masque les indicateurs marqués hidden (non implémentés).
-                                    const visibleDatasets = subTheme.datasets.filter((d: any) => !d.hidden)
-                                    const stReady = visibleDatasets.filter((d: any) => d.demoReady).length
-                                    const stTotal = visibleDatasets.length
-                                    const isOpen = expandedSubThemes.includes(subTheme.id)
-                                    return (
-                                    <div key={subTheme.id} className="overflow-hidden rounded-2xl border border-slate-200 shadow-sm transition hover:shadow-md">
-                                        {/* Sub-theme Header */}
-                                        <button
-                                            onClick={() => toggleSubTheme(subTheme.id)}
-                                            className={cn(
-                                                "flex w-full items-center justify-between p-4 transition-colors",
-                                                isOpen ? "bg-slate-50" : "bg-white hover:bg-slate-50"
-                                            )}
-                                        >
-                                            <div className="flex items-center gap-3">
-                                                {/* Pastille d'icone degradee */}
-                                                <span className="grid h-10 w-10 shrink-0 place-items-center rounded-xl bg-gradient-to-br from-[#1a4b8c]/10 to-[#3bb3a9]/15 text-[#3bb3a9]">
-                                                    <Database className="h-5 w-5" />
-                                                </span>
-                                                <div className="text-left">
-                                                    <h3 className="font-black text-slate-800">{subTheme.title}</h3>
-                                                    <p className="text-xs text-slate-500">{stTotal} indicateurs</p>
+                                {/* Recherche GLOBALE : resultats de toutes les thematiques, groupes par thematique */}
+                                {isSearching ? (
+                                    globalResults.length > 0 ? (
+                                        globalResults.map(({ theme, subThemes }) => (
+                                            <div key={theme.id} className="space-y-3">
+                                                <div className="flex items-center gap-2 px-1 pt-2 text-xs font-black uppercase tracking-wider text-slate-500">
+                                                    <theme.icon className="h-4 w-4 text-[#3bb3a9]" />
+                                                    {theme.shortTitle || theme.title}
                                                 </div>
+                                                {subThemes.map(st => renderSubTheme(st, true))}
                                             </div>
-                                            <div className="flex items-center gap-3">
-                                                <span className={cn(
-                                                    "rounded-full px-2.5 py-0.5 text-[10px] font-medium",
-                                                    stReady === stTotal && stReady > 0
-                                                        ? "border border-green-200 bg-green-50 text-green-600"
-                                                        : stReady > 0
-                                                            ? "border border-amber-200 bg-amber-50 text-amber-600"
-                                                            : "border border-slate-200 bg-slate-50 text-slate-400"
-                                                )}>
-                                                    {stReady}/{stTotal} dispo
-                                                </span>
-                                                {/* Chevron anime au depliage */}
-                                                <ChevronRight className={cn(
-                                                    "h-5 w-5 text-slate-400 transition-transform duration-200",
-                                                    isOpen && "rotate-90"
-                                                )} />
+                                        ))
+                                    ) : (
+                                        <div className="flex flex-col items-center justify-center px-6 py-16 text-center">
+                                            <div className="grid h-20 w-20 place-items-center rounded-full bg-gradient-to-br from-[#1a4b8c]/10 to-[#3bb3a9]/10">
+                                                <Search className="h-9 w-9 text-[#3bb3a9]" />
                                             </div>
-                                        </button>
-
-                                        {/* Datasets Table */}
-                                        {isOpen && (
-                                            <div className="border-t border-slate-200">
-                                                <table className="w-full text-left">
-                                                    <thead className="border-b border-slate-200 bg-slate-50 text-xs font-black uppercase tracking-wider text-slate-500">
-                                                        <tr>
-                                                            <th className="px-4 py-3">Nom de l'indicateur</th>
-                                                            <th className="px-4 py-3">Variable</th>
-                                                            <th className="px-4 py-3">Source</th>
-                                                            <th className="px-4 py-3">Outil</th>
-                                                            <th className="px-4 py-3 text-center">Disponibilité</th>
-                                                        </tr>
-                                                    </thead>
-                                                    <tbody className="divide-y divide-slate-100 text-sm">
-                                                        {visibleDatasets.map((ds: any, idx: number) => (
-                                                            <tr key={`${ds.id}-${idx}`} className="transition-colors hover:bg-slate-50">
-                                                                <td className="px-4 py-3 font-medium text-slate-900">
-                                                                    {ds.label}
-                                                                </td>
-                                                                <td className="px-4 py-3">
-                                                                    {ds.variable && (
-                                                                        <code className="rounded bg-slate-100 px-2 py-1 font-mono text-xs text-slate-600">
-                                                                            {ds.variable}
-                                                                        </code>
-                                                                    )}
-                                                                </td>
-                                                                <td className="px-4 py-3">
-                                                                    <span className="inline-flex items-center gap-1 rounded-lg border border-slate-200 bg-slate-100 px-2 py-1 text-xs font-medium text-slate-600">
-                                                                        <FileSpreadsheet className="h-3 w-3" />
-                                                                        {ds.source}
-                                                                    </span>
-                                                                </td>
-                                                                <td className="px-4 py-3">
-                                                                    {ds.tool && (
-                                                                        <span className="text-xs text-slate-500">{ds.tool}</span>
-                                                                    )}
-                                                                </td>
-                                                                <td className="px-4 py-3 text-center">
-                                                                    {renderAvailability(ds.id, ds)}
-                                                                </td>
-                                                            </tr>
-                                                        ))}
-                                                    </tbody>
-                                                </table>
-                                            </div>
-                                        )}
-                                    </div>
-                                )})}
-
-                                {/* Empty state for search */}
-                                {filteredSubThemes?.length === 0 && searchTerm && (
-                                    <div className="flex flex-col items-center justify-center px-6 py-16 text-center">
-                                        <div className="grid h-20 w-20 place-items-center rounded-full bg-gradient-to-br from-[#1a4b8c]/10 to-[#3bb3a9]/10">
-                                            <Search className="h-9 w-9 text-[#3bb3a9]" />
+                                            <h3 className="mt-5 text-base font-black text-[#1a4b8c]">Aucun résultat</h3>
+                                            <p className="mt-1.5 max-w-sm text-sm text-slate-500">
+                                                Aucun indicateur ne correspond à « {searchTerm} » dans l'ensemble des thématiques.
+                                            </p>
                                         </div>
-                                        <h3 className="mt-5 text-base font-black text-[#1a4b8c]">Aucun résultat</h3>
-                                        <p className="mt-1.5 max-w-sm text-sm text-slate-500">
-                                            Aucun indicateur ne correspond à « {searchTerm} ». Essayez un autre terme ou une autre thématique.
-                                        </p>
-                                    </div>
+                                    )
+                                ) : (
+                                    filteredSubThemes?.map((subTheme) => renderSubTheme(subTheme))
                                 )}
                             </div>
 

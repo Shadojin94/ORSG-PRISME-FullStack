@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { motion } from "framer-motion";
 import { CheckCircle2, Download, RefreshCw, FileSpreadsheet, AlertTriangle, ChevronDown } from "lucide-react";
 import { ReportPreview } from "./ReportPreview";
 
@@ -66,23 +67,43 @@ export function Step3_Result({
     }
 
     return (
-        <div className="flex flex-col items-center justify-center py-12 px-6 animate-in zoom-in-95 duration-500 text-center">
+        <div className="flex flex-col items-center justify-center py-12 px-6 text-center">
 
-            <div className="w-24 h-24 bg-green-100 rounded-full flex items-center justify-center mb-8 border-4 border-white shadow-xl animate-bounce">
-                <CheckCircle2 className="w-12 h-12 text-green-600" />
-            </div>
+            <motion.div
+                initial={{ opacity: 0, scale: 0.6 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ duration: 0.5, ease: "easeOut" }}
+                className="relative mb-8"
+            >
+                {/* Halo / glow pulsé autour de la coche */}
+                <span className="absolute inset-0 rounded-full bg-[#4caf50]/30 blur-2xl animate-pulse" />
+                <span className="absolute -inset-3 rounded-full bg-[#4caf50]/10 animate-ping" />
+                <div className="relative w-24 h-24 bg-green-100 rounded-full flex items-center justify-center border-4 border-white shadow-xl animate-bounce">
+                    <CheckCircle2 className="w-12 h-12 text-green-600" />
+                </div>
+            </motion.div>
 
-            <h2 className="text-3xl font-extrabold text-[#1a4b8c] mb-4">
+            <motion.h2
+                initial={{ opacity: 0, y: 12 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.4, delay: 0.15 }}
+                className="text-3xl font-extrabold text-[#1a4b8c] mb-4"
+            >
                 {isMulti
                     ? `${count} fichiers générés avec succès !`
                     : 'Fichier généré avec succès !'}
-            </h2>
+            </motion.h2>
 
-            <p className="text-gray-500 text-lg mb-8 max-w-lg mx-auto">
+            <motion.p
+                initial={{ opacity: 0, y: 12 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.4, delay: 0.25 }}
+                className="text-gray-500 text-lg mb-8 max-w-lg mx-auto"
+            >
                 {isMulti
                     ? 'Chaque indicateur a produit son propre pack. Téléchargez-les ci-dessous.'
                     : 'Votre fichier de données est prêt. Vous pouvez le télécharger ci-dessous.'}
-            </p>
+            </motion.p>
 
             {warnings.length > 0 && (
                 <div className="bg-amber-50 border border-amber-200 rounded-xl p-4 mb-8 max-w-lg w-full text-left">
@@ -126,12 +147,15 @@ export function Step3_Result({
             )}
 
             <div className="w-full max-w-md space-y-3 mb-6">
-                {generatedFiles.map((file) => (
-                    <div
+                {generatedFiles.map((file, i) => (
+                    <motion.div
                         key={file}
-                        className="bg-gray-50 p-4 rounded-xl border border-gray-200 flex items-center gap-3"
+                        initial={{ opacity: 0, y: 16 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.4, delay: 0.35 + i * 0.08 }}
+                        className="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm flex items-center gap-3 transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md hover:border-[#4caf50]/40"
                     >
-                        <div className="bg-green-100 p-2 rounded-lg text-green-700 shrink-0">
+                        <div className="bg-green-100 p-2 rounded-xl text-green-700 shrink-0">
                             <FileSpreadsheet className="w-6 h-6" />
                         </div>
                         <div className="text-left overflow-hidden flex-1 min-w-0">
@@ -145,7 +169,7 @@ export function Step3_Result({
                             <Download className="w-4 h-4" />
                             Télécharger
                         </button>
-                    </div>
+                    </motion.div>
                 ))}
             </div>
 

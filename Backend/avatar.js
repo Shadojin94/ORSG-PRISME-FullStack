@@ -166,4 +166,4 @@ async function handleAvatar(req, res, urlPath) {
     return false;
 }
 
-module.exports = { handleAvatar };
+module.exports = { handleAvatar, userIdFromToken };

@@ -1,4 +1,4 @@
-import { CheckCircle2, Calendar, AlertTriangle, Database, ArrowLeft, Loader2, Globe, HardDrive, Info, ListChecks, Play } from "lucide-react";
+import { CheckCircle2, Calendar, AlertTriangle, Database, ArrowLeft, Loader2, Globe, HardDrive, Info, ListChecks, Play, FileSpreadsheet } from "lucide-react";
 import { Acronym } from "@/components/ui/Acronym";
 import { cn } from "@/lib/utils";
 import { MocaUpload } from "./MocaUpload";
@@ -76,7 +76,7 @@ export function Step2_Config({
     const isCepiDcSubject = indicators.some(d => CEPIDC_THEMES.includes(d.id));
 
     return (
-        <div className="space-y-6 animate-in fade-in slide-in-from-right-4 duration-300">
+        <div className="space-y-6 animate-in fade-in slide-in-from-right-4 duration-300 mt-6">
 
             {/* Back button + breadcrumb */}
             <div className="flex items-center gap-3">
@@ -94,7 +94,7 @@ export function Step2_Config({
                 </div>
             </div>
 
-            <h2 className="text-2xl font-bold text-[#1a4b8c]">2. Configurez la génération</h2>
+            <h2 className="text-2xl font-extrabold text-[#1a4b8c] tracking-tight">2. Configurez la génération</h2>
 
             {autoSwitchNotice && (
                 <div className="bg-blue-50 p-4 rounded-xl border border-blue-200 animate-in fade-in">
@@ -106,9 +106,11 @@ export function Step2_Config({
             )}
 
             {/* Subject summary: included indicators */}
-            <div className="bg-white p-5 rounded-xl border border-gray-200 shadow-sm">
-                <h3 className="text-base font-bold text-gray-800 mb-3 flex items-center gap-2">
-                    <ListChecks className="w-5 h-5 text-[#3bb3a9]" />
+            <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm">
+                <h3 className="text-base font-bold text-gray-800 mb-4 flex items-center gap-2.5">
+                    <span className="inline-flex items-center justify-center w-9 h-9 rounded-xl bg-[#3bb3a9]/10 text-[#3bb3a9]">
+                        <ListChecks className="w-5 h-5" />
+                    </span>
                     Indicateurs inclus dans ce sujet
                     <span className="ml-1 text-xs bg-gray-100 text-gray-600 px-2 py-0.5 rounded-full font-medium">
                         {indicators.length}
@@ -130,9 +132,11 @@ export function Step2_Config({
             </div>
 
             {/* Source Selection */}
-            <div className="bg-white p-5 rounded-xl border border-gray-200 shadow-sm">
-                <h3 className="text-base font-bold text-gray-800 mb-3 flex items-center gap-2">
-                    <Database className="w-5 h-5 text-[#3bb3a9]" />
+            <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm">
+                <h3 className="text-base font-bold text-gray-800 mb-4 flex items-center gap-2.5">
+                    <span className="inline-flex items-center justify-center w-9 h-9 rounded-xl bg-[#3bb3a9]/10 text-[#3bb3a9]">
+                        <Database className="w-5 h-5" />
+                    </span>
                     Source des données
                 </h3>
 
@@ -140,10 +144,10 @@ export function Step2_Config({
                     <button
                         onClick={() => onSourceChange('moca')}
                         className={cn(
-                            "flex flex-col p-4 rounded-xl border-2 text-left transition-all",
+                            "flex flex-col p-4 rounded-2xl border-2 text-left transition-all duration-200 hover:-translate-y-0.5",
                             sourceMode === 'moca'
-                                ? "border-[#1a4b8c] bg-[#1a4b8c]/5"
-                                : "border-gray-200 hover:border-gray-300"
+                                ? "border-[#1a4b8c] bg-[#1a4b8c]/5 ring-2 ring-[#1a4b8c]/20 shadow-md"
+                                : "border-slate-200 hover:border-[#1a4b8c]/40 hover:shadow-md"
                         )}
                     >
                         <div className="flex justify-between items-start mb-1.5 w-full">
@@ -162,12 +166,12 @@ export function Step2_Config({
                         onClick={() => supportsOpenData && onSourceChange('opendata')}
                         disabled={!supportsOpenData}
                         className={cn(
-                            "flex flex-col p-4 rounded-xl border-2 text-left transition-all",
+                            "flex flex-col p-4 rounded-2xl border-2 text-left transition-all duration-200",
                             !supportsOpenData
                                 ? "border-gray-100 bg-gray-50 opacity-50 cursor-not-allowed"
                                 : sourceMode === 'opendata'
-                                    ? "border-[#3bb3a9] bg-[#3bb3a9]/5"
-                                    : "border-gray-200 hover:border-gray-300"
+                                    ? "border-[#3bb3a9] bg-[#3bb3a9]/5 ring-2 ring-[#3bb3a9]/20 shadow-md hover:-translate-y-0.5"
+                                    : "border-slate-200 hover:border-[#3bb3a9]/40 hover:shadow-md hover:-translate-y-0.5"
                         )}
                     >
                         <div className="flex justify-between items-start mb-1.5 w-full">
@@ -200,9 +204,11 @@ export function Step2_Config({
             </div>
 
             {/* Year Selection */}
-            <div className="bg-white p-5 rounded-xl border border-gray-200 shadow-sm">
-                <h3 className="text-base font-bold text-gray-800 mb-3 flex items-center gap-2">
-                    <Calendar className="w-5 h-5 text-[#3bb3a9]" />
+            <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm">
+                <h3 className="text-base font-bold text-gray-800 mb-4 flex items-center gap-2.5">
+                    <span className="inline-flex items-center justify-center w-9 h-9 rounded-xl bg-[#3bb3a9]/10 text-[#3bb3a9]">
+                        <Calendar className="w-5 h-5" />
+                    </span>
                     {format === 'consolidated' ? 'Plage d\'années' : 'Année'}
                 </h3>
 
@@ -240,16 +246,16 @@ export function Step2_Config({
                         </div>
                     </div>
                 ) : format === 'consolidated' ? null : sortedYears.length > 0 ? (
-                    <div className="flex flex-wrap gap-2">
+                    <div className="flex flex-wrap gap-2.5">
                         {sortedYears.map((y) => (
                             <button
                                 key={y}
                                 onClick={() => onYearChange(y)}
                                 className={cn(
-                                    "px-4 py-2 rounded-full font-semibold text-sm transition-all border-2",
+                                    "px-5 py-2 rounded-full font-semibold text-sm transition-all duration-200 border-2",
                                     year === y
-                                        ? "bg-[#1a4b8c] text-white border-[#1a4b8c] shadow-md"
-                                        : "bg-white text-gray-600 border-gray-200 hover:border-[#3bb3a9] hover:text-[#3bb3a9]"
+                                        ? "bg-[#1a4b8c] text-white border-[#1a4b8c] shadow-md scale-105"
+                                        : "bg-white text-gray-600 border-slate-200 hover:border-[#3bb3a9] hover:text-[#3bb3a9] hover:-translate-y-0.5"
                                 )}
                             >
                                 {y}
@@ -295,14 +301,19 @@ export function Step2_Config({
             )}
 
             {/* Format Selection */}
-            <div className="bg-white p-5 rounded-xl border border-gray-200 shadow-sm">
-                <h3 className="text-base font-bold text-gray-800 mb-3">Format de sortie</h3>
+            <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm">
+                <h3 className="text-base font-bold text-gray-800 mb-4 flex items-center gap-2.5">
+                    <span className="inline-flex items-center justify-center w-9 h-9 rounded-xl bg-[#3bb3a9]/10 text-[#3bb3a9]">
+                        <FileSpreadsheet className="w-5 h-5" />
+                    </span>
+                    Format de sortie
+                </h3>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                     <button
                         onClick={() => onFormatChange('zip')}
                         className={cn(
-                            "p-3 rounded-xl border-2 text-left transition-all",
-                            format === 'zip' ? "border-[#3bb3a9] bg-[#3bb3a9]/5" : "border-gray-200 hover:border-gray-300"
+                            "p-4 rounded-2xl border-2 text-left transition-all duration-200",
+                            format === 'zip' ? "border-[#3bb3a9] bg-[#3bb3a9]/5 ring-2 ring-[#3bb3a9]/20 shadow-md hover:-translate-y-0.5" : "border-slate-200 hover:border-[#3bb3a9]/40 hover:shadow-md hover:-translate-y-0.5"
                         )}
                     >
                         <div className="flex justify-between items-start mb-1">
@@ -314,8 +325,8 @@ export function Step2_Config({
                     <button
                         onClick={() => onFormatChange('consolidated')}
                         className={cn(
-                            "p-3 rounded-xl border-2 text-left transition-all",
-                            format === 'consolidated' ? "border-[#3bb3a9] bg-[#3bb3a9]/5" : "border-gray-200 hover:border-gray-300"
+                            "p-4 rounded-2xl border-2 text-left transition-all duration-200",
+                            format === 'consolidated' ? "border-[#3bb3a9] bg-[#3bb3a9]/5 ring-2 ring-[#3bb3a9]/20 shadow-md hover:-translate-y-0.5" : "border-slate-200 hover:border-[#3bb3a9]/40 hover:shadow-md hover:-translate-y-0.5"
                         )}
                     >
                         <div className="flex justify-between items-start mb-1">
@@ -338,16 +349,16 @@ export function Step2_Config({
             )}
 
             {/* Inline CTA: Générer */}
-            <div className="bg-white p-5 rounded-xl border border-gray-200 shadow-sm sticky bottom-4">
+            <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-lg sticky bottom-4">
                 {isProcessing && progress && (
                     <div className="mb-3 text-xs text-gray-600">
                         <div className="flex justify-between mb-1">
                             <span className="font-semibold">Génération {progress.current}/{progress.total}</span>
                             <span className="truncate ml-2 max-w-[220px]" title={progress.label}>{progress.label}</span>
                         </div>
-                        <div className="h-1.5 bg-gray-200 rounded-full overflow-hidden">
+                        <div className="h-2 bg-gray-200 rounded-full overflow-hidden">
                             <div
-                                className="h-full bg-[#3bb3a9] transition-all duration-300"
+                                className="h-full bg-gradient-to-r from-[#1a4b8c] to-[#3bb3a9] transition-all duration-300"
                                 style={{ width: `${(progress.current / progress.total) * 100}%` }}
                             />
                         </div>
@@ -357,9 +368,9 @@ export function Step2_Config({
                     onClick={onGenerate}
                     disabled={!canGenerate || isProcessing}
                     className={cn(
-                        "w-full py-3 px-4 rounded-xl font-bold flex items-center justify-center gap-2 transition-all shadow-md",
+                        "w-full py-3.5 px-4 rounded-xl font-bold flex items-center justify-center gap-2 transition-all duration-200 shadow-md",
                         canGenerate && !isProcessing
-                            ? "bg-[#3bb3a9] text-white hover:bg-[#2f9a91] hover:shadow-lg hover:-translate-y-0.5"
+                            ? "bg-gradient-to-r from-[#3bb3a9] to-[#2f9a91] text-white hover:shadow-xl hover:shadow-[#3bb3a9]/30 hover:-translate-y-0.5"
                             : "bg-gray-200 text-gray-400 cursor-not-allowed"
                     )}
                 >

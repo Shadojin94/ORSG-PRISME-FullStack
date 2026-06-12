@@ -432,6 +432,62 @@ def _reconstruct_guyane_region(result, enabled, dimension_column):
             result['reg'].append(reg_item)
 
 
+def _classify_geo_item(geo_str, item, result):
+    """Classe un item {annee, valeur[, dimension]} dans le bon niveau géo selon geo_str.
+    Modifie result en place. Partagé par les parsers tabular et moca_filter."""
+    geo_lower = geo_str.lower()
+
+    # Commune 973XX
+    match_com = re.search(r'(973\d{2})', geo_str)
+    if match_com:
+        code = int(match_com.group(1))
+        if code in COMMUNES_GUYANE:
+            item['codgeo'] = code
+            result['com'].append(item.copy())
+        return
+
+    # France entière
+    if ('france entiere' in geo_lower or 'france entière' in geo_lower or
+        'france (y compris' in geo_lower or 'lieu_domicile#france_avec' in geo_lower or
+        (geo_lower == 'lieu_domicile#france')):
+        item['codgeo'] = 99
+        result['fra'].append(item.copy())
+        return
+
+    # France métropolitaine / hexagonale
+    if ('france metropolitaine' in geo_lower or 'france hexagonale' in geo_lower or
+        'france métropolitaine' in geo_lower or geo_lower.startswith('france m')):
+        item['codgeo'] = 0
+        result['fh'].append(item.copy())
+        return
+
+    # DOM
+    if ("departements d'outre" in geo_lower or "départements d'outre" in geo_lower or
+        "departements d'outre mer" in geo_lower):
+        item['codgeo'] = 'DOM'
+        result['dom'].append(item.copy())
+        return
+
+    # Régions
+    for reg_name, reg_code in REGION_MAPPING.items():
+        if reg_name.lower() in geo_lower:
+            item['codgeo'] = reg_code
+            result['reg'].append(item.copy())
+            return
+
+
+def _detect_year_block_stride(parts, year_column):
+    """Format MOCA-O : les niveaux régionaux/nationaux empilent plusieurs années
+    horizontalement sur une même ligne (année@year_column, année suivante à un
+    offset fixe). Détecte ce pas (stride) en cherchant la 2e occurrence d'une
+    année valide après year_column. Retourne 0 si pas de 2e bloc (1 année/ligne)."""
+    for i in range(year_column + 1, len(parts)):
+        m = re.search(r'(\d{4})', parts[i])
+        if m and 2000 <= int(m.group(1)) <= 2030:
+            return i - year_column
+    return 0
+
+
 def parse_tabular_csv(filepath, value_column=2, year_column=0, geo_column=1, dimension_column=None, compute_fra_from_fh_dom=False):
     """Parse un fichier CSV au format tabulaire (OpenData).
     Détecte automatiquement l'encodage (utf-8-sig, utf-8, cp1252, latin-1).
@@ -462,66 +518,40 @@ def parse_tabular_csv(filepath, value_column=2, year_column=0, geo_column=1, dim
         if len(parts) <= max_col:
             continue
 
-        # Extract dim
-        dim_val = None
-        if dimension_column:
-             dim_val = parts[dimension_column].strip()
+        # Format MOCA-O : les lignes régionales/nationales empilent plusieurs
+        # années horizontalement (stride fixe). On itère sur chaque bloc d'année.
+        stride = _detect_year_block_stride(parts, year_column)
+        nblocks = 1
+        if stride:
+            while year_column + nblocks * stride + (max_col - year_column) < len(parts):
+                nblocks += 1
 
-        # Extract year from specified column
-        year_match = re.search(r'(\d{4})', parts[year_column])
-        if not year_match:
-            continue
-        annee = int(year_match.group(1))
-        if not (2000 <= annee <= 2030):
-            continue
-
-        valeur = _parse_float_fr(parts[value_column])
-        if valeur != valeur:  # NaN
-            continue
-            
-        geo_str = parts[geo_column].strip()
-        geo_lower = geo_str.lower()
-        
-        item = {'annee': annee, 'valeur': valeur}
-        if dim_val:
-            item['dimension'] = dim_val
-            
-        # Commune 97XXX
-        match_com = re.search(r'(973\d{2})', geo_str)
-        if match_com:
-            code = int(match_com.group(1))
-            if code in COMMUNES_GUYANE:
-                item['codgeo'] = code
-                result['com'].append(item.copy())
-            continue
-
-        # France entière detection (various formats)
-        if ('france entiere' in geo_lower or 'france entière' in geo_lower or
-            'france (y compris' in geo_lower or 'lieu_domicile#france_avec' in geo_lower or
-            (geo_lower == 'lieu_domicile#france')):
-            item['codgeo'] = 99
-            result['fra'].append(item.copy())
-            continue
-
-        # France métropolitaine / hexagonale detection
-        if ('france metropolitaine' in geo_lower or 'france hexagonale' in geo_lower or
-            'france métropolitaine' in geo_lower or geo_lower.startswith('france m')):
-            item['codgeo'] = 0
-            result['fh'].append(item.copy())
-            continue
-
-        # DOM detection
-        if ("departements d'outre" in geo_lower or "départements d'outre" in geo_lower or
-            "departements d'outre mer" in geo_lower):
-            item['codgeo'] = 'DOM'
-            result['dom'].append(item.copy())
-            continue
-            
-        for reg_name, reg_code in REGION_MAPPING.items():
-            if reg_name.lower() in geo_lower:
-                item['codgeo'] = reg_code
-                result['reg'].append(item.copy())
+        for b in range(nblocks):
+            off = b * stride
+            yc, vc, gc = year_column + off, value_column + off, geo_column + off
+            if vc >= len(parts) or gc >= len(parts):
                 break
+
+            year_match = re.search(r'(\d{4})', parts[yc])
+            if not year_match:
+                continue
+            annee = int(year_match.group(1))
+            if not (2000 <= annee <= 2030):
+                continue
+
+            valeur = _parse_float_fr(parts[vc])
+            if valeur != valeur:  # NaN
+                continue
+
+            geo_str = parts[gc].strip()
+
+            item = {'annee': annee, 'valeur': valeur}
+            if dimension_column:
+                dc = dimension_column + off
+                if dc < len(parts):
+                    item['dimension'] = parts[dc].strip()
+
+            _classify_geo_item(geo_str, item, result)
 
     # France entière (FE) absente des sources mais FH + DOM présents -> FE = FH + DOM
     # Uniquement pour variables additives (comptages), activé via config (computeFraFromFhDom).
@@ -696,77 +726,51 @@ def parse_moca_filter_csv(filepath, filter_column, filter_value, year_column=3, 
         if len(parts) <= max_col:
             continue
 
-        # Check filter match
-        filter_cell = parts[filter_column].strip()
-        if filter_value.lower() not in filter_cell.lower():
-            continue
+        # Format MOCA-O : années empilées horizontalement (stride fixe) sur les
+        # lignes régionales/nationales. On itère sur chaque bloc d'année.
+        stride = _detect_year_block_stride(parts, year_column)
+        nblocks = 1
+        if stride:
+            while year_column + nblocks * stride + (max_col - year_column) < len(parts):
+                nblocks += 1
 
-        # Extract year
-        year_match = re.search(r'(\d{4})', parts[year_column])
-        if not year_match:
-            continue
-        annee = int(year_match.group(1))
-        if not (2000 <= annee <= 2030):
-            continue
-
-        # Extract value (NA => 0.0 pour compat historique)
-        raw_val = parts[value_column]
-        if _is_na_value(raw_val):
-            valeur = 0.0
-        else:
-            valeur = _parse_float_fr(raw_val)
-            if valeur != valeur:
-                continue
-            
-        # Extract dimension
-        dim_val = None
-        if dimension_column is not None:
-            dim_val = parts[dimension_column].strip()
-
-        geo_str = parts[geo_column] if len(parts) > geo_column else ''
-        geo_lower = geo_str.lower()
-
-        item = {'annee': annee, 'valeur': valeur}
-        if dim_val is not None:
-             item['dimension'] = dim_val
-
-        # Check for commune (973XX)
-        match_com = re.search(r'(973\d{2})', geo_str)
-        if match_com:
-            code = int(match_com.group(1))
-            if code in COMMUNES_GUYANE:
-                item['codgeo'] = code
-                result['com'].append(item.copy())
-            continue
-
-        # France entière detection (various formats)
-        if ('france entiere' in geo_lower or 'france entière' in geo_lower or
-            'france (y compris' in geo_lower or 'lieu_domicile#france_avec' in geo_lower or
-            (geo_lower == 'lieu_domicile#france')):
-            item['codgeo'] = 99
-            result['fra'].append(item.copy())
-            continue
-
-        # France métropolitaine / hexagonale detection
-        if ('france metropolitaine' in geo_lower or 'france hexagonale' in geo_lower or
-            'france métropolitaine' in geo_lower or geo_lower.startswith('france m')):
-            item['codgeo'] = 0
-            result['fh'].append(item.copy())
-            continue
-
-        # DOM detection
-        if ("departements d'outre" in geo_lower or "départements d'outre" in geo_lower or
-            "departements d'outre mer" in geo_lower):
-            item['codgeo'] = 'DOM'
-            result['dom'].append(item.copy())
-            continue
-
-        # Régions
-        for reg_name, reg_code in REGION_MAPPING.items():
-            if reg_name.lower() in geo_lower:
-                item['codgeo'] = reg_code
-                result['reg'].append(item.copy())
+        for b in range(nblocks):
+            off = b * stride
+            yc, vc, gc, fc = (year_column + off, value_column + off,
+                              geo_column + off, filter_column + off)
+            if max(yc, vc, gc, fc) >= len(parts):
                 break
+
+            # Check filter match
+            if filter_value.lower() not in parts[fc].strip().lower():
+                continue
+
+            # Extract year
+            year_match = re.search(r'(\d{4})', parts[yc])
+            if not year_match:
+                continue
+            annee = int(year_match.group(1))
+            if not (2000 <= annee <= 2030):
+                continue
+
+            # Extract value (NA => 0.0 pour compat historique)
+            raw_val = parts[vc]
+            if _is_na_value(raw_val):
+                valeur = 0.0
+            else:
+                valeur = _parse_float_fr(raw_val)
+                if valeur != valeur:
+                    continue
+
+            geo_str = parts[gc]
+
+            item = {'annee': annee, 'valeur': valeur}
+            if dimension_column is not None:
+                dc = dimension_column + off
+                if dc < len(parts):
+                    item['dimension'] = parts[dc].strip()
+
+            _classify_geo_item(geo_str, item, result)
 
     # France entière (FE) absente des sources mais FH + DOM présents -> FE = FH + DOM
     # Uniquement pour variables additives (comptages), activé via config (computeFraFromFhDom).

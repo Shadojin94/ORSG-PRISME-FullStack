@@ -11,7 +11,8 @@ const { spawn } = require('child_process');
 const Busboy = require('busboy');
 const PocketBase = require('pocketbase').default || require('pocketbase');
 const { handleReportData } = require('./report_data');
-const { handleAvatar } = require('./avatar');
+const { handleAvatar, userIdFromToken } = require('./avatar');
+const { handleSettings } = require('./settings');
 
 // Utility: SHA256 hash
 function sha256(str) {
@@ -1456,9 +1457,13 @@ except Exception as e:
 
     // ========== LOGS ENDPOINT (journal technique) ==========
     // GET /logs?lines=200  -> N dernieres lignes de app.log (defaut 200, max 2000)
-    // NB: pas de middleware admin sur ce serveur (auth deleguee a PocketBase),
-    // l'endpoint est donc accessible comme les autres routes /api du serveur.
+    // Exige un JWT PocketBase valide (le journal contient des infos techniques).
+    // Cote front, l'affichage est en plus reserve aux admins.
     if (urlPath === '/logs' && req.method === 'GET') {
+        if (!userIdFromToken(req)) {
+            jsonResponse(res, 401, { success: false, error: 'Authentification requise' });
+            return;
+        }
         try {
             let n = parseInt(url.searchParams.get('lines') || '200', 10);
             if (!Number.isFinite(n) || n <= 0) n = 200;
@@ -1479,6 +1484,9 @@ except Exception as e:
     if (urlPath === '/report-data' && req.method === 'GET') {
         return handleReportData(req, res, urlPath, Object.fromEntries(url.searchParams));
     }
+
+    // ========== SETTINGS (contact support editable) ==========
+    if (await handleSettings(req, res, urlPath, getPbAdmin)) return;
 
     // ========== AVATARS (photo de profil) ==========
     if (await handleAvatar(req, res, urlPath)) return;

@@ -35,6 +35,9 @@ export interface SupportTicket extends RecordModel {
     status: 'open' | 'in_progress' | 'resolved' | 'closed';
     user: string;
     admin_notes: string;
+    expand?: {
+        user?: { id: string; name?: string; email?: string };
+    };
 }
 
 // ===== Helpers =====
