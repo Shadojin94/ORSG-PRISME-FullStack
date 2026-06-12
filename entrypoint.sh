@@ -33,6 +33,7 @@ SMTP_PORT=${SMTP_PORT:-465}
 SMTP_USER=${SMTP_USER:-resend}
 SMTP_PASS=${SMTP_PASS:-}
 SMTP_FROM=${SMTP_FROM:-Data Visus <noreply@live.cercleonline.com>}
+RESEND_API_KEY=${RESEND_API_KEY:-}
 PRISME_STATE_DIR=${PRISME_STATE_DIR:-/app/Backend/state}
 ENVEOF
 

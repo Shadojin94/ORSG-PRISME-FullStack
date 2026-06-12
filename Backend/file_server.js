@@ -21,9 +21,12 @@ function pbEscape(value) {
     return String(value).replace(/"/g, '\\"');
 }
 
-// Load .env file if present (simple parser, no dotenv dependency)
-const envPath = path.join(__dirname, '.env');
-if (fs.existsSync(envPath)) {
+// Load .env files if present (simple parser, no dotenv dependency).
+// .env.local est lu en premier : il n'est pas regenere par entrypoint.sh,
+// ce qui permet d'y conserver des secrets (ex. cle Resend) entre redemarrages.
+for (const envFile of ['.env.local', '.env']) {
+    const envPath = path.join(__dirname, envFile);
+    if (!fs.existsSync(envPath)) continue;
     const envContent = fs.readFileSync(envPath, 'utf8');
     for (const line of envContent.split('\n')) {
         const trimmed = line.trim();
