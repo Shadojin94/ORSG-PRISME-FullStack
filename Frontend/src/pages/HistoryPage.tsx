@@ -7,6 +7,7 @@ import { PageHero } from "@/components/ui/PageHero"
 import { cn } from "@/lib/utils"
 import { formatDateFR } from "@/utils/date"
 import { Acronym } from "@/components/ui/Acronym"
+import { ActivityOverview } from "@/components/history/ActivityOverview"
 
 const getThemeColor = (theme: string) => {
     // Normalisation pour correspondre aux clés exactes si besoin
@@ -84,6 +85,9 @@ export function HistoryPage() {
                     </button>
                 }
             />
+
+            {/* Section visuelle d'activité (masquée si aucun fichier) */}
+            {!isLoading && files.length > 0 && <ActivityOverview files={files} />}
 
             {/* Synthèse chiffrée */}
             <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">

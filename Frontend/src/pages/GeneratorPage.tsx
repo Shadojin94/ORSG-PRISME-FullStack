@@ -284,22 +284,24 @@ export function GeneratorPage() {
     };
 
     return (
-        <div className="max-w-[1600px] mx-auto py-8 px-4 pb-32">
+        <div className="pb-32">
 
-            <PageHero
-                icon={Sparkles}
-                eyebrow="GÉNÉRATION"
-                title="Assistant de génération"
-                description="Créez vos fichiers de données en 3 étapes simples."
-            />
+            <main className="mx-auto max-w-7xl space-y-8 px-4 py-8 sm:px-6 lg:px-8">
+                <PageHero
+                    icon={Sparkles}
+                    eyebrow="Génération"
+                    title="Assistant de génération"
+                    description="Créez vos fichiers de données en 3 étapes simples."
+                />
 
-            <GeneratorStepper
-                step={step}
-                isProcessing={isProcessing}
-                onGoToStep={handleGoToStep}
-            />
+                <GeneratorStepper
+                    step={step}
+                    isProcessing={isProcessing}
+                    onGoToStep={handleGoToStep}
+                />
+            </main>
 
-            <div className="relative pb-20">
+            <div className="relative mx-auto max-w-[1600px] px-4 pb-20">
 
                 <div className={cn(
                     "space-y-8 min-h-[500px] w-full",

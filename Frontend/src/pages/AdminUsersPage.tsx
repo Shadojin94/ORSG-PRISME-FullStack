@@ -186,9 +186,6 @@ export function AdminUsersPage() {
                 </motion.div>
             </div>
 
-            {/* Contact support editable */}
-            <ContactSupportCard />
-
             <div className="rounded-2xl border border-slate-200 bg-white shadow-sm">
 
                 {/* Toolbar */}
@@ -354,6 +351,9 @@ export function AdminUsersPage() {
                 )}
 
             </div>
+
+            {/* Contact support editable — derniere section de la page */}
+            <ContactSupportCard />
 
             {/* Create User Modal */}
             {showCreateModal && (

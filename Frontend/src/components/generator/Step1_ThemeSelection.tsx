@@ -2,7 +2,7 @@ import { useState } from "react";
 import { cn } from "@/lib/utils";
 import { BDI_THEMES } from "@/data/bdi_themes";
 import { OPEN_DATA_SUPPORTED_THEMES } from "@/constants/openDataThemes";
-import { ChevronDown, Database, Globe, BarChart3, ArrowRight, Upload } from "lucide-react";
+import { ChevronDown, Database, Globe, BarChart3, ArrowRight, Upload, FolderClosed } from "lucide-react";
 import { Acronym } from "@/components/ui/Acronym";
 
 interface Step1Props {
@@ -125,27 +125,28 @@ export function Step1_ThemeSelection({
                     ) : null}
                 </div>
 
-                {/* Indicators as info pills */}
+                {/* Indicators as info pills — pastille source visuelle (Open Data vs Fichiers internes) */}
                 <div className="flex flex-wrap gap-1.5 mt-3">
                     {datasets.map((ds: any, idx: number) => {
                         const dsIsOpenData = isOpenData(ds);
                         return (
                             <span
                                 key={`${ds.id}-${ds.variable}-${idx}`}
-                                title={`${ds.label} · ${ds.source || ''}`}
-                                className={cn(
-                                    "text-[10px] px-2 py-1 rounded-full font-medium flex items-center gap-1 border",
-                                    !ds.demoReady
-                                        ? "bg-amber-50 text-amber-700 border-amber-200"
-                                        : dsIsOpenData
-                                            ? "bg-blue-50 text-blue-700 border-blue-100"
-                                            : "bg-green-50 text-green-700 border-green-100"
-                                )}
+                                title={`${ds.label} · ${dsIsOpenData ? 'Open Data' : 'Fichiers internes'}${ds.source ? ` · ${ds.source}` : ''}`}
+                                className="text-[10px] pl-1 pr-2 py-1 rounded-full font-medium flex items-center gap-1.5 border border-slate-200 bg-white text-slate-700"
                             >
-                                {ds.demoReady && (dsIsOpenData
-                                    ? <Globe className="w-2.5 h-2.5" />
-                                    : <Database className="w-2.5 h-2.5" />)}
-                                <span className="truncate max-w-[180px]">{ds.label}</span>
+                                <span className={cn(
+                                    "inline-flex items-center gap-1 rounded-full px-1.5 py-0.5 font-semibold",
+                                    dsIsOpenData
+                                        ? "bg-green-100 text-green-700"
+                                        : "bg-amber-100 text-amber-700"
+                                )}>
+                                    {dsIsOpenData
+                                        ? <Globe className="w-2.5 h-2.5" />
+                                        : <FolderClosed className="w-2.5 h-2.5" />}
+                                    {dsIsOpenData ? 'Open Data' : 'Interne'}
+                                </span>
+                                <span className="truncate max-w-[160px]">{ds.label}</span>
                             </span>
                         );
                     })}
@@ -210,6 +211,23 @@ export function Step1_ThemeSelection({
                         <div className="text-[11px] text-gray-500"><Acronym term="MOCA-O" /> (CSV locaux)</div>
                     </div>
                 </div>
+            </div>
+
+            {/* Legende des pastilles source */}
+            <div className="flex flex-wrap items-center gap-x-5 gap-y-2 rounded-lg border border-slate-200 bg-white px-4 py-2.5 text-[11px] text-slate-500">
+                <span className="font-semibold text-slate-600">Source des données :</span>
+                <span className="inline-flex items-center gap-1.5">
+                    <span className="inline-flex items-center gap-1 rounded-full bg-green-100 px-1.5 py-0.5 font-semibold text-green-700">
+                        <Globe className="w-2.5 h-2.5" /> Open Data
+                    </span>
+                    accessible en ligne
+                </span>
+                <span className="inline-flex items-center gap-1.5">
+                    <span className="inline-flex items-center gap-1 rounded-full bg-amber-100 px-1.5 py-0.5 font-semibold text-amber-700">
+                        <FolderClosed className="w-2.5 h-2.5" /> Interne
+                    </span>
+                    fichiers <Acronym term="MOCA-O" /> à importer
+                </span>
             </div>
 
             {/* Theme Cards Grid */}

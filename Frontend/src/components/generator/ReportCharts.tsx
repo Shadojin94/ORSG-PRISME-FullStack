@@ -69,7 +69,25 @@ const REGION_LABELS: Record<string, string> = {
     "03": "Guyane",
     "04": "La Reunion",
     "06": "Mayotte",
+    "11": "Ile-de-France",
+    "24": "Centre-Val de Loire",
+    "27": "Bourgogne-Franche-Comte",
+    "28": "Normandie",
+    "32": "Hauts-de-France",
+    "44": "Grand Est",
+    "52": "Pays de la Loire",
+    "53": "Bretagne",
+    "75": "Nouvelle-Aquitaine",
+    "76": "Occitanie",
+    "84": "Auvergne-Rhone-Alpes",
+    "93": "Provence-Alpes-Cote d'Azur",
+    "94": "Corse",
 };
+
+// Codes des regions hexagonales (metropole hors Corse et DOM), pour la moyenne hexagonale.
+const HEX_REGION_CODES = new Set([
+    "11", "24", "27", "28", "32", "44", "52", "53", "75", "76", "84",
+]);
 
 // Codes reg pouvant designer la Guyane selon les fichiers (3 / 03 / 973).
 const GUYANE_CODES = new Set(["3", "03", "973"]);
@@ -122,6 +140,7 @@ function labelForGeo(code: string, sheetName: string): string {
     if (sheetName === "dom") return "DOM";
     if (sheetName === "fh") return "France hexagonale";
     if (sheetName === "fra") return "France entiere";
+    if (sheetName === "reg") return `Region ${reg}`;
     return c;
 }
 
@@ -282,12 +301,68 @@ export function ReportCharts({ sheets }: ReportChartsProps) {
             }
         }
 
+        // ---------- Positionnement de la Guyane (remplace le comparatif regional) ----------
+        // Visualisation distincte du top communes : 3 colonnes verticales
+        // (Guyane / moyenne hexagonale / France entiere) + ligne de classement.
+        let positioning: Array<{ name: string; value: number; isGuyane: boolean }> = [];
+        let rank: number | null = null;
+        let rankTotal = 0;
+        if (regSheet) {
+            const { geoCol, yearCol, valueCols } = analyzeSheet(regSheet);
+            const valueCol = pickValueCol(regSheet, valueCols);
+            if (valueCol) {
+                const target =
+                    refYear && yearCol
+                        ? regSheet.rows.filter((r) => String(r[yearCol]) === refYear)
+                        : regSheet.rows;
+                const entries = target
+                    .map((r: Row) => {
+                        const v = toNum(r[valueCol]);
+                        const code = normRegCode(String(r[geoCol]));
+                        return v != null ? { code, value: v } : null;
+                    })
+                    .filter((x): x is { code: string; value: number } => x != null);
+
+                rankTotal = entries.length;
+                const guyaneEntry = entries.find((e) => e.code === "03");
+                if (guyaneEntry) {
+                    rank =
+                        entries.filter((e) => e.value > guyaneEntry.value).length + 1;
+                }
+
+                const hexEntries = entries.filter((e) => HEX_REGION_CODES.has(e.code));
+                const hexAverage = hexEntries.length
+                    ? hexEntries.reduce((acc, e) => acc + e.value, 0) / hexEntries.length
+                    : null;
+
+                if (guyaneEntry) {
+                    positioning.push({ name: "Guyane", value: guyaneEntry.value, isGuyane: true });
+                    if (hexAverage != null) {
+                        positioning.push({
+                            name: "Moyenne hexagonale",
+                            value: hexAverage,
+                            isGuyane: false,
+                        });
+                    }
+                    if (franceTotal != null) {
+                        positioning.push({
+                            name: "France entiere",
+                            value: franceTotal,
+                            isGuyane: false,
+                        });
+                    }
+                }
+            }
+        }
+
         return {
             valueLabel: valueLabel || "Donnees",
             year: refYear,
             temporal,
             territorial,
-            regional,
+            positioning,
+            rank,
+            rankTotal,
             guyaneTotal,
             franceTotal,
             maxRow,
@@ -299,7 +374,7 @@ export function ReportCharts({ sheets }: ReportChartsProps) {
 
     const hasTemporal = model.temporal.length > 1;
     const hasTerritorial = model.territorial.length > 1;
-    const hasRegional = model.regional.length > 1;
+    const hasPositioning = model.positioning.length > 1;
     const hasKeyCard =
         model.guyaneTotal != null ||
         model.franceTotal != null ||
@@ -308,11 +383,10 @@ export function ReportCharts({ sheets }: ReportChartsProps) {
 
     // Masquage : section affichee seulement s'il existe au moins une carte chiffre cle
     // OU un graphe avec >=2 points de donnees.
-    const hasContent = hasKeyCard || hasTemporal || hasTerritorial || hasRegional;
+    const hasContent = hasKeyCard || hasTemporal || hasTerritorial || hasPositioning;
     if (!hasContent) return null;
 
     const territoryBarHeight = Math.max(220, model.territorial.length * 34);
-    const regionalBarHeight = Math.max(200, model.regional.length * 34);
 
     return (
         <div style={{ padding: "28px 48px 8px" }}>
@@ -370,7 +444,7 @@ export function ReportCharts({ sheets }: ReportChartsProps) {
 
             {/* Comparaison territoriale (communes) */}
             {hasTerritorial && (
-                <div style={{ marginBottom: hasRegional ? "24px" : 0 }}>
+                <div style={{ marginBottom: hasPositioning ? "24px" : 0 }}>
                     <div style={{ fontSize: "13px", fontWeight: 700, color: COLORS.ink, marginBottom: "8px" }}>
                         Comparaison par commune (top {model.territorial.length})
                     </div>
@@ -397,31 +471,35 @@ export function ReportCharts({ sheets }: ReportChartsProps) {
                 </div>
             )}
 
-            {/* Comparaison regionale (Guyane mise en avant) */}
-            {hasRegional && (
+            {/* Positionnement de la Guyane (vue distincte du top communes) */}
+            {hasPositioning && (
                 <div>
                     <div style={{ fontSize: "13px", fontWeight: 700, color: COLORS.ink, marginBottom: "8px" }}>
-                        Comparaison par region
+                        Positionnement de la Guyane
                     </div>
-                    <div style={{ backgroundColor: COLORS.light, border: `1px solid ${COLORS.line}`, borderRadius: "10px", padding: "12px 8px" }}>
-                        <ResponsiveContainer width="100%" height={regionalBarHeight}>
-                            <BarChart data={model.regional} layout="vertical" margin={{ top: 4, right: 48, left: 8, bottom: 4 }}>
-                                <CartesianGrid strokeDasharray="3 3" stroke={COLORS.line} horizontal={false} />
-                                <XAxis type="number" tickFormatter={fmt} tick={{ fontSize: 11, fill: COLORS.sub }} />
-                                <YAxis
-                                    type="category"
+                    <div style={{ backgroundColor: COLORS.light, border: `1px solid ${COLORS.line}`, borderRadius: "10px", padding: "16px 12px 8px" }}>
+                        <ResponsiveContainer width="100%" height={260}>
+                            <BarChart data={model.positioning} margin={{ top: 28, right: 16, left: 8, bottom: 4 }} barCategoryGap="30%">
+                                <CartesianGrid strokeDasharray="3 3" stroke={COLORS.line} vertical={false} />
+                                <XAxis
                                     dataKey="name"
-                                    width={150}
                                     tick={{ fontSize: 12, fill: COLORS.ink }}
+                                    interval={0}
                                 />
+                                <YAxis tickFormatter={fmt} tick={{ fontSize: 11, fill: COLORS.sub }} width={56} />
                                 <Tooltip formatter={(v) => fmt(v as number)} cursor={{ fill: "rgba(26,75,140,0.06)" }} />
-                                <Bar dataKey="value" radius={[0, 5, 5, 0]} isAnimationActive={false} label={{ position: "right", fontSize: 11, fill: COLORS.sub, formatter: ((v: unknown) => fmt(v as number)) as never }}>
-                                    {model.regional.map((r, i) => (
-                                        <Cell key={i} fill={r.isGuyane ? COLORS.blue : COLORS.grey} />
+                                <Bar dataKey="value" radius={[5, 5, 0, 0]} maxBarSize={96} isAnimationActive={false} label={{ position: "top", fontSize: 12, fontWeight: 700, fill: COLORS.ink, formatter: ((v: unknown) => fmt(v as number)) as never }}>
+                                    {model.positioning.map((p, i) => (
+                                        <Cell key={i} fill={p.isGuyane ? COLORS.blue : COLORS.grey} />
                                     ))}
                                 </Bar>
                             </BarChart>
                         </ResponsiveContainer>
+                        {model.rank != null && model.rankTotal > 1 && (
+                            <div style={{ fontSize: "12px", fontWeight: 600, color: COLORS.blue, textAlign: "center", marginTop: "4px" }}>
+                                La Guyane se situe au {model.rank}{model.rank === 1 ? "er" : "e"} rang sur {model.rankTotal} regions
+                            </div>
+                        )}
                     </div>
                 </div>
             )}

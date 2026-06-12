@@ -346,6 +346,29 @@ export function DocsPage() {
                 className="space-y-8"
             >
 
+                {/* Recherche globale — section dediee, au-dessus des thematiques */}
+                <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm sm:p-6">
+                    <div className="mb-4 flex items-center gap-3">
+                        <span className="grid h-10 w-10 shrink-0 place-items-center rounded-xl bg-gradient-to-br from-[#1a4b8c]/15 to-[#3bb3a9]/15 text-[#1a4b8c]">
+                            <Search className="h-5 w-5" />
+                        </span>
+                        <div>
+                            <h2 className="text-lg font-black text-[#1a4b8c]">Recherche globale</h2>
+                            <p className="text-xs text-slate-500">Cherchez un indicateur dans l'ensemble des thematiques BDI.</p>
+                        </div>
+                    </div>
+                    <div className="relative">
+                        <Search className="absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
+                        <input
+                            type="text"
+                            placeholder="Rechercher dans toutes les thématiques…"
+                            value={searchTerm}
+                            onChange={(e) => setSearchTerm(e.target.value)}
+                            className="w-full rounded-2xl border border-slate-200 bg-white py-3 pl-11 pr-4 text-sm shadow-sm outline-none transition focus:border-[#3bb3a9] focus:shadow-md focus:ring-4 focus:ring-[#3bb3a9]/10"
+                        />
+                    </div>
+                </div>
+
                 {/* Stats */}
                 <div className="grid grid-cols-2 gap-4 md:grid-cols-4">
                     <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm transition hover:shadow-md">
@@ -450,18 +473,6 @@ export function DocsPage() {
                                             <div className="text-xs text-slate-500">indicateurs</div>
                                         </div>
                                     </div>
-                                </div>
-
-                                {/* Search premium */}
-                                <div className="relative mt-5">
-                                    <Search className="absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
-                                    <input
-                                        type="text"
-                                        placeholder="Rechercher dans toutes les thématiques (indicateur, variable, source)..."
-                                        value={searchTerm}
-                                        onChange={(e) => setSearchTerm(e.target.value)}
-                                        className="w-full rounded-2xl border border-slate-200 bg-white py-3 pl-11 pr-4 text-sm shadow-sm outline-none transition focus:border-[#3bb3a9] focus:shadow-md focus:ring-4 focus:ring-[#3bb3a9]/10"
-                                    />
                                 </div>
                             </div>
 
