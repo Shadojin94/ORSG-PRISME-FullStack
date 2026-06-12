@@ -201,7 +201,7 @@ export function ActivityOverview({ files }: { files: GeneratedFile[] }) {
                                         fontSize: 12,
                                     }}
                                     labelStyle={{ fontWeight: 700, color: "#1a4b8c" }}
-                                    formatter={(v: number) => [`${v} fichier${v > 1 ? "s" : ""}`, "Générations"]}
+                                    formatter={(v) => [`${v ?? 0} fichier${Number(v) > 1 ? "s" : ""}`, "Générations"]}
                                 />
                                 <Area
                                     type="monotone"
@@ -243,7 +243,7 @@ export function ActivityOverview({ files }: { files: GeneratedFile[] }) {
                                             border: "1px solid #e2e8f0",
                                             fontSize: 12,
                                         }}
-                                        formatter={(v: number, n: string) => [`${v} fichier${v > 1 ? "s" : ""}`, n]}
+                                        formatter={(v, n) => [`${v ?? 0} fichier${Number(v) > 1 ? "s" : ""}`, String(n)]}
                                     />
                                 </PieChart>
                             </ResponsiveContainer>
