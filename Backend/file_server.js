@@ -244,6 +244,34 @@ ensureDir(OUTPUT_DIR);
 ensureDir(CSV_SOURCES_DIR);
 migrateLegacyState();
 
+// ========== APP LOGGER (suivi des bugs) ==========
+// Logs lisibles dans Backend/logs/app.log. Format: [ISO date] [LEVEL] message
+// Rotation simple: si app.log > 5 Mo -> renomme en app.log.1, repart sur un fichier vide.
+const LOG_DIR = path.join(__dirname, 'logs');
+const LOG_FILE = path.join(LOG_DIR, 'app.log');
+const LOG_FILE_OLD = path.join(LOG_DIR, 'app.log.1');
+const LOG_MAX_BYTES = 5 * 1024 * 1024; // 5 Mo
+ensureDir(LOG_DIR);
+
+function appLog(level, message) {
+    try {
+        // Rotation
+        try {
+            const st = fs.statSync(LOG_FILE);
+            if (st.size > LOG_MAX_BYTES) {
+                fs.renameSync(LOG_FILE, LOG_FILE_OLD); // ecrase app.log.1 existant
+            }
+        } catch (_e) { /* fichier absent: rien a tourner */ }
+        const line = `[${new Date().toISOString()}] [${level}] ${message}\n`;
+        fs.appendFileSync(LOG_FILE, line, 'utf8');
+    } catch (e) {
+        console.error('appLog failed:', e.message);
+    }
+}
+const logInfo = (msg) => appLog('INFO', msg);
+const logWarn = (msg) => appLog('WARN', msg);
+const logError = (msg) => appLog('ERROR', msg);
+
 // Load themes config (cached, reloadable)
 let themesConfig = loadConfig();
 
@@ -815,6 +843,7 @@ except Exception as e:
 
             if (result.success) {
                 logActivity('generate', { source: 'moca', theme, year: parseInt(year), filename: result.filename, warnings: result.warnings || [] });
+                logInfo(`Generation OK (moca): ${result.filename}`);
                 const resp = {
                     success: true,
                     filename: result.filename,
@@ -826,10 +855,12 @@ except Exception as e:
                 jsonResponse(res, 200, resp);
             } else {
                 logActivity('error', { source: 'moca', theme, year: parseInt(year), error: result.error });
+                logError(`Generation echouee (moca ${theme}_${year}): ${result.error}`);
                 jsonResponse(res, 500, { success: false, error: result.error });
             }
         } catch (err) {
             logActivity('error', { source: 'moca', theme, year: parseInt(year), error: err.message });
+            logError(`Generation exception (moca ${theme}_${year}): ${err.message}`);
             jsonResponse(res, 500, { success: false, error: err.message });
         }
         return;
@@ -866,6 +897,7 @@ except Exception as e:
 
             if (result.success) {
                 logActivity('generate', { source: 'opendata', theme, year: parseInt(year), filename: result.filename });
+                logInfo(`Generation OK (opendata): ${result.filename}`);
                 jsonResponse(res, 200, {
                     success: true,
                     filename: result.filename,
@@ -873,10 +905,12 @@ except Exception as e:
                 });
             } else {
                 logActivity('error', { source: 'opendata', theme, year: parseInt(year), error: result.error });
+                logError(`Generation echouee (opendata ${theme}_${year}): ${result.error}`);
                 jsonResponse(res, 500, { success: false, error: result.error });
             }
         } catch (err) {
             logActivity('error', { source: 'opendata', theme, year: parseInt(year), error: err.message });
+            logError(`Generation exception (opendata ${theme}_${year}): ${err.message}`);
             jsonResponse(res, 500, { success: false, error: err.message });
         }
         return;
@@ -908,13 +942,16 @@ except Exception as e:
             const result = await generateConsolidatedFile(theme, yearStart, yearEnd, source);
             if (result.success) {
                 logActivity('generate', { source: `mocao_cons_${source}`, theme, yearStart, yearEnd, filename: result.filename });
+                logInfo(`Generation OK (mocao_cons ${source}): ${result.filename}`);
                 jsonResponse(res, 200, { success: true, filename: result.filename, message: `Consolidated file: ${result.filename}` });
             } else {
                 logActivity('error', { source: 'mocao_cons', theme, yearStart, yearEnd, error: result.error });
+                logError(`Generation echouee (mocao_cons ${theme} ${yearStart}-${yearEnd}): ${result.error}`);
                 jsonResponse(res, 500, { success: false, error: result.error });
             }
         } catch (err) {
             logActivity('error', { source: 'mocao_cons', theme, yearStart, yearEnd, error: err.message });
+            logError(`Generation exception (mocao_cons ${theme} ${yearStart}-${yearEnd}): ${err.message}`);
             jsonResponse(res, 500, { success: false, error: err.message });
         }
         return;
@@ -1186,6 +1223,7 @@ except Exception as e:
             }
 
             if (!codeRecords || codeRecords.length === 0) {
+                logWarn(`Login OTP echoue (code invalide/expire) pour ${email}`);
                 jsonResponse(res, 401, { success: false, error: 'Code invalide ou expire' });
                 return;
             }
@@ -1199,6 +1237,7 @@ except Exception as e:
             try {
                 const userPb = new PocketBase(PB_URL);
                 const authData = await userPb.collection('users').authWithPassword(email, PB_SYSTEM_PASSWORD);
+                logInfo(`Login OTP reussi pour ${email}`);
                 jsonResponse(res, 200, {
                     success: true,
                     token: authData.token,
@@ -1206,6 +1245,7 @@ except Exception as e:
                 });
             } catch (e) {
                 console.error('PB auth failed:', e.message);
+                logError(`Login OTP: auth PB echouee pour ${email}: ${e.message}`);
                 jsonResponse(res, 500, { success: false, error: 'Erreur d\'authentification. Contactez un administrateur.' });
             }
         } catch (e) {
@@ -1244,6 +1284,7 @@ except Exception as e:
             const storedHash = user.personal_password_hash || '';
             if (!storedHash || storedHash.length !== providedHash.length ||
                 !crypto.timingSafeEqual(Buffer.from(storedHash, 'hex'), Buffer.from(providedHash, 'hex'))) {
+                logWarn(`Login mot de passe echoue (mauvais mot de passe) pour ${email}`);
                 jsonResponse(res, 401, { success: false, error: 'Email ou mot de passe incorrect' });
                 return;
             }
@@ -1251,9 +1292,11 @@ except Exception as e:
             try {
                 const userPb = new PocketBase(PB_URL);
                 const authData = await userPb.collection('users').authWithPassword(email, PB_SYSTEM_PASSWORD);
+                logInfo(`Login mot de passe reussi pour ${email}`);
                 jsonResponse(res, 200, { success: true, token: authData.token, record: authData.record });
             } catch (e) {
                 console.error('[AUTH] login-password PB auth failed:', e.message);
+                logError(`Login mot de passe: auth PB echouee pour ${email}: ${e.message}`);
                 jsonResponse(res, 500, { success: false, error: 'Erreur d\'authentification. Contactez un administrateur.' });
             }
         } catch (e) {
@@ -1401,6 +1444,27 @@ except Exception as e:
             jsonResponse(res, 200, response);
         } catch (e) {
             console.error('Create user error:', e.message);
+            jsonResponse(res, 500, { success: false, error: e.message });
+        }
+        return;
+    }
+
+    // ========== LOGS ENDPOINT (journal technique) ==========
+    // GET /logs?lines=200  -> N dernieres lignes de app.log (defaut 200, max 2000)
+    // NB: pas de middleware admin sur ce serveur (auth deleguee a PocketBase),
+    // l'endpoint est donc accessible comme les autres routes /api du serveur.
+    if (urlPath === '/logs' && req.method === 'GET') {
+        try {
+            let n = parseInt(url.searchParams.get('lines') || '200', 10);
+            if (!Number.isFinite(n) || n <= 0) n = 200;
+            if (n > 2000) n = 2000;
+            let lines = [];
+            if (fs.existsSync(LOG_FILE)) {
+                const content = fs.readFileSync(LOG_FILE, 'utf8');
+                lines = content.split('\n').filter(l => l.length > 0).slice(-n);
+            }
+            jsonResponse(res, 200, { success: true, lines });
+        } catch (e) {
             jsonResponse(res, 500, { success: false, error: e.message });
         }
         return;
@@ -1829,12 +1893,14 @@ server.listen(PORT, () => {
     console.log(`   - POST /delete-csv?file=X   (delete a CSV)`);
     console.log(`   - GET  /files               (metadata: filename, date, size, theme)`);
     console.log(`   - GET  /activity-log        (persistent activity logs)`);
+    console.log(`   - GET  /logs?lines=200      (journal technique app.log)`);
     console.log(`   - POST /auth/send-code      (OTP: send code by email)`);
     console.log(`   - POST /auth/verify-code    (OTP: verify code & get token)`);
     console.log(`   - POST /auth/create-user    (create new user)`);
     console.log(`   PocketBase: ${PB_URL}`);
     console.log(`   SMTP: ${SMTP_HOST ? SMTP_HOST + ':' + SMTP_PORT : '(not configured — codes in console)'}`);
     console.log(`${'='.repeat(50)}\n`);
+    logInfo(`Serveur demarre sur le port ${PORT}`);
     // Initialize PocketBase admin connection
     getPbAdmin().catch(e => console.warn('PB admin init deferred:', e.message));
 });

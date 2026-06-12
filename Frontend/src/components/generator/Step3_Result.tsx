@@ -1,5 +1,32 @@
-import { CheckCircle2, Download, RefreshCw, FileSpreadsheet, AlertTriangle } from "lucide-react";
+import { useState } from "react";
+import { CheckCircle2, Download, RefreshCw, FileSpreadsheet, AlertTriangle, ChevronDown } from "lucide-react";
 import { ReportPreview } from "./ReportPreview";
+
+/**
+ * Humanise un avertissement technique remonté par le moteur.
+ * Forme reçue typique : "pop_homme : données absentes au niveau Communes, DOM, ... — les colonnes seront vides. Vérifiez le fichier CSV source."
+ * On remplace le nom de variable brut par son libellé métier (via la liste d'indicateurs)
+ * et on retire la consigne technique « Vérifiez le fichier CSV source ».
+ */
+function humanizeWarning(
+    raw: string,
+    varToLabel: Record<string, string>
+): string {
+    let text = raw.trim();
+    // Retire la consigne technique destinée à un informaticien.
+    text = text.replace(/\s*Vérifiez le fichier CSV source\.?\s*$/i, "").trim();
+
+    // Remplace le nom de variable (avant le " : ") par son libellé humain si connu.
+    const sepIndex = text.indexOf(" : ");
+    if (sepIndex > 0) {
+        const varName = text.slice(0, sepIndex).trim();
+        const human = varToLabel[varName];
+        if (human) {
+            text = `${human} (${varName})${text.slice(sepIndex)}`;
+        }
+    }
+    return text;
+}
 
 interface Step3Props {
     generatedFiles: string[];
@@ -30,6 +57,14 @@ export function Step3_Result({
     const count = generatedFiles.length;
     const isMulti = count > 1;
 
+    const [showWarningDetail, setShowWarningDetail] = useState(false);
+
+    // Mapping nom de variable brut -> libellé métier, pour humaniser le détail.
+    const varToLabel: Record<string, string> = {};
+    for (const ind of indicators) {
+        if (ind.variable && ind.label) varToLabel[ind.variable] = ind.label;
+    }
+
     return (
         <div className="flex flex-col items-center justify-center py-12 px-6 animate-in zoom-in-95 duration-500 text-center">
 
@@ -51,22 +86,42 @@ export function Step3_Result({
 
             {warnings.length > 0 && (
                 <div className="bg-amber-50 border border-amber-200 rounded-xl p-4 mb-8 max-w-lg w-full text-left">
-                    <div className="flex items-center gap-2 mb-2">
-                        <AlertTriangle className="w-5 h-5 text-amber-500 flex-shrink-0" />
-                        <p className="font-semibold text-amber-700 text-sm">
-                            Avertissements sur les données sources
-                        </p>
+                    <div className="flex items-start gap-3">
+                        <AlertTriangle className="w-5 h-5 text-amber-500 flex-shrink-0 mt-0.5" />
+                        <div className="flex-1 min-w-0">
+                            <p className="font-semibold text-amber-800 text-sm mb-1">
+                                Certaines données n'étaient pas disponibles
+                            </p>
+                            <p className="text-sm text-amber-700 leading-relaxed">
+                                Certaines données ne sont pas disponibles pour tous les territoires :
+                                les cellules concernées resteront vides dans le fichier Excel.
+                                Votre fichier reste utilisable, ces zones pourront être complétées plus tard.
+                            </p>
+
+                            <button
+                                type="button"
+                                onClick={() => setShowWarningDetail(v => !v)}
+                                className="mt-3 inline-flex items-center gap-1.5 text-xs font-bold text-amber-700 hover:text-amber-900 transition-colors"
+                                aria-expanded={showWarningDetail}
+                            >
+                                <ChevronDown
+                                    className={`w-4 h-4 transition-transform duration-200 ${showWarningDetail ? "rotate-180" : ""}`}
+                                />
+                                {showWarningDetail ? "Masquer le détail" : `Voir le détail (${warnings.length})`}
+                            </button>
+
+                            {showWarningDetail && (
+                                <ul className="mt-3 space-y-2 border-t border-amber-200 pt-3 animate-in fade-in slide-in-from-top-1 duration-200">
+                                    {warnings.map((w, i) => (
+                                        <li key={i} className="text-xs text-amber-700 leading-relaxed flex gap-2">
+                                            <span className="text-amber-400 select-none">•</span>
+                                            <span>{humanizeWarning(w, varToLabel)}</span>
+                                        </li>
+                                    ))}
+                                </ul>
+                            )}
+                        </div>
                     </div>
-                    <ul className="space-y-1">
-                        {warnings.map((w, i) => (
-                            <li key={i} className="text-xs text-amber-600 pl-7">
-                                {w}
-                            </li>
-                        ))}
-                    </ul>
-                    <p className="text-xs text-amber-500 mt-2 pl-7 italic">
-                        Ces avertissements proviennent des fichiers sources, pas de l'application.
-                    </p>
                 </div>
             )}
 
@@ -104,7 +159,7 @@ export function Step3_Result({
                 </button>
             )}
 
-            <div className="w-full border-t border-gray-200 pt-10 mt-2 text-left">
+            <div className="w-full border-t border-gray-200 pt-10 mt-2 text-left bg-gray-50/50 -mx-6 px-6 pb-2 rounded-b-2xl">
                 <ReportPreview
                     themeLabel={themeLabel}
                     subjectLabel={subjectLabel}

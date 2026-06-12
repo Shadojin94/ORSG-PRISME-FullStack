@@ -166,13 +166,23 @@ export function Step1_ThemeSelection({
     const stats = globalStats();
 
     return (
-        <div className="space-y-4">
-            <div className="flex items-center justify-between mb-2">
-                <h2 className="text-2xl font-bold text-[#1a4b8c]">1. Choisissez un sujet</h2>
+        <div className="space-y-5">
+            <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
+                <div className="flex items-center gap-3">
+                    <div className="grid h-11 w-11 shrink-0 place-items-center rounded-xl bg-[#1a4b8c] text-white shadow-md">
+                        <BarChart3 className="h-5 w-5" />
+                    </div>
+                    <div>
+                        <h2 className="text-lg font-black text-[#1a4b8c]">Choisissez un sujet</h2>
+                        <p className="text-xs text-slate-500">
+                            Dépliez une thématique, puis sélectionnez le sujet à générer.
+                        </p>
+                    </div>
+                </div>
             </div>
 
             {/* Summary stats bar */}
-            <div className="grid grid-cols-3 gap-3 mb-2">
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
                 <div className="bg-white rounded-lg border border-gray-200 px-4 py-3 flex items-center gap-3">
                     <div className="p-2 rounded-lg bg-green-50">
                         <BarChart3 className="w-4 h-4 text-green-600" />
@@ -203,7 +213,7 @@ export function Step1_ThemeSelection({
             </div>
 
             {/* Theme Cards Grid */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 {(BDI_THEMES as any[]).map((theme) => {
                     const isExpanded = expandedThemeId === theme.id;
                     const Icon = theme.icon;
@@ -215,10 +225,10 @@ export function Step1_ThemeSelection({
                         <div
                             key={theme.id}
                             className={cn(
-                                "border rounded-xl transition-all duration-200 bg-white overflow-hidden",
+                                "border rounded-2xl transition-all duration-200 bg-white overflow-hidden",
                                 isExpanded
                                     ? "ring-2 ring-[#3bb3a9] shadow-lg md:col-span-2"
-                                    : "border-gray-200 shadow-sm hover:shadow-md hover:border-gray-300"
+                                    : "border-slate-200 shadow-sm hover:shadow-md hover:border-slate-300 hover:-translate-y-0.5"
                             )}
                         >
                             <button

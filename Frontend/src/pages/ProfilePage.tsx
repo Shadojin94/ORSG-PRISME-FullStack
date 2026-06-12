@@ -111,124 +111,129 @@ export function ProfilePage() {
     const initials = userInitials(user)
 
     return (
-        <div className="max-w-4xl mx-auto py-8 px-4">
+        <main className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
 
-            <div className="bg-white rounded-3xl p-8 shadow-sm border border-slate-100 flex flex-col md:flex-row items-center md:items-start gap-8 mb-8">
+            <div className="mb-8 flex flex-col gap-1">
+                <h1 className="text-2xl font-black text-[#1a4b8c]">Mon profil</h1>
+                <p className="text-sm text-slate-500">Gérez vos informations personnelles et vos paramètres de sécurité.</p>
+            </div>
+
+            <div className="mb-8 flex flex-col items-center gap-8 rounded-2xl border border-slate-200 bg-white p-5 shadow-sm md:flex-row md:items-start">
                 <div className="relative">
-                    <div className="w-32 h-32 bg-orsg-blue rounded-full flex items-center justify-center text-white text-4xl font-bold border-4 border-white shadow-lg">
+                    <div className="flex h-32 w-32 items-center justify-center rounded-2xl border-4 border-white bg-gradient-to-br from-[#1a4b8c] to-[#3bb3a9] text-4xl font-black text-white shadow-lg">
                         {initials}
                     </div>
                 </div>
                 <div className="flex-grow text-center md:text-left">
-                    <h2 className="text-2xl font-bold text-slate-800">{user?.name || 'Utilisateur'}</h2>
-                    <p className="text-slate-500 mb-4">
+                    <h2 className="text-2xl font-black text-[#1a4b8c]">{user?.name || 'Utilisateur'}</h2>
+                    <p className="mb-4 text-slate-500">
                         {user?.department ? `${user.department} - ` : ''}{user?.organization || 'ORSG-CTPS'}
                     </p>
-                    <div className="flex flex-wrap justify-center md:justify-start gap-3">
+                    <div className="flex flex-wrap justify-center gap-3 md:justify-start">
                         {user?.role === 'admin' && (
-                            <span className="px-3 py-1 bg-purple-50 text-purple-700 rounded-full text-sm font-medium">Administrateur</span>
+                            <span className="rounded-full bg-purple-50 px-3 py-1 text-sm font-black text-purple-700">Administrateur</span>
                         )}
-                        <span className="px-3 py-1 bg-green-50 text-orsg-green rounded-full text-sm font-medium">Compte Actif</span>
+                        <span className="rounded-full bg-green-50 px-3 py-1 text-sm font-black text-orsg-green">Compte actif</span>
                     </div>
                 </div>
             </div>
 
-            <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
-                <div className="grid md:grid-cols-3 min-h-[500px]">
+            <div className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
+                <div className="grid min-h-[500px] md:grid-cols-3">
 
                     {/* Sidebar Menu */}
-                    <div className="bg-gray-50 border-r border-gray-200 p-6 space-y-1">
-                        <div className="text-xs font-bold text-gray-400 uppercase tracking-wider mb-4 px-3">Compte</div>
+                    <div className="space-y-1 border-r border-slate-200 bg-slate-50 p-6">
+                        <div className="mb-4 px-3 text-xs font-black uppercase tracking-wider text-slate-400">Compte</div>
                         <button
                             onClick={() => setActiveTab('account')}
                             className={cn(
-                                "w-full flex items-center gap-3 px-3 py-2 rounded-lg font-medium transition-colors",
-                                activeTab === 'account' ? "bg-white shadow-sm text-orsg-blue border border-gray-200" : "text-gray-600 hover:bg-gray-100"
+                                "flex w-full items-center gap-3 rounded-lg px-3 py-2 font-bold transition-colors",
+                                activeTab === 'account' ? "border border-slate-200 bg-white text-[#1a4b8c] shadow-sm" : "text-slate-600 hover:bg-slate-100"
                             )}
                         >
-                            <User className="w-4 h-4" /> Informations
+                            <User className="h-4 w-4" /> Informations
                         </button>
                         <button
                             onClick={() => setActiveTab('security')}
                             className={cn(
-                                "w-full flex items-center gap-3 px-3 py-2 rounded-lg font-medium transition-colors",
-                                activeTab === 'security' ? "bg-white shadow-sm text-orsg-blue border border-gray-200" : "text-gray-600 hover:bg-gray-100"
+                                "flex w-full items-center gap-3 rounded-lg px-3 py-2 font-bold transition-colors",
+                                activeTab === 'security' ? "border border-slate-200 bg-white text-[#1a4b8c] shadow-sm" : "text-slate-600 hover:bg-slate-100"
                             )}
                         >
-                            <Shield className="w-4 h-4" /> Sécurité
+                            <Shield className="h-4 w-4" /> Sécurité
                         </button>
                     </div>
 
                     {/* Content */}
-                    <div className="md:col-span-2 p-8">
+                    <div className="p-8 md:col-span-2">
 
                         {activeTab === 'account' && (
                             <div className="space-y-6 animate-in fade-in duration-300">
-                                <h2 className="text-xl font-bold text-gray-800 border-b border-gray-100 pb-4">Informations Personnelles</h2>
+                                <h2 className="border-b border-slate-100 pb-4 text-xl font-black text-[#1a4b8c]">Informations personnelles</h2>
                                 <div className="space-y-4">
                                     <div>
-                                        <label className="block text-sm font-medium text-slate-700 mb-1">Nom complet</label>
+                                        <label className="mb-1 block text-xs font-black uppercase tracking-wide text-slate-500">Nom complet</label>
                                         <input
                                             type="text"
                                             value={form.name}
                                             onChange={(e) => setForm({ ...form, name: e.target.value })}
-                                            className="w-full px-4 py-2 rounded-lg border border-gray-300 bg-white focus:ring-2 focus:ring-orsg-blue/20 outline-none"
+                                            className="w-full rounded-lg border border-slate-200 bg-white px-4 py-2 outline-none focus:border-[#3bb3a9] focus:ring-2 focus:ring-[#3bb3a9]/20"
                                         />
                                     </div>
                                     <div>
-                                        <label className="block text-sm font-medium text-slate-700 mb-1">Email professionnel</label>
+                                        <label className="mb-1 block text-xs font-black uppercase tracking-wide text-slate-500">Email professionnel</label>
                                         <input
                                             type="email"
                                             value={user?.email || ''}
-                                            className="w-full px-4 py-2 rounded-lg border border-gray-300 bg-gray-50 text-gray-500"
+                                            className="w-full rounded-lg border border-slate-200 bg-slate-50 px-4 py-2 text-slate-500"
                                             readOnly
                                         />
-                                        <p className="text-xs text-gray-400 mt-1">L'email ne peut pas être modifié. Contactez un administrateur.</p>
+                                        <p className="mt-1 text-xs text-slate-400">L'email ne peut pas être modifié. Contactez un administrateur.</p>
                                     </div>
                                     <div>
-                                        <label className="block text-sm font-medium text-slate-700 mb-1">Telephone</label>
+                                        <label className="mb-1 block text-xs font-black uppercase tracking-wide text-slate-500">Téléphone</label>
                                         <input
                                             type="tel"
                                             value={form.phone}
                                             onChange={(e) => setForm({ ...form, phone: e.target.value })}
                                             placeholder="+594 694 XX XX XX"
-                                            className="w-full px-4 py-2 rounded-lg border border-gray-300 bg-white focus:ring-2 focus:ring-orsg-blue/20 outline-none"
+                                            className="w-full rounded-lg border border-slate-200 bg-white px-4 py-2 outline-none focus:border-[#3bb3a9] focus:ring-2 focus:ring-[#3bb3a9]/20"
                                         />
                                     </div>
                                     <div className="grid grid-cols-2 gap-4">
                                         <div>
-                                            <label className="block text-sm font-medium text-slate-700 mb-1">Organisation</label>
+                                            <label className="mb-1 block text-xs font-black uppercase tracking-wide text-slate-500">Organisation</label>
                                             <input
                                                 type="text"
                                                 value={form.organization}
                                                 onChange={(e) => setForm({ ...form, organization: e.target.value })}
                                                 placeholder="ORSG-CTPS"
-                                                className="w-full px-4 py-2 rounded-lg border border-gray-300 bg-white focus:ring-2 focus:ring-orsg-blue/20 outline-none"
+                                                className="w-full rounded-lg border border-slate-200 bg-white px-4 py-2 outline-none focus:border-[#3bb3a9] focus:ring-2 focus:ring-[#3bb3a9]/20"
                                             />
                                         </div>
                                         <div>
-                                            <label className="block text-sm font-medium text-slate-700 mb-1">Departement</label>
+                                            <label className="mb-1 block text-xs font-black uppercase tracking-wide text-slate-500">Département</label>
                                             <input
                                                 type="text"
                                                 value={form.department}
                                                 onChange={(e) => setForm({ ...form, department: e.target.value })}
                                                 placeholder="Direction"
-                                                className="w-full px-4 py-2 rounded-lg border border-gray-300 bg-white focus:ring-2 focus:ring-orsg-blue/20 outline-none"
+                                                className="w-full rounded-lg border border-slate-200 bg-white px-4 py-2 outline-none focus:border-[#3bb3a9] focus:ring-2 focus:ring-[#3bb3a9]/20"
                                             />
                                         </div>
                                     </div>
-                                    <div className="pt-4 flex justify-end items-center gap-3">
+                                    <div className="flex items-center justify-end gap-3 pt-4">
                                         {saved && (
-                                            <span className="text-sm text-green-600 flex items-center gap-1">
-                                                <CheckCircle2 className="w-4 h-4" /> Enregistré
+                                            <span className="flex items-center gap-1 text-sm text-green-600">
+                                                <CheckCircle2 className="h-4 w-4" /> Enregistré
                                             </span>
                                         )}
                                         <button
                                             onClick={handleSave}
                                             disabled={saving}
-                                            className="bg-orsg-blue hover:bg-blue-600 text-white px-6 py-2 rounded-lg font-bold shadow-md transition-colors flex items-center gap-2 disabled:opacity-60"
+                                            className="flex items-center gap-2 rounded-lg bg-[#1a4b8c] px-4 py-2 text-sm font-black text-white transition-colors hover:bg-[#153e75] disabled:opacity-60"
                                         >
-                                            {saving ? <Loader2 className="w-4 h-4 animate-spin" /> : <Save className="w-4 h-4" />}
+                                            {saving ? <Loader2 className="h-4 w-4 animate-spin" /> : <Save className="h-4 w-4" />}
                                             Enregistrer
                                         </button>
                                     </div>
@@ -238,7 +243,7 @@ export function ProfilePage() {
 
                         {activeTab === 'security' && (
                             <div className="space-y-6 animate-in fade-in duration-300">
-                                <h2 className="text-xl font-bold text-gray-800 border-b border-gray-100 pb-4">Sécurité & Connexion</h2>
+                                <h2 className="border-b border-slate-100 pb-4 text-xl font-black text-[#1a4b8c]">Sécurité & connexion</h2>
 
                                 {/* OTP Toggle */}
                                 <div className={cn(
@@ -249,7 +254,7 @@ export function ProfilePage() {
                                 )}>
                                     <div className="flex items-center gap-4">
                                         <div className={cn(
-                                            "w-10 h-10 bg-white rounded-full flex items-center justify-center shadow-sm",
+                                            "grid h-10 w-10 place-items-center rounded-xl bg-white shadow-sm",
                                             user?.otp_enabled !== false ? "text-sky-600" : "text-gray-400"
                                         )}>
                                             {user?.otp_enabled !== false
@@ -299,7 +304,7 @@ export function ProfilePage() {
                                 {/* Password change */}
                                 <div className="p-4 bg-gray-50 rounded-xl border border-gray-200 space-y-3">
                                     <div className="flex items-center gap-3">
-                                        <div className="w-10 h-10 bg-white rounded-full flex items-center justify-center text-gray-600 shadow-sm">
+                                        <div className="grid h-10 w-10 place-items-center rounded-xl bg-blue-50 text-[#1a4b8c] shadow-sm">
                                             <KeyRound className="w-5 h-5" />
                                         </div>
                                         <div>
@@ -320,7 +325,7 @@ export function ProfilePage() {
                                                 onChange={(e) => setPwdForm({ ...pwdForm, newPassword: e.target.value })}
                                                 placeholder="Nouveau mot de passe"
                                                 autoComplete="new-password"
-                                                className="w-full px-4 py-2 pr-10 rounded-lg border border-gray-300 bg-white focus:ring-2 focus:ring-orsg-blue/20 outline-none text-sm"
+                                                className="w-full rounded-lg border border-slate-200 bg-white px-4 py-2 pr-10 text-sm outline-none focus:border-[#3bb3a9] focus:ring-2 focus:ring-[#3bb3a9]/20"
                                             />
                                             <button
                                                 type="button"
@@ -337,7 +342,7 @@ export function ProfilePage() {
                                             onChange={(e) => setPwdForm({ ...pwdForm, confirmPassword: e.target.value })}
                                             placeholder="Confirmation"
                                             autoComplete="new-password"
-                                            className="w-full px-4 py-2 rounded-lg border border-gray-300 bg-white focus:ring-2 focus:ring-orsg-blue/20 outline-none text-sm"
+                                            className="w-full rounded-lg border border-slate-200 bg-white px-4 py-2 text-sm outline-none focus:border-[#3bb3a9] focus:ring-2 focus:ring-[#3bb3a9]/20"
                                         />
                                     </div>
                                     {pwdMessage && (
@@ -352,7 +357,7 @@ export function ProfilePage() {
                                         <button
                                             onClick={handleChangePassword}
                                             disabled={pwdSaving || !pwdForm.newPassword}
-                                            className="bg-orsg-blue hover:bg-blue-700 text-white px-5 py-2 rounded-lg font-bold text-sm shadow-sm transition-colors flex items-center gap-2 disabled:opacity-60"
+                                            className="flex items-center gap-2 rounded-lg bg-[#1a4b8c] px-4 py-2 text-sm font-black text-white transition-colors hover:bg-[#153e75] disabled:opacity-60"
                                         >
                                             {pwdSaving ? <Loader2 className="w-4 h-4 animate-spin" /> : <Save className="w-4 h-4" />}
                                             Mettre à jour
@@ -362,7 +367,7 @@ export function ProfilePage() {
 
                                 <div className="flex items-center justify-between p-4 bg-gray-50 rounded-xl border border-gray-200">
                                     <div className="flex items-center gap-4">
-                                        <div className="w-10 h-10 bg-white rounded-full flex items-center justify-center text-gray-600 shadow-sm">
+                                        <div className="grid h-10 w-10 place-items-center rounded-xl bg-teal-50 text-[#3bb3a9] shadow-sm">
                                             <Mail className="w-5 h-5" />
                                         </div>
                                         <div>
@@ -374,7 +379,7 @@ export function ProfilePage() {
 
                                 <div className="flex items-center justify-between p-4 bg-gray-50 rounded-xl border border-gray-200">
                                     <div className="flex items-center gap-4">
-                                        <div className="w-10 h-10 bg-white rounded-full flex items-center justify-center text-gray-600 shadow-sm">
+                                        <div className="grid h-10 w-10 place-items-center rounded-xl bg-amber-50 text-amber-600 shadow-sm">
                                             <Clock className="w-5 h-5" />
                                         </div>
                                         <div>
@@ -393,6 +398,6 @@ export function ProfilePage() {
                     </div>
                 </div>
             </div>
-        </div>
+        </main>
     )
 }

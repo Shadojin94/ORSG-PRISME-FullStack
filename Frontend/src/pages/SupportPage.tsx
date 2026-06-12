@@ -1,9 +1,10 @@
 import { useState, useEffect, useCallback } from "react"
-import { Mail, Send, Loader2, CheckCircle2, AlertCircle, Clock, MessageSquare } from "lucide-react"
+import { Mail, Send, Loader2, CheckCircle2, AlertCircle, Clock, MessageSquare, FileText, RefreshCw } from "lucide-react"
 import { cn } from "@/lib/utils"
 import { useAuth } from "@/hooks/useAuth"
 import { pb } from "@/lib/pocketbase"
 import type { SupportTicket } from "@/lib/pocketbase"
+import { getLogs } from "@/services/api"
 
 const CATEGORIES = [
     { value: 'account', label: 'Mon compte' },
@@ -59,6 +60,26 @@ export function SupportPage() {
 
     useEffect(() => { loadTickets() }, [loadTickets])
 
+    // Journal technique (logs serveur)
+    const [logs, setLogs] = useState<string[]>([])
+    const [loadingLogs, setLoadingLogs] = useState(true)
+    const [logsError, setLogsError] = useState('')
+
+    const loadLogs = useCallback(async () => {
+        setLoadingLogs(true)
+        setLogsError('')
+        try {
+            const lines = await getLogs(200)
+            setLogs(lines)
+        } catch (err) {
+            console.error('Failed to load logs:', err)
+            setLogsError("Impossible de charger le journal technique.")
+        }
+        setLoadingLogs(false)
+    }, [])
+
+    useEffect(() => { loadLogs() }, [loadLogs])
+
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault()
         if (!user) return
@@ -94,37 +115,44 @@ export function SupportPage() {
     }
 
     return (
-        <div className="max-w-4xl mx-auto py-8 px-4">
+        <main className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
 
-            <div className="text-center mb-10">
-                <h1 className="text-3xl font-bold text-orsg-darkBlue mb-4">Centre d'Aide & Support</h1>
-                <p className="text-gray-600 max-w-xl mx-auto">
+            <div className="mb-8 flex flex-col gap-1">
+                <div className="flex items-center gap-3">
+                    <h1 className="text-2xl font-black text-[#1a4b8c]">Centre d'aide & support</h1>
+                    <span className="rounded-full bg-teal-50 px-3 py-1 text-xs font-black text-[#3bb3a9]">Support</span>
+                </div>
+                <p className="text-sm text-slate-500">
                     Besoin d'aide ? Soumettez un ticket de support ou contactez directement l'administration.
                 </p>
             </div>
 
+            <div className="grid gap-6 lg:grid-cols-2">
+
             {/* Ticket Form */}
-            <div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-6 mb-8">
-                <h2 className="text-lg font-bold text-gray-900 mb-4 flex items-center gap-2">
-                    <MessageSquare className="w-5 h-5 text-orsg-blue" />
+            <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
+                <h2 className="mb-4 flex items-center gap-3 text-lg font-black text-[#1a4b8c]">
+                    <span className="grid h-10 w-10 place-items-center rounded-xl bg-blue-50 text-[#1a4b8c]">
+                        <MessageSquare className="h-5 w-5" />
+                    </span>
                     Nouveau ticket de support
                 </h2>
 
                 {submitted && (
-                    <div className="mb-4 p-3 bg-green-50 border border-green-200 rounded-xl flex items-center gap-2 text-green-700 text-sm">
-                        <CheckCircle2 className="w-5 h-5" />
+                    <div className="mb-4 flex items-center gap-2 rounded-xl border border-green-200 bg-green-50 p-3 text-sm text-green-700">
+                        <CheckCircle2 className="h-5 w-5" />
                         Ticket créé avec succès ! Nous reviendrons vers vous rapidement.
                     </div>
                 )}
 
                 <form onSubmit={handleSubmit} className="space-y-4">
                     <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-1">Sujet *</label>
+                        <label className="mb-1 block text-xs font-black uppercase tracking-wide text-slate-500">Sujet *</label>
                         <input
                             type="text"
                             value={form.subject}
                             onChange={(e) => setForm({ ...form, subject: e.target.value })}
-                            className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-orsg-blue/20 outline-none"
+                            className="w-full rounded-lg border border-slate-200 px-4 py-2 outline-none focus:border-[#3bb3a9] focus:ring-2 focus:ring-[#3bb3a9]/20"
                             placeholder="Décrivez brièvement votre problème..."
                             maxLength={200}
                         />
@@ -132,11 +160,11 @@ export function SupportPage() {
 
                     <div className="grid grid-cols-2 gap-4">
                         <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-1">Catégorie</label>
+                            <label className="mb-1 block text-xs font-black uppercase tracking-wide text-slate-500">Catégorie</label>
                             <select
                                 value={form.category}
                                 onChange={(e) => setForm({ ...form, category: e.target.value })}
-                                className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-orsg-blue/20 outline-none"
+                                className="w-full rounded-lg border border-slate-200 px-4 py-2 outline-none focus:border-[#3bb3a9] focus:ring-2 focus:ring-[#3bb3a9]/20"
                             >
                                 {CATEGORIES.map(c => (
                                     <option key={c.value} value={c.value}>{c.label}</option>
@@ -144,11 +172,11 @@ export function SupportPage() {
                             </select>
                         </div>
                         <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-1">Priorité</label>
+                            <label className="mb-1 block text-xs font-black uppercase tracking-wide text-slate-500">Priorité</label>
                             <select
                                 value={form.priority}
                                 onChange={(e) => setForm({ ...form, priority: e.target.value })}
-                                className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-orsg-blue/20 outline-none"
+                                className="w-full rounded-lg border border-slate-200 px-4 py-2 outline-none focus:border-[#3bb3a9] focus:ring-2 focus:ring-[#3bb3a9]/20"
                             >
                                 {PRIORITIES.map(p => (
                                     <option key={p.value} value={p.value}>{p.label}</option>
@@ -158,19 +186,19 @@ export function SupportPage() {
                     </div>
 
                     <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-1">Description *</label>
+                        <label className="mb-1 block text-xs font-black uppercase tracking-wide text-slate-500">Description *</label>
                         <textarea
                             value={form.description}
                             onChange={(e) => setForm({ ...form, description: e.target.value })}
                             rows={4}
-                            className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-orsg-blue/20 outline-none resize-none"
+                            className="w-full resize-none rounded-lg border border-slate-200 px-4 py-2 outline-none focus:border-[#3bb3a9] focus:ring-2 focus:ring-[#3bb3a9]/20"
                             placeholder="Décrivez votre problème en détail (étapes pour reproduire, messages d'erreur, etc.)..."
                         />
                     </div>
 
                     {error && (
-                        <div className="flex items-center gap-2 text-sm text-red-600 bg-red-50 p-2 rounded-lg">
-                            <AlertCircle className="w-4 h-4" />
+                        <div className="flex items-center gap-2 rounded-lg bg-red-50 p-2 text-sm text-red-600">
+                            <AlertCircle className="h-4 w-4" />
                             {error}
                         </div>
                     )}
@@ -179,60 +207,89 @@ export function SupportPage() {
                         <button
                             type="submit"
                             disabled={submitting}
-                            className="bg-orsg-blue hover:bg-blue-600 text-white px-6 py-2 rounded-lg font-bold shadow-md transition-colors flex items-center gap-2 disabled:opacity-60"
+                            className="flex items-center gap-2 rounded-lg bg-[#1a4b8c] px-4 py-2 text-sm font-black text-white transition-colors hover:bg-[#153e75] disabled:opacity-60"
                         >
-                            {submitting ? <Loader2 className="w-4 h-4 animate-spin" /> : <Send className="w-4 h-4" />}
+                            {submitting ? <Loader2 className="h-4 w-4 animate-spin" /> : <Send className="h-4 w-4" />}
                             Envoyer le ticket
                         </button>
                     </div>
                 </form>
             </div>
 
+            {/* Contact Admin */}
+            <div className="grid gap-4 sm:grid-cols-2 lg:col-span-2 lg:order-last">
+                <a
+                    href="mailto:naissa.chateau@ors-guyane.org?subject=[Data Visus] Demande de support"
+                    className="block rounded-2xl border border-slate-200 bg-white p-5 text-center shadow-sm transition-all hover:-translate-y-0.5 hover:shadow-lg"
+                >
+                    <div className="mx-auto mb-4 grid h-11 w-11 place-items-center rounded-xl bg-blue-50 text-[#1a4b8c]">
+                        <Mail className="h-6 w-6" />
+                    </div>
+                    <h3 className="mb-1 font-black text-[#1a4b8c]">Contacter l'admin</h3>
+                    <p className="text-sm text-slate-500">naissa.chateau@ors-guyane.org</p>
+                </a>
+
+                <a
+                    href="/docs"
+                    className="block rounded-2xl border border-slate-200 bg-white p-5 text-center shadow-sm transition-all hover:-translate-y-0.5 hover:shadow-lg"
+                >
+                    <div className="mx-auto mb-4 grid h-11 w-11 place-items-center rounded-xl bg-emerald-50 text-emerald-700">
+                        <MessageSquare className="h-6 w-6" />
+                    </div>
+                    <h3 className="mb-1 font-black text-[#1a4b8c]">Documentation</h3>
+                    <p className="text-sm text-slate-500">Référentiel BDI & guide d'utilisation</p>
+                </a>
+            </div>
+
             {/* Tickets List */}
-            <div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-6 mb-8">
-                <h2 className="text-lg font-bold text-gray-900 mb-4 flex items-center gap-2">
-                    <Clock className="w-5 h-5 text-orsg-blue" />
+            <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm lg:col-span-2">
+                <h2 className="mb-4 flex items-center gap-3 text-lg font-black text-[#1a4b8c]">
+                    <span className="grid h-10 w-10 place-items-center rounded-xl bg-amber-50 text-amber-600">
+                        <Clock className="h-5 w-5" />
+                    </span>
                     Mes tickets ({tickets.length})
                 </h2>
 
                 {loadingTickets ? (
                     <div className="py-6 text-center">
-                        <Loader2 className="w-6 h-6 animate-spin text-gray-400 mx-auto" />
+                        <Loader2 className="mx-auto h-5 w-5 animate-spin text-[#3bb3a9]" />
                     </div>
                 ) : tickets.length === 0 ? (
-                    <p className="text-gray-500 text-sm text-center py-6">
-                        Aucun ticket de support. Soumettez un ticket ci-dessus si vous avez besoin d'aide.
-                    </p>
+                    <div className="py-8 text-center">
+                        <MessageSquare className="mx-auto mb-3 h-8 w-8 text-slate-300" />
+                        <p className="font-black text-slate-700">Aucun ticket de support</p>
+                        <p className="mt-1 text-sm text-slate-500">Soumettez un ticket ci-dessus si vous avez besoin d'aide.</p>
+                    </div>
                 ) : (
                     <div className="space-y-3">
                         {tickets.map(ticket => {
                             const status = STATUS_LABELS[ticket.status] || STATUS_LABELS.open
                             const priority = PRIORITIES.find(p => p.value === ticket.priority)
                             return (
-                                <div key={ticket.id} className="border border-gray-100 rounded-xl p-4 hover:bg-gray-50 transition-colors">
+                                <div key={ticket.id} className="rounded-xl border border-slate-200 p-4 transition-all hover:-translate-y-0.5 hover:shadow-lg">
                                     <div className="flex items-start justify-between">
                                         <div className="flex-1">
-                                            <h4 className="font-bold text-gray-900 text-sm">{ticket.subject}</h4>
-                                            <p className="text-xs text-gray-500 mt-1 line-clamp-2">{ticket.description}</p>
-                                            <div className="flex items-center gap-2 mt-2 text-xs text-gray-400">
+                                            <h4 className="text-sm font-black text-slate-900">{ticket.subject}</h4>
+                                            <p className="mt-1 line-clamp-2 text-xs text-slate-500">{ticket.description}</p>
+                                            <div className="mt-2 flex items-center gap-2 text-xs text-slate-400">
                                                 <span>{new Date(ticket.created).toLocaleDateString('fr-FR')} {new Date(ticket.created).toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' })}</span>
                                                 <span>&bull;</span>
                                                 <span>{CATEGORIES.find(c => c.value === ticket.category)?.label}</span>
                                             </div>
                                         </div>
-                                        <div className="flex items-center gap-2 ml-4">
+                                        <div className="ml-4 flex items-center gap-2">
                                             {priority && (
-                                                <span className={cn("px-2 py-0.5 rounded-full text-xs font-medium", priority.color)}>
+                                                <span className={cn("rounded-full px-2 py-0.5 text-xs font-medium", priority.color)}>
                                                     {priority.label}
                                                 </span>
                                             )}
-                                            <span className={cn("px-2 py-0.5 rounded-full text-xs font-medium", status.color)}>
+                                            <span className={cn("rounded-full px-2 py-0.5 text-xs font-medium", status.color)}>
                                                 {status.label}
                                             </span>
                                         </div>
                                     </div>
                                     {ticket.admin_notes && (
-                                        <div className="mt-3 p-2 bg-blue-50 rounded-lg text-xs text-blue-800">
+                                        <div className="mt-3 rounded-lg bg-blue-50 p-2 text-xs text-blue-800">
                                             <strong>Réponse admin :</strong> {ticket.admin_notes}
                                         </div>
                                     )}
@@ -243,31 +300,49 @@ export function SupportPage() {
                 )}
             </div>
 
-            {/* Contact Admin */}
-            <div className="grid md:grid-cols-2 gap-6">
-                <a
-                    href="mailto:naissa.chateau@ors-guyane.org?subject=[Data Visus] Demande de support"
-                    className="bg-white p-6 rounded-2xl shadow-sm border border-gray-200 hover:shadow-md transition-shadow text-center block"
-                >
-                    <div className="w-12 h-12 bg-blue-50 text-orsg-blue rounded-full flex items-center justify-center mx-auto mb-4">
-                        <Mail className="w-6 h-6" />
-                    </div>
-                    <h3 className="font-bold text-gray-900 mb-1">Contacter l'Admin</h3>
-                    <p className="text-gray-500 text-sm">naissa.chateau@ors-guyane.org</p>
-                </a>
+            {/* Journal technique */}
+            <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm lg:col-span-2">
+                <div className="mb-3 flex items-center justify-between gap-3">
+                    <h2 className="flex items-center gap-3 text-lg font-black text-[#1a4b8c]">
+                        <span className="grid h-10 w-10 place-items-center rounded-xl bg-slate-100 text-slate-600">
+                            <FileText className="h-5 w-5" />
+                        </span>
+                        Journal technique
+                    </h2>
+                    <button
+                        onClick={loadLogs}
+                        disabled={loadingLogs}
+                        className="flex items-center gap-2 rounded-lg border border-slate-200 px-3 py-1.5 text-sm font-black text-[#1a4b8c] transition-colors hover:bg-slate-50 disabled:opacity-60"
+                    >
+                        <RefreshCw className={cn("h-4 w-4", loadingLogs && "animate-spin")} />
+                        Rafraîchir
+                    </button>
+                </div>
+                <p className="mb-3 text-xs text-slate-500">
+                    Derniers événements du serveur (générations, connexions, erreurs). Utile pour le suivi des bugs.
+                </p>
 
-                <a
-                    href="/docs"
-                    className="bg-white p-6 rounded-2xl shadow-sm border border-gray-200 hover:shadow-md transition-shadow text-center block"
-                >
-                    <div className="w-12 h-12 bg-green-50 text-orsg-green rounded-full flex items-center justify-center mx-auto mb-4">
-                        <MessageSquare className="w-6 h-6" />
+                {loadingLogs ? (
+                    <div className="py-6 text-center">
+                        <Loader2 className="mx-auto h-5 w-5 animate-spin text-[#3bb3a9]" />
                     </div>
-                    <h3 className="font-bold text-gray-900 mb-1">Documentation</h3>
-                    <p className="text-gray-500 text-sm">Référentiel BDI & guide d'utilisation</p>
-                </a>
+                ) : logsError ? (
+                    <div className="flex items-center gap-2 rounded-lg bg-red-50 p-3 text-sm text-red-600">
+                        <AlertCircle className="h-4 w-4" />
+                        {logsError}
+                    </div>
+                ) : logs.length === 0 ? (
+                    <p className="py-6 text-center text-sm text-slate-500">
+                        Aucune entrée dans le journal pour le moment.
+                    </p>
+                ) : (
+                    <pre className="max-h-96 overflow-auto whitespace-pre-wrap break-words rounded-xl bg-slate-900 p-4 font-mono text-xs text-slate-100">
+                        {logs.join('\n')}
+                    </pre>
+                )}
             </div>
 
-        </div>
+            </div>
+        </main>
     )
 }

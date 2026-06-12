@@ -1,5 +1,4 @@
 import { useState, useEffect, useMemo } from "react";
-import { SidebarSummary } from "@/components/generator/SidebarSummary";
 import { Step1_ThemeSelection } from "@/components/generator/Step1_ThemeSelection";
 import { Step2_Config } from "@/components/generator/Step2_Config";
 import { Step3_Result } from "@/components/generator/Step3_Result";
@@ -333,14 +332,11 @@ export function GeneratorPage() {
                 </div>
             </div>
 
-            <div className={cn(
-                "grid grid-cols-1 gap-8 items-start relative pb-20",
-                step === 1 ? "lg:grid-cols-12" : ""
-            )}>
+            <div className="relative pb-20">
 
                 <div className={cn(
-                    "space-y-8 min-h-[500px]",
-                    step === 1 ? "lg:col-span-8" : "max-w-4xl mx-auto w-full"
+                    "space-y-8 min-h-[500px] w-full",
+                    step === 1 ? "max-w-6xl mx-auto" : "max-w-4xl mx-auto"
                 )}>
 
                     {step === 1 && (
@@ -399,24 +395,6 @@ export function GeneratorPage() {
 
                 </div>
 
-                {step === 1 && (
-                    <div className="hidden lg:block lg:col-span-4">
-                        <SidebarSummary
-                            step={step}
-                            themeLabel={themeLabel}
-                            subjectLabel={subjectLabel}
-                            subjectDatasets={subjectDatasets}
-                            year={year}
-                            format={format}
-                            isProcessing={isProcessing}
-                            progress={progress}
-                            onGenerate={handleGenerate}
-                            onGoToStep={handleGoToStep}
-                            canGenerate={subjectDatasets.length > 0 && !!year}
-                            isOpenDataMode={sourceMode === 'opendata'}
-                        />
-                    </div>
-                )}
             </div>
 
         </div>
