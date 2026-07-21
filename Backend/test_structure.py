@@ -1,7 +1,7 @@
 import os
 from pathlib import Path
 from openpyxl import Workbook
-from openpyxl.styles import PatternFill, Font
+from openpyxl.styles import Font
 import shutil
 
 # Mock setup
@@ -10,7 +10,6 @@ if BASE_DIR.exists():
     shutil.rmtree(BASE_DIR)
 BASE_DIR.mkdir()
 
-ORANGE_FILL = PatternFill(start_color="FFC000", end_color="FFC000", fill_type="solid")
 
 def generate_folder_structure_test(dataset_name, year):
     # Mock Data
@@ -59,7 +58,6 @@ def generate_folder_structure_test(dataset_name, year):
         for col_idx, h in enumerate(headers, 1):
             cell = ws.cell(row=1, column=col_idx, value=h)
             cell.font = Font(bold=True)
-            cell.fill = ORANGE_FILL
             
         # Add Data
         rows = data.get(key, [])

@@ -9,7 +9,7 @@ import re
 import requests
 import pandas as pd
 from openpyxl import Workbook
-from openpyxl.styles import PatternFill, Font
+from openpyxl.styles import Font
 from pathlib import Path
 import warnings
 import os
@@ -32,7 +32,6 @@ OUTPUT_DIR = BASE_DIR / "output"
 TEMP_DIR.mkdir(exist_ok=True)
 OUTPUT_DIR.mkdir(exist_ok=True)
 
-ORANGE_FILL = PatternFill(start_color="FFC000", end_color="FFC000", fill_type="solid")
 
 # ============================================================================
 # REGION & COMMUNE CONSTANTS
@@ -322,7 +321,6 @@ def generate_prisme_excel(dataset_name, year, csv_dir=None):
         for col_idx, h in enumerate(headers, 1):
             cell = ws.cell(row=1, column=col_idx, value=h)
             cell.font = Font(bold=True)
-            cell.fill = ORANGE_FILL
         
         # Données
         for row_idx, row_dict in enumerate(rows_data, 2):
@@ -332,8 +330,6 @@ def generate_prisme_excel(dataset_name, year, csv_dir=None):
             for i, var in enumerate(variables):
                 val = row_dict.get(var)
                 cell = ws.cell(row=row_idx, column=3 + i, value=val)
-                if val is not None:
-                    cell.fill = ORANGE_FILL
         
         # Largeur colonnes
         ws.column_dimensions['A'].width = 15
@@ -362,7 +358,6 @@ def generate_prisme_excel(dataset_name, year, csv_dir=None):
             for col_idx, h in enumerate(headers, 1):
                 cell = ws.cell(row=1, column=col_idx, value=h)
                 cell.font = Font(bold=True)
-                cell.fill = ORANGE_FILL
             
             # Données
             for row_idx, row_dict in enumerate(rows_data, 2):
@@ -372,8 +367,6 @@ def generate_prisme_excel(dataset_name, year, csv_dir=None):
                 for i, var in enumerate(variables):
                     val = row_dict.get(var)
                     cell = ws.cell(row=row_idx, column=3 + i, value=val)
-                    if val is not None:
-                        cell.fill = ORANGE_FILL
             
             # Largeur colonnes
             ws.column_dimensions['A'].width = 15

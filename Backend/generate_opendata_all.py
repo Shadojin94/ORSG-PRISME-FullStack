@@ -19,7 +19,7 @@ Usage:
 
 import pandas as pd
 import openpyxl
-from openpyxl.styles import PatternFill, Font
+from openpyxl.styles import Font
 from pathlib import Path
 import shutil
 import argparse
@@ -37,7 +37,6 @@ CSV_SOURCES_DIR = BASE_DIR / "csv_sources"
 
 OUTPUT_DIR.mkdir(exist_ok=True)
 
-ORANGE_FILL = PatternFill(start_color="FFC000", end_color="FFC000", fill_type="solid")
 
 # Communes de Guyane
 COMMUNES_GUYANE = [
@@ -547,7 +546,6 @@ def generate_excel_prisme(theme: str, year: int) -> Path:
         for col_idx, h in enumerate(headers, 1):
             cell = ws.cell(row=1, column=col_idx, value=h)
             cell.font = Font(bold=True)
-            cell.fill = ORANGE_FILL
         
         # Données
         for row_idx, (_, row) in enumerate(df_level.iterrows(), 2):
@@ -559,7 +557,6 @@ def generate_excel_prisme(theme: str, year: int) -> Path:
                 cell = ws.cell(row=row_idx, column=3 + i)
                 if pd.notna(val):
                     cell.value = val
-                    cell.fill = ORANGE_FILL
         
         # Largeur colonnes
         ws.column_dimensions['A'].width = 15
@@ -585,7 +582,6 @@ def generate_excel_prisme(theme: str, year: int) -> Path:
         for col_idx, h in enumerate(headers, 1):
             cell = ws.cell(row=1, column=col_idx, value=h)
             cell.font = Font(bold=True)
-            cell.fill = ORANGE_FILL
         
         for row_idx, (_, row) in enumerate(df_level.iterrows(), 2):
             ws.cell(row=row_idx, column=1, value=row.get(id_col, ''))
@@ -595,7 +591,6 @@ def generate_excel_prisme(theme: str, year: int) -> Path:
                 cell = ws.cell(row=row_idx, column=3 + i)
                 if pd.notna(val):
                     cell.value = val
-                    cell.fill = ORANGE_FILL
     
     cons_path = theme_dir / f"{config['excel_name']}_consolidated_{year}.xlsx"
     wb_cons.save(cons_path)

@@ -3,7 +3,7 @@ import os
 import requests
 import time
 import openpyxl
-from openpyxl.styles import PatternFill, Font
+from openpyxl.styles import Font
 import zipfile
 import io
 import shutil
@@ -44,7 +44,6 @@ GEO_LEVELS = {
 REGION_ORDER = [11, 24, 27, 28, 32, 44, 52, 53, 75, 76, 84, 93, 94, 1, 2, 3, 4, 6]
 
 # Style Excel
-ORANGE_FILL = PatternFill(start_color="FFC000", end_color="FFC000", fill_type="solid")
 
 # Assurer que les dossiers existent
 os.makedirs(INPUTS_DIR, exist_ok=True)
@@ -307,7 +306,6 @@ def process_csv_file(file_path):
             for col_idx, h in enumerate(headers, 1):
                 cell = ws.cell(row=1, column=col_idx, value=h)
                 cell.font = Font(bold=True)
-                cell.fill = ORANGE_FILL
             
             # Données
             for row_idx, row_dict in enumerate(rows_data, 2):
@@ -317,8 +315,6 @@ def process_csv_file(file_path):
                 for i, var in enumerate(variables):
                     val = row_dict.get(var)
                     cell = ws.cell(row=row_idx, column=3 + i, value=val)
-                    if val is not None:
-                        cell.fill = ORANGE_FILL
             
             # Largeur colonnes
             ws.column_dimensions['A'].width = 15
@@ -346,7 +342,6 @@ def process_csv_file(file_path):
             for col_idx, h in enumerate(headers, 1):
                 cell = ws.cell(row=1, column=col_idx, value=h)
                 cell.font = Font(bold=True)
-                cell.fill = ORANGE_FILL
             
             # Données
             for row_idx, row_dict in enumerate(rows_data, 2):
@@ -356,8 +351,6 @@ def process_csv_file(file_path):
                 for i, var in enumerate(variables):
                     val = row_dict.get(var)
                     cell = ws.cell(row=row_idx, column=3 + i, value=val)
-                    if val is not None:
-                        cell.fill = ORANGE_FILL
             
             ws.column_dimensions['A'].width = 15
             ws.column_dimensions['B'].width = 10
@@ -441,7 +434,6 @@ def generate_mock_data():
         for col_idx, h in enumerate(headers, 1):
             cell = ws.cell(row=1, column=col_idx, value=h)
             cell.font = Font(bold=True)
-            cell.fill = ORANGE_FILL
         
         # Données
         for row_idx, row_dict in enumerate(rows_data, 2):
@@ -451,8 +443,6 @@ def generate_mock_data():
             for i, var in enumerate(variables):
                 val = row_dict.get(var)
                 cell = ws.cell(row=row_idx, column=3 + i, value=val)
-                if val is not None:
-                    cell.fill = ORANGE_FILL
         
         # Largeur colonnes
         ws.column_dimensions['A'].width = 15

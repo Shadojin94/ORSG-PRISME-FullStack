@@ -30,10 +30,9 @@ import tempfile
 import shutil
 from pathlib import Path
 from openpyxl import load_workbook, Workbook
-from openpyxl.styles import Font, PatternFill
+from openpyxl.styles import Font
 
 # Meme convention que prisme_engine.py / generate_from_opendata.py
-ORANGE_FILL = PatternFill(start_color="FFC000", end_color="FFC000", fill_type="solid")
 
 BASE = Path(__file__).parent
 OUTPUT_DIR = BASE / "output"
@@ -174,17 +173,11 @@ def _norm_value(v):
 
 def _style_sheet(ws):
     """Applique la convention MOCA-O des fichiers unitaires :
-    - en-tetes (ligne 1) : bold + ORANGE_FILL sur toutes les cellules
-    - donnees : ORANGE_FILL sur les colonnes > 1 sauf valeur manquante (MISSING_VALUE)
-      (la colonne 1 = code geo/commune n'est jamais coloree, comme dans les unitaires)
+    - en-tetes (ligne 1) : bold sur toutes les cellules
+    - donnees : aucun remplissage (les cellules generees restent sans couleur)
     """
     for c in ws[1]:
         c.font = Font(bold=True)
-        c.fill = ORANGE_FILL
-    for row in ws.iter_rows(min_row=2):
-        for c in row:
-            if c.column > 1 and c.value != MISSING_VALUE:
-                c.fill = ORANGE_FILL
 
 
 def build_consolidated_xlsx(dataset_id: str, years: list[int],

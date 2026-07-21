@@ -6,7 +6,7 @@ Génère l'arborescence complète : Thème > Sous-thème > Année > Niveau Géo 
 
 import pandas as pd
 from openpyxl import Workbook
-from openpyxl.styles import PatternFill, Font
+from openpyxl.styles import Font
 from pathlib import Path
 import re
 import warnings
@@ -21,7 +21,6 @@ BASE_DIR = Path(__file__).parent
 CSV_SOURCES_DIR = BASE_DIR / "csv_sources"
 OUTPUT_DIR = BASE_DIR / "output_sharepoint"
 
-ORANGE_FILL = PatternFill(start_color="FFC000", end_color="FFC000", fill_type="solid")
 
 # Niveaux géographiques (correspondant aux onglets actuels)
 GEO_LEVELS = {
@@ -218,7 +217,6 @@ def generate_single_geo_excel(dataset_name, year, geo_level, geo_code, csv_data,
     for col_idx, h in enumerate(headers, 1):
         cell = ws.cell(row=1, column=col_idx, value=h)
         cell.font = Font(bold=True)
-        cell.fill = ORANGE_FILL
     
     # Écrire les données
     for row_idx, row_dict in enumerate(rows_data, 2):
@@ -228,8 +226,6 @@ def generate_single_geo_excel(dataset_name, year, geo_level, geo_code, csv_data,
         for i, var in enumerate(variables):
             val = row_dict.get(var)
             cell = ws.cell(row=row_idx, column=3 + i, value=val)
-            if val is not None:
-                cell.fill = ORANGE_FILL
     
     # Ajuster largeurs
     ws.column_dimensions['A'].width = 15

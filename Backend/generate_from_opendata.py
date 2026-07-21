@@ -16,7 +16,7 @@ import argparse
 import shutil
 import pandas as pd
 from openpyxl import Workbook
-from openpyxl.styles import PatternFill, Font
+from openpyxl.styles import Font
 
 from csv_reader import read_csv_safe, log_read, normalize_geo_code
 
@@ -25,7 +25,6 @@ BASE_DIR = Path(__file__).parent
 INPUTS_DIR = BASE_DIR / "inputs" / "opendata"
 OUTPUT_DIR = BASE_DIR / "output"
 
-ORANGE_FILL = PatternFill(start_color="FFC000", end_color="FFC000", fill_type="solid")
 
 
 def is_calculated_variable(var_name: str) -> bool:
@@ -1523,7 +1522,6 @@ def _generate_excel_and_zip(theme: str, year: int, all_levels, guyane_only: bool
         for idx, h in enumerate(headers, 1):
             c = ws.cell(row=1, column=idx, value=h)
             c.font = Font(bold=True)
-            c.fill = ORANGE_FILL
 
         df = all_levels[geo_key].copy()
         for var in variables:
@@ -1539,7 +1537,6 @@ def _generate_excel_and_zip(theme: str, year: int, all_levels, guyane_only: bool
                     data_cell = ws.cell(row=row_idx, column=3 + i, value=float(val))
                 else:
                     data_cell = ws.cell(row=row_idx, column=3 + i, value=None)
-                data_cell.fill = ORANGE_FILL
 
         # CepiDc commune annotation: data is regional-only
         if geo_key == "com" and cfg.get("source_type") == "cepidc":
@@ -1569,7 +1566,6 @@ def _generate_excel_and_zip(theme: str, year: int, all_levels, guyane_only: bool
         for idx, h in enumerate(headers, 1):
             c = ws.cell(row=1, column=idx, value=h)
             c.font = Font(bold=True)
-            c.fill = ORANGE_FILL
         df = all_levels[geo_key].copy()
         for var in variables:
             if var not in df.columns:
@@ -1583,7 +1579,6 @@ def _generate_excel_and_zip(theme: str, year: int, all_levels, guyane_only: bool
                     data_cell = ws.cell(row=row_idx, column=3 + i, value=float(val))
                 else:
                     data_cell = ws.cell(row=row_idx, column=3 + i, value=None)
-                data_cell.fill = ORANGE_FILL
 
         # CepiDc commune annotation in consolidated
         if geo_key == "com" and cfg.get("source_type") == "cepidc":

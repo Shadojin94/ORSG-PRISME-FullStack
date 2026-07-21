@@ -10,7 +10,7 @@ import re
 import shutil
 import pandas as pd
 from openpyxl import Workbook
-from openpyxl.styles import PatternFill, Font
+from openpyxl.styles import Font
 from pathlib import Path
 import warnings
 import tempfile
@@ -119,7 +119,6 @@ CONFIG_FILE = BASE_DIR / "themes_config.json"
 
 OUTPUT_DIR.mkdir(exist_ok=True)
 
-ORANGE_FILL = PatternFill(start_color="FFC000", end_color="FFC000", fill_type="solid")
 
 
 # ============================================================================
@@ -902,14 +901,11 @@ def _write_sheet(ws, headers, rows_data, col_keys):
     for col_idx, h in enumerate(headers, 1):
         cell = ws.cell(row=1, column=col_idx, value=h)
         cell.font = Font(bold=True)
-        cell.fill = ORANGE_FILL
 
     for row_idx, row_dict in enumerate(rows_data, 2):
         for col_idx, key in enumerate(col_keys, 1):
             val = row_dict.get(key)
             cell = ws.cell(row=row_idx, column=col_idx, value=val)
-            if val is not None and col_idx > 1:
-                cell.fill = ORANGE_FILL
 
     ws.column_dimensions['A'].width = 15
     ws.column_dimensions['B'].width = 10
