@@ -1,7 +1,8 @@
 #!/usr/bin/env python3
 """
 QA Excel - Verification format des fichiers generés par PRISME Engine et generate_from_opendata.
-Genere dans Backend/output/, verifie : onglets, colonnes, couleur FFC000, remplissage donnees.
+Genere dans Backend/output/, verifie : onglets, colonnes, absence de remplissage
+colore sur les cellules, remplissage donnees.
 Usage : python qa_excel_check.py
 NE MODIFIE AUCUN FICHIER SOURCE.
 """
@@ -26,20 +27,34 @@ import openpyxl
 # HELPERS VERIFICATION
 # =============================================================================
 
-ORANGE_HEX = "FFC000"
+def _cell_has_color_fill(cell):
+    """True si la cellule porte un remplissage colore (solid + couleur non nulle)."""
+    fill = cell.fill
+    if fill is None or fill.fill_type != "solid":
+        return False
+    fg = fill.fgColor
+    if fg is None:
+        return False
+    rgb = getattr(fg, 'rgb', None)
+    if not isinstance(rgb, str):
+        return False
+    rgb = rgb.upper()
+    # 00000000 = pas de couleur ; FFFFFFFF = blanc (fond par defaut)
+    return rgb not in ("", "00000000", "FFFFFFFF")
 
-def _has_orange_fill(ws, min_data_row=2, sample_rows=5, sample_cols=10):
-    """Verifie si au moins une cellule de donnees (hors header) a le fill FFC000."""
-    max_row = min(ws.max_row, min_data_row + sample_rows - 1)
-    max_col = min(ws.max_column, sample_cols)
-    for row in ws.iter_rows(min_row=min_data_row, max_row=max_row, min_col=1, max_col=max_col):
+
+def _find_color_fills(ws):
+    """Retourne les coordonnees des cellules ayant un remplissage colore.
+
+    Balaie la feuille entiere (en-tetes ligne 1 incluses) : le client ne veut
+    aucune couleur sur les cellules generees.
+    """
+    found = []
+    for row in ws.iter_rows(min_row=1, max_row=ws.max_row):
         for cell in row:
-            fill = cell.fill
-            if fill and fill.fgColor:
-                color = fill.fgColor.rgb if hasattr(fill.fgColor, 'rgb') else ''
-                if color and color.upper().endswith(ORANGE_HEX):
-                    return True
-    return False
+            if _cell_has_color_fill(cell):
+                found.append(f"{cell.coordinate}={cell.fill.fgColor.rgb}")
+    return found
 
 def _count_data_rows(ws):
     """Nombre de lignes de donnees (hors header, hors None)."""
@@ -59,7 +74,7 @@ def check_xlsx(xlsx_bytes_or_path, expected_sheets, expected_variables, label=""
     Retourne un dict de resultats.
     """
     issues = []
-    orange_found = {}
+    fills_found = {}
     sheet_data_rows = {}
     sheets_found = []
 
@@ -69,7 +84,7 @@ def check_xlsx(xlsx_bytes_or_path, expected_sheets, expected_variables, label=""
         else:
             wb = openpyxl.load_workbook(str(xlsx_bytes_or_path))
     except Exception as e:
-        return {"ok": False, "issues": [f"Impossible d'ouvrir le fichier: {e}"], "orange": {}, "rows": {}}
+        return {"ok": False, "issues": [f"Impossible d'ouvrir le fichier: {e}"], "fills": {}, "rows": {}}
 
     sheets_found = wb.sheetnames
 
@@ -80,7 +95,7 @@ def check_xlsx(xlsx_bytes_or_path, expected_sheets, expected_variables, label=""
 
     for sheet_name in expected_sheets:
         if sheet_name not in sheets_found:
-            orange_found[sheet_name] = False
+            fills_found[sheet_name] = []
             sheet_data_rows[sheet_name] = 0
             continue
         ws = wb[sheet_name]
@@ -92,10 +107,14 @@ def check_xlsx(xlsx_bytes_or_path, expected_sheets, expected_variables, label=""
             if var not in headers_clean:
                 issues.append(f"[{sheet_name}] Colonne '{var}' absente (headers: {headers_clean})")
 
-        # Couleur FFC000
-        orange_found[sheet_name] = _has_orange_fill(ws)
-        if not orange_found[sheet_name]:
-            issues.append(f"[{sheet_name}] Couleur FFC000 ABSENTE sur les cellules de donnees")
+        # Absence de remplissage colore
+        fills_found[sheet_name] = _find_color_fills(ws)
+        if fills_found[sheet_name]:
+            sample = ", ".join(fills_found[sheet_name][:5])
+            issues.append(
+                f"[{sheet_name}] Remplissage colore PRESENT sur "
+                f"{len(fills_found[sheet_name])} cellule(s) (ex: {sample})"
+            )
 
         # Remplissage donnees
         nrows = _count_data_rows(ws)
@@ -107,7 +126,7 @@ def check_xlsx(xlsx_bytes_or_path, expected_sheets, expected_variables, label=""
     return {
         "ok": ok,
         "issues": issues,
-        "orange": orange_found,
+        "fills": fills_found,
         "rows": sheet_data_rows,
         "sheets_found": sheets_found,
     }
@@ -163,7 +182,7 @@ def check_zip_pack(zip_path, expected_geo_levels, expected_variables, file_name)
 
                 if found_xlsx is None and is_opendata:
                     issues.append(f"[ZIP] Dossier geo '{geo_key}' non trouve dans le ZIP")
-                    per_sheet[geo_key] = {"ok": False, "issues": [f"Absent du ZIP"], "orange": {geo_key: False}, "rows": {geo_key: 0}}
+                    per_sheet[geo_key] = {"ok": False, "issues": [f"Absent du ZIP"], "fills": {geo_key: []}, "rows": {geo_key: 0}}
                     continue
 
                 if found_xlsx:
@@ -262,10 +281,10 @@ def qa_mocao():
                     if not cons_res['ok']:
                         cons_issues.append(f"Consolide {cons_files[0]}: {cons_res['issues']}")
                     print(f"  [CONSOLIDE] {cons_files[0]}: {'OK' if cons_res['ok'] else 'KO'}")
-                    # Orange check consolide
-                    for sh, has_color in cons_res['orange'].items():
-                        status = "OK" if has_color else "ABSENT"
-                        print(f"    FFC000 [{sh}]: {status}")
+                    # Absence de couleur consolide
+                    for sh, fills in cons_res['fills'].items():
+                        status = "AUCUNE COULEUR" if not fills else f"{len(fills)} cellule(s) coloree(s)"
+                        print(f"    Remplissage [{sh}]: {status}")
                 else:
                     cons_issues.append("Fichier consolide absent du ZIP")
         except Exception as e:
@@ -276,8 +295,8 @@ def qa_mocao():
         # Afficher details
         for sh, sr in res.get('per_sheet', {}).items():
             rows = sr.get('rows', {}).get(sh, '?')
-            orange = sr.get('orange', {}).get(sh, False)
-            print(f"  [{sh}] rows={rows} | FFC000={'OK' if orange else 'ABSENT'} | {'OK' if sr.get('ok') else 'KO: ' + str(sr.get('issues'))}")
+            fills = sr.get('fills', {}).get(sh, [])
+            print(f"  [{sh}] rows={rows} | couleurs={len(fills)} | {'OK' if sr.get('ok') else 'KO: ' + str(sr.get('issues'))}")
 
         status = "OK" if not all_issues else "KO"
         results[label] = {
@@ -285,7 +304,7 @@ def qa_mocao():
             "year": year,
             "reason": "; ".join(all_issues) if all_issues else "",
             "zip": str(zip_path),
-            "orange_by_sheet": {sh: sr.get('orange', {}).get(sh, False) for sh, sr in res.get('per_sheet', {}).items()},
+            "fills_by_sheet": {sh: sr.get('fills', {}).get(sh, []) for sh, sr in res.get('per_sheet', {}).items()},
         }
 
     return results
@@ -365,8 +384,8 @@ def qa_opendata():
         # Afficher details
         for sh, sr in res.get('per_sheet', {}).items():
             rows = sr.get('rows', {}).get(sh, '?')
-            orange = sr.get('orange', {}).get(sh, False)
-            print(f"  [{sh}] rows={rows} | FFC000={'OK' if orange else 'ABSENT'} | {'OK' if sr.get('ok') else 'KO: ' + str(sr.get('issues'))}")
+            fills = sr.get('fills', {}).get(sh, [])
+            print(f"  [{sh}] rows={rows} | couleurs={len(fills)} | {'OK' if sr.get('ok') else 'KO: ' + str(sr.get('issues'))}")
 
         # Verifier le .xlsx consolide (dans root_dir)
         cons_issues = []
@@ -376,8 +395,8 @@ def qa_opendata():
             if not cons_res['ok']:
                 cons_issues.append(f"Consolide KO: {cons_res['issues']}")
             print(f"  [CONSOLIDE] {'OK' if cons_res['ok'] else 'KO'}")
-            for sh, has_color in cons_res['orange'].items():
-                print(f"    FFC000 [{sh}]: {'OK' if has_color else 'ABSENT'}")
+            for sh, fills in cons_res['fills'].items():
+                print(f"    Remplissage [{sh}]: {'AUCUNE COULEUR' if not fills else str(len(fills)) + ' cellule(s) coloree(s)'}")
         else:
             print(f"  [CONSOLIDE] Absent ({cons_path})")
 
@@ -388,7 +407,7 @@ def qa_opendata():
             "year": year,
             "reason": "; ".join(all_issues) if all_issues else "",
             "zip": str(zip_path),
-            "orange_by_sheet": {sh: sr.get('orange', {}).get(sh, False) for sh, sr in res.get('per_sheet', {}).items()},
+            "fills_by_sheet": {sh: sr.get('fills', {}).get(sh, []) for sh, sr in res.get('per_sheet', {}).items()},
         }
 
     return results
@@ -494,9 +513,9 @@ def qa_mocao_consolidated():
             res = check_xlsx(str(out_path), EXPECTED_SHEETS_FALLBACK, [], label="consolidated")
 
         print(f"  Onglets trouves: {res.get('sheets_found', [])}")
-        for sh, has_color in res.get('orange', {}).items():
+        for sh, fills in res.get('fills', {}).items():
             rows = res.get('rows', {}).get(sh, '?')
-            print(f"  [{sh}] rows={rows} | FFC000={'OK' if has_color else 'ABSENT'}")
+            print(f"  [{sh}] rows={rows} | couleurs={len(fills)}")
 
         status = "OK" if res['ok'] else "KO"
         results[label] = {
@@ -504,7 +523,7 @@ def qa_mocao_consolidated():
             "reason": "; ".join(res['issues']) if res['issues'] else "",
             "file": str(out_path),
             "sheets": res.get('sheets_found', []),
-            "orange": res.get('orange', {}),
+            "fills": res.get('fills', {}),
         }
 
     return results
@@ -518,16 +537,16 @@ def print_report(all_results):
     print("\n\n" + "="*80)
     print("RAPPORT DE RECETTE PRISME - FORMAT EXCEL")
     print("="*80)
-    print(f"{'Dataset':<45} {'Statut':<12} {'Annee':<8} {'FFC000 sheets':<30} Remarques")
+    print(f"{'Dataset':<45} {'Statut':<12} {'Annee':<8} {'Cellules colorees':<30} Remarques")
     print("-"*140)
 
     for label, r in sorted(all_results.items()):
         status = r.get("status", "?")
         year = str(r.get("year", ""))
         reason = r.get("reason", "")
-        orange = r.get("orange_by_sheet") or r.get("orange", {})
-        orange_str = " ".join(f"{k}={'Y' if v else 'N'}" for k, v in orange.items()) if orange else "-"
-        print(f"{label:<45} {status:<12} {year:<8} {orange_str:<30} {reason[:60]}")
+        fills = r.get("fills_by_sheet") or r.get("fills", {})
+        fills_str = " ".join(f"{k}={len(v)}" for k, v in fills.items()) if fills else "-"
+        print(f"{label:<45} {status:<12} {year:<8} {fills_str:<30} {reason[:60]}")
 
     print("-"*140)
     ok = sum(1 for r in all_results.values() if r.get("status") == "OK")
@@ -540,10 +559,10 @@ def print_report(all_results):
     for label, r in sorted(all_results.items()):
         if r.get("status") == "KO":
             print(f"  [KO] {label}: {r.get('reason', '')}")
-        orange = r.get("orange_by_sheet") or r.get("orange", {})
-        missing_orange = [k for k, v in orange.items() if not v]
-        if missing_orange:
-            print(f"  [FFC000 ABSENT] {label} sur: {missing_orange}")
+        fills = r.get("fills_by_sheet") or r.get("fills", {})
+        colored = [k for k, v in fills.items() if v]
+        if colored:
+            print(f"  [COULEUR RESIDUELLE] {label} sur: {colored}")
 
 
 # =============================================================================
