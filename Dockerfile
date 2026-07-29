@@ -28,6 +28,9 @@ RUN cd Backend && npm install --production
 
 # Copy Backend source code
 COPY Backend/file_server.js ./Backend/
+COPY Backend/report_data.js ./Backend/
+COPY Backend/avatar.js ./Backend/
+COPY Backend/settings.js ./Backend/
 COPY Backend/prisme_engine.py ./Backend/
 COPY Backend/generate_from_opendata.py ./Backend/
 COPY Backend/generate_mocao_consolidated.py ./Backend/
