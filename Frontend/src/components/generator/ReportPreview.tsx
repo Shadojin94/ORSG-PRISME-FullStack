@@ -42,6 +42,14 @@ const COLORS = {
     light: "#f8fafc",
 };
 
+const PDF_LAYOUT = {
+    marginTop: 12,
+    marginRight: 12,
+    marginBottom: 9,
+    marginLeft: 12,
+    footerHeight: 13,
+};
+
 function cleanSource(source?: string): string {
     if (!source) return "—";
     return source.split(",")[0].split("/")[0].trim() || "—";
@@ -119,16 +127,68 @@ export function ReportPreview({
         try {
             const canvas = await capture();
             if (!canvas) return;
-            const imgData = canvas.toDataURL("image/png");
             const pdf = new jsPDF({ orientation: "portrait", unit: "mm", format: "a4" });
             const pageW = pdf.internal.pageSize.getWidth();
             const pageH = pdf.internal.pageSize.getHeight();
-            const imgH = (canvas.height * pageW) / canvas.width;
-            // Une seule page A4 : si trop haut, on contraint à la hauteur de page.
-            const finalH = Math.min(imgH, pageH);
-            const finalW = (canvas.width * finalH) / canvas.height;
-            const x = (pageW - finalW) / 2;
-            pdf.addImage(imgData, "PNG", x, 0, finalW, finalH);
+            const contentW = pageW - PDF_LAYOUT.marginLeft - PDF_LAYOUT.marginRight;
+            const footerLineY = pageH - PDF_LAYOUT.marginBottom - PDF_LAYOUT.footerHeight + 3;
+            const footerTextY = pageH - PDF_LAYOUT.marginBottom;
+            const contentH = footerLineY - PDF_LAYOUT.marginTop - 2;
+
+            // La capture conserve sa largeur : on la decoupe verticalement selon
+            // la hauteur imprimable A4, au lieu de reduire tout le rapport sur une page.
+            const sliceHeightPx = Math.max(1, Math.floor((contentH * canvas.width) / contentW));
+            const pageCount = Math.max(1, Math.ceil(canvas.height / sliceHeightPx));
+
+            for (let pageIndex = 0; pageIndex < pageCount; pageIndex += 1) {
+                if (pageIndex > 0) pdf.addPage();
+
+                const sourceY = pageIndex * sliceHeightPx;
+                const currentSliceHeight = Math.min(sliceHeightPx, canvas.height - sourceY);
+                const pageCanvas = document.createElement("canvas");
+                pageCanvas.width = canvas.width;
+                pageCanvas.height = currentSliceHeight;
+
+                const context = pageCanvas.getContext("2d");
+                if (!context) continue;
+                context.fillStyle = "#ffffff";
+                context.fillRect(0, 0, pageCanvas.width, pageCanvas.height);
+                context.drawImage(
+                    canvas,
+                    0,
+                    sourceY,
+                    canvas.width,
+                    currentSliceHeight,
+                    0,
+                    0,
+                    canvas.width,
+                    currentSliceHeight,
+                );
+
+                const renderedHeight = (currentSliceHeight * contentW) / canvas.width;
+                pdf.addImage(
+                    pageCanvas.toDataURL("image/png"),
+                    "PNG",
+                    PDF_LAYOUT.marginLeft,
+                    PDF_LAYOUT.marginTop,
+                    contentW,
+                    renderedHeight,
+                );
+
+                pdf.setDrawColor(59, 179, 169);
+                pdf.setLineWidth(0.4);
+                pdf.line(PDF_LAYOUT.marginLeft, footerLineY, pageW - PDF_LAYOUT.marginRight, footerLineY);
+                pdf.setFont("helvetica", "normal");
+                pdf.setFontSize(8);
+                pdf.setTextColor(107, 114, 128);
+                pdf.text("Data Visus - ORSG-CTPS", PDF_LAYOUT.marginLeft, footerTextY);
+                pdf.text(
+                    `Page ${pageIndex + 1} / ${pageCount}`,
+                    pageW - PDF_LAYOUT.marginRight,
+                    footerTextY,
+                    { align: "right" },
+                );
+            }
             pdf.save(`${safeName}.pdf`);
         } finally {
             setBusy(null);
