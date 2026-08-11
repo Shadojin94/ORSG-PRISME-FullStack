@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo } from "react";
+import { useState, useEffect, useMemo, useRef } from "react";
 import { motion } from "framer-motion";
 import { Sparkles, Check } from "lucide-react";
 import { PageHero } from "@/components/ui/PageHero";
@@ -84,6 +84,17 @@ export function GeneratorPage() {
     const [generationWarnings, setGenerationWarnings] = useState<string[]>([]);
 
     const [error, setError] = useState<string | null>(null);
+
+    // À chaque changement d'étape : on remonte en haut et on donne le focus au titre de l'étape.
+    const stepHeadingRef = useRef<HTMLHeadingElement>(null);
+
+    useEffect(() => {
+        const prefersReducedMotion =
+            typeof window !== 'undefined' &&
+            !!window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
+        window.scrollTo({ top: 0, behavior: prefersReducedMotion ? 'auto' : 'smooth' });
+        stepHeadingRef.current?.focus({ preventScroll: true });
+    }, [step]);
 
     useEffect(() => {
         saveState({
@@ -299,6 +310,15 @@ export function GeneratorPage() {
                     isProcessing={isProcessing}
                     onGoToStep={handleGoToStep}
                 />
+
+                {/* Repère textuel persistant + cible de focus au changement d'étape. */}
+                <h2
+                    ref={stepHeadingRef}
+                    tabIndex={-1}
+                    className="-mt-8 text-center text-sm font-semibold text-[#1a4b8c] outline-none"
+                >
+                    Étape {step} sur {STEPPER_STEPS.length} — {STEP_TITLES[step - 1]}
+                </h2>
             </main>
 
             <div className="relative mx-auto max-w-[1600px] px-4 pb-20">
@@ -318,7 +338,6 @@ export function GeneratorPage() {
 
                     {step === 2 && (
                         <Step2_Config
-                            themeId={selectedThemeId}
                             year={year}
                             yearEnd={yearEnd}
                             onYearEndChange={setYearEnd}
@@ -377,6 +396,9 @@ const STEPPER_STEPS = [
     { n: 3, label: "Résultat" }
 ];
 
+// Libellé long de l'étape, affiché sous le stepper.
+const STEP_TITLES = ["Thématique", "Configuration", "Résultat"];
+
 function GeneratorStepper({
     step,
     isProcessing,
@@ -411,6 +433,7 @@ function GeneratorStepper({
                             key={s}
                             onClick={() => isClickable && onGoToStep(s)}
                             disabled={!isClickable}
+                            aria-current={isActive ? "step" : undefined}
                             className={cn(
                                 "relative z-10 flex flex-col items-center gap-2 group",
                                 isClickable ? "cursor-pointer" : "cursor-default"

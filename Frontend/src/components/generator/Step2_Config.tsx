@@ -1,12 +1,9 @@
-import { useState } from "react";
-import { CheckCircle2, Calendar, AlertTriangle, Database, ArrowLeft, Loader2, Globe, HardDrive, Info, ListChecks, Play, FileSpreadsheet, Wand2 } from "lucide-react";
+import { CheckCircle2, Calendar, AlertTriangle, Database, ArrowLeft, Loader2, Globe, HardDrive, Info, ListChecks, Play, FileSpreadsheet } from "lucide-react";
 import { Acronym } from "@/components/ui/Acronym";
 import { cn } from "@/lib/utils";
 import { MocaUpload } from "./MocaUpload";
-import { PathoReorganize } from "./PathoReorganize";
 
 interface Step2Props {
-    themeId: string | null;
     year: string;
     yearEnd: string;
     onYearEndChange: (year: string) => void;
@@ -47,7 +44,6 @@ const CEPIDC_THEMES = [
 ];
 
 export function Step2_Config({
-    themeId,
     year,
     yearEnd,
     onYearEndChange,
@@ -79,10 +75,6 @@ export function Step2_Config({
     const sortedYears = [...availableYears].sort((a, b) => parseInt(b) - parseInt(a));
     const isCepiDcSubject = indicators.some(d => CEPIDC_THEMES.includes(d.id));
 
-    // Thème Pathologies : mode « Réagencement MOCA-O » (upload d'une extraction brute).
-    const isPathoTheme = themeId === 'pathologies';
-    const [pathoMode, setPathoMode] = useState<'standard' | 'reorg'>('standard');
-
     const header = (
         <>
             {/* Back button + breadcrumb */}
@@ -105,70 +97,10 @@ export function Step2_Config({
         </>
     );
 
-    const modeSelector = isPathoTheme ? (
-        <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm">
-            <h3 className="text-base font-bold text-gray-800 mb-4 flex items-center gap-2.5">
-                <span className="inline-flex items-center justify-center w-9 h-9 rounded-xl bg-[#3bb3a9]/10 text-[#3bb3a9]">
-                    <Wand2 className="w-5 h-5" />
-                </span>
-                Que voulez-vous faire ?
-            </h3>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                <button
-                    onClick={() => setPathoMode('standard')}
-                    className={cn(
-                        "flex flex-col p-4 rounded-2xl border-2 text-left transition-all duration-200 hover:-translate-y-0.5",
-                        pathoMode === 'standard'
-                            ? "border-[#1a4b8c] bg-[#1a4b8c]/5 ring-2 ring-[#1a4b8c]/20 shadow-md"
-                            : "border-slate-200 hover:border-[#1a4b8c]/40 hover:shadow-md"
-                    )}
-                >
-                    <div className="flex justify-between items-start mb-1.5 w-full">
-                        <span className="font-bold text-gray-800 text-sm">Génération standard</span>
-                        {pathoMode === 'standard' && <CheckCircle2 className="w-5 h-5 text-[#1a4b8c]" />}
-                    </div>
-                    <p className="text-xs text-gray-500">
-                        Produire les fichiers du sujet à partir des données déjà intégrées.
-                    </p>
-                </button>
-
-                <button
-                    onClick={() => setPathoMode('reorg')}
-                    className={cn(
-                        "flex flex-col p-4 rounded-2xl border-2 text-left transition-all duration-200 hover:-translate-y-0.5",
-                        pathoMode === 'reorg'
-                            ? "border-[#3bb3a9] bg-[#3bb3a9]/5 ring-2 ring-[#3bb3a9]/20 shadow-md"
-                            : "border-slate-200 hover:border-[#3bb3a9]/40 hover:shadow-md"
-                    )}
-                >
-                    <div className="flex justify-between items-start mb-1.5 w-full">
-                        <span className="font-bold text-gray-800 text-sm">Réagencement MOCA-O</span>
-                        {pathoMode === 'reorg' && <CheckCircle2 className="w-5 h-5 text-[#3bb3a9]" />}
-                    </div>
-                    <p className="text-xs text-gray-500">
-                        Déposer une extraction MOCA-O et obtenir un fichier Excel réorganisé.
-                    </p>
-                </button>
-            </div>
-        </div>
-    ) : null;
-
-    if (isPathoTheme && pathoMode === 'reorg') {
-        return (
-            <div className="space-y-6 animate-in fade-in slide-in-from-right-4 duration-300 mt-6">
-                {header}
-                {modeSelector}
-                <PathoReorganize />
-            </div>
-        );
-    }
-
     return (
         <div className="space-y-6 animate-in fade-in slide-in-from-right-4 duration-300 mt-6">
 
             {header}
-
-            {modeSelector}
 
             {autoSwitchNotice && (
                 <div className="bg-blue-50 p-4 rounded-xl border border-blue-200 animate-in fade-in">

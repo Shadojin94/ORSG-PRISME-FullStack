@@ -87,12 +87,12 @@ export function PathoReorganize() {
                 <span className="inline-flex items-center justify-center w-9 h-9 rounded-xl bg-[#3bb3a9]/10 text-[#3bb3a9]">
                     <FileSpreadsheet className="w-5 h-5" />
                 </span>
-                Réagencement MOCA-O
+                Réagencement d'une extraction MOCA-O
             </h3>
 
             <p className="text-sm text-gray-600">
-                Un fichier Excel à 5 onglets sera généré : communes, DROM, France entière,
-                France hexagonale, régions.
+                Déposez votre extraction MOCA-O (.xls) : un fichier Excel à 5 onglets est généré
+                (communes, DROM, France entière, France hexagonale, régions), sans quitter cette étape.
             </p>
 
             {/* Zone de dépôt */}
