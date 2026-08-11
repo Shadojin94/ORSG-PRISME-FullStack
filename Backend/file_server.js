@@ -50,6 +50,9 @@ const CSV_SOURCES_DIR = path.join(__dirname, 'csv_sources');
 const FRONTEND_DIST = path.join(__dirname, '..', 'Frontend', 'dist');
 const PYTHON_EXE = process.env.PYTHON_EXE || 'py';
 const STATE_DIR = process.env.PRISME_STATE_DIR || path.join(__dirname, 'state');
+// Uploads temporaires (reorganisation pathologies) : hors volumes persistants, nettoyes apres usage
+const PATHO_TMP_DIR = path.join(__dirname, 'tmp_uploads');
+const PATHO_MAX_UPLOAD_BYTES = 30 * 1024 * 1024;
 const IMPORT_HISTORY_FILE = path.join(STATE_DIR, 'import_history.json');
 const ACTIVITY_LOG_FILE = path.join(STATE_DIR, 'activity_log.json');
 
@@ -963,6 +966,84 @@ except Exception as e:
         return;
     }
 
+    // ========== REORGANISATION PATHOLOGIES (upload .xls MOCA-O -> classeur 5 onglets) ==========
+    // POST /api/patho/reorganize  (multipart: file=<.xls>, year=<2000-2030>)
+    // NB: le prefixe /api est retire de urlPath en amont (voir rawPath/urlPath)
+    if (urlPath === '/patho/reorganize' && req.method === 'POST') {
+        let tmpDir = null;
+        let year = null;
+        try {
+            const form = await parseUploadedForm(req, { fileSize: PATHO_MAX_UPLOAD_BYTES, files: 1 });
+
+            if (form.truncated) {
+                jsonResponse(res, 400, { success: false, error: 'Fichier trop volumineux (max 30 Mo).' });
+                return;
+            }
+            if (form.files.length === 0) {
+                jsonResponse(res, 400, { success: false, error: 'Aucun fichier reçu (champ "file" attendu).' });
+                return;
+            }
+
+            const upload = form.files.find(f => f.fieldname === 'file') || form.files[0];
+            const ext = path.extname(upload.filename || '').toLowerCase();
+            if (ext !== '.xls') {
+                jsonResponse(res, 400, { success: false, error: 'Format non supporté : déposez l\'export MOCA-O d\'origine au format .xls (les fichiers .xlsx ne sont pas acceptés).' });
+                return;
+            }
+            if (upload.data.length === 0) {
+                jsonResponse(res, 400, { success: false, error: 'Fichier vide.' });
+                return;
+            }
+
+            const rawYear = (form.fields.year || '').trim();
+            if (!/^\d{4}$/.test(rawYear)) {
+                jsonResponse(res, 400, { success: false, error: 'Année invalide : un entier entre 2000 et 2030 est requis.' });
+                return;
+            }
+            year = parseInt(rawYear, 10);
+            if (year < 2000 || year > 2030) {
+                jsonResponse(res, 400, { success: false, error: 'Année invalide : un entier entre 2000 et 2030 est requis.' });
+                return;
+            }
+
+            // Le nom de sortie est construit cote serveur, jamais depuis l'input utilisateur
+            const filename = `mortalite_patho_${year}.xlsx`;
+
+            ensureDir(PATHO_TMP_DIR);
+            tmpDir = fs.mkdtempSync(path.join(PATHO_TMP_DIR, 'patho_'));
+            const srcPath = path.join(tmpDir, `source${ext}`);
+            fs.writeFileSync(srcPath, upload.data);
+
+            console.log(`\nPatho reorganisation requested: ${year} (${upload.data.length} bytes)`);
+
+            const result = await generatePathoReorganisation(srcPath, year);
+
+            if (result.success && fs.existsSync(path.join(OUTPUT_DIR, filename))) {
+                logActivity('generate', { source: 'patho_reorg', year, filename });
+                logInfo(`Generation OK (patho_reorg): ${filename}`);
+                jsonResponse(res, 200, { success: true, filename });
+            } else {
+                const fullError = result.error || `Fichier attendu non produit : ${filename}`;
+                logActivity('error', { source: 'patho_reorg', year, error: fullError });
+                logError(`Generation echouee (patho_reorg ${year}): ${fullError}`);
+                jsonResponse(res, 500, { success: false, error: sanitizePathoError(fullError, year) });
+            }
+        } catch (err) {
+            logActivity('error', { source: 'patho_reorg', year, error: err.message });
+            logError(`Generation exception (patho_reorg ${year}): ${err.message}`);
+            if (/Missing Content-Type|Unsupported content type|Multipart/i.test(err.message)) {
+                jsonResponse(res, 400, { success: false, error: 'Requête invalide : un envoi multipart (fichier + année) est attendu.' });
+            } else {
+                jsonResponse(res, 500, { success: false, error: 'Erreur interne lors de la génération. Vérifiez que le fichier est bien l\'export MOCA-O .xls attendu.' });
+            }
+        } finally {
+            if (tmpDir) {
+                try { fs.rmSync(tmpDir, { recursive: true, force: true }); } catch (e) { }
+            }
+        }
+        return;
+    }
+
     // ========== DOWNLOAD ENDPOINT ==========
     if (urlPath.startsWith('/download/')) {
         const filename = decodeURIComponent(urlPath.replace('/download/', ''));
@@ -1710,6 +1791,100 @@ function generateConsolidatedFile(theme, yearStart, yearEnd, source) {
         });
 
         child.on('error', (err) => resolve({ success: false, error: err.message }));
+    });
+}
+
+/**
+ * Generate the single-workbook pathologies reorganisation (5 sheets: com/dom/fra/fh/reg)
+ * Calls Backend/generate_patho_reorganisation.py <src> <year> --single-file --outdir OUTPUT_DIR
+ */
+/**
+ * Message d'erreur montrable a l'utilisateur final : jamais de traceback Python
+ * ni de chemins absolus du serveur (le detail complet part dans logError).
+ */
+function sanitizePathoError(fullError, year) {
+    const text = String(fullError || '');
+    if (/annee|année|year/i.test(text) && /absente|introuvable|not found/i.test(text)) {
+        return `L'année ${year} est absente du fichier fourni.`;
+    }
+    if (/xlsx file; not supported|Unsupported format|CompDoc|corrupt/i.test(text)) {
+        return 'Le fichier n\'a pas pu être lu : déposez l\'export MOCA-O d\'origine au format .xls.';
+    }
+    const lines = text.trim().split('\n').map(l => l.trim()).filter(Boolean);
+    const last = lines[lines.length - 1] || '';
+    if (last && !/Traceback|File "|[A-Za-z]:\\|\/app\//.test(last) && last.length < 200) {
+        return last;
+    }
+    return 'La génération a échoué : le fichier ne correspond pas à la structure MOCA-O attendue.';
+}
+
+function generatePathoReorganisation(sourcePath, year) {
+    return new Promise((resolve) => {
+        const scriptPath = path.join(__dirname, 'generate_patho_reorganisation.py');
+        if (!fs.existsSync(scriptPath)) {
+            resolve({ success: false, error: 'generate_patho_reorganisation.py not found' });
+            return;
+        }
+
+        const args = [scriptPath, sourcePath, String(year), '--single-file', '--outdir', OUTPUT_DIR];
+        const child = spawn(PYTHON_EXE, args, { cwd: __dirname });
+
+        let stdout = '';
+        let stderr = '';
+        child.stdout.on('data', (d) => { stdout += d.toString(); });
+        child.stderr.on('data', (d) => {
+            stderr += d.toString();
+            console.log(`   ${d.toString().trim()}`);
+        });
+
+        child.on('close', (code) => {
+            if (code === 0) {
+                resolve({ success: true, stdout });
+            } else {
+                resolve({ success: false, error: (stderr || stdout || `Exit ${code}`).trim() });
+            }
+        });
+
+        child.on('error', (err) => resolve({ success: false, error: err.message }));
+    });
+}
+
+/**
+ * Parse a multipart form with busboy, returning both files and text fields.
+ * Options: { fileSize, files } (busboy limits).
+ */
+function parseUploadedForm(req, options = {}) {
+    return new Promise((resolve, reject) => {
+        const files = [];
+        const fields = {};
+        let truncated = false;
+
+        const busboy = Busboy({
+            headers: req.headers,
+            limits: {
+                fileSize: options.fileSize || 30 * 1024 * 1024,
+                files: options.files || 1,
+                fields: 20
+            }
+        });
+
+        busboy.on('field', (name, value) => { fields[name] = value; });
+
+        busboy.on('file', (fieldname, stream, info) => {
+            const { filename } = info;
+            const chunks = [];
+            stream.on('data', (chunk) => chunks.push(chunk));
+            stream.on('limit', () => { truncated = true; });
+            stream.on('end', () => {
+                if (filename) {
+                    files.push({ fieldname, filename, data: Buffer.concat(chunks) });
+                }
+            });
+        });
+
+        busboy.on('finish', () => resolve({ files, fields, truncated }));
+        busboy.on('error', (err) => reject(err));
+        req.pipe(busboy);
     });
 }
 

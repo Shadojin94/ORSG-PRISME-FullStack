@@ -132,6 +132,27 @@ export async function generateMocaoConsolidated(
     return response.json();
 }
 
+// Réagencement d'une extraction MOCA-O « pathologies » (.xls) en un classeur
+// Excel unique à 5 onglets (com, dom, fra, fh, reg).
+export async function reorganizePatho(file: File, year: number): Promise<{
+    success: boolean;
+    filename?: string;
+    error?: string;
+}> {
+    const formData = new FormData();
+    formData.append('file', file, file.name);
+    formData.append('year', String(year));
+    const response = await fetch(`${API_BASE}/api/patho/reorganize`, {
+        method: 'POST',
+        body: formData
+    });
+    try {
+        return await response.json();
+    } catch {
+        return { success: false, error: `Erreur serveur (${response.status})` };
+    }
+}
+
 // Upload CSV/XLSX files to Backend/csv_sources/
 export interface GeoAnalysis {
     filename: string;

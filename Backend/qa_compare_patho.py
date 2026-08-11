@@ -12,6 +12,11 @@ correspondre qu'a une cellule vide.
 
 Usage :
     python qa_compare_patho.py <genere.xlsx> <cible.xlsx> [--tolerance 1e-6]
+    python qa_compare_patho.py --sheet com <multi_onglets.xlsx> <cible.xlsx>
+
+Avec --sheet, seul l'onglet nomme du classeur genere est compare (utile pour
+verifier un classeur multi-onglets contre les fichiers cibles mono-onglet) ;
+cote cible on prend l'onglet de meme nom, ou son unique onglet.
 """
 from __future__ import annotations
 
@@ -79,10 +84,22 @@ def _lire(chemin: Path):
     return contenu
 
 
-def comparer(genere: Path, cible: Path, tolerance=TOLERANCE):
+def comparer(genere: Path, cible: Path, tolerance=TOLERANCE, onglet_cible=None):
     ecarts = []
     a = _lire(genere)
     b = _lire(cible)
+
+    if onglet_cible is not None:
+        if onglet_cible not in a:
+            return [f"onglet {onglet_cible!r} absent du genere : {list(a)}"]
+        if onglet_cible in b:
+            reference = b[onglet_cible]
+        elif len(b) == 1:
+            reference = next(iter(b.values()))
+        else:
+            return [f"onglet {onglet_cible!r} absent de la cible : {list(b)}"]
+        a = {onglet_cible: a[onglet_cible]}
+        b = {onglet_cible: reference}
 
     if list(a) != list(b):
         ecarts.append(f"onglets differents : genere={list(a)} cible={list(b)}")
@@ -148,17 +165,21 @@ def main(argv=None):
     parseur.add_argument("--tolerance", type=float, default=TOLERANCE)
     parseur.add_argument("--max", type=int, default=30,
                          help="nombre maximum d'ecarts affiches")
+    parseur.add_argument("--sheet", default=None,
+                         help="ne comparer que cet onglet du classeur genere "
+                              "(ex. com, dom, fra, fh, reg)")
     args = parseur.parse_args(argv)
 
     for chemin in (args.genere, args.cible):
         if not chemin.is_file():
             raise SystemExit(f"fichier introuvable : {chemin}")
 
-    ecarts = comparer(args.genere, args.cible, args.tolerance)
+    ecarts = comparer(args.genere, args.cible, args.tolerance, args.sheet)
+    suffixe = f" [onglet {args.sheet}]" if args.sheet else ""
     if not ecarts:
-        print(f"OK 0 ecart  ({args.genere.name} == {args.cible.name})")
+        print(f"OK 0 ecart{suffixe}  ({args.genere.name} == {args.cible.name})")
         return 0
-    print(f"KO {len(ecarts)} ecart(s)  ({args.genere.name} vs {args.cible.name})")
+    print(f"KO {len(ecarts)} ecart(s){suffixe}  ({args.genere.name} vs {args.cible.name})")
     for message in ecarts[:args.max]:
         print("  -", message)
     if len(ecarts) > args.max:

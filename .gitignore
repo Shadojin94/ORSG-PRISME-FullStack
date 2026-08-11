@@ -17,6 +17,7 @@ Backend/output_sharepoint/
 Backend/test_output/
 Backend/state/
 Backend/activity_log.json
+Backend/tmp_uploads/
 output/
 
 # Input data (volumineux, pas du code source)
@@ -89,3 +90,4 @@ Thumbs.db
 .env.production
 *.key
 *.pem
+/tmp/

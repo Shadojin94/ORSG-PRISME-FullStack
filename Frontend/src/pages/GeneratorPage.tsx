@@ -318,6 +318,7 @@ export function GeneratorPage() {
 
                     {step === 2 && (
                         <Step2_Config
+                            themeId={selectedThemeId}
                             year={year}
                             yearEnd={yearEnd}
                             onYearEndChange={setYearEnd}

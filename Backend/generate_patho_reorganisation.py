@@ -12,8 +12,13 @@ et produit, pour une annee donnee, les 5 classeurs attendus par le client :
     mortalite_fe.xlsx    onglet "fra"   code 99   (France entiere) (1 x 3 sexes)
     mortalite_fh.xlsx    onglet "fh"    code 000  (France hexag.)  (1 x 3 sexes)
 
+Avec --single-file, les memes 5 feuilles sont ecrites dans UN seul classeur
+`mortalite_patho_<annee>.xlsx` (onglets com, dom, fra, fh, reg dans cet ordre),
+chaque onglet strictement identique a celui du fichier separe correspondant.
+
 Usage :
-    python generate_patho_reorganisation.py <source.xls> <annee> [--outdir DIR] [--no-fill]
+    python generate_patho_reorganisation.py <source.xls> <annee> [--outdir DIR]
+                                            [--no-fill] [--single-file]
 
 Structure du fichier source (cf. README de synthese) :
   - 237 colonnes, mais SEULES les colonnes A-G portent des donnees. Les 230 autres
@@ -212,17 +217,15 @@ def lire_source(chemin: Path):
 # --------------------------------------------------------------------------
 # Ecriture des classeurs
 # --------------------------------------------------------------------------
-def ecrire_classeur(chemin, onglet, entetes, lignes, formats, avec_fill=True):
-    """Ecrit un classeur mono-onglet.
+def ecrire_feuille(feuille, onglet, entetes, lignes, formats, avec_fill=True):
+    """Remplit une feuille existante (mise en forme unique pour les deux modes).
 
-    formats : dict slug_de_rendu -> applique aux cellules de valeur
+    formats : slug_de_rendu -> applique aux cellules de valeur
       "brut"    valeur float tronquee a 15 chiffres significatifs (precision de
                 stockage d'Excel, celle des fichiers exemples), affichage 0.00
       "arrondi" valeur float arrondie a 2 decimales, format General
       "texte"   valeur ecrite en texte (str(float)), format General
     """
-    classeur = Workbook()
-    feuille = classeur.active
     feuille.title = onglet
 
     gras = Font(bold=True)
@@ -255,7 +258,6 @@ def ecrire_classeur(chemin, onglet, entetes, lignes, formats, avec_fill=True):
     derniere = len(lignes) + 1
     feuille.auto_filter.ref = f"A1:T{derniere}"
     feuille.freeze_panes = FREEZE_PANES
-    classeur.save(str(chemin))
     return derniere - 1
 
 
@@ -264,7 +266,70 @@ def serie(valeurs, geo, sexe, annee):
     return [valeurs.get((geo, sexe, annee, slug)) for slug in INDICATEURS]
 
 
-def generer(source: Path, annee: int, outdir: Path, avec_fill=True):
+def construire_feuilles(valeurs, communes, annee):
+    """Definition des 5 feuilles, dans l'ordre du classeur unique.
+
+    Retourne une liste de dicts : onglet, fichier (mode 5 fichiers), entetes,
+    lignes, formats. C'est la seule source de verite pour les deux modes.
+    """
+    return [
+        {
+            "onglet": "com",
+            "fichier": "mortalite_com.xlsx",
+            "entetes": ["com", "sexe", "annee"] + COLONNES_INDICATEURS,
+            "formats": "brut",
+            "lignes": [
+                ((code, sexe, annee), serie(valeurs, geo, sexe, annee))
+                for sexe in ("Ens", "H", "F")
+                for code, geo in communes
+            ],
+        },
+        {
+            "onglet": "dom",
+            "fichier": "mortalite_drom.xlsx",
+            "entetes": ["dom", "sexe", "annee"] + COLONNES_INDICATEURS,
+            "formats": "texte",
+            "lignes": [
+                (("999", sexe, str(annee)), serie(valeurs, GEO_DROM, sexe, annee))
+                for sexe in ("Ens", "H", "F")
+            ],
+        },
+        {
+            # France entiere : colonnes fra / annee / sexe, ordre Ens, F, H
+            "onglet": "fra",
+            "fichier": "mortalite_fe.xlsx",
+            "entetes": ["fra", "annee", "sexe"] + COLONNES_INDICATEURS,
+            "formats": "arrondi",
+            "lignes": [
+                (("99", str(annee), sexe), serie(valeurs, GEO_FRANCE_ENTIERE, sexe, annee))
+                for sexe in ("Ens", "F", "H")
+            ],
+        },
+        {
+            "onglet": "fh",
+            "fichier": "mortalite_fh.xlsx",
+            "entetes": ["fh", "sexe", "annee"] + COLONNES_INDICATEURS,
+            "formats": "arrondi",
+            "lignes": [
+                (("000", sexe, str(annee)), serie(valeurs, GEO_FRANCE_HEXA, sexe, annee))
+                for sexe in ("Ens", "H", "F")
+            ],
+        },
+        {
+            "onglet": "reg",
+            "fichier": "mortalite_Re.xlsx",
+            "entetes": ["reg", "sexe", "annee"] + COLONNES_INDICATEURS,
+            "formats": "arrondi",
+            "lignes": [
+                ((code, sexe, str(annee)), serie(valeurs, geo, sexe, annee))
+                for sexe in ("Ens", "H", "F")
+                for code, geo in REGIONS
+            ],
+        },
+    ]
+
+
+def generer(source: Path, annee: int, outdir: Path, avec_fill=True, single_file=False):
     valeurs, communes = lire_source(source)
 
     annees = sorted({cle[2] for cle in valeurs})
@@ -283,60 +348,27 @@ def generer(source: Path, annee: int, outdir: Path, avec_fill=True):
             raise SystemExit(f"region absente du source : {code} / {nom!r}")
 
     outdir.mkdir(parents=True, exist_ok=True)
+    feuilles = construire_feuilles(valeurs, communes, annee)
+
+    if single_file:
+        classeur = Workbook()
+        total = 0
+        for i, spec in enumerate(feuilles):
+            feuille = classeur.active if i == 0 else classeur.create_sheet()
+            total += ecrire_feuille(feuille, spec["onglet"], spec["entetes"],
+                                    spec["lignes"], spec["formats"], avec_fill)
+        chemin = outdir / f"mortalite_patho_{annee}.xlsx"
+        classeur.save(str(chemin))
+        return [(chemin, total)]
+
     produits = []
-
-    # --- communes -----------------------------------------------------------
-    lignes = [
-        ((code, sexe, annee), serie(valeurs, geo, sexe, annee))
-        for sexe in ("Ens", "H", "F")
-        for code, geo in communes
-    ]
-    chemin = outdir / "mortalite_com.xlsx"
-    n = ecrire_classeur(chemin, "com", ["com", "sexe", "annee"] + COLONNES_INDICATEURS,
-                        lignes, "brut", avec_fill)
-    produits.append((chemin, n))
-
-    # --- regions ------------------------------------------------------------
-    lignes = [
-        ((code, sexe, str(annee)), serie(valeurs, geo, sexe, annee))
-        for sexe in ("Ens", "H", "F")
-        for code, geo in REGIONS
-    ]
-    chemin = outdir / "mortalite_Re.xlsx"
-    n = ecrire_classeur(chemin, "reg", ["reg", "sexe", "annee"] + COLONNES_INDICATEURS,
-                        lignes, "arrondi", avec_fill)
-    produits.append((chemin, n))
-
-    # --- DROM ---------------------------------------------------------------
-    lignes = [
-        (("999", sexe, str(annee)), serie(valeurs, GEO_DROM, sexe, annee))
-        for sexe in ("Ens", "H", "F")
-    ]
-    chemin = outdir / "mortalite_drom.xlsx"
-    n = ecrire_classeur(chemin, "dom", ["dom", "sexe", "annee"] + COLONNES_INDICATEURS,
-                        lignes, "texte", avec_fill)
-    produits.append((chemin, n))
-
-    # --- France hexagonale --------------------------------------------------
-    lignes = [
-        (("000", sexe, str(annee)), serie(valeurs, GEO_FRANCE_HEXA, sexe, annee))
-        for sexe in ("Ens", "H", "F")
-    ]
-    chemin = outdir / "mortalite_fh.xlsx"
-    n = ecrire_classeur(chemin, "fh", ["fh", "sexe", "annee"] + COLONNES_INDICATEURS,
-                        lignes, "arrondi", avec_fill)
-    produits.append((chemin, n))
-
-    # --- France entiere (colonnes fra / annee / sexe, ordre Ens, F, H) ------
-    lignes = [
-        (("99", str(annee), sexe), serie(valeurs, GEO_FRANCE_ENTIERE, sexe, annee))
-        for sexe in ("Ens", "F", "H")
-    ]
-    chemin = outdir / "mortalite_fe.xlsx"
-    n = ecrire_classeur(chemin, "fra", ["fra", "annee", "sexe"] + COLONNES_INDICATEURS,
-                        lignes, "arrondi", avec_fill)
-    produits.append((chemin, n))
-
+    for spec in feuilles:
+        classeur = Workbook()
+        n = ecrire_feuille(classeur.active, spec["onglet"], spec["entetes"],
+                           spec["lignes"], spec["formats"], avec_fill)
+        chemin = outdir / spec["fichier"]
+        classeur.save(str(chemin))
+        produits.append((chemin, n))
     return produits
 
 
@@ -351,12 +383,17 @@ def main(argv=None):
     parseur.add_argument("--no-fill", action="store_true",
                          help="ne pas colorer la ligne d'en-tete (les fichiers "
                               "exemples du client sont en ABBBDB)")
+    parseur.add_argument("--single-file", action="store_true",
+                         help="produire un unique classeur mortalite_patho_<annee>.xlsx "
+                              "a 5 onglets (com, dom, fra, fh, reg) au lieu des "
+                              "5 fichiers separes")
     args = parseur.parse_args(argv)
 
     if not args.source.is_file():
         raise SystemExit(f"fichier source introuvable : {args.source}")
 
-    produits = generer(args.source, args.annee, args.outdir, avec_fill=not args.no_fill)
+    produits = generer(args.source, args.annee, args.outdir,
+                       avec_fill=not args.no_fill, single_file=args.single_file)
     for chemin, nb in produits:
         print(f"OK  {chemin}  ({nb} lignes)")
     return 0
