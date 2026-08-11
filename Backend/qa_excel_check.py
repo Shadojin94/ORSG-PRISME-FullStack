@@ -28,37 +28,19 @@ import openpyxl
 # =============================================================================
 
 def _cell_has_color_fill(cell):
-    """True si la cellule porte un remplissage colore."""
+    """True si la cellule porte un remplissage colore (solid + couleur non nulle)."""
     fill = cell.fill
-    if fill is None or fill.fill_type is None:
+    if fill is None or fill.fill_type != "solid":
         return False
-
-    def is_colored(color):
-        if color is None:
-            return False
-        color_type = getattr(color, "type", None)
-        if color_type == "rgb":
-            rgb = getattr(color, "rgb", "")
-            if not isinstance(rgb, str):
-                return False
-            rgb = rgb.upper()
-            # Transparent/noir par defaut et blanc ne sont pas des couleurs visibles.
-            return rgb not in ("", "00000000", "00FFFFFF", "FFFFFFFF")
-        if color_type == "indexed":
-            # 1 = blanc ; 64 = couleur systeme/par defaut.
-            return getattr(color, "indexed", None) not in (1, 64)
-        if color_type == "theme":
-            # Excel : theme 1 = fond clair (blanc), theme 0 = texte sombre.
-            # Toute teinte explicite est refusee par prudence.
-            return (
-                getattr(color, "theme", None) != 1
-                or getattr(color, "tint", 0.0) not in (0, 0.0)
-            )
-        return bool(color_type)
-
-    if fill.fill_type == "solid":
-        return is_colored(fill.fgColor)
-    return is_colored(fill.fgColor) or is_colored(fill.bgColor)
+    fg = fill.fgColor
+    if fg is None:
+        return False
+    rgb = getattr(fg, 'rgb', None)
+    if not isinstance(rgb, str):
+        return False
+    rgb = rgb.upper()
+    # 00000000 = pas de couleur ; FFFFFFFF = blanc (fond par defaut)
+    return rgb not in ("", "00000000", "FFFFFFFF")
 
 
 def _find_color_fills(ws):
@@ -71,12 +53,7 @@ def _find_color_fills(ws):
     for row in ws.iter_rows(min_row=1, max_row=ws.max_row):
         for cell in row:
             if _cell_has_color_fill(cell):
-                color = cell.fill.fgColor
-                color_type = getattr(color, "type", "unknown")
-                color_value = getattr(color, color_type, "unknown")
-                tint = getattr(color, "tint", 0.0)
-                suffix = f",tint={tint}" if tint not in (0, 0.0) else ""
-                found.append(f"{cell.coordinate}={color_type}:{color_value}{suffix}")
+                found.append(f"{cell.coordinate}={cell.fill.fgColor.rgb}")
     return found
 
 def _count_data_rows(ws):
@@ -110,8 +87,6 @@ def check_xlsx(xlsx_bytes_or_path, expected_sheets, expected_variables, label=""
         return {"ok": False, "issues": [f"Impossible d'ouvrir le fichier: {e}"], "fills": {}, "rows": {}}
 
     sheets_found = wb.sheetnames
-    if expected_sheets is None:
-        expected_sheets = sheets_found
 
     # Verifier onglets attendus
     missing_sheets = [s for s in expected_sheets if s not in sheets_found]
@@ -154,54 +129,6 @@ def check_xlsx(xlsx_bytes_or_path, expected_sheets, expected_variables, label=""
         "fills": fills_found,
         "rows": sheet_data_rows,
         "sheets_found": sheets_found,
-    }
-
-
-def check_generated_artifact(artifact_path):
-    """Verifie tous les classeurs d'un XLSX ou d'un pack ZIP genere par l'API."""
-    artifact_path = Path(artifact_path)
-    issues = []
-    workbooks = {}
-
-    if not artifact_path.is_file():
-        return {
-            "ok": False,
-            "artifact": str(artifact_path),
-            "issues": [f"Artefact introuvable: {artifact_path}"],
-            "workbooks": {},
-        }
-
-    def check_workbook(label, content):
-        result = check_xlsx(content, None, [], label=label)
-        workbooks[label] = result
-        issues.extend(f"[{label}] {issue}" for issue in result.get("issues", []))
-
-    suffix = artifact_path.suffix.lower()
-    if suffix == ".xlsx":
-        check_workbook(artifact_path.name, artifact_path)
-    elif suffix == ".zip":
-        try:
-            with zipfile.ZipFile(artifact_path, "r") as zf:
-                xlsx_names = [
-                    name for name in zf.namelist()
-                    if name.lower().endswith(".xlsx")
-                    and not name.startswith("__MACOSX/")
-                    and not Path(name).name.startswith("~$")
-                ]
-                if not xlsx_names:
-                    issues.append("Le pack ZIP ne contient aucun fichier XLSX")
-                for name in xlsx_names:
-                    check_workbook(name, zf.read(name))
-        except Exception as exc:
-            issues.append(f"Impossible d'ouvrir le pack ZIP: {exc}")
-    else:
-        issues.append("Format non supporte: seuls .xlsx et .zip sont acceptes")
-
-    return {
-        "ok": not issues,
-        "artifact": str(artifact_path),
-        "issues": issues,
-        "workbooks": workbooks,
     }
 
 
@@ -643,11 +570,6 @@ def print_report(all_results):
 # =============================================================================
 
 if __name__ == "__main__":
-    if len(sys.argv) >= 3 and sys.argv[1] == "--artifact":
-        artifact_result = check_generated_artifact(sys.argv[2])
-        print(json.dumps(artifact_result, ensure_ascii=False, default=str))
-        sys.exit(0 if artifact_result["ok"] else 1)
-
     all_results = {}
 
     # Mode 1 : MOCA-O

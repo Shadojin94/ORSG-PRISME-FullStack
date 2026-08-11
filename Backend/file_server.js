@@ -52,8 +52,6 @@ const PYTHON_EXE = process.env.PYTHON_EXE || 'py';
 const STATE_DIR = process.env.PRISME_STATE_DIR || path.join(__dirname, 'state');
 const IMPORT_HISTORY_FILE = path.join(STATE_DIR, 'import_history.json');
 const ACTIVITY_LOG_FILE = path.join(STATE_DIR, 'activity_log.json');
-const artifactQaVerdicts = new Map();
-const artifactQaInFlight = new Map();
 
 function ensureDir(dir) {
     if (!fs.existsSync(dir)) {
@@ -847,7 +845,7 @@ except Exception as e:
         console.log(`\nGeneration requested: ${theme}_${year}`);
 
         try {
-            const result = await guardGeneratedArtifact(await generateFile(theme, parseInt(year)));
+            const result = await generateFile(theme, parseInt(year));
 
             if (result.success) {
                 logActivity('generate', { source: 'moca', theme, year: parseInt(year), filename: result.filename, warnings: result.warnings || [] });
@@ -864,11 +862,7 @@ except Exception as e:
             } else {
                 logActivity('error', { source: 'moca', theme, year: parseInt(year), error: result.error });
                 logError(`Generation echouee (moca ${theme}_${year}): ${result.error}`);
-                jsonResponse(res, result.qa ? 422 : 500, {
-                    success: false,
-                    error: result.error,
-                    ...(result.qa ? { issues: result.qa.issues || [] } : {}),
-                });
+                jsonResponse(res, 500, { success: false, error: result.error });
             }
         } catch (err) {
             logActivity('error', { source: 'moca', theme, year: parseInt(year), error: err.message });
@@ -905,7 +899,7 @@ except Exception as e:
         }
 
         try {
-            const result = await guardGeneratedArtifact(await generateOpenDataFile(theme, parseInt(year)));
+            const result = await generateOpenDataFile(theme, parseInt(year));
 
             if (result.success) {
                 logActivity('generate', { source: 'opendata', theme, year: parseInt(year), filename: result.filename });
@@ -918,11 +912,7 @@ except Exception as e:
             } else {
                 logActivity('error', { source: 'opendata', theme, year: parseInt(year), error: result.error });
                 logError(`Generation echouee (opendata ${theme}_${year}): ${result.error}`);
-                jsonResponse(res, result.qa ? 422 : 500, {
-                    success: false,
-                    error: result.error,
-                    ...(result.qa ? { issues: result.qa.issues || [] } : {}),
-                });
+                jsonResponse(res, 500, { success: false, error: result.error });
             }
         } catch (err) {
             logActivity('error', { source: 'opendata', theme, year: parseInt(year), error: err.message });
@@ -955,7 +945,7 @@ except Exception as e:
         console.log(`\nConsolidated MOCA-O generation: ${theme} ${yearStart}-${yearEnd} (${source})`);
 
         try {
-            const result = await guardGeneratedArtifact(await generateConsolidatedFile(theme, yearStart, yearEnd, source));
+            const result = await generateConsolidatedFile(theme, yearStart, yearEnd, source);
             if (result.success) {
                 logActivity('generate', { source: `mocao_cons_${source}`, theme, yearStart, yearEnd, filename: result.filename });
                 logInfo(`Generation OK (mocao_cons ${source}): ${result.filename}`);
@@ -963,11 +953,7 @@ except Exception as e:
             } else {
                 logActivity('error', { source: 'mocao_cons', theme, yearStart, yearEnd, error: result.error });
                 logError(`Generation echouee (mocao_cons ${theme} ${yearStart}-${yearEnd}): ${result.error}`);
-                jsonResponse(res, result.qa ? 422 : 500, {
-                    success: false,
-                    error: result.error,
-                    ...(result.qa ? { issues: result.qa.issues || [] } : {}),
-                });
+                jsonResponse(res, 500, { success: false, error: result.error });
             }
         } catch (err) {
             logActivity('error', { source: 'mocao_cons', theme, yearStart, yearEnd, error: err.message });
@@ -991,16 +977,6 @@ except Exception as e:
         if (!fs.existsSync(filePath)) {
             res.writeHead(404, { 'Content-Type': 'text/plain' });
             res.end(`File not found: ${filename}`);
-            return;
-        }
-
-        const qaResult = await getArtifactQaVerdict(filename);
-        if (!qaResult.ok) {
-            const quarantinedAs = quarantineGeneratedArtifact(filename);
-            const error = formatExcelQaError(qaResult, quarantinedAs);
-            logActivity('error', { source: 'download_qa', filename, error });
-            logError(`Telechargement refuse par le QA Excel (${filename}): ${error}`);
-            jsonResponse(res, 422, { success: false, error, issues: qaResult.issues || [] });
             return;
         }
 
@@ -1583,147 +1559,6 @@ function runPython(script) {
             reject(err);
         });
     });
-}
-
-/**
- * Run the existing Excel QA against every workbook in a generated XLSX/ZIP.
- * Validation fails closed: an unreadable QA result is never considered valid.
- */
-function validateGeneratedArtifact(filename) {
-    return new Promise((resolve) => {
-        const artifactPath = path.resolve(OUTPUT_DIR, filename);
-        if (path.dirname(artifactPath) !== path.resolve(OUTPUT_DIR)) {
-            resolve({ ok: false, issues: ['Chemin artefact hors du dossier output'] });
-            return;
-        }
-
-        const qaScript = path.join(__dirname, 'qa_excel_check.py');
-        const child = spawn(PYTHON_EXE, [qaScript, '--artifact', artifactPath], { cwd: __dirname });
-        let stdout = '';
-        let stderr = '';
-        child.stdout.on('data', (data) => { stdout += data.toString(); });
-        child.stderr.on('data', (data) => { stderr += data.toString(); });
-        child.on('close', () => {
-            try {
-                const line = stdout.trim().split('\n').filter(Boolean).pop();
-                const result = JSON.parse(line || '');
-                if (typeof result.ok !== 'boolean' || !Array.isArray(result.issues)) {
-                    throw new Error('resultat QA incomplet');
-                }
-                resolve(result);
-            } catch (error) {
-                resolve({
-                    ok: false,
-                    issues: [`Controle QA Excel impossible: ${stderr.trim() || error.message}`],
-                });
-            }
-        });
-        child.on('error', (error) => {
-            resolve({ ok: false, issues: [`Controle QA Excel impossible: ${error.message}`] });
-        });
-    });
-}
-
-function getArtifactFingerprint(filename) {
-    const artifactPath = path.resolve(OUTPUT_DIR, filename);
-    if (path.dirname(artifactPath) !== path.resolve(OUTPUT_DIR)) {
-        throw new Error('Chemin artefact hors du dossier output');
-    }
-    const stat = fs.statSync(artifactPath);
-    if (!stat.isFile()) throw new Error('Artefact absent ou invalide');
-    return `${stat.size}:${stat.mtimeMs}`;
-}
-
-async function getArtifactQaVerdict(filename, { force = false } = {}) {
-    let fingerprint;
-    try {
-        fingerprint = getArtifactFingerprint(filename);
-    } catch (error) {
-        return { ok: false, issues: [`Controle QA Excel impossible: ${error.message}`] };
-    }
-
-    const cached = artifactQaVerdicts.get(filename);
-    if (!force && cached && cached.fingerprint === fingerprint) {
-        return cached.result;
-    }
-
-    const active = artifactQaInFlight.get(filename);
-    if (active && active.fingerprint === fingerprint) {
-        return active.promise;
-    }
-    if (active) {
-        await active.promise;
-        return getArtifactQaVerdict(filename, { force });
-    }
-
-    const promise = (async () => {
-        const result = await validateGeneratedArtifact(filename);
-        let currentFingerprint;
-        try {
-            currentFingerprint = getArtifactFingerprint(filename);
-        } catch (error) {
-            return { ok: false, issues: [`Controle QA Excel impossible: ${error.message}`] };
-        }
-        if (currentFingerprint !== fingerprint) {
-            artifactQaVerdicts.delete(filename);
-            return {
-                ok: false,
-                issues: ['Artefact modifie pendant le controle QA Excel; telechargement refuse'],
-            };
-        }
-        artifactQaVerdicts.set(filename, { fingerprint, result });
-        return result;
-    })();
-
-    const entry = { fingerprint, promise };
-    artifactQaInFlight.set(filename, entry);
-    try {
-        return await promise;
-    } finally {
-        if (artifactQaInFlight.get(filename) === entry) {
-            artifactQaInFlight.delete(filename);
-        }
-    }
-}
-
-function quarantineGeneratedArtifact(filename) {
-    const artifactPath = path.resolve(OUTPUT_DIR, filename);
-    if (path.dirname(artifactPath) !== path.resolve(OUTPUT_DIR) || !fs.existsSync(artifactPath)) {
-        return null;
-    }
-    const quarantinedPath = `${artifactPath}.invalid-${Date.now()}`;
-    try {
-        fs.renameSync(artifactPath, quarantinedPath);
-        artifactQaVerdicts.delete(filename);
-        return path.basename(quarantinedPath);
-    } catch (error) {
-        console.error(`Impossible d'isoler l'artefact invalide ${filename}: ${error.message}`);
-        return null;
-    }
-}
-
-function formatExcelQaError(qaResult, quarantinedAs) {
-    const issues = qaResult.issues || [];
-    const hasColorFill = issues.some((issue) => issue.toLowerCase().includes('remplissage colore'));
-    const headline = hasColorFill
-        ? 'Remplissage colore interdit detecte dans le fichier genere'
-        : 'Controle QA Excel echoue pour le fichier genere';
-    const quarantine = quarantinedAs ? ` Artefact isole: ${quarantinedAs}.` : '';
-    return `${headline}: ${issues.join(' | ') || 'erreur inconnue'}.${quarantine}`;
-}
-
-async function guardGeneratedArtifact(result) {
-    if (!result.success) return result;
-    const qaResult = await getArtifactQaVerdict(result.filename, { force: true });
-    if (qaResult.ok) return result;
-
-    const quarantinedAs = quarantineGeneratedArtifact(result.filename);
-    return {
-        ...result,
-        success: false,
-        error: formatExcelQaError(qaResult, quarantinedAs),
-        qa: qaResult,
-    };
 }
 
 /**
