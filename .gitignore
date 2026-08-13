@@ -91,3 +91,4 @@ Thumbs.db
 *.key
 *.pem
 /tmp/
+Frontend/test-results/
