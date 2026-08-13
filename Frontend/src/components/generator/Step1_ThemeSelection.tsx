@@ -4,7 +4,6 @@ import { BDI_THEMES } from "@/data/bdi_themes";
 import { OPEN_DATA_SUPPORTED_THEMES } from "@/constants/openDataThemes";
 import { ChevronDown, Database, Globe, BarChart3, ArrowRight, Upload, FolderClosed } from "lucide-react";
 import { Acronym } from "@/components/ui/Acronym";
-import { PathoReorganize } from "./PathoReorganize";
 
 interface Step1Props {
     onSubjectSelect: (themeId: string, subThemeId: string) => void;
@@ -273,16 +272,6 @@ export function Step1_ThemeSelection({
 
                             {isExpanded && (
                                 <div className="bg-gray-50 border-t border-gray-100 p-3 grid grid-cols-1 md:grid-cols-2 gap-2 animate-in fade-in slide-in-from-top-2 duration-200">
-                                    {/* Thème Pathologies : réagencement d'une extraction MOCA-O, sans quitter l'étape 1.
-                                        stopPropagation pour ne jamais replier l'accordéon ni sélectionner un sujet. */}
-                                    {theme.id === 'pathologies' && (
-                                        <div
-                                            className="md:col-span-2"
-                                            onClick={(e) => e.stopPropagation()}
-                                        >
-                                            <PathoReorganize />
-                                        </div>
-                                    )}
                                     {subjects.map((sub: any) => renderSubject(sub, theme.id))}
                                 </div>
                             )}

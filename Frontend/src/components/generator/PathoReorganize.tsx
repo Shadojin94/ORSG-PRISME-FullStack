@@ -91,8 +91,9 @@ export function PathoReorganize() {
             </h3>
 
             <p className="text-sm text-gray-600">
-                Déposez votre extraction MOCA-O (.xls) : un fichier Excel à 5 onglets est généré
-                (communes, DROM, France entière, France hexagonale, régions), sans quitter cette étape.
+                Déposez votre extraction MOCA-O (.xls), choisissez l'année, téléchargez le classeur
+                réagencé : un fichier Excel à 5 onglets (communes, DROM, France entière,
+                France hexagonale, régions).
             </p>
 
             {/* Zone de dépôt */}

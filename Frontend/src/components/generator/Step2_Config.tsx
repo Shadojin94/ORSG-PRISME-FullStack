@@ -2,8 +2,10 @@ import { CheckCircle2, Calendar, AlertTriangle, Database, ArrowLeft, Loader2, Gl
 import { Acronym } from "@/components/ui/Acronym";
 import { cn } from "@/lib/utils";
 import { MocaUpload } from "./MocaUpload";
+import { PathoReorganize } from "./PathoReorganize";
 
 interface Step2Props {
+    themeId: string | null;
     year: string;
     yearEnd: string;
     onYearEndChange: (year: string) => void;
@@ -44,6 +46,7 @@ const CEPIDC_THEMES = [
 ];
 
 export function Step2_Config({
+    themeId,
     year,
     yearEnd,
     onYearEndChange,
@@ -74,6 +77,9 @@ export function Step2_Config({
 
     const sortedYears = [...availableYears].sort((a, b) => parseInt(b) - parseInt(a));
     const isCepiDcSubject = indicators.some(d => CEPIDC_THEMES.includes(d.id));
+    // Thème Pathologies : la carte « Source des données » est remplacée par le
+    // réagencement d'une extraction MOCA-O (PathoReorganize).
+    const isPathoTheme = themeId === 'pathologies';
 
     const header = (
         <>
@@ -137,7 +143,13 @@ export function Step2_Config({
                 </ul>
             </div>
 
-            {/* Source Selection */}
+            {/* Thème Pathologies : réagencement d'une extraction MOCA-O à la place
+                de la carte « Source des données ». PathoReorganize rend déjà la carte
+                complète (bg-white p-5 rounded-2xl + header avec icône). */}
+            {isPathoTheme ? (
+                <PathoReorganize />
+            ) : (
+            /* Source Selection */
             <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm">
                 <h3 className="text-base font-bold text-gray-800 mb-4 flex items-center gap-2.5">
                     <span className="inline-flex items-center justify-center w-9 h-9 rounded-xl bg-[#3bb3a9]/10 text-[#3bb3a9]">
@@ -208,6 +220,7 @@ export function Step2_Config({
                     </div>
                 )}
             </div>
+            )}
 
             {/* Year Selection */}
             <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm">
@@ -274,7 +287,11 @@ export function Step2_Config({
                             <AlertTriangle className="w-4 h-4" />
                             Aucune donnée {sourceMode === 'moca' ? 'MOCA-O' : 'Open Data'} disponible
                         </div>
-                        {sourceMode === 'moca' && supportsOpenData ? (
+                        {isPathoTheme ? (
+                            /* Pas de zone d'import par sujet pour ce thème : on décrit ce que fait
+                               la carte de réagencement au lieu de renvoyer vers un import inexistant. */
+                            <p>Les données publiques ne sont pas disponibles pour ce sujet. La carte «&nbsp;Réagencement d'une extraction MOCA-O&nbsp;» ci-dessus produit le classeur réagencé à partir de votre extraction ; la génération classique de ce sujet nécessite des données préalablement importées.</p>
+                        ) : sourceMode === 'moca' && supportsOpenData ? (
                             <p>Aucun fichier CSV trouvé. Importez vos fichiers ci-dessus ou <button onClick={() => onSourceChange('opendata')} className="underline font-bold hover:text-amber-900">basculez sur Open Data</button>.</p>
                         ) : sourceMode === 'moca' ? (
                             <p>Aucun fichier importé pour ce sujet. Importez les fichiers MOCA-O attendus (la liste précise des fichiers requis est affichée dans la zone d'import ci-dessus, avec leur statut) pour pouvoir générer.</p>

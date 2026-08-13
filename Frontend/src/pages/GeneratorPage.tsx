@@ -167,10 +167,14 @@ export function GeneratorPage() {
         ) {
             setSourceMode('moca');
             setAutoSwitchNotice(
-                "Les données publiques ne sont pas encore disponibles pour ce sujet. Importez vos fichiers MOCA-O ci-dessous pour générer."
+                selectedThemeId === 'pathologies'
+                    // Thème pathologies : pas de zone d'import par sujet à l'étape 2,
+                    // on ne renvoie donc pas vers un import inexistant.
+                    ? "Les données publiques ne sont pas disponibles pour ce sujet. La génération classique nécessite des données préalablement importées."
+                    : "Les données publiques ne sont pas encore disponibles pour ce sujet. Importez vos fichiers MOCA-O ci-dessous pour générer."
             );
         }
-    }, [sourceMode, yearsLoading, yearsError, availableYears, supportsMoca]);
+    }, [sourceMode, yearsLoading, yearsError, availableYears, supportsMoca, selectedThemeId]);
 
     useEffect(() => {
         if (availableYears && availableYears.length > 0) {
@@ -338,6 +342,7 @@ export function GeneratorPage() {
 
                     {step === 2 && (
                         <Step2_Config
+                            themeId={selectedThemeId}
                             year={year}
                             yearEnd={yearEnd}
                             onYearEndChange={setYearEnd}
