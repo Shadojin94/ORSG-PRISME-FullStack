@@ -168,9 +168,9 @@ export function GeneratorPage() {
             setSourceMode('moca');
             setAutoSwitchNotice(
                 selectedThemeId === 'pathologies'
-                    // Thème pathologies : pas de zone d'import par sujet à l'étape 2,
-                    // on ne renvoie donc pas vers un import inexistant.
-                    ? "Les données publiques ne sont pas disponibles pour ce sujet. La génération classique nécessite des données préalablement importées."
+                    // Thème pathologies : l'import MOCA-O par sujet est remplacé par le
+                    // réagencement d'une extraction, rendu dans la carte source ci-dessous.
+                    ? "Les données publiques ne sont pas disponibles pour ce sujet. Utilisez le réagencement d'une extraction MOCA-O ci-dessous."
                     : "Les données publiques ne sont pas encore disponibles pour ce sujet. Importez vos fichiers MOCA-O ci-dessous pour générer."
             );
         }

@@ -143,13 +143,7 @@ export function Step2_Config({
                 </ul>
             </div>
 
-            {/* Thème Pathologies : réagencement d'une extraction MOCA-O à la place
-                de la carte « Source des données ». PathoReorganize rend déjà la carte
-                complète (bg-white p-5 rounded-2xl + header avec icône). */}
-            {isPathoTheme ? (
-                <PathoReorganize />
-            ) : (
-            /* Source Selection */
+            {/* Source Selection */}
             <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm">
                 <h3 className="text-base font-bold text-gray-800 mb-4 flex items-center gap-2.5">
                     <span className="inline-flex items-center justify-center w-9 h-9 rounded-xl bg-[#3bb3a9]/10 text-[#3bb3a9]">
@@ -176,7 +170,10 @@ export function Step2_Config({
                             {sourceMode === 'moca' && <CheckCircle2 className="w-5 h-5 text-[#1a4b8c]" />}
                         </div>
                         <p className="text-xs text-gray-500">
-                            Fichiers internes CSV. Plus de données et thématiques disponibles.
+                            {/* Thème Pathologies : ce bouton mène au réagencement, pas à l'import par sujet. */}
+                            {isPathoTheme
+                                ? "Réagencement d'une extraction MOCA-O (.xls) en classeur par niveaux géographiques."
+                                : "Fichiers internes CSV. Plus de données et thématiques disponibles."}
                         </p>
                     </button>
 
@@ -213,14 +210,20 @@ export function Step2_Config({
 
                 {sourceMode === 'moca' && (
                     <div className="mt-4">
-                        <MocaUpload
-                            datasetId={primaryDatasetId}
-                            onUploadComplete={onUploadComplete}
-                        />
+                        {/* Thème Pathologies : le process d'import MOCA-O par sujet est
+                            remplacé par le réagencement d'une extraction. L'option
+                            Open Data ci-dessus reste inchangée. */}
+                        {isPathoTheme ? (
+                            <PathoReorganize embedded />
+                        ) : (
+                            <MocaUpload
+                                datasetId={primaryDatasetId}
+                                onUploadComplete={onUploadComplete}
+                            />
+                        )}
                     </div>
                 )}
             </div>
-            )}
 
             {/* Year Selection */}
             <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm">
@@ -287,10 +290,17 @@ export function Step2_Config({
                             <AlertTriangle className="w-4 h-4" />
                             Aucune donnée {sourceMode === 'moca' ? 'MOCA-O' : 'Open Data'} disponible
                         </div>
-                        {isPathoTheme ? (
-                            /* Pas de zone d'import par sujet pour ce thème : on décrit ce que fait
-                               la carte de réagencement au lieu de renvoyer vers un import inexistant. */
-                            <p>Les données publiques ne sont pas disponibles pour ce sujet. La carte «&nbsp;Réagencement d'une extraction MOCA-O&nbsp;» ci-dessus produit le classeur réagencé à partir de votre extraction ; la génération classique de ce sujet nécessite des données préalablement importées.</p>
+                        {/* Thème Pathologies : pas d'import MOCA-O par sujet, on renvoie vers le
+                            réagencement (dans la carte source ci-dessus) et vers Open Data. */}
+                        {isPathoTheme && sourceMode === 'moca' ? (
+                            <p>
+                                La génération classique de ce sujet nécessite des données préalablement importées. Le réagencement d'une extraction MOCA-O ci-dessus produit le classeur réagencé à partir de votre extraction
+                                {supportsOpenData ? (
+                                    <> ; vous pouvez aussi <button onClick={() => onSourceChange('opendata')} className="underline font-bold hover:text-amber-900">basculer sur Open Data</button></>
+                                ) : null}.
+                            </p>
+                        ) : isPathoTheme ? (
+                            <p>Les données publiques ne sont pas disponibles pour ce sujet. <button onClick={() => onSourceChange('moca')} className="underline font-bold hover:text-amber-900">Passez sur MOCA-O</button> pour réagencer une extraction.</p>
                         ) : sourceMode === 'moca' && supportsOpenData ? (
                             <p>Aucun fichier CSV trouvé. Importez vos fichiers ci-dessus ou <button onClick={() => onSourceChange('opendata')} className="underline font-bold hover:text-amber-900">basculez sur Open Data</button>.</p>
                         ) : sourceMode === 'moca' ? (

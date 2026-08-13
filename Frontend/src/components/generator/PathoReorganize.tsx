@@ -10,12 +10,21 @@ function isAcceptedFile(file: File): boolean {
     return file.name.toLowerCase().endsWith(".xls");
 }
 
+interface PathoReorganizeProps {
+    /**
+     * Rendu à l'intérieur d'une carte existante (carte « Source des données ») :
+     * on retire le chrome de carte propre pour éviter la carte-dans-carte, et on
+     * s'aligne sur MocaUpload, qui rend lui aussi un simple `space-y-4`.
+     */
+    embedded?: boolean;
+}
+
 /**
  * Mode « Réagencement MOCA-O » du thème Pathologies :
  * on dépose l'extraction brute MOCA-O (.xls), on choisit l'année,
  * le serveur renvoie un classeur Excel à 5 onglets prêt à l'emploi.
  */
-export function PathoReorganize() {
+export function PathoReorganize({ embedded = false }: PathoReorganizeProps) {
     const [dragActive, setDragActive] = useState(false);
     const [file, setFile] = useState<File | null>(null);
     const [year, setYear] = useState<string>(DEFAULT_YEAR);
@@ -82,13 +91,20 @@ export function PathoReorganize() {
     }, [file, year, loading]);
 
     return (
-        <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm space-y-4">
-            <h3 className="text-base font-bold text-gray-800 flex items-center gap-2.5">
-                <span className="inline-flex items-center justify-center w-9 h-9 rounded-xl bg-[#3bb3a9]/10 text-[#3bb3a9]">
-                    <FileSpreadsheet className="w-5 h-5" />
-                </span>
-                Réagencement d'une extraction MOCA-O
-            </h3>
+        <div className={cn("space-y-4", !embedded && "bg-white p-5 rounded-2xl border border-slate-200 shadow-sm")}>
+            {embedded ? (
+                <h4 className="text-sm font-bold text-gray-800 flex items-center gap-2">
+                    <FileSpreadsheet className="w-4 h-4 text-[#3bb3a9]" />
+                    Réagencement d'une extraction MOCA-O
+                </h4>
+            ) : (
+                <h3 className="text-base font-bold text-gray-800 flex items-center gap-2.5">
+                    <span className="inline-flex items-center justify-center w-9 h-9 rounded-xl bg-[#3bb3a9]/10 text-[#3bb3a9]">
+                        <FileSpreadsheet className="w-5 h-5" />
+                    </span>
+                    Réagencement d'une extraction MOCA-O
+                </h3>
+            )}
 
             <p className="text-sm text-gray-600">
                 Déposez votre extraction MOCA-O (.xls), choisissez l'année, téléchargez le classeur
